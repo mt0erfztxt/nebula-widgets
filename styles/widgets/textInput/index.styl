@@ -1,0 +1,79 @@
+$nw_textInput_height = $g_size--s;
+
+
+.nw-textInput
+    position: relative;
+
+
+    &__busy
+        color: $g_color_primary_text;
+        display: none;
+        font-size: $g_font_size;
+        opacity: 0;
+        position: absolute;
+        right: 8px;
+        top: ceil(($nw_textInput_height - $g_font_size) / 2px);
+        transition: opacity 0.5s;
+
+
+    &__input
+        +placeholder()
+            color: blend(alpha($g_color_primary_text, .15), $g_color_secondary);
+
+        background-color: $g_color_secondary;
+        border: 1px solid $g_color_secondary;
+        color: $g_color_primary_text;
+        line-height: 36px;
+        max-width: 100%;
+        min-height: 40px;
+        min-width: 100%;
+        outline: none;
+        padding: 1px 12px;
+        width: 100%;
+
+        &:focus
+            color: $g_color_primary_text--active;
+
+
+    &--busy &__busy
+        display: block;
+        opacity: 0.36;
+
+
+    &--disabled &__input
+        background-color: $g_color_primary;
+
+
+    &--invalid &__input
+        border-color: $g_color_primary_text--error;
+
+
+    &--multi-line &__input
+        line-height: 1.63;
+        min-height: 128px;
+        padding-bottom: 8px;
+        padding-top: 8px;
+
+
+    &--size_large &__input
+        //
+
+        
+    &--size_normal &__input
+        //
+
+
+    &--size_small &__input
+        line-height: 28px;
+
+
+    &--text-align_center &__input
+        text-align: center;
+
+
+    &--text-align_left &__input
+        text-align: left;
+
+
+    &__input &--text-align_right
+        text-align: right;

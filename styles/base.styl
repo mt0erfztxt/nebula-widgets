@@ -1,0 +1,84 @@
+$b_greedy
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+
+$b_non-greedy
+    bottom: auto;
+    left: auto;
+    position: static;
+    right: auto;
+    top: auto;
+
+
+$b_modal
+    @extend $b_greedy;
+    position: fixed;
+    z-index: $g_z-index_modal;
+
+
+$b_modal_backdrop
+    @extend $b_greedy;
+    background-color: alpha($g_color_background, 0.97);
+    // background-color: alpha($color-background, 0.90);
+    // background-color: alpha($color-background, 0.81);
+    // background-color: alpha($color-background, 0.72);
+    // background-color: alpha($color-background, 0.63);
+
+
+$b_panel_body
+    padding: 8px;
+
+    +above('mn')
+        padding: 32px 0;
+
+
+$b_shadow--small
+    box-shadow: 0 0 7px alpha(#000, 0.24);
+
+
+$b_card
+    @extend $b_shadow--small;
+    background-color: $g_color_primary;
+    color: $g_color_primary_text;
+    margin: 0 auto;
+
+    +above('mn')
+        width: 960px;
+
+
+$b_table
+    width: 100%;
+
+
+    tbody
+        td
+            // padding: 8px 0 8px 16px;
+            //
+            // &:last-child
+            //     padding-right: 16px;
+            padding: 8px 16px;
+
+
+        tr
+            background-color: $g_color_secondary;
+            border-top: 1px solid $w_suggestionInput--expanded_border_color;
+            // cursor: pointer;
+            transition: color 0.3s;
+
+            &:hover
+                color #fff;
+
+
+    thead
+        th
+            padding: 16px;
+
+
+        tr
+            background-color: $w_suggestionInput--expanded_border_color;
+            border: 1px solid $w_suggestionInput--expanded_border_color;
+            color: mix($g_color_primary_text, $w_suggestionInput--expanded_border_color, 30%);

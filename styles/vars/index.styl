@@ -1,0 +1,78 @@
+@require 'config';
+@require 'images';
+
+
+// rupture.scale       = 0 400px 600px 800px 960px 1050px 1440px 1800px;
+// rupture.scale-names = 'xs'  's'   'm'   'l'   'll'   'xl'   'xxl'  'hd';
+rupture.scale       = 0 320 480px 640px 800px 960px 1120px 1280px 1440px 1600px 1800px 1920px 2080px 2240px;
+rupture.scale-names = 't' 'ts'  's'   'sm'  'm'   'mn'   'n'    'nl'   'l'    'lh'   'h'    'hf'   'f';
+
+
+get-scale-index(scale-name)
+    for list-item, i in rupture.scale-names
+        if list-item is scale-name
+            return i + 1
+    return false
+
+get-scale-value(scale-name)
+    return rupture.scale[get-scale-index(scale-name)]
+
+
+$g_color_accent                 = rgb(252, 158, 94);
+$g_color_background             = rgb(45, 53, 64);
+$g_color_body                   = rgb(250, 250, 250);
+$g_color_primary                = rgb(65, 77, 93);
+$g_color_primary_text           = rgb(163, 167, 173)
+$g_color_primary_text--active   = rgb(255, 255, 255)
+$g_color_primary_text--darker   = mix($g_color_primary, $g_color_primary_text, 50%);
+$g_color_primary_text--error    = rgb(138, 64, 48)
+$g_color_primary_text--disabled = rgb(76, 91, 107)
+$g_color_secondary              = rgb(55, 65, 77);
+$g_color_secondary_text         = mix($g_color_background, $g_color_primary_text, 56%);
+$g_color_tertiary               = shade($g_color_secondary, 18%);
+$g_color_tertiary_text--darker  = mix($g_color_primary_text, $g_color_tertiary, 30%);
+$g_color_text                   = rgb(68, 68, 68)
+$g_color_text--light            = tint($g_color_text, 63%)
+
+$g_mask_color_background = alpha($g_color_primary, 0.72);
+
+$g_separator_color_dark  = rgb(57, 66, 78)
+$g_separator_color_light = rgb(82, 93, 107)
+
+$g_size--l = 56px;
+$g_size--n = 48px;
+$g_size--s = 40px;
+
+$g_transition_delay = 500ms;
+
+$g_app_bar_height              = $g_size--n + 2; // 2px reserved for separator
+$g_app_footer_height           = $g_size--n;
+$g_app_header_height           = $g_size--l;
+$g_app_head_height             = $g_app_header_height + $g_app_bar_height + 1px; // 1px reserved for bottom border
+$g_app_head--no-topbar_height  = $g_app_head_height - $g_app_bar_height;
+$g_app_sidebar_gutter_size--l  = $g_size--l;
+$g_app_sidebar_gutter_size--n  = $g_size--n;
+$g_app_sidebar_gutter_size--s  = $g_size--s;
+$g_app_sidebar_panel_size--l   = 480px;
+$g_app_sidebar_panel_size--n   = 320px;
+$g_app_sidebar_panel_size--s   = 320px;
+
+// TODO Choose some generic name and use it.
+$w_suggestionInput--expanded_border_color = shade($g_color_secondary, 18%);
+
+// TODO Does it used anywhre now?!
+// Container's sidebar dimentions.
+$container-sidebar-gutter-width = 56px
+$container-sidebar-panel-width  = 320px
+$container-sidebar-width        = 376px
+
+$g_font_family = 'Droid Sans', sans-serif;
+$g_font_size   = 14px;
+
+$g_z-index_app_head            = 5000;
+$g_z-index_app_head-navigation = $g_z-index_app_head + 500;
+$g_z-index_app_panel-body      = $g_z-index_app_head - 1000;
+$g_z-index_app_sidebar         = $g_z-index_app_head + 1000;
+$g_z-index_app_image-viewer    = $g_z-index_app_sidebar + 800;
+$g_z-index_app_panel-flyouts   = $g_z-index_app_sidebar + 100;
+$g_z-index_modal               = $g_z-index_app_sidebar + 1000;

@@ -1,0 +1,32 @@
+{
+  "name": "nebula-widgets",
+  "version": "0.1.0",
+  "description": "Widgets",
+  "license": "Apache-2.0",
+  "author": "Sergey Kozhevnikov <mt0erfztxt@gmail.com>",
+  "main": "src/js/index.js",
+  "directories": {
+    "doc": "doc",
+    "lib": "src/js",
+    "test": "test/js"
+  },
+  "scripts": {
+    "dev:watch:stylus:devcards": "mkdir -p ./resources/public/assets/css && stylus -w -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/devcards.css ./styles/devcards.styl",
+    "dev:watch:stylus:kitchen-sink": "mkdir -p ./resources/public/assets/css && stylus -w -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./styles/kitchen-sink.styl"
+  },
+  "devDependencies": {
+    "autoprefixer-stylus": "^0.9.4",
+    "axis": "^0.6.1",
+    "font-awesome": "4.7.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-stylus": "^1.2.0",
+    "grunt-spritesmith": "^6.4.0",
+    "jeet": "^6.1.2",
+    "md5": "^2.2.1",
+    "rupture": "^0.6.1",
+    "serve": "^6.5.8",
+    "stylus": "^0.54.5"
+  }
+}
