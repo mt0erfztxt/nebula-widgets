@@ -3,10 +3,11 @@
   :url "http://example.com/FIXME"
   :license {:name "Apache License, Version 2.0"
             :url  "https://www.apache.org/licenses/LICENSE-2.0"}
-  :dependencies [[devcards "0.2.4"]
+  :dependencies [[devcards "0.2.5"]
+                 [funcool/cuerdas "2.0.5"]
                  [org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.339" :scope "provided"]
-                 [org.slf4j/slf4j-nop "1.7.13" :scope "test"]]
+                 [org.slf4j/slf4j-nop "1.7.25" :scope "test"]]
   :min-lein-version "2.0.0"
   :target-path "target/%s/"
   :clean-targets ^{:protect false} [:target-path
@@ -19,7 +20,8 @@
   :source-paths ["src/clj"]
   :resource-paths ["resources" "target/cljsbuild"]
   :test-paths ["test/clj"]
-  :plugins [[lein-cljsbuild "1.1.7"]]
+  :plugins [[lein-ancient "0.6.15"]
+            [lein-cljsbuild "1.1.7"]]
   :aliases {"test-all"      ["do" "clean," "doo" "phantom" "test" "once"]
             "test-all-auto" ["do" "clean," "doo" "phantom" "test" "auto"]}
   :profiles
@@ -36,7 +38,7 @@
                                                    :pretty-print         true
                                                    :source-map           true
                                                    :source-map-timestamp true}
-                                    :figwheel     true
+                                    :figwheel     {:on-jsload "nebula-widgets.kitchen-sink.views/mount-root-view"}
                                     :source-paths ["src/clj" "src/cljs"]}
                                    :devcards
                                    {:compiler     {:asset-path           "/assets/js/devcards"
@@ -60,8 +62,8 @@
                                                    :source-map-timestamp true}
                                     :source-paths ["src/clj" "src/cljs" "test/clj"]}}}
                    :dependencies [[binaryage/devtools "0.9.10"]
-                                  [cider/cider-nrepl "0.17.0-SNAPSHOT"]
-                                  [com.cemerick/piggieback "0.2.1"]
+                                  [cider/cider-nrepl "0.17.0"]
+                                  [com.cemerick/piggieback "0.2.2"]
                                   [doo "0.1.10"]
                                   [funcool/bide "1.6.0"]
                                   [re-frame "0.10.5"]

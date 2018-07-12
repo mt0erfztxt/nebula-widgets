@@ -1,0 +1,58 @@
+.nw-appPanel
+    color: $g_color_primary_text;
+    height: 100%;
+
+
+    &__body
+        flex: 1 0 auto;
+        transition: left $g_transition_delay;
+
+
+    &__main
+        background-color: $g_color_background;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+        transition: margin-left $g_transition_delay;
+
+
+    &__sidebar
+        @extend $b_greedy;
+        display: none;
+        position: fixed;
+        width: 100%;
+
+
+    &__sidebar&__sidebar--left
+        right: auto;
+        transition: left $g_transition_delay, width $g_transition_delay, z-index $g_transition_delay;
+        +above('s')
+            right: 0;
+            width: auto;
+
+
+    &__sidebar&__sidebar--right
+        left: auto;
+        transition: right $g_transition_delay, width $g_transition_delay, z-index $g_transition_delay;
+        +above('s')
+            left: 0;
+            width: auto;
+
+
+    &__sidebar-inner
+        @extend $b_greedy;
+        background-color: $g_color_primary;
+        box-shadow: 0 0 14px alpha(#000, 36%);
+        transition: left $g_transition_delay, width $g_transition_delay, z-index $g_transition_delay;
+
+
+    &__sidebar-backdrop
+        background-color: alpha($g_color_background, 0.81);
+        bottom: 0;
+        left: 0;
+        position: fixed;
+        right: 0;
+        top: 0;
+        +above('n')
+            display: none;
