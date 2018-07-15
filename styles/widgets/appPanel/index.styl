@@ -1,3 +1,7 @@
+nw-appPanel-sidebar_border(side, enabled)
+    border-{side}-width: enabled ? 1px : 0;
+
+
 .nw-appPanel
     color: $g_color_primary_text;
     height: 100%;
@@ -19,24 +23,24 @@
 
     &__sidebar
         @extend $b_greedy;
-        display: none;
+        display: block;
         position: fixed;
         width: 100%;
 
 
-    &__sidebar&__sidebar--left
+    &__sidebar&__sidebar--placement_left
         right: auto;
         transition: left $g_transition_delay, width $g_transition_delay, z-index $g_transition_delay;
         +above('s')
-            right: 0;
+            // right: 0;
             width: auto;
 
 
-    &__sidebar&__sidebar--right
+    &__sidebar&__sidebar--placement_right
         left: auto;
         transition: right $g_transition_delay, width $g_transition_delay, z-index $g_transition_delay;
         +above('s')
-            left: 0;
+            // left: 0;
             width: auto;
 
 
@@ -56,3 +60,210 @@
         top: 0;
         +above('n')
             display: none;
+
+
+    // ------------------------------------------------------------------------
+    // 'leftSidebar'
+    //
+    // Have sidebar placed before (at left) content
+    // ------------------------------------------------------------------------
+
+    &--leftSidebar &__head-inner
+        border-left-color: $g_separator_color--dark;
+    &--rightSidebar &__head-inner
+        border-right-color: $g_separator_color--dark;
+
+
+    // ++ head-pinned
+    // When sidebar expanded and head is pinned then they must be at same level visually.
+    &--leftSidebar&--head-pinned &__sidebar
+    &--rightSidebar&--head-pinned &__sidebar
+        +above('n')
+            z-index: $g_z-index_app-panel_head;
+
+
+    // ------------------------------------------------------------------------
+    // 'leftSidebar-collapsed'
+    //
+    // Have left sidebar with sidebar's panel hidden
+    // ------------------------------------------------------------------------
+
+    &--leftSidebar-collapsed &__main
+        +above('s')
+            margin-left: 0;
+    &--rightSidebar-collapsed &__main
+        +above('s')
+            margin-right: 0;
+
+
+    &--leftSidebar-collapsed &__sidebar-backdrop
+    &--rightSidebar-collapsed &__sidebar-backdrop
+        display: none;
+
+
+    // ------------------------------------------------------------------------
+    // 'leftSidebar-size_normal'
+    //
+    // Have left sidebar with sidebar's panel width set to predefined value
+    // ------------------------------------------------------------------------
+
+    &--leftSidebar-size_normal &__main
+        +above('n')
+            margin-left: $g_app_sidebar_panel_size--n + 1;
+    &--rightSidebar-size_normal &__main
+        +above('n')
+            margin-right: $g_app_sidebar_panel_size--n + 1;
+
+    &--leftSidebar-size_normal &__sidebar--placement_left
+    &--rightSidebar-size_normal &__sidebar--placement_right
+        width: $g_app_sidebar_panel_size--n + 1;
+        z-index: $g_z-index_app-panel_sidebar;
+
+    &--leftSidebar-size_normal &__sidebar--placement_left &__sidebar-inner
+    &--rightSidebar-size_normal &__sidebar--placement_right &__sidebar-inner
+        +above('s')
+            width: $g_app_sidebar_panel_size--n + 1;
+        +above('n')
+            z-index: $g_z-index_app-panel_head;
+
+    &--leftSidebar-size_normal &__sidebar--placement_left &__sidebar-inner
+        +above('s')
+            border-right: 1px solid $g_separator_color--light;
+    &--rightSidebar-size_normal &__sidebar--placement_right &__sidebar-inner
+        +above('s')
+            border-left: 1px solid $g_separator_color--light;
+
+
+    // ++ adjusted
+
+
+    // ++ collapsed
+    &--leftSidebar-size_normal&--leftSidebar-collapsed &__main
+        +above('s')
+            margin-left: 0;
+    &--rightSidebar-size_normal&--rightSidebar-collapsed &__main
+        +above('s')
+            margin-right: 0;
+
+    &--leftSidebar-size_normal&--leftSidebar-collapsed &__sidebar--placement_left
+    &--leftSidebar-size_normal&--leftSidebar-collapsed &__sidebar--placement_left &__sidebar-inner
+    &--rightSidebar-size_normal&--rightSidebar-collapsed &__sidebar--placement_right
+    &--rightSidebar-size_normal&--rightSidebar-collapsed &__sidebar--placement_right &__sidebar-inner
+        +above('s')
+            width: 0;
+    &--leftSidebar-size_normal&--leftSidebar-collapsed &__sidebar--placement_left
+    &--leftSidebar-size_normal&--leftSidebar-collapsed &__sidebar--placement_left &__sidebar-inner
+        +above('s')
+            nw-appPanel-sidebar_border(right, false);
+    &--rightSidebar-size_normal&--rightSidebar-collapsed &__sidebar--placement_right
+    &--rightSidebar-size_normal&--rightSidebar-collapsed &__sidebar--placement_right &__sidebar-inner
+        +above('s')
+            nw-appPanel-sidebar_border(left, false);
+
+    &--leftSidebar-size_normal&--leftSidebar-collapsed &__sidebar--placement_left
+    &--rightSidebar-size_normal&--rightSidebar-collapsed &__sidebar--placement_right
+        +above('s')
+            z-index: $g_z-index_app-panel_head;
+    &--leftSidebar-size_normal&--leftSidebar-collapsed &__sidebar--placement_left
+        left: - 110%; // more then 100% to make box shadow not visible at left side of viewport
+        +above('s')
+            left: 0;
+    &--rightSidebar-size_normal&--rightSidebar-collapsed &__sidebar--placement_right
+        right: - 110%; // more then 100% to make box shadow not visible at right side of viewport
+        +above('s')
+            right: 0;
+
+
+    // ++ gutter-n
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal &__main
+        +above('s')
+            margin-left: $g_app_sidebar_gutter_size--n + 1;
+        +above('n')
+            margin-left: $g_app_sidebar_gutter_size--n + $g_app_sidebar_panel_size--n + 1;
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal &__main
+        +above('s')
+            margin-right: $g_app_sidebar_gutter_size--n + 1;
+        +above('n')
+            margin-right: $g_app_sidebar_gutter_size--n + $g_app_sidebar_panel_size--n + 1;
+
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal &__sidebar--placement_left
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal &__sidebar--placement_right
+        +above('n')
+            width: $g_app_sidebar_gutter_size--n + $g_app_sidebar_panel_size--n + 1;
+
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal &__sidebar--placement_left &__sidebar-inner
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal &__sidebar--placement_right &__sidebar-inner
+        +above('s')
+            width: $g_app_sidebar_gutter_size--n + $g_app_sidebar_panel_size--n + 1;
+
+
+    // ++ head-pinned
+    &--leftSidebar-size_normal&--head-pinned &__head
+        +above('n')
+            left: $g_app_sidebar_panel_size--n + 1;
+    &--rightSidebar-size_normal&--head-pinned &__head
+        +above('n')
+            right: $g_app_sidebar_panel_size--n + 1;
+
+
+    // ++ gutter-n ++ adjusted
+
+
+    // ++ gutter-n ++ collapsed
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed &__main
+        +above('s')
+            margin-left: $g_app_sidebar_gutter_size--n + 1;
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed &__main
+        +above('s')
+            margin-right: $g_app_sidebar_gutter_size--n + 1;
+
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed &__sidebar--placement_left
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed &__sidebar--placement_left &__sidebar-inner
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed &__sidebar--placement_right
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed &__sidebar--placement_right &__sidebar-inner
+        +above('s')
+            width: $g_app_sidebar_gutter_size--n + 1;
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed &__sidebar--placement_left
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed &__sidebar--placement_left &__sidebar-inner
+        +above('s')
+            nw-appPanel-sidebar_border(right, true);
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed &__sidebar--placement_right
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed &__sidebar--placement_right &__sidebar-inner
+        +above('s')
+            nw-appPanel-sidebar_border(left, true);
+
+
+    // ++ gutter-n ++ head-pinned
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--head-pinned &__head
+        +above('s')
+            left: $g_app_sidebar_gutter_size--n + 1;
+        +above('n')
+            left: $g_app_sidebar_gutter_size--n + $g_app_sidebar_panel_size--n + 1;
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--head-pinned &__head
+        +above('s')
+            right: $g_app_sidebar_gutter_size--n + 1;
+        +above('n')
+            right: $g_app_sidebar_gutter_size--n + $g_app_sidebar_panel_size--n + 1;
+
+
+    // ++ gutter-n ++ adjusted
+
+
+    // ++ gutter-n ++ adjusted ++ collapsed
+
+
+    // ++ gutter-n ++ adjusted ++ head-pinned
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--adjusted&--head-pinned &__head
+        +above('n')
+            left: $g_app_sidebar_gutter_size--n + $g_app_sidebar_panel_size--n + 1;
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--adjusted&--head-pinned &__head
+        +above('n')
+            right: $g_app_sidebar_gutter_size--n + $g_app_sidebar_panel_size--n + 1;
+
+    // ++ gutter-n ++ head-pinned ++ collapsed
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed&--head-pinned &__head
+        +above('s')
+            left: $g_app_sidebar_gutter_size--n + 1;
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed&--head-pinned &__head
+        +above('s')
+            right: $g_app_sidebar_gutter_size--n + 1;

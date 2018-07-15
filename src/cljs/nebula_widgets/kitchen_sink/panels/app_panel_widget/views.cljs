@@ -1,14 +1,58 @@
 (ns nebula-widgets.kitchen-sink.panels.app-panel-widget.views
   (:require
-    [nebula-widgets.widgets.app-panel :as app-panel]))
+    [nebula-widgets.kitchen-sink.panels.app-panel-widget.common :as common]
+    [nebula-widgets.widgets.app-panel :as app-panel]
+    [nebula-widgets.utils :as utils]
+    [re-frame.core :as rf]))
+
+(defn- sidebar-knobs-cmp [placement {:keys [collapsed? gutter size]}]
+  [:<>
+   [:h1 (-> placement name (str "Sidebar"))]
+   [:ul
+    [:li
+     [:label
+      [:input {:checked   collapsed?
+               :on-change #(rf/dispatch [(common/build-sidebar-setter-event-name placement :collapsed?) (utils/event->checked %)])
+               :type      "checkbox"}]
+      "collapsed?"]]
+    [:li
+     [:h2 "gutter"]
+     (for [s [false "small" "normal" "large"]]
+       ^{:key s} [:label
+                  [:input {:checked   (= gutter s)
+                           :disabled  (#{"small" "large"} s)
+                           :on-change #(rf/dispatch [(common/build-sidebar-setter-event-name placement :gutter) s])
+                           :type      "radio"}]
+                  (or s "none")])]
+    [:li
+     [:h2 "size"]
+     (for [s ["small" "normal" "large"]]
+       ^{:key s} [:label
+                  [:input {:checked   (= size s)
+                           :disabled  (#{"small" "large"} s)
+                           :on-change #(rf/dispatch [(common/build-sidebar-setter-event-name placement :size) s])
+                           :type      "radio"}]
+                  s])]]])
+
+(defn- build-sidebar-props [placement {:keys [collapsed? gutter size]}]
+  {:collapsed? collapsed?
+   :gutter     gutter
+   :placement  placement
+   :size       size})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn widget
-  []
-  [:div.appPanelWidgetPanel
-   [app-panel/widget
-    {:sidebars [{:expanded? true :placement "left"}]}
-    "Hi, there!"]])
+(defn widget []
+  (let [*left-sidebar (rf/subscribe [:app-panel-widget-panel/left-sidebar])
+        *right-sidebar (rf/subscribe [:app-panel-widget-panel/right-sidebar])]
+    (fn []
+      (let [left-sidebar @*left-sidebar
+            right-sidebar @*right-sidebar]
+        [:div.appPanelWidgetPanel
+         [app-panel/widget
+          {:sidebars [(build-sidebar-props :left left-sidebar)
+                      (build-sidebar-props :right right-sidebar)]}
+          [sidebar-knobs-cmp :left left-sidebar]
+          [sidebar-knobs-cmp :right right-sidebar]]]))))

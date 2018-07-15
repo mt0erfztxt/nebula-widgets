@@ -7,7 +7,7 @@
     [reagent.core :as r]))
 
 (defn- root-view []
-  (let [*route (rf/subscribe [:get-app-route])]
+  (let [*route (rf/subscribe [:app/route])]
     (fn []
       (case (:id @*route)
         :home [home-panel-views/widget]

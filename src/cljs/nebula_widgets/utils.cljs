@@ -7,3 +7,9 @@
    (-> value keyword ((set supported-keywords)) (or default-value)))
   ([value supported-keywords]
    (calculate-prop-value value supported-keywords nil)))
+
+(defn calculate-size-like-prop-value [value]
+  (calculate-prop-value value #{:large :normal :small}))
+
+(defn event->checked [event]
+  (-> event .-target .-checked))

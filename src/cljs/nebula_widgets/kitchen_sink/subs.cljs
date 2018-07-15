@@ -5,18 +5,18 @@
     [re-frame.core :as rf]))
 
 (rf/reg-sub
-  :get-app
+  :app
   (fn [db _]
     (:app db)))
 
 (rf/reg-sub
-  :get-app-route
-  :<- [:get-app]
+  :app/route
+  :<- [:app]
   (fn [app _]
     (:route app)))
 
 (rf/reg-sub
-  :get-panels
+  :panels
   (fn [db _]
     (:panels db)))
 
