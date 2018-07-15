@@ -1,7 +1,7 @@
 (ns nebula-widgets.kitchen-sink.panels.app-panel-widget.views
   (:require
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.common :as common]
-    [nebula-widgets.widgets.app-panel :as app-panel]
+    [nebula-widgets.widgets.app-panel.core :as app-panel]
     [nebula-widgets.utils :as utils]
     [re-frame.core :as rf]))
 
@@ -45,14 +45,43 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget []
-  (let [*left-sidebar (rf/subscribe [:app-panel-widget-panel/left-sidebar])
-        *right-sidebar (rf/subscribe [:app-panel-widget-panel/right-sidebar])]
+  (let [*header (rf/subscribe [:app-panel-widget-panel/header])
+        *left-sidebar (rf/subscribe [:app-panel-widget-panel/left-sidebar])
+        *right-sidebar (rf/subscribe [:app-panel-widget-panel/right-sidebar])
+        *top-bar (rf/subscribe [:app-panel-widget-panel/top-bar])]
     (fn []
-      (let [left-sidebar @*left-sidebar
-            right-sidebar @*right-sidebar]
+      (let [{header-absent? :absent? header-pinned? :pinned? :as header} @*header
+            left-sidebar @*left-sidebar
+            right-sidebar @*right-sidebar
+            top-bar @*top-bar]
         [:div.appPanelWidgetPanel
          [app-panel/widget
-          {:sidebars [(build-sidebar-props :left left-sidebar)
+          {:bars     [{:content [:div "Content of top bar"] :placement "top" :separated? (:separated? top-bar)}]
+           :head     [:div "Content of app panel head"]
+           :header   (if (:absent? header) false header)
+           :sidebars [(build-sidebar-props :left left-sidebar)
                       (build-sidebar-props :right right-sidebar)]}
+          [:h1 "header"]
+          [:ul
+           [:li
+            [:label
+             [:input {:checked   header-absent?
+                      :on-change #(rf/dispatch [(common/build-header-setter-event-name :absent?) (utils/event->checked %)])
+                      :type      "checkbox"}]
+             "absent?"]]
+           [:li
+            [:label
+             [:input {:checked   header-pinned?
+                      :on-change #(rf/dispatch [(common/build-header-setter-event-name :pinned?) (utils/event->checked %)])
+                      :type      "checkbox"}]
+             "pinned?"]]]
+          [:h1 "topBar"]
+          [:ul
+           [:li
+            [:label
+             [:input {:checked   (:separated? top-bar)
+                      :on-change #(rf/dispatch [(common/build-bar-setter-event-name :top :separated?) (utils/event->checked %)])
+                      :type      "checkbox"}]
+             "separated?"]]]
           [sidebar-knobs-cmp :left left-sidebar]
           [sidebar-knobs-cmp :right right-sidebar]]]))))

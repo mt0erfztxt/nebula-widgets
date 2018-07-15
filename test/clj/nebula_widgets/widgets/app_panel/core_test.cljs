@@ -1,7 +1,7 @@
-(ns nebula-widgets.widgets.app-panel-test
+(ns nebula-widgets.widgets.app-panel.core-test
   (:require
     [cljs.test :refer-macros [deftest is testing]]
-    [nebula-widgets.widgets.app-panel :as app-panel]))
+    [nebula-widgets.widgets.app-panel.core :as app-panel]))
 
 (deftest build-sidebar-modifiers-test
   (let [sut #'app-panel/build-sidebar-modifiers]

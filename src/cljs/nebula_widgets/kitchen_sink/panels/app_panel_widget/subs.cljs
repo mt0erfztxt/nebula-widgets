@@ -9,6 +9,12 @@
     (:app-panel-widget panels)))
 
 (rf/reg-sub
+  :app-panel-widget-panel/header
+  :<- [:app-panel-widget-panel]
+  (fn [panel _]
+    (:header panel)))
+
+(rf/reg-sub
   :app-panel-widget-panel/left-sidebar
   :<- [:app-panel-widget-panel]
   (fn [panel _]
@@ -19,3 +25,9 @@
   :<- [:app-panel-widget-panel]
   (fn [panel _]
     (:right-sidebar panel)))
+
+(rf/reg-sub
+  :app-panel-widget-panel/top-bar
+  :<- [:app-panel-widget-panel]
+  (fn [panel _]
+    (-> panel :bar :top)))

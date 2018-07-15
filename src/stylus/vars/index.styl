@@ -2,8 +2,6 @@
 @require 'images';
 
 
-// rupture.scale       = 0 400px 600px 800px 960px 1050px 1440px 1800px;
-// rupture.scale-names = 'xs'  's'   'm'   'l'   'll'   'xl'   'xxl'  'hd';
 rupture.scale       = 0 320 480px 640px 800px 960px 1120px 1280px 1440px 1600px 1800px 1920px 2080px 2240px;
 rupture.scale-names = 't' 'ts'  's'   'sm'  'm'   'mn'   'n'    'nl'   'l'    'lh'   'h'    'hf'   'f';
 
@@ -45,23 +43,22 @@ $g_size--s = 40px;
 
 $g_transition_delay = 500ms;
 
-$g_app_bar_height              = $g_size--n + 2; // 2px reserved for separator
-$g_app_footer_height           = $g_size--n;
-$g_app_header_height           = $g_size--l;
-$g_app_head_height             = $g_app_header_height + $g_app_bar_height + 1px; // 1px reserved for bottom border
-$g_app_head--no-topbar_height  = $g_app_head_height - $g_app_bar_height;
-$g_app_sidebar_gutter_size--l  = $g_size--l;
-$g_app_sidebar_gutter_size--n  = $g_size--n;
-$g_app_sidebar_gutter_size--s  = $g_size--s;
-$g_app_sidebar_panel_size--l   = 480px;
-$g_app_sidebar_panel_size--n   = 320px;
-$g_app_sidebar_panel_size--s   = 320px;
+$g_appPanel__header_height         = $g_size--l;
+$g_appPanel-bar_height             = $g_size--n + 2; // 2px reserved for separator
+$g_appPanel-footer_height          = $g_size--n;
+$g_appPanel-head_height            = $g_appPanel__header_height;
+$g_appPanel--sidebar-gutter_large  = $g_size--l;
+$g_appPanel--sidebar-gutter_normal = $g_size--n;
+$g_appPanel--sidebar-gutter_small  = $g_size--s;
+$g_appPanel--sidebar-size_large    = 480px;
+$g_appPanel--sidebar-size_normal   = 320px;
+$g_appPanel--sidebar-size_small    = 320px;
 
 // TODO Choose some generic name and use it.
 $w_suggestionInput--expanded_border_color = shade($g_color_secondary, 18%);
 
-// TODO Does it used anywhre now?!
-// Container's sidebar dimentions.
+// TODO Does it used anywhere now?!
+// Container's sidebar dimensions.
 $container-sidebar-gutter-width = 56px
 $container-sidebar-panel-width  = 320px
 $container-sidebar-width        = 376px
@@ -69,10 +66,10 @@ $container-sidebar-width        = 376px
 $g_font_family = 'Droid Sans', sans-serif;
 $g_font_size   = 14px;
 
-$g_z-index_app-panel_head            = 5000;
-$g_z-index_app-panel_head_navigation = $g_z-index_app-panel_head + 500;
-$g_z-index_app-panel_body            = $g_z-index_app-panel_head - 1000;
-$g_z-index_app-panel_sidebar         = $g_z-index_app-panel_head + 1000;
-$g_z-index_app-panel_flyouts         = $g_z-index_app-panel_sidebar + 100;
-$g_z-index_app-image-viewer          = $g_z-index_app-panel_sidebar + 800;
-$g_z-index_modal                     = $g_z-index_app-panel_sidebar + 1000;
+$g_z-index_appPanel-head            = 5000;
+$g_z-index_appPanel-head-navigation = $g_z-index_appPanel-head + 500;
+$g_z-index_appPanel-body            = $g_z-index_appPanel-head - 1000;
+$g_z-index_appPanel-sidebar         = $g_z-index_appPanel-head + 1000;
+$g_z-index_appPanel-flyouts         = $g_z-index_appPanel-sidebar + 100;
+$g_z-index_app-image-viewer         = $g_z-index_appPanel-sidebar + 800;
+$g_z-index_modal                    = $g_z-index_appPanel-sidebar + 1000;
