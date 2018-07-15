@@ -22,9 +22,6 @@ module.exports = function(grunt) {
     copy: {
       dev: {
         files: [{
-          src: 'node_modules/font-awesome/css/font-awesome.css',
-          dest: 'styles/vendor/dist/font-awesome.css'
-        }, {
           expand: true,
           cwd: 'node_modules/font-awesome/fonts',
           src: '**/*',
@@ -73,13 +70,13 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          'resources/public/assets/css/devcards.css': 'styles/devcards.styl',
-          'resources/public/assets/css/kitchen-sink.css': 'styles/kitchen-sink.styl'
+          'resources/public/assets/css/devcards.css': 'src/stylus/devcards.styl',
+          'resources/public/assets/css/kitchen-sink.css': 'src/stylus/kitchen-sink.styl'
         }
       },
       prod: {
         files: {
-          'resources/public/assets/css/nebula-widgets.css': 'styles/index.styl'
+          'resources/public/assets/css/nebula-widgets.css': 'src/stylus/index.styl'
         }
       }
     }

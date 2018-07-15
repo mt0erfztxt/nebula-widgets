@@ -1,0 +1,129 @@
+/*
+Stylus variables are information about icon's compiled state, stored under its original file name
+
+.icon-home {
+  width: $icon_home_width;
+}
+
+The large array-like variables contain all information about a single icon
+$icon_home = x y offset_x offset_y width height total_width total_height image_path;
+
+At the bottom of this section, we provide information about the spritesheet itself
+$spritesheet = width height image $spritesheet_sprites;
+*/
+$icon_checkbox_checked_name = 'icon-checkbox-checked';
+$icon_checkbox_checked_x = 0px;
+$icon_checkbox_checked_y = 0px;
+$icon_checkbox_checked_offset_x = 0px;
+$icon_checkbox_checked_offset_y = 0px;
+$icon_checkbox_checked_width = 20px;
+$icon_checkbox_checked_height = 20px;
+$icon_checkbox_checked_total_width = 40px;
+$icon_checkbox_checked_total_height = 40px;
+$icon_checkbox_checked_image = '../images/icons-d41d8cd98f00b204e9800998ecf8427e.png';
+$icon_checkbox_checked = 0px 0px 0px 0px 20px 20px 40px 40px '../images/icons-d41d8cd98f00b204e9800998ecf8427e.png' 'icon-checkbox-checked';
+$icon_checkbox_name = 'icon-checkbox';
+$icon_checkbox_x = 20px;
+$icon_checkbox_y = 0px;
+$icon_checkbox_offset_x = -20px;
+$icon_checkbox_offset_y = 0px;
+$icon_checkbox_width = 20px;
+$icon_checkbox_height = 20px;
+$icon_checkbox_total_width = 40px;
+$icon_checkbox_total_height = 40px;
+$icon_checkbox_image = '../images/icons-d41d8cd98f00b204e9800998ecf8427e.png';
+$icon_checkbox = 20px 0px -20px 0px 20px 20px 40px 40px '../images/icons-d41d8cd98f00b204e9800998ecf8427e.png' 'icon-checkbox';
+$icon_radio_checked_name = 'icon-radio-checked';
+$icon_radio_checked_x = 0px;
+$icon_radio_checked_y = 20px;
+$icon_radio_checked_offset_x = 0px;
+$icon_radio_checked_offset_y = -20px;
+$icon_radio_checked_width = 20px;
+$icon_radio_checked_height = 20px;
+$icon_radio_checked_total_width = 40px;
+$icon_radio_checked_total_height = 40px;
+$icon_radio_checked_image = '../images/icons-d41d8cd98f00b204e9800998ecf8427e.png';
+$icon_radio_checked = 0px 20px 0px -20px 20px 20px 40px 40px '../images/icons-d41d8cd98f00b204e9800998ecf8427e.png' 'icon-radio-checked';
+$icon_radio_name = 'icon-radio';
+$icon_radio_x = 20px;
+$icon_radio_y = 20px;
+$icon_radio_offset_x = -20px;
+$icon_radio_offset_y = -20px;
+$icon_radio_width = 20px;
+$icon_radio_height = 20px;
+$icon_radio_total_width = 40px;
+$icon_radio_total_height = 40px;
+$icon_radio_image = '../images/icons-d41d8cd98f00b204e9800998ecf8427e.png';
+$icon_radio = 20px 20px -20px -20px 20px 20px 40px 40px '../images/icons-d41d8cd98f00b204e9800998ecf8427e.png' 'icon-radio';
+$spritesheet_width = 40px;
+$spritesheet_height = 40px;
+$spritesheet_image = '../images/icons-d41d8cd98f00b204e9800998ecf8427e.png';
+$spritesheet_sprites = $icon_checkbox_checked $icon_checkbox $icon_radio_checked $icon_radio;
+$spritesheet = 40px 40px '../images/icons-d41d8cd98f00b204e9800998ecf8427e.png' $spritesheet_sprites;
+
+/*
+The provided mixins are intended to be used with the array-like variables
+
+.icon-home {
+  spriteWidth($icon_home)
+}
+
+.icon-email {
+  sprite($icon_email)
+}
+
+Example usage in HTML:
+
+`display: block` sprite:
+<div class="icon-home"></div>
+
+To change `display` (e.g. `display: inline-block;`), we suggest using a common CSS class:
+
+// CSS
+.icon {
+  display: inline-block;
+}
+
+// HTML
+<i class="icon icon-home"></i>
+*/
+spriteWidth($sprite) {
+  width: $sprite[4];
+}
+
+spriteHeight($sprite) {
+  height: $sprite[5];
+}
+
+spritePosition($sprite) {
+  background-position: $sprite[2] $sprite[3];
+}
+
+spriteImage($sprite) {
+  background-image: url($sprite[8]);
+}
+
+sprite($sprite) {
+  spriteImage($sprite)
+  spritePosition($sprite)
+  spriteWidth($sprite)
+  spriteHeight($sprite)
+}
+
+/*
+The `sprites` mixin generates identical output to the CSS template
+  but can be overridden inside of Stylus
+
+This must be run when you have at least 2 sprites.
+  If run with a single sprite, then there will be reference errors.
+
+sprites($spritesheet_sprites);
+*/
+sprites($sprites) {
+  for $sprite in $sprites {
+    $sprite_name = $sprite[9];
+    .{$sprite_name} {
+      sprite($sprite);
+    }
+  }
+}
