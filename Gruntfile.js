@@ -48,7 +48,7 @@ module.exports = function(grunt) {
       icons: {
         src: 'assets/icons/*.png',
         dest: 'resources/public/assets/images/icons-' + getCollectiveMd5('assets/images/icons/*.png') + '.png',
-        destCss: 'styles/icons.styl',
+        destCss: 'src/stylus/core/icons.styl',
         imgPath: '../images/icons-' + getCollectiveMd5('assets/images/icons/*.png') + '.png'
       }
     },

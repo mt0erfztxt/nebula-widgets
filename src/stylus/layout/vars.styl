@@ -1,7 +1,3 @@
-@require 'config';
-@require 'images';
-
-
 rupture.scale       = 0 320 480px 640px 800px 960px 1120px 1280px 1440px 1600px 1800px 1920px 2080px 2240px;
 rupture.scale-names = 't' 'ts'  's'   'sm'  'm'   'mn'   'n'    'nl'   'l'    'lh'   'h'    'hf'   'f';
 
@@ -15,27 +11,6 @@ get-scale-index(scale-name)
 get-scale-value(scale-name)
     return rupture.scale[get-scale-index(scale-name)]
 
-
-$g_color_accent                 = rgb(252, 158, 94);
-$g_color_background             = rgb(45, 53, 64);
-$g_color_body                   = rgb(250, 250, 250);
-$g_color_primary                = rgb(65, 77, 93);
-$g_color_primary_text           = rgb(163, 167, 173)
-$g_color_primary_text--active   = rgb(255, 255, 255)
-$g_color_primary_text--darker   = mix($g_color_primary, $g_color_primary_text, 50%);
-$g_color_primary_text--error    = rgb(138, 64, 48)
-$g_color_primary_text--disabled = rgb(76, 91, 107)
-$g_color_secondary              = rgb(55, 65, 77);
-$g_color_secondary_text         = mix($g_color_background, $g_color_primary_text, 56%);
-$g_color_tertiary               = shade($g_color_secondary, 18%);
-$g_color_tertiary_text--darker  = mix($g_color_primary_text, $g_color_tertiary, 30%);
-$g_color_text                   = rgb(68, 68, 68)
-$g_color_text--light            = tint($g_color_text, 63%)
-
-$g_mask_color_background = alpha($g_color_primary, 0.72);
-
-$g_separator_color--dark  = rgb(57, 66, 78)
-$g_separator_color--light = rgb(82, 93, 107)
 
 $g_size--l = 56px;
 $g_size--n = 48px;
@@ -53,9 +28,6 @@ $g_appPanel--sidebar-gutter_small  = $g_size--s;
 $g_appPanel--sidebar-size_large    = 480px;
 $g_appPanel--sidebar-size_normal   = 320px;
 $g_appPanel--sidebar-size_small    = 320px;
-
-// TODO Choose some generic name and use it.
-$w_suggestionInput--expanded_border_color = shade($g_color_secondary, 18%);
 
 // TODO Does it used anywhere now?!
 // Container's sidebar dimensions.
