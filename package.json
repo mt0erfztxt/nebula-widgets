@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev:watch:stylus:devcards": "mkdir -p ./resources/public/assets/css && stylus -w -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/devcards.css ./src/stylus/devcards.styl",
-    "dev:watch:stylus:kitchen-sink": "mkdir -p ./resources/public/assets/css && stylus -w -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink.styl"
+    "dev:watch:stylus:kitchen-sink": "mkdir -p ./resources/public/assets/css && stylus -w -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink/index.styl"
   },
   "devDependencies": {
     "autoprefixer-stylus": "^0.9.4",

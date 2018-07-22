@@ -1,0 +1,64 @@
+nw-card_add-separator(placement, is-inner)
+    _is-bottom = (placement == 'bottom');
+    _side = _is-bottom ? 'top' : 'bottom';
+
+    if (_is-bottom)
+        _color = (is-inner ? $g_separator_color--light : $g_separator_color--dark);
+    else
+        _color = (is-inner ? $g_separator_color--dark : $g_separator_color--light);
+
+    border-{_side}: 1px solid _color;
+
+
+.nw-card
+    @extend $b_card;
+    display: flex;
+    flex-flow: column;
+
+
+    &__bar
+        //
+
+
+    &__bar-inner
+        height: $g_size--n;
+
+
+    &__bar--separated &__bar-inner
+        height: $g_size--n + 1;
+
+
+    &__bar--separated&__bar--placement_bottom
+        nw-card_add-separator('bottom', false);
+    &__bar--separated&__bar--placement_bottom &__bar-inner
+        nw-card_add-separator('bottom', true);
+
+
+    &__bar--separated&__bar--placement_top
+        nw-card_add-separator('top', false);
+    &__bar--separated&__bar--placement_top &__bar-inner
+        nw-card_add-separator('top', true);
+
+
+    &__body
+        //
+
+
+    &--adjustable
+        @extend $b_greedy;
+        align-content: stretch;
+        margin: 0;
+        width: auto;
+
+
+    &--adjustable &__bar
+        flex: none;
+
+
+    &--adjustable &__body
+        flex: auto;
+        overflow-y: auto;
+
+
+    &--flat
+        box-shadow: none;

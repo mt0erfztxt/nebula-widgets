@@ -10,4 +10,5 @@
   [:div.homePanel
    [:ul
     [:li [:a {:href (routes/resolve :widgets/app-panel)} "appPanel widget"]]
+    [:li [:a {:href (routes/resolve :widgets/card)} "card widget"]]
     [:li [:a {:href (routes/resolve :widgets/text-input)} "textInput widget"]]]])

@@ -7,6 +7,7 @@
   (bide/router
     [["" :home]
      ["/widgets/app-panel" :widgets/app-panel]
+     ["/widgets/card" :widgets/card]
      ["/widgets/text-input" :widgets/text-input]]))
 
 (defn match [url]
