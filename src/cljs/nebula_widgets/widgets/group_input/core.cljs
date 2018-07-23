@@ -1,6 +1,7 @@
 (ns nebula-widgets.widgets.group-input.core
-  (:require [nebula-widgets.utils.bem :as bem-utils]
-            [reagent.core :as r]))
+  (:require
+    [nebula-widgets.utils.bem :as bem-utils]
+    [reagent.core :as r]))
 
 (def ^:private bem "nw-groupInput")
 (def ^:private bem-inner (str bem "__inner"))
