@@ -30,7 +30,7 @@
     :cns               - optional, any, no default, component namespace
     :disabled          - optional, logical true/false, no default
     :equidistant       - optional, logical true/false, no default, whether items have same width
-    :stacked           - optional, logical true/false, no default, whether items grouped stacked or inline
+    :inline            - optional, logical true/false, no default, whether items grouped stacked or inline
     :item-props        - optional, map, no default, common props for all items in group, for example, event handlers
     :size              - optional, one of :large, :normal (default), :small or their string/symbol equivalents
     :soft-columns      - optional, logical true/false, no default, when logical true and :columns is also set then
@@ -41,11 +41,11 @@
     :widget            - optional, any, item widget, see concrete group input implementation for details
   children - optional, seq of renderables"
   [& _args]
-  (let [[props children] ((juxt r/props r/children) (r/current-component))]
+  (let [[{:keys [columns soft-columns] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}
      (into [:div {:class bem-inner}]
-           (for [{:keys [checked columns soft-columns?] :as item} children]
+           (for [{:keys [checked] :as item} children]
              [:div (cond-> (assoc {} :class (bem-utils/build-class bem-item [["checked" checked]]))
                            (and (integer? columns) (pos? columns))
-                           (update :style assoc (if soft-columns? :min-width :width) (str (/ 100 columns) "%")))
+                           (update :style assoc (if soft-columns :min-width :width) (str (/ 100 columns) "%")))
               item]))]))

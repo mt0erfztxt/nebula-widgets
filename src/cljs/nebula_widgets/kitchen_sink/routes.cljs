@@ -8,6 +8,7 @@
     [["" :home]
      ["/widgets/app-panel" :widgets/app-panel]
      ["/widgets/card" :widgets/card]
+     ["/widgets/radio-group-input" :widgets/radio-group-input]
      ["/widgets/text-input" :widgets/text-input]]))
 
 (defn match [url]

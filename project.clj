@@ -3,7 +3,8 @@
   :url "http://example.com/FIXME"
   :license {:name "Apache License, Version 2.0"
             :url  "https://www.apache.org/licenses/LICENSE-2.0"}
-  :dependencies [[devcards "0.2.5" :exclusions [cljsjs/react cljsjs/react-dom]] ; w/o exclusions compilation fails
+  :dependencies [[com.taoensso/timbre "4.10.0"]
+                 [devcards "0.2.5" :exclusions [cljsjs/react cljsjs/react-dom]] ; w/o exclusions compilation fails
                  [funcool/cuerdas "2.0.5"]
                  [funcool/bide "1.6.0"]
                  [org.clojure/clojure "1.9.0"]

@@ -7,6 +7,7 @@
 (def ^:private bem-errors (str bem "__errors"))
 (def ^:private bem-input (str bem "__input"))
 (def ^:private bem-label (str bem "__label"))
+(def ^:private bem-label-text (str bem-label "-text"))
 
 (def ^:private non-input-props [:cid :cns :label :path :widget])
 
@@ -20,10 +21,14 @@
      ["invalid" invalid?]
      ["widget" widget]]))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; PUBLIC
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; TODO: Maybe errors rendering is a responsibility of input component (see :input-cmp prop)?
 (defn widget
   "props          - required, map:
-    :checked`       - optional, logical true/false, no default
+    :checked        - optional, logical true/false, no default
     :cid            - optional, any, no default, component id
     :cns            - optional, any, no default, component namespace
     :disabled       - optional, logical true/false, no default
@@ -36,7 +41,7 @@
         input-hcp [input-cmp (-> (apply dissoc input-cmp-props non-input-props) (assoc :class bem-input))]]
     [:div {:class (-> props (assoc ::invalid? invalid?) build-class)}
      (if label
-       [:label {:class bem-label} input-hcp label]
+       [:label {:class bem-label} input-hcp [:span {:class bem-label-text} label]]
        input-hcp)
      (when invalid?
        (into [:ul {:class bem-errors}]

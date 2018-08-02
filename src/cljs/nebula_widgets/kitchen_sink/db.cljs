@@ -2,12 +2,14 @@
   (:require
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.db :as app-panel-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.card-widget.db :as card-widget-panel-db]
+    [nebula-widgets.kitchen-sink.panels.radio-group-input-widget.db :as radio-group-input-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.text-input.db :as text-input-panel-db]))
 
 (def ^:private db-panels
   (merge {}
          app-panel-widget-panel-db/default-db
          card-widget-panel-db/default-db
+         radio-group-input-widget-panel-db/default-db
          text-input-panel-db/default-db))
 
 (def default-db

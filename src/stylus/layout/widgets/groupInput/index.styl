@@ -1,0 +1,88 @@
+$group-input-active-item-background-color = $g_color_secondary;
+$group-input-hovered-item-color           = #fff;   // TODO: Extract
+$group-input-idle-item-background-color   = $g_color_primary;
+$group-input-idle-item-border-color       = $g_color_accent;
+
+$group-input-height                = 48px;
+$group-input-height-small          = 40px;
+$group-input-height-tiny           = 32px;
+$group-input-height-bordered       = $group-input-height       - 2px;
+$group-input-height-small-bordered = $group-input-height-small - 2px;
+$group-input-height-tiny-bordered  = $group-input-height-tiny  - 2px;
+
+
+@require 'item'
+
+
+.nw-groupInput
+    color: $g_color_primary_text;
+    font-size: 14px;
+    line-height: normal;
+
+
+    &__inner
+        //
+
+
+    &__item
+        margin-bottom: 8px;
+
+
+    &--disabled
+        // opacity: 0.27;
+
+
+    &--equidistant &__inner
+        display: table !important;
+        table-layout: fixed;
+        width: 100%;
+
+
+    &--equidistant &__item
+        display: table-cell !important;
+        text-align: center;
+
+
+    &--inline &__item
+        display: inline-block;
+        padding-right: 24px;
+
+
+    &:not(&--inline) &__item:last-child
+        margin-bottom: 0;
+
+
+    &--size_small&--widget_button &__item
+        line-height: $group-input-height-small-bordered;
+
+
+    &--size_tiny&--widget_button &__item
+        line-height: $group-input-height-tiny-bordered;
+
+
+    &--stacked-on-mobile &__item
+        +below('ts')
+            display: block;
+
+
+    &--widget_button &__inner
+        background-color: $group-input-idle-item-background-color;
+        border: 1px solid $g_color_secondary;
+        overflow: hidden;
+
+
+    &--widget_button &__item
+        background-color: $group-input-idle-item-background-color;
+        border-right: 1px solid $g_color_secondary;
+        cursor: pointer;
+        display: inline-block;
+        line-height: $group-input-height-bordered;
+        margin-bottom: 0;
+        outline: none;
+        padding: 0;
+
+        input
+            display: none;
+
+        &:last-child
+            border-right: none;
