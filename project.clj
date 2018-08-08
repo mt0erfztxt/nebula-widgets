@@ -25,7 +25,9 @@
   :resource-paths ["resources" "target/cljsbuild"]
   :test-paths ["test/clj"]
   :plugins [[lein-ancient "0.6.15"]
-            [lein-cljsbuild "1.1.7"]]
+            [lein-cljsbuild "1.1.7"]
+            [lein-doo "0.1.10"]
+            [lein-figwheel "0.5.16"]]
   :doo {:build "test"}
   :aliases {"test-all"      ["do" "clean," "doo" "phantom" "test" "once"]
             "test-all-auto" ["do" "clean," "doo" "phantom" "test" "auto"]}
@@ -66,19 +68,21 @@
                                                    :source-map           true
                                                    :source-map-timestamp true}
                                     :source-paths ["src/clj" "src/cljs" "test/clj"]}}}
+                   :plugins      [[cider/cider-nrepl "0.18.0-SNAPSHOT"]]
                    :dependencies [[binaryage/devtools "0.9.10"]
-                                  [cider/cider-nrepl "0.17.0"]
                                   [com.cemerick/piggieback "0.2.2"]
+                                  [cider/piggieback "0.3.6"]
                                   [doo "0.1.10"]
                                   [day8.re-frame/re-frame-10x "0.3.3-react16"]
+                                  [figwheel-sidecar "0.5.16"]
+                                  [org.clojure/tools.nrepl "0.2.13"]
                                   [ring/ring-core "1.6.3"]]
+                   :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}
                    :figwheel     {:css-dirs          ["resources/public/assets/css"]
                                   :http-server-root  "public"
                                   :nrepl-port        7002
                                   :open-file-command "figwheel-emacsclient"
-                                  :ring-handler      figwheel-handler/handler}
-                   :plugins      [[lein-doo "0.1.10"]
-                                  [lein-figwheel "0.5.16"]]}
+                                  :ring-handler      figwheel-handler/handler}}
    :project/test  {}
    :profiles/dev  {}
    :profiles/test {}})
