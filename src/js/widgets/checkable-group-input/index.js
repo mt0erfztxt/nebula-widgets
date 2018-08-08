@@ -1,13 +1,11 @@
 import testFragment from 'nebula-test-fragment';
 import { t } from 'testcafe';
-import typeOf from 'typeof--';
 
 import GroupInput from '../group-input';
 
-import Item from './item';
+import CheckableGroupInput_Item from './item';
 
 const {
-  bem: { BemBase },
   Fragment,
   Options,
   utils
@@ -48,27 +46,6 @@ class CheckableGroupInput extends GroupInput {
   // ---------------------------------------------------------------------------
 
   /**
-   * Asserts that number of checked item fragments in checkable group input
-   * fragment equal value specified in `count`.
-   *
-   * @param {Number|Array} count - Checkable group input must have that number of checked items to pass assertion. When you need more flexibility than just equality pass an `Array` with TestCafe assertion name (default to 'eql') as first element and expected value for assertion as second, for example, `['gte', 3]`
-   * @param {Options|Object} [options] - Options
-   * @param {Boolean} [options.isNot=false] - When truthy assertion would be negated
-   * @return {Promise<void>}
-   */
-  async expectCheckedItemsCountIs(count, options) {
-    let assertionName = 'eql';
-    const checkedItems = await this.getCheckedItems();
-
-    if (_.isArray(count)) {
-      [assertionName, count] = count;
-    }
-
-    assertionName = utils.buildTestCafeAssertionName(assertionName, options);
-    await t.expect(checkedItems.length)[assertionName](count);
-  }
-
-  /**
    * Asserts that checkable group input fragment has checked item fragment
    * specified by `spec` and `opts`. Optionally, asserts that specified checked
    * item found in checkable group input in position specified by `idx`.
@@ -79,28 +56,7 @@ class CheckableGroupInput extends GroupInput {
    * @returns {Promise<Object>} Checked item.
    */
   async expectHasCheckedItem(spec, opts, idx) {
-    const checkedItems = await this.expectHasCheckedItems([spec, opts]);
-
-    if (idx) {
-      if (!(_.isInteger(idx) && idx >= 0)) {
-        throw new TypeError(
-          `${this.displayName}#expectHasCheckedItem(): 'idx' argument must be an integer greater or ` +
-          `equal 0 but it is ${typeOf(idx)} (${idx})`
-        );
-      }
-
-      const item = this.getItem(spec, opts);
-      const itemAtIdx = this.getItem({ idx });
-
-      await itemAtIdx.expectIsExist();
-      await itemAtIdx.expectIsChecked();
-
-      await t
-        .expect(item.textContent)
-        .eql(itemAtIdx.textContent, `Item matches ${spec} and ${opts} doesn't equal item at index ${idx}`);
-    }
-
-    return checkedItems[0];
+    return this.expectHasSomething('Item', _.assign({}, spec, { checked: true }), opts, { idx });
   }
 
   // TODO It can be implemented in terms of `Fragment#expectHasSomethings` if we allow composable specs, e.g.
@@ -119,44 +75,9 @@ class CheckableGroupInput extends GroupInput {
    * @returns {Promise<Array<Object>>} Checked items.
    */
   async expectHasCheckedItems(specAndOptsList, options) {
-    const opts = new Options(options, {
-      defaults: {
-        only: false,
-        sameOrder: false
-      }
-    });
-
-    const specifiedCheckedItems = [];
-
-    for (let i = 0, len = specAndOptsList.length; i < len; i++) {
-      const item = this.getItem(specAndOptsList[0], specAndOptsList[1]);
-
-      await item.expectIsExist();
-      await item.expectIsChecked();
-
-      specifiedCheckedItems.push(item);
-    }
-
-    // Check that group has no more and no less than specified checked items.
-    if (opts.only) {
-      const allCheckedItems = await this.getCheckedItems();
-
-      await t
-        .expect(specifiedCheckedItems.length)
-        .eql(allCheckedItems.length, `Number of specified checked items doesn't equal number of checked items in DOM`);
-
-      // Check that group has checked items in specified order.
-      // Naive implementation, but (I hope :D) works in most cases.
-      if (opts.sameOrder) {
-        for (let i = 0, len = allCheckedItems.length; i < len; i++) {
-          await t
-            .expect(allCheckedItems[i].selector.textContent)
-            .eql(specifiedCheckedItems[i].selector.textContent);
-        }
-      }
-    }
-
-    return specifiedCheckedItems;
+    const opts = _.chain(new Options(options)).set('counterMethodName', 'expectCheckedItemsCountIs').value();
+    const checkedSpecAndOpts = _.map(specAndOptsList, ([s, o]) => [_.assign({}, s, { checked: true }), o]);
+    return this.expectHasSomethings('Item', checkedSpecAndOpts, opts);
   }
 
   /**
@@ -169,6 +90,27 @@ class CheckableGroupInput extends GroupInput {
    */
   async expectCheckedItemsAre(specAndOptsList) {
     return this.expectHasCheckedItems(specAndOptsList, { only: true, sameOrder: true });
+  }
+
+  /**
+   * Asserts that number of checked item fragments in checkable group input
+   * fragment equal value specified in `count`.
+   *
+   * @param {Number|Array} count - Checkable group input must have that number of checked items to pass assertion. When you need more flexibility than just equality pass an `Array` with TestCafe assertion name (default to 'eql') as first element and expected value for assertion as second, for example, `['gte', 3]`
+   * @param {Options|Object} [options] - Options
+   * @param {Boolean} [options.isNot=false] - When truthy assertion would be negated
+   * @return {Promise<void>}
+   */
+  async expectCheckedItemsCountIs(count, options) {
+    let assertionName = 'eql';
+    const checkedItems = await this.getCheckedItems();
+
+    if (_.isArray(count)) {
+      [assertionName, count] = count;
+    }
+
+    assertionName = utils.buildTestCafeAssertionName(assertionName, options);
+    await t.expect(checkedItems.length)[assertionName](count);
   }
 
   async expectHasValue() {
@@ -203,6 +145,18 @@ class CheckableGroupInput extends GroupInput {
 
     return checkedItems;
   }
+
+  /**
+   * Returns checkable group input item fragment that matches `spec` and `opts`
+   * and also is checked.
+   *
+   * @param {*} [spec] - See `spec` parameter of item fragment's class constructor
+   * @param {*} [opts] - See `opts` parameter of item fragment's class constructor
+   * @returns {Fragment}
+   */
+  getCheckedItem(spec, opts) {
+    return this.getItem(_.assign({}, spec, { checked: true }), opts);
+  }
 }
 
 Object.defineProperties(CheckableGroupInput, {
@@ -210,7 +164,7 @@ Object.defineProperties(CheckableGroupInput, {
     value: fragmentDisplayName
   },
   ItemFragment: {
-    value: Item
+    value: CheckableGroupInput_Item
   }
 });
 

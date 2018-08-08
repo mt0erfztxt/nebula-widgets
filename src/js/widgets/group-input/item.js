@@ -12,9 +12,10 @@ const {
 /**
  * Base class for group input item fragment.
  * 
- * @type {Fragment}
+ * @class
+ * @extends {Fragment}
  */
-const BaseClass = Fragment.makeFragmentClass(Fragment, {
+const GroupInput_ItemBaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
     ['disabled', { antonym: 'enabled' }],
     ['invalid', { antonym: 'valid' }],
@@ -32,14 +33,13 @@ const fragmentDisplayName = 'nebula-widgets.widgets.group-input.item';
 /**
  * Fragment that represents group input item.
  */
-class Item extends BaseClass {
+class GroupInput_Item extends GroupInput_ItemBaseClass {
 
-  // TODO: Copy implementation of spec.label somewhere as reference implementation of custom spec. Remove it because no more errors in group input item.
   /**
    * Creates fragment.
    *
-   * @param {Item|Object} [spec] - When it's already instance of `Item` it would be returned as-is otherwise it's same as `Fragment` constructor `spec` parameter plus it implements following `custom` specs - `label`
-   * @param {String|RegExp} [spec.label] - Error's label. Allows to find item with error text equal or matches given value
+   * @param {GroupInput_Item|Object} [spec] - When it's already instance of `GroupInput_Item` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter plus it implements following `custom` specs - `label`
+   * @param {String|RegExp} [spec.label] - Item's label. Allows to find item with label equal or matches given value
    * @param {Options|Object} [opts] - Options. Same as in `Fragment`
    */
   constructor(spec, opts) {
@@ -242,7 +242,7 @@ class Item extends BaseClass {
   // ---------------------------------------------------------------------------
 }
 
-Object.defineProperties(Item, {
+Object.defineProperties(GroupInput_Item, {
   bemBase: {
     value: 'nw-groupInput-item'
   },
@@ -251,4 +251,4 @@ Object.defineProperties(Item, {
   }
 });
 
-export default Item;
+export default GroupInput_Item;

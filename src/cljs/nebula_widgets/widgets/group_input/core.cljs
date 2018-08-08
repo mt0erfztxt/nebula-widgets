@@ -48,11 +48,13 @@
   (let [[{:keys [columns errors invalid soft-columns] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}
      (into [:div {:class bem-inner}]
-           (for [{:keys [checked] :as item} children]
-             [:div (cond-> (assoc {} :class (bem-utils/build-class bem-item [["checked" checked]]))
-                           (and (integer? columns) (pos? columns))
-                           (update :style assoc (if soft-columns :min-width :width) (str (/ 100 columns) "%")))
-              item]))
+           (for [child children]
+             (let []
+               (js/console.log child)
+               [:div (cond-> (assoc {} :class (bem-utils/build-class bem-item [["checked" (-> child second :checked)]]))
+                             (and (integer? columns) (pos? columns))
+                             (update :style assoc (if soft-columns :min-width :width) (str (/ 100 columns) "%")))
+                child])))
      (when (and invalid (seq errors))
        (into [:ul {:class bem-errors}]
              (for [error errors] [:li {:class bem-error} error])))]))

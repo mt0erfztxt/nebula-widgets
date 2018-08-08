@@ -1,6 +1,6 @@
 import testFragment from 'nebula-test-fragment';
 
-import GroupInputItem from '../checkable-group-input/item';
+import GroupInput_Item from '../group-input/item';
 
 const {
   Fragment,
@@ -9,8 +9,11 @@ const {
 
 /**
  * Base class for checkable group input item fragment.
+ * 
+ * @class
+ * @extends {GroupInput_Item}
  */
-const BaseClass = Fragment.makeFragmentClass(GroupInputItem, {
+const CheckableGroupInput_ItemBaseClass = Fragment.makeFragmentClass(GroupInput_Item, {
   stateParts: [
     'checked'
   ]
@@ -26,12 +29,12 @@ const fragmentDisplayName = 'nebula-widgets.widgets.checkable-group-input.item';
 /**
  * Fragment that represents checkable group input item.
  */
-class Item extends BaseClass {
+class CheckableGroupInput_Item extends CheckableGroupInput_ItemBaseClass {
 
   /**
    * Creates fragment.
    *
-   * @param {Item|Object} [spec] - When it's already instance of `Item` it would be returned as-is otherwise it's same as `Fragment` constructor `spec` parameter
+   * @param {CheckableGroupInput_Item|Object} [spec] - When it's already instance of `CheckableGroupInput_Item` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
    * @param {Options|Object} [opts] - Options
    */
   constructor(spec, opts) {
@@ -105,10 +108,10 @@ class Item extends BaseClass {
 
 }
 
-Object.defineProperties(Item, {
+Object.defineProperties(CheckableGroupInput_Item, {
   displayName: {
     value: fragmentDisplayName
   }
 });
 
-export default Item;
+export default CheckableGroupInput_Item;

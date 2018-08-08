@@ -6,7 +6,7 @@ import typeOf from 'typeof--';
 
 import Input from '../input';
 
-import Item from './item';
+import GroupInput_Item from './item';
 
 const {
   bem: { BemBase },
@@ -17,7 +17,8 @@ const {
 /**
  * Base class for group input fragment.
  * 
- * @extends {Fragment}
+ * @class
+ * @extends {Input}
  */
 const BaseClass = Fragment.makeFragmentClass(Input, {
   stateParts: [
@@ -42,7 +43,7 @@ class GroupInput extends BaseClass {
   /**
    * Creates fragment.
    *
-   * @param {GroupInput|Object} [spec] - When it's already instance of `GroupInput` it would be returned as-is otherwise it's same as `Fragment` constructor `spec` parameter
+   * @param {GroupInput|Object} [spec] - When it's already instance of `GroupInput` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
    * @param {Options|Object} [opts] - Options
    * @param {Object} [opts.ItemFragmentOpts] - Default `opts` for group input item fragment's constructor
    * @param {Object} [opts.ItemFragmentSpec] - Default `spec` for group input item fragment's constructor
@@ -408,7 +409,7 @@ Object.defineProperties(GroupInput, {
     value: fragmentDisplayName
   },
   ItemFragment: {
-    value: Item
+    value: GroupInput_Item
   }
 });
 
