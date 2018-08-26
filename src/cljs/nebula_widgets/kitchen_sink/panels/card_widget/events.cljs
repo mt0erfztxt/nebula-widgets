@@ -21,6 +21,6 @@
 
 ;; bars
 (doseq [placement [:bottom :top]]
-  (doseq [property [:separated?]]
+  (doseq [property [:separated]]
     (apply rf/reg-event-db
            ((juxt common/build-bar-setter-event-name make-bar-setter-event-handler) placement property))))

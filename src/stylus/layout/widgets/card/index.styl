@@ -9,8 +9,7 @@ nw-card_add-separator(placement, is-inner)
 
     border-{_side}: 1px solid _color;
 
-
-.nw-card
+nw-card(bem = 'nw-card')
     @extend $b_card;
     display: flex;
     flex-flow: column;
@@ -62,3 +61,7 @@ nw-card_add-separator(placement, is-inner)
 
     &--flat
         box-shadow: none;
+
+
+.nw-card
+    nw-card: '';
