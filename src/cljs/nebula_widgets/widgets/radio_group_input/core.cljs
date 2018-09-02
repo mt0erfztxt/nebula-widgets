@@ -8,13 +8,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "props is a map as in group-input/widget plus:
-    :items - optional, seq of maps, no default, group's radios, each map is a props for radio-group-input-item widget
-    :value - optional, any, no default, item which :value prop equal (core/=) that value would be checked"
-  [{:keys [cns disabled items value widget] :or {cns "radioGroupInput" widget "icon"} :as props}]
-  (into [group-input/widget (assoc props :cns cns)]
+  "Renders group of radio inputs. Accepts same props map as in group-input/widget plus following:
+  * :items - seq of maps, no default. Group radios, each map is a props for radio-group-input-item widget.
+  * :value - any, no default. Item, which have :value prop equal that value, would be checked."
+  [{:keys [item-props items value] :as props}]
+  (into [group-input/widget (assoc props :bem "nw-radioGroupInput")]
         (for [{v :value :as item} items]
           [radio-group-input-item/widget
-           (-> props :item-props (merge item {:checked  (= v value)
-                                              :disabled disabled
-                                              :widget   widget}))])))
+           (merge item-props item {:checked (= v value)} (select-keys props [:disabled :widget]))])))

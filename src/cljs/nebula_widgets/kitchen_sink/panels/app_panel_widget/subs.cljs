@@ -18,13 +18,13 @@
   :app-panel-widget-panel/left-sidebar
   :<- [:app-panel-widget-panel]
   (fn [panel _]
-    (:left-sidebar panel)))
+    (-> panel :sidebar :left)))
 
 (rf/reg-sub
   :app-panel-widget-panel/right-sidebar
   :<- [:app-panel-widget-panel]
   (fn [panel _]
-    (:right-sidebar panel)))
+    (-> panel :sidebar :right)))
 
 (rf/reg-sub
   :app-panel-widget-panel/top-bar

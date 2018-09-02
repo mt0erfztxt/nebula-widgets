@@ -1,14 +1,13 @@
-@require './error';
-
-
-.nw-groupInput-item
+// Produces styles for widget. Can be called directly, see below, or used as
+// mixin, see `.nw-groupInput-item` bellow for example.
+nw-groupInput-item(bem = 'nw-groupInput-item')
     &__label
         cursor: pointer;
         display: inline-block;
         transition: color .3s;
 
         &:hover
-            color: $group-input-hovered-item-color;
+            // color: $group-input-hovered-item-color;
 
 
     &__errors
@@ -20,7 +19,10 @@
 
 
     &--checked
-        color: $group-input-hovered-item-color;
+        // color: $group-input-hovered-item-color;
+
+    &--checked &__label
+        cursor: default;
 
 
     &--disabled &__label
@@ -31,13 +33,19 @@
             color: inherit;
 
 
+    &--shrinkLabel
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+
     &--widget_button &__label
         display: block;
         padding: 0 8px;
 
 
+    // TODO Move to checkbox-group-item?
     &--widget_button&--cns_checkboxGroupInput-item&--checked
-    &--widget_button&--cns_radioGroupInput-item&--checked
         background-color: $group-input-active-item-background-color;
         box-shadow: inset 0 0 2px alpha(#000, .15);   // TODO: Extract
 
@@ -57,11 +65,12 @@
             content: " ";
             left: 0;
             position: absolute;
-            top: 0;
+            top: 50%;
+            transform: translateY(-50%);
 
 
+    // TODO Move to checkbox-group-item?
     &--widget_icon&--cns_checkboxGroupInput-item &__label
-    &--widget_icon&--cns_radioGroupInput-item &__label
         display: inline-block;
         line-height: 20px;
         vertical-align: middle;
@@ -76,18 +85,10 @@
         sprite($icon_checkbox_checked)
 
 
-    // TODO Move to radio-group-item?
-    &--widget_icon&--cns_radioGroupInput-item &__label:before
-        sprite($icon_radio)
-
-    // TODO Move to radio-group-item?
-    &--widget_icon&--cns_radioGroupInput-item&--checked &__label:before
-        sprite($icon_radio_checked)
-
-
     // TODO Move to checkbox-group-item?
-    // TODO Move to radio-group-item?
-    // Styles for components that augments this component with 'cns'.
     &--cns_checkboxGroupInput-item&--disabled
-    &--cns_radioGroupInput-item&--disabled
         opacity: 0.32;
+
+
+.nw-groupInput-item
+    nw-groupInput-item: '';

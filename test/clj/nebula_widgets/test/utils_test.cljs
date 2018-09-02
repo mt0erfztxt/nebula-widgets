@@ -1,6 +1,6 @@
-(ns nebula-widgets.utils-test
+(ns nebula-widgets.test.utils-test
   (:require
-    [cljs.test :refer-macros [deftest is testing]]
+    [cljs.test :refer [deftest is testing]]
     [nebula-widgets.utils :as utils]))
 
 (deftest calculate-prop-value-test
@@ -71,3 +71,29 @@
     (testing "040 It should return that consists from string segments when keywordize? option is not true"
       (is (= ["ns-segment-a" "ns-segment-b" "foo" "bar"]
              (sut :ns-segment-a.ns-segment-b/foo.bar {:keywordize? false}))))))
+
+(deftest update-hcp-props-test
+  (let [sut #'utils/update-hcp-props
+        initial-props {:foo "bar"}
+        updated-props {:foo 42}
+        updater #(assoc % :foo 42)]
+    (testing "010 It should exist and be a function"
+      (is (fn? sut)))
+    (testing "020 It should correctly update passed args when it has no 'props' nor 'children'"
+      (is (= [{}] (sut [] identity)))
+      (is (= [updated-props] (sut [] updater))))
+    (testing "030 It should correctly update passed args when it has only 'props'"
+      (is (= [initial-props] (sut [initial-props] identity)))
+      (is (= [updated-props] (sut [] updater))))
+    (testing "040 It should correctly update passed args when it has only 'children'"
+      (is (= [{} "foo" "bar" "baz"] (sut ["foo" "bar" "baz"] identity)))
+      (is (= [updated-props "foo" "bar" "baz"] (sut ["foo" "bar" "baz"] updater))))
+    (testing "050 It should correctly update passed args when it has both 'props' and 'children'"
+      (is (= [{} "foo" "bar" "baz"] (sut [{} "foo" "bar" "baz"] identity)))
+      (is (= [updated-props "foo" "bar" "baz"] (sut [initial-props "foo" "bar" "baz"] updater))))
+    (testing "060 It should allow args to be not only vector but any suitable seq"
+      (is (= [{}] (sut '() identity)))
+      (is (= [updated-props] (sut (map identity []) updater))))
+    (testing "070 It should allow args to be something not sequential"
+      (is (= [{} "foo"] (sut "foo" identity)))
+      (is (= [updated-props 42] (sut 42 updater))))))

@@ -1,0 +1,15 @@
+$manPage-title-color = mix($g_color_primary_text, $g_color_background, 50%);
+
+
+@require './example';
+
+
+.manPage
+    margin: 32px auto;
+    width: 960px;
+
+
+    &__title
+        color: $manPage-title-color;
+        margin: 0;
+        padding-bottom: 16px;

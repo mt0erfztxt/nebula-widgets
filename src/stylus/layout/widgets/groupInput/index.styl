@@ -1,4 +1,4 @@
-$group-input-active-item-background-color = $g_color_secondary;
+$group-input-active-item-background-color = darken($g_color_background, 8%);
 $group-input-hovered-item-color           = #fff;   // TODO: Extract
 $group-input-idle-item-background-color   = $g_color_primary;
 $group-input-idle-item-border-color       = $g_color_accent;
@@ -14,7 +14,9 @@ $group-input-height-tiny-bordered  = $group-input-height-tiny  - 2px;
 @require 'item'
 
 
-.nw-groupInput
+// Produces styles for widget. Can be called directly, see below, or used as
+// mixin, see `.nw-groupInput` bellow for example.
+nw-groupInput(bem = 'nw-groupInput')
     color: $g_color_primary_text;
     font-size: 14px;
     line-height: normal;
@@ -66,15 +68,15 @@ $group-input-height-tiny-bordered  = $group-input-height-tiny  - 2px;
 
 
     &--widget_button &__inner
-        background-color: $group-input-idle-item-background-color;
+        // background-color: $group-input-idle-item-background-color;
         border: 1px solid $g_color_secondary;
         overflow: hidden;
 
 
     &--widget_button &__item
-        background-color: $group-input-idle-item-background-color;
+        // background-color: $group-input-idle-item-background-color;
         border-right: 1px solid $g_color_secondary;
-        cursor: pointer;
+        // cursor: pointer;
         display: inline-block;
         line-height: $group-input-height-bordered;
         margin-bottom: 0;
@@ -86,3 +88,11 @@ $group-input-height-tiny-bordered  = $group-input-height-tiny  - 2px;
 
         &:last-child
             border-right: none;
+
+
+    &--widget_button &__item--checked
+        background-color: $group-input-active-item-background-color;
+
+
+.nw-groupInput
+    nw-groupInput: '';

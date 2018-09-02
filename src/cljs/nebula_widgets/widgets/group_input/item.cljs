@@ -2,42 +2,57 @@
   (:require
     [nebula-widgets.utils.bem :as bem-utils]))
 
-(def ^:private bem "nw-groupInput-item")
-(def ^:private bem-input (str bem "__input"))
-(def ^:private bem-label (str bem "__label"))
-(def ^:private bem-label-text (str bem-label "-text"))
+(def ^:private default-bem
+  "nw-groupInput-item")
 
-(def ^:private non-input-props [:cid :cns :label :path :widget])
+(def ^:private non-input-props
+  [:cid :cns :label :path :shrink-label :widget])
 
-(defn- build-class [{:keys [checked cid cns disabled invalid widget]}]
+(defn- build-bem [bem]
+  (or bem default-bem))
+
+(defn- build-input-bem [bem]
+  (str (build-bem bem) "__input"))
+
+(defn- build-label-bem [bem]
+  (str (build-bem bem) "__label"))
+
+(defn- build-label-text-bem [bem]
+  (str (build-label-bem bem) "-text"))
+
+(defn- build-class [{:keys [bem checked cid cns disabled invalid shrink-label widget]}]
   (bem-utils/build-class
-    bem
+    (build-bem bem)
     [["cns" cns]
      ["cid" cid]
      ["checked" checked]
      ["disabled" disabled]
      ["invalid" invalid]
+     ["shrinkLabel" shrink-label]
      ["widget" widget]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: Maybe errors rendering is a responsibility of input component (see :input-cmp prop)?
-;;       Having invalid on item is convenient in UI testing.
 (defn widget
-  "props          - required, map:
-    :checked        - optional, logical true/false, no default
-    :cid            - optional, any, no default, component id
-    :cns            - optional, any, no default, component namespace
-    :disabled       - optional, logical true/false, no default
-    :invalid        - optional, logical true/false, no default
-    :widget         - optional, any, item widget, see concrete group input item implementation for details
-  input-cmp       - required, any component, e.g :input
-  input-cmp-props - required, map, props for :input-cmp, any React supported props can be passed here"
-  [{:keys [label] :as props} input-cmp input-cmp-props]
-  (let [input-hcp [input-cmp (-> (apply dissoc input-cmp-props non-input-props) (assoc :class bem-input))]]
+  "Renders item of group input. Not intended to be used directly but rather as base for item of more specific group
+  input widgets.
+  Arguments:
+  props - required, map:
+  * :bem  - string, nw-groupInput-item by default. Would be used as widget's BEM.
+  * :checked - logical true/false, no default. Whether item is checked or not.
+  * :cid - any, no default. Component id.
+  * :cns - any, no default. Component namespace.
+  * :disabled - logical true/false, no default. Whether item is disabled or not.
+  * :invalid - logical true/false, no default.  Whether item has errors or not.
+  * :shrink-label - logical true/false, no default. Whether to shrink long label (ellipsis) or not.
+  * :widget - any, no default. Widget visual look, see concrete group input item implementation for details.
+  input-cmp - required, any component, e.g :input.
+  input-cmp-props - required, map, props for :input-cmp. Any React supported props can be passed here."
+  [{:keys [bem label] :as props} input-cmp input-cmp-props]
+  (let [input-hcp [input-cmp (-> (apply dissoc input-cmp-props non-input-props) (assoc :class (build-input-bem bem)))]]
     [:div {:class (build-class props)}
      (if label
-       [:label {:class bem-label} input-hcp [:span {:class bem-label-text} label]]
+       [:label {:class (build-label-bem bem)} input-hcp [:span {:class (build-label-text-bem bem)} label]]
        input-hcp)]))

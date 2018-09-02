@@ -1,0 +1,23 @@
+$homePanel-widgetList-item_border--dark  = 1px solid $g_separator_color--dark;
+$homePanel-widgetList-item_border--light = 1px solid $g_separator_color--light;
+
+
+.homePanel-widgetList-item
+    border-bottom: $homePanel-widgetList-item_border--dark
+    border-top: $homePanel-widgetList-item_border--light;
+    font-weight: bold;
+    padding: 2px;
+
+    &:first-child
+        border-top: $homePanel-widgetList-item_border--light;
+
+
+    a
+        color: inherit;
+        display: block;
+        padding: 20px 12px;
+        text-decoration: none;
+        transition: color $g_transition_delay;
+
+        &:hover
+            color: $g_color_primary_text--active;
