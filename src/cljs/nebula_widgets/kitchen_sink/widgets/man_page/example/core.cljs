@@ -36,10 +36,10 @@
   * :cid - any, no default. Component id, it would be rendered as example's number when provided.
   * :title - string, no default. Example title."
   [& _args]
-  (let [[{:keys [cid title]} children] ((juxt r/props r/children) (r/current-component))
+  (let [[{:keys [cid title] :as props} children] ((juxt r/props r/children) (r/current-component))
         last-child (last children)
         code (when (string? last-child) last-child)]
-    [:div {:class bem}
+    [:div {:class (build-class props)}
      [:h4 {:class title-elt-bem}
       (str "Example" (when cid (str " # " cid)) " - ")
       [:span {:class title-text-elt-bem} title]]
