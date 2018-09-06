@@ -41,7 +41,7 @@
               (let [placement (-> placement keyword #{:bottom :top} (or :bottom))
                     bar-props (assoc bar-props :placement placement
                                                :separated (-> separated boolean #{false true} (or true)))]
-                [placement {:props bar-props :hcp [bar-elt-cmp bar-props]}])))
+                [placement {:hcp [bar-elt-cmp bar-props], :props bar-props}])))
        (into {})))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

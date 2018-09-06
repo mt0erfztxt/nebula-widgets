@@ -60,7 +60,7 @@
     items are checked.
   * :widget - any, no default. Widget visual look, see concrete group input implementation for details."
   [& _args]
-  (let [[{:keys [bem columns errors invalid soft-columns] :as props} children] ((juxt r/props r/children) (r/current-component))]
+  (let [[{:keys [bem columns errors soft-columns] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}
      (into [:div {:class (build-inner-elt-bem bem)}]
            (for [child children]
@@ -69,6 +69,6 @@
                              (and (integer? columns) (pos? columns))
                              (update :style assoc (if soft-columns :min-width :width) (str (/ 100 columns) "%")))
                 child])))
-     (when (and invalid (seq errors))
+     (when (and (:invalid props) (seq errors))
        (into [:ul {:class (build-errors-elt-bem bem)}]
              (for [error errors] [:li {:class (build-error-elt-bem bem)} error])))]))

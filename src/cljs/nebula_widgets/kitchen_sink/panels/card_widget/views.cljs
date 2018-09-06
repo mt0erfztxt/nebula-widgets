@@ -26,12 +26,14 @@
          [:div.cardWidgetPanel-adjustableExample
           [card/widget
            {:adjustable true
-            :bars       [{:content [bar-content-cmp "Top bar"] :placement "top" :separated top-bar-separated?}
-                         {:content [bar-content-cmp "Bottom bar"] :separated bottom-bar-separated?}]
-            :flat       true}
+            :bars
+            [{:content [bar-content-cmp "Top bar"] :placement "top" :separated top-bar-separated?}
+             {:content [bar-content-cmp "Bottom bar"] :separated bottom-bar-separated?}]
+            :flat true}
            [body-cmp]]]
          [:div.cardWidgetPanel-nonAdjustableExample
           [card/widget
-           {:bars [{:content [bar-content-cmp "Top bar"] :placement "top" :separated top-bar-separated?}
-                   {:content [bar-content-cmp "Bottom bar"] :placement "bottom" :separated bottom-bar-separated?}]}
+           {:bars
+            [{:content [bar-content-cmp "Top bar"] :placement "top" :separated top-bar-separated?}
+             {:content [bar-content-cmp "Bottom bar"] :placement "bottom" :separated bottom-bar-separated?}]}
            [body-cmp]]]]))))

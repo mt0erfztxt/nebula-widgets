@@ -20,10 +20,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget [& _args]
-  "props - optional map:
-    :bem  - optional, string, nw-title by default, would be used as widget's BEM
-    :cid  - optional, any, no default, component id
-    :size - optional, one of :large, :normal (default), :small or their string/symbol equivalents
-  children - optional, seq of renderables, no default"
-  (let [[props children] ((juxt r/props r/children) (r/current-component))]
-    (into [:div {:class (build-class props)}] children)))
+  "Renders title. Accepts optional props map and any number of child components.
+  Supported props:
+  * :bem  - string, nw-title by default. Would be used as widget's BEM.
+  * :cid  - any, no default. Component id.
+  * :size - one of :large, :normal (default), :small or their string/symbol equivalents. Title size."
+  (let [this (r/current-component)]
+    (into [:div {:class (-> this r/props build-class)}]
+          (r/children this))))

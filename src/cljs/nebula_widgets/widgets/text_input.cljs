@@ -1,11 +1,18 @@
 (ns nebula-widgets.widgets.text-input)
 
-(def ^:private bem "nw-textInput")
+(def ^:private bem
+  "nw-textInput")
 
-(def ^:private custom-props-set #{:busy? :cid :cns :errors :multi-line? :size :text-align})
-(def ^:private size-prop-set #{:large :normal :small})
-(def ^:private text-align-prop-set #{:center :left :right})
+(def ^:private custom-props-set
+  #{:busy? :cid :cns :errors :multi-line? :size :text-align})
 
+(def ^:private size-prop-set
+  #{:large :normal :small})
+
+(def ^:private text-align-prop-set
+  #{:center :left :right})
+
+;; TODO Use bem utils.
 (defn- build-class [{:keys [busy? cid cns disabled errors multi-line? size text-align]}]
   (str bem
        (when cns (str " " bem "--cns_" cns))
