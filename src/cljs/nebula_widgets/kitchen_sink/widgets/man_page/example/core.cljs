@@ -1,14 +1,12 @@
 (ns nebula-widgets.kitchen-sink.widgets.man-page.example.core
   (:require
+    [nebula-widgets.kitchen-sink.widgets.man-page.example.view :as view]
     [nebula-widgets.kitchen-sink.widgets.markdown.core :as markdown]
     [nebula-widgets.utils.bem :as bem-utils]
     [reagent.core :as r]))
 
 (def ^:private bem
   "manPage-example")
-
-(def ^:private view-bem
-  (str bem "-view"))
 
 (def ^:private code-elt-bem
   (str bem "__code"))
@@ -30,8 +28,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "Renders man page example. Accepts optional props map and any number of child components. When last child is a string,
-  it would be rendered as code block (supports Markdown syntax).
+  "Renders man page's example. Accepts optional props map and any number of child components. When last child is a
+  string, it would be rendered as code block (supports Markdown syntax).
   Supported props:
   * :cid - any, no default. Component id, it would be rendered as example's number when provided.
   * :title - string, no default. Example title."
@@ -45,7 +43,7 @@
       [:span {:class title-text-elt-bem} title]]
      (into [:div {:class views-elt-bem}]
            (for [child (if code (butlast children) children)]
-             [:div {:class view-bem} child]))
+             [view/widget child]))
      (when code
        [:div {:class code-elt-bem}
         [markdown/widget (markdown/cleanup-code code)]])]))
