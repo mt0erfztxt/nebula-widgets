@@ -47,19 +47,36 @@
 (defn- example020-item-on-change-handler [_ value]
   (rf/dispatch [(example020-path->keyword :set :value) value]))
 
+(defn- example020-dispatch-set-disabled [disabled]
+  (rf/dispatch [(example020-path->keyword :set :disabled) disabled]))
+
+(defn- example020-disable-button-on-click-handler [_]
+  (example020-dispatch-set-disabled true))
+
+(defn- example020-enable-button-on-click-handler [_]
+  (example020-dispatch-set-disabled false))
+
 (defn- example020-cmp []
   (let [*example020 (rf/subscribe [(example020-path->keyword)])]
     (fn []
-      (let [{:keys [value]} @*example020]
+      (let [{:keys [disabled value]} @*example020]
         [example/widget
          {:cid "020"
           :title "widget with value prop equal to value of one of items and inline props set"}
          [radio-group-input/widget
           {:cid "020"
+           :disabled disabled
            :inline true
            :item-props {:on-change example020-item-on-change-handler}
-           :items (for [n (range 1 19)] {:label (str "Option " n), :value (->> n (str "option") keyword)})
+           :items
+           (for [n (range 1 19)]
+             {:cid (str "020-" n)
+              :label (str "Option " n)
+              :value (->> n (str "option") keyword)})
            :value value}]
+         [:div                                              ; TODO Use button-group widget
+          [:button {:on-click example020-disable-button-on-click-handler :type "button"} "Disable"]
+          [:button {:on-click example020-enable-button-on-click-handler :type "button"} "Enable"]]
          "```clojure
            [radio-group-input/widget
             {:inline true
@@ -130,17 +147,15 @@
             ```"]
          [example/widget
           {:cid "030-030"
-           :title "widget with inline, columns and shrink-labels props set and one item with label that spans multiple columns"}
+           :title "widget with inline, columns and label/shrinked props set and one item with label that spans multiple columns"}
           [radio-group-input/widget
            {:cid "030-030"
             :columns 5
             :item-props {:on-change example030-item-on-change-handler}
             :items
             (for [n (range 1 19) :let [label (if (= n 3) "A label that spans multiple columns" (str "Option " n))]]
-              {:label label
-               :shrink-label true
+              {:label {:shrinked true :text label}
                :value (->> n (str "option") keyword)})
-            :shrink-labels true
             :value value}]
           "```clojure
             [radio-group-input/widget
@@ -148,11 +163,10 @@
               :inline true
               :item-props {:on-change (fn [event value] ...)}
               :items
-              [{:label \"Option 1\" :value :option1}
-               {:label \"Option 2\" :value :option2}
-               {:label \"Option 3\" :value :option3}
+              [{:label {:shrinked true :text \"Option 1\"} :value :option1}
+               {:label {:shrinked true :text \"Option 2\"} :value :option2}
+               {:label {:shrinked true :text \"Option 3\"} :value :option3}
                ...]
-              :shrink-labels true
               :value :option1}]
             ```"]
          [example/widget

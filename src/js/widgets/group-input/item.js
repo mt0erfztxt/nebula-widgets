@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
-import { Selector } from 'testcafe';
+import { Selector, t } from 'testcafe';
 
 const {
   bem: { BemBase },
@@ -15,10 +15,11 @@ const {
  * @class
  * @extends {Fragment}
  */
-const GroupInput_ItemBaseClass = Fragment.makeFragmentClass(Fragment, {
+const GroupInputItemBaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
     ['disabled', { antonym: 'enabled' }],
     ['invalid', { antonym: 'valid' }],
+    ['labelShrinked'],
     ['widget', { isBoolean: false }]
   ]
 });
@@ -33,14 +34,14 @@ const fragmentDisplayName = 'nebula-widgets.widgets.group-input.item';
 /**
  * Fragment that represents group input item.
  */
-class GroupInput_Item extends GroupInput_ItemBaseClass {
+class GroupInputItem extends GroupInputItemBaseClass {
 
   /**
    * Creates fragment.
    *
-   * @param {GroupInput_Item|Object} [spec] - When it's already instance of `GroupInput_Item` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter plus it implements following `custom` specs - `label`
-   * @param {String|RegExp} [spec.label] - Item's label. Allows to find item with label equal or matches given value
-   * @param {Options|Object} [opts] - Options. Same as in `Fragment`
+   * @param {GroupInputItem|Object} [spec]  When it's already instance of `GroupInputItem` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter plus it implements following `custom` specs - `label`
+   * @param {String|RegExp} [spec.label] Item's label. Allows to find item with label equal or matches given value
+   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    */
   constructor(spec, opts) {
     const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
@@ -55,7 +56,7 @@ class GroupInput_Item extends GroupInput_ItemBaseClass {
         const labelElementBemBase = bemBase.setElt('label', { fresh: true });
 
         return selector
-          .filterSelectorByText(sel.child(`.${labelElementBemBase}`), spec.label)
+          .filterByText(sel.child(`.${labelElementBemBase}`), spec.label)
           .parent(`.${bemBase}`)
           .nth(0);
       };
@@ -145,32 +146,32 @@ class GroupInput_Item extends GroupInput_ItemBaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * @name Item#getDisabledPartOfState
+   * @name GroupInputItem#getDisabledPartOfState
    * @method
    * @param {Options|Object} options
    * @returns {Promise<*>}
    */
 
   /**
-   * @name Item#expectIsDisabled
+   * @name GroupInputItem#expectIsDisabled
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsNotDisabled
+   * @name GroupInputItem#expectIsNotDisabled
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsEnabled
+   * @name GroupInputItem#expectIsEnabled
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsNotEnabled
+   * @name GroupInputItem#expectIsNotEnabled
    * @method
    * @returns {Promise<void>}
    */
@@ -182,32 +183,57 @@ class GroupInput_Item extends GroupInput_ItemBaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * @name Item#getInvalidPartOfState
+   * @name GroupInputItem#getInvalidPartOfState
    * @method
    * @param {Options|Object} options
    * @returns {Promise<*>}
    */
 
   /**
-   * @name Item#expectIsInvalid
+   * @name GroupInputItem#expectIsInvalid
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsNotInvalid
+   * @name GroupInputItem#expectIsNotInvalid
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsValid
+   * @name GroupInputItem#expectIsValid
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsNotValid
+   * @name GroupInputItem#expectIsNotValid
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: LabelShrinked (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name GroupInputItem#getLabelShrinkedPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name GroupInputItem#expectIsLabelShrinked
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name GroupInputItem#expectIsNotLabelShrinked
    * @method
    * @returns {Promise<void>}
    */
@@ -219,14 +245,14 @@ class GroupInput_Item extends GroupInput_ItemBaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * @name Item#getWidgetPartOfState
+   * @name GroupInputItem#getWidgetPartOfState
    * @method
    * @param {Options|Object} options
    * @returns {Promise<*>}
    */
 
   /**
-   * @name Item#expectWidgetPartOfStateIs
+   * @name GroupInputItem#expectWidgetPartOfStateIs
    * @method
    * @param {*} value
    * @param {Options|Object} options
@@ -240,9 +266,27 @@ class GroupInput_Item extends GroupInput_ItemBaseClass {
   // ---------------------------------------------------------------------------
   // Other Methods
   // ---------------------------------------------------------------------------
+
+
+  /**
+   * Hovers on item.
+   * 
+   * @param {Options|Object} [options] Options
+   * @param {Number} [options.wait] Wait specified number of milliseconds after hover is done
+   * @returns {Promise<void>}
+   */
+  async hover(options) {
+    const { wait } = new Options(options);
+
+    await t.hover(this.selector);
+
+    if (wait) {
+      await t.wait(wait);
+    }
+  }
 }
 
-Object.defineProperties(GroupInput_Item, {
+Object.defineProperties(GroupInputItem, {
   bemBase: {
     value: 'nw-groupInput-item'
   },
@@ -251,4 +295,4 @@ Object.defineProperties(GroupInput_Item, {
   }
 });
 
-export default GroupInput_Item;
+export default GroupInputItem;

@@ -1,6 +1,6 @@
 import testFragment from 'nebula-test-fragment';
 
-import GroupInput_Item from '../group-input/item';
+import GroupInputItem from '../group-input/item';
 
 const {
   Fragment,
@@ -11,9 +11,9 @@ const {
  * Base class for checkable group input item fragment.
  * 
  * @class
- * @extends {GroupInput_Item}
+ * @extends {GroupInputItem}
  */
-const CheckableGroupInput_ItemBaseClass = Fragment.makeFragmentClass(GroupInput_Item, {
+const CheckableGroupInputItemBaseClass = Fragment.makeFragmentClass(GroupInputItem, {
   stateParts: [
     'checked'
   ]
@@ -29,13 +29,13 @@ const fragmentDisplayName = 'nebula-widgets.widgets.checkable-group-input.item';
 /**
  * Fragment that represents checkable group input item.
  */
-class CheckableGroupInput_Item extends CheckableGroupInput_ItemBaseClass {
+class CheckableGroupInputItem extends CheckableGroupInputItemBaseClass {
 
   /**
    * Creates fragment.
    *
-   * @param {CheckableGroupInput_Item|Object} [spec] - When it's already instance of `CheckableGroupInput_Item` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
-   * @param {Options|Object} [opts] - Options
+   * @param {CheckableGroupInputItem|Object} [spec] When it's already instance of `CheckableGroupInputItem` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
+   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    */
   constructor(spec, opts) {
     const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
@@ -74,7 +74,7 @@ class CheckableGroupInput_Item extends CheckableGroupInput_ItemBaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * @name Item#getCheckedPartOfState
+   * @name CheckableGroupInputItem#getCheckedPartOfState
    * @method
    * @param {Options|Object} options
    * @returns {Promise<*>}
@@ -84,8 +84,8 @@ class CheckableGroupInput_Item extends CheckableGroupInput_ItemBaseClass {
    * Sets item's 'Checked' part of state to boolean true or false depending on
    * whether passed in `value` is truthy or not.
    * 
-   * @param {*} value - Whether item must be checked or not
-   * @param {Options|Object} [options] - Options
+   * @param {*} value Whether item must be checked or not
+   * @param {Options|Object} [options] Options
    * @return {Promise<*>} Current value of 'Checked' part of fragment's state after set state operation is done.
    */
   async setCheckedPartOfState(value, options) {
@@ -95,23 +95,23 @@ class CheckableGroupInput_Item extends CheckableGroupInput_ItemBaseClass {
   }
 
   /**
-   * @name Item#expectIsChecked
+   * @name CheckableGroupInputItem#expectIsChecked
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsNotChecked
+   * @name CheckableGroupInputItem#expectIsNotChecked
    * @method
    * @returns {Promise<void>}
    */
 
 }
 
-Object.defineProperties(CheckableGroupInput_Item, {
+Object.defineProperties(CheckableGroupInputItem, {
   displayName: {
     value: fragmentDisplayName
   }
 });
 
-export default CheckableGroupInput_Item;
+export default CheckableGroupInputItem;

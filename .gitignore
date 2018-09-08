@@ -1,7 +1,5 @@
 *.class
 *.jar
-.hg/
-.hgignore
 .rebel_readline_history
 /.idea
 /.lein-*

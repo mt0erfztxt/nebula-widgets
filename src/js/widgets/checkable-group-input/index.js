@@ -3,7 +3,7 @@ import { t } from 'testcafe';
 
 import GroupInput from '../group-input';
 
-import CheckableGroupInput_Item from './item';
+import CheckableGroupInputItem from './item';
 
 const {
   Fragment,
@@ -26,8 +26,8 @@ class CheckableGroupInput extends GroupInput {
   /**
    * Creates fragment.
    *
-   * @param {CheckableGroupInput|Object} [spec] - When it's already instance of `CheckableGroupInput` it would be returned as-is otherwise it's same as `GroupInput` constructor `spec` parameter
-   * @param {Options|Object} [opts] - Options. Same as in `GroupInput` constructor
+   * @param {CheckableGroupInput|Object} [spec] When it's already instance of `CheckableGroupInput` it would be returned as-is otherwise it's same as `GroupInput` constructor `spec` parameter
+   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    */
   constructor(spec, opts) {
     const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
@@ -50,9 +50,9 @@ class CheckableGroupInput extends GroupInput {
    * specified by `spec` and `opts`. Optionally, asserts that specified checked
    * item found in checkable group input in position specified by `idx`.
    * 
-   * @param {*} [spec] - See `spec` parameter of item fragment's class constructor
-   * @param {*} [opts] - See `opts` parameter of item fragment's class constructor
-   * @param {Number} [idx] - A position (integer gte 0) at which item must be found in group input to pass assertion
+   * @param {*} [spec] See `spec` parameter of item fragment's class constructor
+   * @param {*} [opts] See `opts` parameter of item fragment's class constructor
+   * @param {Number} [idx] A position (integer gte 0) at which item must be found in group input to pass assertion
    * @returns {Promise<Object>} Checked item.
    */
   async expectHasCheckedItem(spec, opts, idx) {
@@ -68,10 +68,10 @@ class CheckableGroupInput extends GroupInput {
    * optionally, asserts that checked items found in checkable group input in
    * same order as in `specAndOptsList`.
    *
-   * @param {Array} specAndOptsList - Each element is a tuple of item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
-   * @param {Options|Object} [options] - Options
-   * @param {Boolean} [options.only=false] - Checkable group input must have only specified checked items to pass assertion
-   * @param {Boolean} [options.sameOrder=false] - Checked items must be found in checkable group input in same order as in `specAndOptsList` to pass assertion. Work only in conjunction with `options.only` parameter
+   * @param {Array} specAndOptsList Each element is a tuple of item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.only=false] Checkable group input must have only specified checked items to pass assertion
+   * @param {Boolean} [options.sameOrder=false] Checked items must be found in checkable group input in same order as in `specAndOptsList` to pass assertion. Work only in conjunction with `options.only` parameter
    * @returns {Promise<Array<Object>>} Checked items.
    */
   async expectHasCheckedItems(specAndOptsList, options) {
@@ -85,7 +85,7 @@ class CheckableGroupInput extends GroupInput {
    * checked item fragments passed in `specAndOptsList` list and they appears
    * in same order as in `specAndOptsList`.
    *
-   * @param {Array} specAndOptsList - Each element is a tuple of item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
+   * @param {Array} specAndOptsList Each element is a tuple of item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
    * @returns {Promise<Array<Object>>} Checked items.
    */
   async expectCheckedItemsAre(specAndOptsList) {
@@ -96,9 +96,9 @@ class CheckableGroupInput extends GroupInput {
    * Asserts that number of checked item fragments in checkable group input
    * fragment equal value specified in `count`.
    *
-   * @param {Number|Array} count - Checkable group input must have that number of checked items to pass assertion. When you need more flexibility than just equality pass an `Array` with TestCafe assertion name (default to 'eql') as first element and expected value for assertion as second, for example, `['gte', 3]`
-   * @param {Options|Object} [options] - Options
-   * @param {Boolean} [options.isNot=false] - When truthy assertion would be negated
+   * @param {Number|Array} count Checkable group input must have that number of checked items to pass assertion. When you need more flexibility than just equality pass an `Array` with TestCafe assertion name (default to 'eql') as first element and expected value for assertion as second, for example, `['gte', 3]`
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.isNot=false] When truthy assertion would be negated
    * @return {Promise<void>}
    */
   async expectCheckedItemsCountIs(count, options) {
@@ -150,8 +150,8 @@ class CheckableGroupInput extends GroupInput {
    * Returns checkable group input item fragment that matches `spec` and `opts`
    * and also is checked.
    *
-   * @param {*} [spec] - See `spec` parameter of item fragment's class constructor
-   * @param {*} [opts] - See `opts` parameter of item fragment's class constructor
+   * @param {*} [spec] See `spec` parameter of item fragment's class constructor
+   * @param {*} [opts] See `opts` parameter of item fragment's class constructor
    * @returns {Fragment}
    */
   getCheckedItem(spec, opts) {
@@ -164,7 +164,7 @@ Object.defineProperties(CheckableGroupInput, {
     value: fragmentDisplayName
   },
   ItemFragment: {
-    value: CheckableGroupInput_Item
+    value: CheckableGroupInputItem
   }
 });
 

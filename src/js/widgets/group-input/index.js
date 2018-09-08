@@ -6,7 +6,7 @@ import typeOf from 'typeof--';
 
 import Input from '../input';
 
-import GroupInput_Item from './item';
+import GroupInputItem from './item';
 
 const {
   bem: { BemBase },
@@ -22,6 +22,7 @@ const {
  */
 const BaseClass = Fragment.makeFragmentClass(Input, {
   stateParts: [
+    ['columns', { isBoolean: false }],
     ['disabled', { antonym: 'enabled' }],
     ['invalid', { antonym: 'valid' }],
     ['widget', { isBoolean: false }]
@@ -43,10 +44,10 @@ class GroupInput extends BaseClass {
   /**
    * Creates fragment.
    *
-   * @param {GroupInput|Object} [spec] - When it's already instance of `GroupInput` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
-   * @param {Options|Object} [opts] - Options
-   * @param {Object} [opts.ItemFragmentOpts] - Default `opts` for group input item fragment's constructor
-   * @param {Object} [opts.ItemFragmentSpec] - Default `spec` for group input item fragment's constructor
+   * @param {GroupInput|Object} [spec] When it's already instance of `GroupInput` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
+   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
+   * @param {Object} [opts.ItemFragmentOpts] Default `opts` for group input item fragment's constructor
+   * @param {Object} [opts.ItemFragmentSpec] Default `spec` for group input item fragment's constructor
    */
   constructor(spec, opts) {
     const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
@@ -121,6 +122,27 @@ class GroupInput extends BaseClass {
       ]);
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // State :: Columns (read-only, not boolean)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name GroupInput#getColumnsPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name GroupInput#expectColumnsPartOfStateIs
+   * @method
+   * @param {*} value
+   * @param {Options|Object} options
+   * @returns {Promise<void>}
+   */
 
   // ---------------------------------------------------------------------------
   // State :: Disabled (read-only, antonym: Enabled)
@@ -203,7 +225,7 @@ class GroupInput extends BaseClass {
   /**
    * Obtains 'Items' part of fragment's state and returns it.
    *
-   * @param {Options|Object} [options] - Options
+   * @param {Options|Object} [options] Options
    * @returns {Promise<Array>}
    */
   async getItemsPartOfState(options) {
@@ -222,8 +244,8 @@ class GroupInput extends BaseClass {
   /**
    * Sets 'Items' part of state to new `value`.
    *
-   * @param {Array} [value] - New value for 'Items' part of fragment's state. Passing `undefined` means that state must stay intact
-   * @param {Options|Object} [options] - Options
+   * @param {Array} [value] New value for 'Items' part of fragment's state. Passing `undefined` means that state must stay intact
+   * @param {Options|Object} [options] Options
    * @returns {Promise<Array>} Fragment's 'Items' part of state.
    * @throws {TypeError} When provided arguments aren't valid.
    */
@@ -258,8 +280,8 @@ class GroupInput extends BaseClass {
    * Asserts that 'Items' part of fragment's state is equal to `value` which
    * is an `Array` of group input items states.
    *
-   * @param {Array} value - Group input items states
-   * @param {Options|Object} [options] - Options
+   * @param {Array} value Group input items states
+   * @param {Options|Object} [options] Options
    * @returns {Promise<void>}
    * @throws {TypeError} When provided arguments aren't valid.
    */
@@ -318,9 +340,9 @@ class GroupInput extends BaseClass {
    * by `spec` and `opts`. Optionally, asserts that specified item found in
    * group input in position specified by `idx`.
    * 
-   * @param {*} [spec] - See `spec` parameter of item fragment's class constructor
-   * @param {*} [opts] - See `opts` parameter of item fragment's class constructor
-   * @param {Number} [idx] - A position (integer gte 0) at which item must be found in group input to pass assertion
+   * @param {*} [spec] See `spec` parameter of item fragment's class constructor
+   * @param {*} [opts] See `opts` parameter of item fragment's class constructor
+   * @param {Number} [idx] A position (integer gte 0) at which item must be found in group input to pass assertion
    * @returns {Promise<void>}
    */
   async expectHasItem(spec, opts, idx) {
@@ -333,10 +355,10 @@ class GroupInput extends BaseClass {
    * specified items, and, also optionally, asserts that items found in group
    * input in same order as in `specAndOptsList`.
    *
-   * @param {Array} specAndOptsList - Each element is a tuple of item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
-   * @param {Options|Object} [options] - Options
-   * @param {Boolean} [options.only=false] - Group input must have only specified items to pass assertion
-   * @param {Boolean} [options.sameOrder=false] - Items must be found in group input in same order as in `specAndOptsList` to pass assertion. Work only in conjunction with `options.only` parameter
+   * @param {Array} specAndOptsList Each element is a tuple of item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.only=false] Group input must have only specified items to pass assertion
+   * @param {Boolean} [options.sameOrder=false] Items must be found in group input in same order as in `specAndOptsList` to pass assertion. Work only in conjunction with `options.only` parameter
    * @returns {Promise<void>}
    */
   async expectHasItems(specAndOptsList, options) {
@@ -347,9 +369,9 @@ class GroupInput extends BaseClass {
    * Asserts that group input item fragment specified by `spec` found in group
    * input fragment at index specified by `idx`.
    *
-   * @param {*} [spec] - See `spec` parameter of item fragment's class constructor
-   * @param {*} [opts] - See `opts` parameter of item fragment's class constructor
-   * @param {Number} idx - Item must be found in group input at this position to pass assertion
+   * @param {*} spec See `spec` parameter of item fragment's class constructor
+   * @param {*} opts See `opts` parameter of item fragment's class constructor
+   * @param {Number} idx Item must be found in group input at this position to pass assertion
    * @returns {Promise<void>}
    */
   async expectItemIndexIs(spec, opts, idx) {
@@ -361,7 +383,7 @@ class GroupInput extends BaseClass {
    * item fragments passed in `specAndOptsList` list and they appears in same
    * order as in `specAndOptsList`.
    *
-   * @param {Array} specAndOptsList - Each element is a tuple of item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
+   * @param {Array} specAndOptsList Each element is a tuple of item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
    * @returns {Promise<void>}
    */
   async expectItemsAre(specAndOptsList) {
@@ -372,9 +394,9 @@ class GroupInput extends BaseClass {
    * Asserts that count of group input item fragments in group input fragment
    * equal value specified in `count`.
    *
-   * @param {Number|Array} count - Group input fragment must have that number of item fragments to pass assertion. When you need more flexibility than just equality pass an `Array` with TestCafe assertion name (default to 'eql') as first element and expected value for assertion as second, for example, `['gte', 3]`
-   * @param {Options|Object} [options] - Options
-   * @param {Boolean} [options.isNot=false] - When truthy assertion would be negated
+   * @param {Number|Array} count Group input fragment must have that number of item fragments to pass assertion. When you need more flexibility than just equality pass an `Array` with TestCafe assertion name (default to 'eql') as first element and expected value for assertion as second, for example, `['gte', 3]`
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.isNot=false] When truthy assertion would be negated
    * @return {Promise<void>}
    */
   async expectItemsCountIs(count, options) {
@@ -388,8 +410,8 @@ class GroupInput extends BaseClass {
   /**
    * Returns group input item fragment that matches `spec` and `opts`.
    *
-   * @param {*} [spec] - See `spec` parameter of item fragment's class constructor
-   * @param {*} [opts] - See `opts` parameter of item fragment's class constructor
+   * @param {*} [spec] See `spec` parameter of item fragment's class constructor
+   * @param {*} [opts] See `opts` parameter of item fragment's class constructor
    * @returns {Fragment}
    */
   getItem(spec, opts) {
@@ -409,7 +431,7 @@ Object.defineProperties(GroupInput, {
     value: fragmentDisplayName
   },
   ItemFragment: {
-    value: GroupInput_Item
+    value: GroupInputItem
   }
 });
 

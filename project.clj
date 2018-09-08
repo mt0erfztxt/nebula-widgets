@@ -1,6 +1,6 @@
 (defproject nebula-widgets "0.1.0-SNAPSHOT"
   :description "Nebula widgets"
-  :url "http://example.com/FIXME"
+  :url "https://github.com/mt0erfztxt/nebula-widgets"
   :license
   {:name "Apache License, Version 2.0"
    :url "https://www.apache.org/licenses/LICENSE-2.0"}
@@ -53,7 +53,7 @@
         :optimizations :none
         :output-dir "target/cljsbuild/public/assets/js/kitchen-sink"
         :output-to "target/cljsbuild/public/assets/js/kitchen-sink.js"
-        :preloads [day8.re-frame-10x.preload devtools.preload]
+        :preloads [#_day8.re-frame-10x.preload devtools.preload]
         :pretty-print true
         :source-map-timestamp true}
        :figwheel {:on-jsload "nebula-widgets.kitchen-sink.views/mount-root-view"}

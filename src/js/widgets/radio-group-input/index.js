@@ -2,12 +2,11 @@ import testFragment from 'nebula-test-fragment';
 
 import CheckableGroupInput from '../checkable-group-input';
 
-import RadioGroupInput_Item from './item';
+import RadioGroupInputItem from './item';
 
 const {
   Fragment,
-  Options,
-  utils
+  Options
 } = testFragment;
 
 /**
@@ -25,15 +24,11 @@ class RadioGroupInput extends CheckableGroupInput {
   /**
    * Creates fragment.
    *
-   * @param {RadioGroupInput|Object} [spec] - When it's already instance of `RadioGroupInput` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
-   * @param {Options|Object} [opts] - Options, see extended fragment's constructor `opts` parameter
+   * @param {RadioGroupInput|Object} [spec] When it's already instance of `RadioGroupInput` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
+   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    */
   constructor(spec, opts) {
-    const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts, {
-      spec: {
-        cns: 'radioGroupInput'
-      }
-    });
+    const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
 
     if (isInstance === true) {
       return spec;
@@ -46,11 +41,14 @@ class RadioGroupInput extends CheckableGroupInput {
 }
 
 Object.defineProperties(RadioGroupInput, {
+  bemBase: {
+    value: 'nw-radioGroupInput'
+  },
   displayName: {
     value: fragmentDisplayName
   },
   ItemFragment: {
-    value: RadioGroupInput_Item
+    value: RadioGroupInputItem
   }
 });
 
