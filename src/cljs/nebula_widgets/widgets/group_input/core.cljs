@@ -38,6 +38,7 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO Allow to pass `:label-shrinked` here to be less verbose in group item?
 (defn widget
   "Renders group input. Not intended to be used directly but rather as base for more specific group input widgets.
   Accepts optional props map and variable number of child components.

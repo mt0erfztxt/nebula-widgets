@@ -6,7 +6,7 @@
   "nw-groupInput-item")
 
 (def ^:private non-input-props
-  [:cid :cns :label :path :shrink-label :widget])
+  [:cid :cns :label :path :label :widget])
 
 (defn- build-bem [bem]
   (or bem default-bem))
@@ -20,7 +20,14 @@
 (defn- build-label-text-bem [bem]
   (str (build-label-bem bem) "-text"))
 
-(defn- build-class [{:keys [bem checked cid cns disabled invalid shrink-label widget]}]
+(defn- extract-label [{:keys [label]}]
+  (if (map? label) (:text label) label))
+
+(defn- extract-label-props [{:keys [label]}]
+  (when (map? label)
+    label))
+
+(defn- build-class [{:keys [bem checked cid cns disabled invalid widget] :as props}]
   (bem-utils/build-class
     (build-bem bem)
     [["cns" cns]
@@ -28,7 +35,7 @@
      ["checked" checked]
      ["disabled" disabled]
      ["invalid" invalid]
-     ["shrinkLabel" shrink-label]
+     ["labelShrinked" (-> props extract-label-props :shrinked)]
      ["widget" widget]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -45,14 +52,19 @@
   * :cid - any, no default. Component id.
   * :cns - any, no default. Component namespace.
   * :disabled - logical true/false, no default. Whether item is disabled or not.
-  * :invalid - logical true/false, no default.  Whether item has errors or not.
-  * :shrink-label - logical true/false, no default. Whether to shrink long label (ellipsis) or not.
+  * :invalid - logical true/false, no default. Whether item has errors or not.
+  * :label - string, renderable or map, no default. Item's label. Can be a map to provide more props for label:
+    - :shrinked - logical true/false, no default. Whether label shrinked (using ellipsis) when too long or not.
+    - :text - string, renderable, no default. Label's text. Same value (not map) that can be passed directly to :label.
   * :widget - any, no default. Widget visual look, see concrete group input item implementation for details.
   input-cmp - required, any component, e.g :input.
   input-cmp-props - required, map, props for :input-cmp. Any React supported props can be passed here."
-  [{:keys [bem label] :as props} input-cmp input-cmp-props]
-  (let [input-hcp [input-cmp (-> (apply dissoc input-cmp-props non-input-props) (assoc :class (build-input-bem bem)))]]
+  [{:keys [bem] :as props} input-cmp input-cmp-props]
+  (let [input-hcp [input-cmp (-> (apply dissoc input-cmp-props non-input-props) (assoc :class (build-input-bem bem)))]
+        label (extract-label props)]
     [:div {:class (build-class props)}
      (if label
-       [:label {:class (build-label-bem bem)} input-hcp [:span {:class (build-label-text-bem bem)} label]]
+       [:label {:class (build-label-bem bem)}
+        input-hcp
+        [:span {:class (build-label-text-bem bem)} label]]
        input-hcp)]))
