@@ -14,6 +14,7 @@
 /styles/icons.styl
 /styles/vendor/dist
 /target
+/webpack-out
 figwheel_server.log
 jsconfig.json
 nebula-widgets.iml

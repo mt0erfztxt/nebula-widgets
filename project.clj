@@ -2,7 +2,7 @@
   :description "Nebula widgets"
   :url "http://example.com/FIXME"
   :license {:name "Apache License, Version 2.0"
-            :url  "https://www.apache.org/licenses/LICENSE-2.0"}
+            :url "https://www.apache.org/licenses/LICENSE-2.0"}
   :dependencies [[com.taoensso/timbre "4.10.0"]
                  [devcards "0.2.5" :exclusions [cljsjs/react cljsjs/react-dom]] ; w/o exclusions compilation fails
                  [funcool/cuerdas "2.0.5"]
@@ -29,60 +29,70 @@
             [lein-doo "0.1.10"]
             [lein-figwheel "0.5.16"]]
   :doo {:build "test"}
-  :aliases {"test-all"      ["do" "clean," "doo" "phantom" "test" "once"]
+  :aliases {"test-all" ["do" "clean," "doo" "phantom" "test" "once"]
             "test-all-auto" ["do" "clean," "doo" "phantom" "test" "auto"]}
   :profiles
-  {:dev           [:project/dev :profiles/dev]
-   :test          [:project/dev :project/test :profiles/test]
-   :project/dev   {:cljsbuild    {:builds
-                                  {:kitchen-sink
-                                   {:compiler     {:asset-path           "/assets/js/kitchen-sink"
-                                                   :closure-defines      {"re_frame.trace.trace_enabled_QMARK_" true}
-                                                   :main                 nebula-widgets.kitchen-sink.core
-                                                   :optimizations        :none
-                                                   :output-dir           "target/cljsbuild/public/assets/js/kitchen-sink"
-                                                   :output-to            "target/cljsbuild/public/assets/js/kitchen-sink.js"
-                                                   :preloads             [day8.re-frame-10x.preload devtools.preload]
-                                                   :pretty-print         true
-                                                   :source-map-timestamp true}
-                                    :figwheel     {:on-jsload "nebula-widgets.kitchen-sink.views/mount-root-view"}
-                                    :source-paths ["src/clj" "src/cljs"]}
-                                   :devcards
-                                   {:compiler     {:asset-path           "/assets/js/devcards"
-                                                   :main                 nebula-widgets.devcards.core
-                                                   :optimizations        :none
-                                                   :output-dir           "target/cljsbuild/public/assets/js/devcards"
-                                                   :output-to            "target/cljsbuild/public/assets/js/devcards.js"
-                                                   :preloads             [devtools.preload]
-                                                   :pretty-print         true
-                                                   :source-map           true
-                                                   :source-map-timestamp true}
-                                    :figwheel     {:devcards true}
-                                    :source-paths ["src/clj" "src/cljs" "devcards_src"]}
-                                   :test
-                                   {:compiler     {:main                 nebula-widgets.runner
-                                                   :optimizations        :none
-                                                   :output-dir           "target/cljsbuild/dev-test/test"
-                                                   :output-to            "target/cljsbuild/dev-test/test.js"
-                                                   :pretty-print         true
-                                                   :source-map           true
-                                                   :source-map-timestamp true}
-                                    :source-paths ["src/clj" "src/cljs" "test/clj"]}}}
-                   :plugins      [[cider/cider-nrepl "0.18.0-SNAPSHOT"]]
-                   :dependencies [[binaryage/devtools "0.9.10"]
-                                  [com.cemerick/piggieback "0.2.2"]
-                                  [cider/piggieback "0.3.6"]
-                                  [doo "0.1.10"]
-                                  [day8.re-frame/re-frame-10x "0.3.3-react16"]
-                                  [figwheel-sidecar "0.5.16"]
-                                  [org.clojure/tools.nrepl "0.2.13"]
-                                  [ring/ring-core "1.6.3"]]
-                   :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}
-                   :figwheel     {:css-dirs          ["resources/public/assets/css"]
-                                  :http-server-root  "public"
-                                  :nrepl-port        7002
-                                  :open-file-command "figwheel-emacsclient"
-                                  :ring-handler      figwheel-handler/handler}}
-   :project/test  {}
-   :profiles/dev  {}
+  {:dev [:project/dev :profiles/dev]
+   :prod [:project/prod :profiles/prod]
+   :test [:project/dev :project/test :profiles/test]
+   :project/dev {:cljsbuild {:builds
+                             {:kitchen-sink
+                              {:compiler {:asset-path "/assets/js/kitchen-sink"
+                                          :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}
+                                          :main nebula-widgets.kitchen-sink.core
+                                          :optimizations :none
+                                          :output-dir "target/cljsbuild/public/assets/js/kitchen-sink"
+                                          :output-to "target/cljsbuild/public/assets/js/kitchen-sink.js"
+                                          :preloads [day8.re-frame-10x.preload devtools.preload]
+                                          :pretty-print true
+                                          :source-map-timestamp true}
+                               :figwheel {:on-jsload "nebula-widgets.kitchen-sink.views/mount-root-view"}
+                               :source-paths ["src/clj" "src/cljs"]}
+                              :devcards
+                              {:compiler {:asset-path "/assets/js/devcards"
+                                          :main nebula-widgets.devcards.core
+                                          :optimizations :none
+                                          :output-dir "target/cljsbuild/public/assets/js/devcards"
+                                          :output-to "target/cljsbuild/public/assets/js/devcards.js"
+                                          :preloads [devtools.preload]
+                                          :pretty-print true
+                                          :source-map true
+                                          :source-map-timestamp true}
+                               :figwheel {:devcards true}
+                               :source-paths ["src/clj" "src/cljs" "devcards_src"]}
+                              :test
+                              {:compiler {:main nebula-widgets.runner
+                                          :optimizations :none
+                                          :output-dir "target/cljsbuild/dev-test/test"
+                                          :output-to "target/cljsbuild/dev-test/test.js"
+                                          :pretty-print true
+                                          :source-map true
+                                          :source-map-timestamp true}
+                               :source-paths ["src/clj" "src/cljs" "test/clj"]}}}
+                 :plugins [[cider/cider-nrepl "0.18.0-SNAPSHOT"]]
+                 :dependencies [[binaryage/devtools "0.9.10"]
+                                [com.cemerick/piggieback "0.2.2"]
+                                [cider/piggieback "0.3.6"]
+                                [doo "0.1.10"]
+                                [day8.re-frame/re-frame-10x "0.3.3-react16"]
+                                [figwheel-sidecar "0.5.16"]
+                                [org.clojure/tools.nrepl "0.2.13"]
+                                [ring/ring-core "1.6.3"]]
+                 :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}
+                 :figwheel {:css-dirs ["resources/public/assets/css"]
+                            :http-server-root "public"
+                            :nrepl-port 7002
+                            :open-file-command "figwheel-emacsclient"
+                            :ring-handler figwheel-handler/handler}}
+   :profiles/dev {}
+   :project/prod
+   {:cljsbuild
+    {:builds
+     {:kitchen-sink
+      {:compiler {:main nebula-widgets.kitchen-sink.core
+                  :optimizations :advanced
+                  :output-to "resources/public/assets/js/kitchen-sink.js"}
+       :source-paths ["src/cljs"]}}}}
+   :profiles/prod {}
+   :project/test {}
    :profiles/test {}})

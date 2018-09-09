@@ -17,31 +17,65 @@ module.exports = function(grunt) {
           force: true
         },
         src: ['resources/public/*']
+      },
+      webpackOut: {
+        options: {
+          force: true
+        },
+        src: ['webpack-out']
       }
     },
     copy: {
-      dev: {
-        files: [{
-          expand: true,
-          cwd: 'node_modules/font-awesome/fonts',
-          src: '**/*',
-          dest: 'resources/public/assets/fonts'
-        }, {
-          expand: true,
-          cwd: 'assets',
-          src: ['**/*', '!icons/**/*'],
-          dest: 'resources/public/assets'
-        }, {
-          expand: true,
-          cwd: 'assets-dev',
-          src: '**/*',
-          dest: 'resources/public/assets'
-        }, {
-          expand: true,
-          cwd: 'src/html',
-          src: ['devcards.html', 'kitchen-sink.html'],
-          dest: 'resources/public'
-        }]
+      fonts: {
+        expand: true,
+        cwd: 'node_modules/font-awesome/fonts',
+        src: '**/*',
+        dest: 'resources/public/assets/fonts'
+      },
+      images: {
+        expand: true,
+        cwd: 'assets/images',
+        src: '**',
+        dest: 'resources/public/assets/images'
+      },
+      kitchenSinkHtml: {
+        src: 'src/html/kitchen-sink.html',
+        dest: 'resources/public/index.html'
+      }
+    },
+    sh: {
+      kitchenSinkDevCljsBuild: {
+        cmd: 'lein cljsbuild once kitchen-sink'
+      },
+      kitchenSinkDevCljsBuildClean: {
+        cmd: 'lein do clean, cljsbuild once kitchen-sink'
+      },
+      kitchenSinkDevCljsWatch: {
+        cmd: 'lein figwheel kitchen-sink'
+      },
+      kitchenSinkDevCljsWatchClean: {
+        cmd: 'lein do clean, figwheel kitchen-sink'
+      },
+      kitchenSinkDevCssBuild: {
+        cmd: 'mkdir -p ./resources/public/assets/css && yarn stylus -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink/index.styl'
+      },
+      kitchenSinkDevCssWatch: {
+        cmd: 'mkdir -p ./resources/public/assets/css && yarn stylus -w -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink/index.styl'
+      },
+      kitchenSinkDevJsBuild: {
+        cmd: 'yarn webpack --config config/webpack.kitchen-sink.dev.js'
+      },
+      kitchenSinkProdCljsBuild: {
+        cmd: 'lein with-profile prod do clean, cljsbuild once kitchen-sink'
+      },
+      kitchenSinkProdCssBuild: {
+        cmd: 'mkdir -p ./resources/public/assets/css && yarn stylus --hoist-atrules -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink/index.styl && yarn cleancss -o resources/public/assets/css/kitchen-sink.css resources/public/assets/css/kitchen-sink.css'
+      },
+      kitchenSinkProdJsBuild: {
+        cmd: 'yarn webpack --config config/webpack.kitchen-sink.prod.js'
+      },
+      kitchenSinkProdStaticServe: {
+        cmd: 'yarn serve --single'
       }
     },
     sprite: {
@@ -51,47 +85,70 @@ module.exports = function(grunt) {
         destCss: 'src/stylus/core/icons.styl',
         imgPath: '../images/icons-' + getCollectiveMd5('assets/images/icons/*.png') + '.png'
       }
-    },
-    stylus: {
-      options: {
-        'include css': true,
-        use: [
-          require('autoprefixer-stylus'),
-          require('axis'),
-          require('jeet'),
-          require('rupture')
-        ]
-      },
-      dev: {
-        options: {
-          compress: false,
-          sourcemap: {
-            inline: true
-          }
-        },
-        files: {
-          'resources/public/assets/css/devcards.css': 'src/stylus/devcards.styl',
-          'resources/public/assets/css/kitchen-sink.css': 'src/stylus/kitchen-sink.styl'
-        }
-      },
-      prod: {
-        files: {
-          'resources/public/assets/css/nebula-widgets.css': 'src/stylus/index.styl'
-        }
-      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-stylus');
+  grunt.loadNpmTasks('grunt-sh');
   grunt.loadNpmTasks('grunt-spritesmith');
 
-  // Task for 'dev' environment.
-  grunt.registerTask('dev:build:assets', ['clean', 'copy:dev', 'sprite', 'stylus:dev']);
-  grunt.registerTask('dev:build', ['dev:build:assets']);
+  // -- Kitchen Sink
 
-  // Task for 'prod' environment.
-  grunt.registerTask('prod:build:assets', ['clean', 'copy:prod', 'sprite', 'stylus:prod']);
-  grunt.registerTask('prod:build', ['prod:build:assets']);
+  grunt.registerTask('kitchenSink:dev:assets:build', [
+    'copy:fonts', 'copy:images', 'copy:kitchenSinkHtml'
+  ]);
+
+  grunt.registerTask('kitchenSink:dev:css:build', [
+    'kitchenSink:dev:assets:build',
+    'sprite',
+    'sh:kitchenSinkDevCssBuild'
+  ]);
+
+  grunt.registerTask('kitchenSink:dev:css:watch', [
+    'kitchenSink:dev:assets:build',
+    'sprite',
+    'sh:kitchenSinkDevCssWatch'
+  ]);
+
+  grunt.registerTask('kitchenSink:dev:cljs:build', [
+    'kitchenSink:dev:js:build',
+    'sh:kitchenSinkDevCljsBuild'
+  ]);
+
+  grunt.registerTask('kitchenSink:dev:cljs:buildClean', [
+    'kitchenSink:dev:js:build',
+    'sh:kitchenSinkDevCljsBuildClean'
+  ]);
+
+  grunt.registerTask('kitchenSink:dev:cljs:watch', [
+    'kitchenSink:dev:js:build',
+    'sh:kitchenSinkDevCljsWatch'
+  ]);
+
+  grunt.registerTask('kitchenSink:dev:cljs:watchClean', [
+    'kitchenSink:dev:js:build',
+    'sh:kitchenSinkDevCljsWatchClean'
+  ]);
+
+  grunt.registerTask('kitchenSink:dev:js:build', [
+    'sh:kitchenSinkDevJsBuild'
+  ]);
+
+  grunt.registerTask('kitchenSink:prod:build', [
+    'clean',
+    'copy:fonts', 'copy:images', 'copy:kitchenSinkHtml',
+    'sprite',
+    'sh:kitchenSinkProdCssBuild',
+    'sh:kitchenSinkProdCljsBuild'
+  ]);
+
+  grunt.registerTask('kitchenSink:prod:build+run', [
+    'kitchenSink:prod:build',
+    'sh:kitchenSinkProdStaticServe'
+  ]);
+
+  grunt.registerTask('kitchenSink:prod:run', [
+    'sh:kitchenSinkProdStaticServe'
+  ]);
 };

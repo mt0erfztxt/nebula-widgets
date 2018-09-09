@@ -11,11 +11,8 @@
     "test": "test/js"
   },
   "scripts": {
-    "dev:watch:stylus:devcards": "mkdir -p ./resources/public/assets/css && stylus -w -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/devcards.css ./src/stylus/devcards.styl",
-    "dev:watch:stylus:kitchen-sink": "mkdir -p ./resources/public/assets/css && stylus -w -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink/index.styl",
-    "local-tests": "npm run test_in-browser_local",
-    "test": "npm run local-tests",
-    "test_in-browser_local": "testcafe chrome test/js/in-browser"
+    "test": "yarn test-js",
+    "test-js": "yarn testcafe chrome test/js/browser"
   },
   "dependencies": {
     "testcafe": "^0.16.2",
@@ -24,19 +21,28 @@
   "devDependencies": {
     "autoprefixer-stylus": "^0.9.4",
     "axis": "^0.6.1",
+    "clean-css-cli": "^4.2.1",
     "font-awesome": "4.7.0",
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-stylus": "^1.2.0",
+    "grunt-sh": "^0.2.0",
     "grunt-spritesmith": "^6.4.0",
     "jeet": "^6.1.2",
     "md5": "^2.2.1",
     "rupture": "^0.6.1",
-    "serve": "^6.5.8",
+    "serve": "^10",
     "sinon": "^6.1.3",
     "stylus": "^0.54.5",
     "unexpected": "^10.38.0",
     "unexpected-sinon": "^10.10.1"
+  },
+  "now": {
+    "static": {
+      "directoryListing": false,
+      "public": "resources/public"
+    },
+    "type": "static"
   }
 }
