@@ -37,6 +37,7 @@
    "test-all-auto" ["do" "clean," "doo" "chrome-headless" "test" "auto"]}
   :profiles
   {:dev [:project/dev :profiles/dev]
+   :prod [:project/prod :profiles/prod]
    :test [:project/dev :project/test :profiles/test]
    :project/dev
    {:cljsbuild
@@ -100,6 +101,20 @@
     :plugins
     [[lein-doo "0.1.10"]
      [lein-figwheel "0.5.16"]]}
-   :project/test {}
    :profiles/dev {}
+   :project/prod
+   {:cljsbuild
+    {:builds
+     {:kitchen-sink
+      {:compiler
+       {:foreign-libs
+        [{:file "webpack-out/kitchen-sink/js-bundle.prod.js"
+          :provides ["js-bundle"]}]
+        :main nebula-widgets.kitchen-sink.core
+        :npm-deps false
+        :optimizations :advanced
+        :output-to "resources/public/assets/js/kitchen-sink.js"}
+       :source-paths ["src/cljs"]}}}}
+   :profiles/prod {}
+   :project/test {}
    :profiles/test {}})
