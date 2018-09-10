@@ -18,7 +18,7 @@ expect.use(unexpectedSinon);
  * @param {String} [exampleCid] 'cid' of man page's example to which radio group input belongs
  * @returns {RadioGroupInput}
  */
-function getRadioInputGroup(cid, exampleCid) {
+function getRadioGroupInput(cid, exampleCid) {
   // TODO Assert on arguments.
 
   let example;
@@ -43,7 +43,7 @@ test("010 It should allow obtain radio group input", async () => {
 
 test("020 It should allow assert on item existence using `#expectHasItem()`", async () => {
   let isThrown = false;
-  const rgi = getRadioInputGroup('010', '010');
+  const rgi = getRadioGroupInput('010', '010');
 
   await rgi.expectIsExist();
   await rgi.expectHasItem({ label: 'Option 2' });
@@ -67,7 +67,7 @@ test("020 It should allow assert on item existence using `#expectHasItem()`", as
 
 test("030 It should allow assert on item existence using `#expectHasItem()` - case with idx", async () => {
   let isThrown = false;
-  const rgi = getRadioInputGroup('010', '010');
+  const rgi = getRadioGroupInput('010', '010');
 
   await rgi.expectIsExist();
   await rgi.expectHasItem({ label: 'Option 3' }, null, 2);
@@ -91,7 +91,7 @@ test("030 It should allow assert on item existence using `#expectHasItem()` - ca
 
 test("040 It should allow assert on items existence using `#expectHasItems()`", async () => {
   let isThrown = false;
-  const rgi = getRadioInputGroup('010', '010');
+  const rgi = getRadioGroupInput('010', '010');
 
   await rgi.expectIsExist();
   await rgi.expectHasItems([
@@ -124,7 +124,7 @@ test("040 It should allow assert on items existence using `#expectHasItems()`", 
 
 test("050 It should allow assert on items existence using `#expectHasItems()` - case with 'only' option", async () => {
   let isThrown = false;
-  const rgi = getRadioInputGroup('010', '010');
+  const rgi = getRadioGroupInput('010', '010');
 
   await rgi.expectIsExist();
   await rgi.expectHasItems([
@@ -159,7 +159,7 @@ test("050 It should allow assert on items existence using `#expectHasItems()` - 
 
 test("060 It should allow assert on items existence using `#expectHasItems()` - case with 'sameOrder' option", async () => {
   let isThrown = false;
-  const rgi = getRadioInputGroup('010', '010');
+  const rgi = getRadioGroupInput('010', '010');
 
   await rgi.expectIsExist();
   await rgi.expectHasItems([
@@ -197,7 +197,7 @@ test("060 It should allow assert on items existence using `#expectHasItems()` - 
 
 test("070 It should allow assert on item's index using `#expectItemIndexIs()`", async () => {
   let isThrown = false;
-  const rgi = getRadioInputGroup('010', '010');
+  const rgi = getRadioGroupInput('010', '010');
 
   await rgi.expectIsExist();
   await rgi.expectItemIndexIs({ label: 'Option 3' }, null, 2);
@@ -220,7 +220,7 @@ test("070 It should allow assert on item's index using `#expectItemIndexIs()`", 
 });
 
 test("080 It should allow assert on items existence at specified indexes using `#expectItemsAre()`", async () => {
-  const rgi = getRadioInputGroup('010', '010');
+  const rgi = getRadioGroupInput('010', '010');
   const expectHasItemsSpy = sinon.spy(rgi, 'expectHasItems');
 
   const items = [
@@ -238,7 +238,7 @@ test("080 It should allow assert on items existence at specified indexes using `
 
 test("090 It should allow assert on number of items using `#expectItemsCountIs()` - simple case", async () => {
   let isThrown = false;
-  const rgi = getRadioInputGroup('010', '010');
+  const rgi = getRadioGroupInput('010', '010');
 
   await rgi.expectIsExist();
   await rgi.expectItemsCountIs(3);
@@ -262,7 +262,7 @@ test("090 It should allow assert on number of items using `#expectItemsCountIs()
 
 test("100 It should allow assert on number of items using `#expectItemsCountIs()` - simple case with 'isNot' option", async () => {
   let isThrown = false;
-  const rgi = getRadioInputGroup('010', '010');
+  const rgi = getRadioGroupInput('010', '010');
 
   await rgi.expectIsExist();
   await rgi.expectItemsCountIs(4, { isNot: true });
@@ -286,7 +286,7 @@ test("100 It should allow assert on number of items using `#expectItemsCountIs()
 
 test("110 It should allow assert on number of items using `#expectItemsCountIs()` - complex case", async () => {
   let isThrown = false;
-  const rgi = getRadioInputGroup('010', '010');
+  const rgi = getRadioGroupInput('010', '010');
 
   await rgi.expectIsExist();
   await rgi.expectItemsCountIs(['gt', 2]);
@@ -312,7 +312,7 @@ test("110 It should allow assert on number of items using `#expectItemsCountIs()
 
 test("120 It should allow assert on number of items using `#expectItemsCountIs()` - complex case with 'isNot' option", async () => {
   let isThrown = false;
-  const rgi = getRadioInputGroup('010', '010');
+  const rgi = getRadioGroupInput('010', '010');
 
   await rgi.expectIsExist();
   await rgi.expectItemsCountIs(['lt', 3], { isNot: true });
@@ -337,7 +337,7 @@ test("120 It should allow assert on number of items using `#expectItemsCountIs()
 
 test("130 It should allow obtain item using `#getItem()`", async () => {
   expect(
-    getRadioInputGroup('010', '010').getItem({ idx: 3 }),
+    getRadioGroupInput('010', '010').getItem({ idx: 3 }),
     'to be a',
     RadioGroupInputItem
   );

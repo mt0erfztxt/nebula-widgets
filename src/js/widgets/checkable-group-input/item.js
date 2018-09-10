@@ -105,7 +105,6 @@ class CheckableGroupInputItem extends CheckableGroupInputItemBaseClass {
    * @method
    * @returns {Promise<void>}
    */
-
 }
 
 Object.defineProperties(CheckableGroupInputItem, {

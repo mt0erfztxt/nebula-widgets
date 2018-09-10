@@ -75,8 +75,14 @@
               :value (->> n (str "option") keyword)})
            :value value}]
          [:div                                              ; TODO Use button-group widget
-          [:button {:on-click example020-disable-button-on-click-handler :type "button"} "Disable"]
-          [:button {:on-click example020-enable-button-on-click-handler :type "button"} "Enable"]]
+          [:button.nw-button.nw-button--cid_disable
+           {:on-click example020-disable-button-on-click-handler
+            :type "button"}
+           "Disable"]
+          [:button.nw-button.nw-button--cid_enable
+           {:on-click example020-enable-button-on-click-handler
+            :type "button"}
+           "Enable"]]
          "```clojure
            [radio-group-input/widget
             {:inline true
