@@ -267,7 +267,6 @@ class GroupInputItem extends GroupInputItemBaseClass {
   // Other Methods
   // ---------------------------------------------------------------------------
 
-
   /**
    * Hovers on item.
    * 

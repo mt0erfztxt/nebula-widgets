@@ -44,22 +44,49 @@
 (def ^:private example020-path->keyword
   (partial panel-path->keyword :example020 "/"))
 
-(defn- example020-item-on-change-handler [_ value]
-  (rf/dispatch [(example020-path->keyword :set :value) value]))
+(defn- example020-item-on-change-handler [_ v]
+  (rf/dispatch [(example020-path->keyword :set :value) v]))
 
-(defn- example020-dispatch-set-disabled [disabled]
-  (rf/dispatch [(example020-path->keyword :set :disabled) disabled]))
+(defn- example020-dispatch-set-disabled [v]
+  (rf/dispatch [(example020-path->keyword :set :disabled) v]))
 
-(defn- example020-disable-button-on-click-handler [_]
+(defn- example020-set-disabled-button-on-click-handler [_]
   (example020-dispatch-set-disabled true))
 
-(defn- example020-enable-button-on-click-handler [_]
+(defn- example020-unset-disabled-button-on-click-handler [_]
   (example020-dispatch-set-disabled false))
+
+(defn- example020-dispatch-set-invalid [v]
+  (rf/dispatch [(example020-path->keyword :set :invalid) v]))
+
+(defn- example020-set-invalid-button-on-click-handler [_]
+  (example020-dispatch-set-invalid true))
+
+(defn- example020-unset-invalid-button-on-click-handler [_]
+  (example020-dispatch-set-invalid false))
+
+(defn- example020-dispatch-set-label-shrinked [v]
+  (rf/dispatch [(example020-path->keyword :set :label-shrinked) v]))
+
+(defn- example020-set-label-shrinked-button-on-click-handler [_]
+  (example020-dispatch-set-label-shrinked true))
+
+(defn- example020-unset-label-shrinked-button-on-click-handler [_]
+  (example020-dispatch-set-label-shrinked false))
+
+(defn- example020-dispatch-set-widget [v]
+  (rf/dispatch [(example020-path->keyword :set :widget) v]))
+
+(defn- example020-set-widget-to-icon-button-on-click-handler [_]
+  (example020-dispatch-set-widget "icon"))
+
+(defn- example020-set-widget-to-native-button-on-click-handler [_]
+  (example020-dispatch-set-widget "native"))
 
 (defn- example020-cmp []
   (let [*example020 (rf/subscribe [(example020-path->keyword)])]
     (fn []
-      (let [{:keys [disabled value]} @*example020]
+      (let [{:keys [disabled invalid label-shrinked value widget]} @*example020]
         [example/widget
          {:cid "020"
           :title "widget with value prop equal to value of one of items and inline props set"}
@@ -71,18 +98,49 @@
            :items
            (for [n (range 1 19)]
              {:cid (str "020-" n)
-              :label (str "Option " n)
-              :value (->> n (str "option") keyword)})
-           :value value}]
+              :invalid invalid
+              :label {:shrinked label-shrinked :text (str "Option " n)}
+              :value (->> n (str "option") keyword)
+              :widget widget})
+           :invalid invalid
+           :value value
+           :widget widget}]
          [:div                                              ; TODO Use button-group widget
-          [:button.nw-button.nw-button--cid_disable
-           {:on-click example020-disable-button-on-click-handler
+          [:button.nw-button.nw-button--cid_setDisabled
+           {:on-click example020-set-disabled-button-on-click-handler
             :type "button"}
-           "Disable"]
-          [:button.nw-button.nw-button--cid_enable
-           {:on-click example020-enable-button-on-click-handler
+           "Set disabled"]
+          [:button.nw-button.nw-button--cid_unsetDisabled
+           {:on-click example020-unset-disabled-button-on-click-handler
             :type "button"}
-           "Enable"]]
+           "Unset disabled"]]
+         [:div                                              ; TODO Use button-group widget
+          [:button.nw-button.nw-button--cid_setInvalid
+           {:on-click example020-set-invalid-button-on-click-handler
+            :type "button"}
+           "Set invalid"]
+          [:button.nw-button.nw-button--cid_unsetInvalid
+           {:on-click example020-unset-invalid-button-on-click-handler
+            :type "button"}
+           "Unset invalid"]]
+         [:div                                              ; TODO Use button-group widget
+          [:button.nw-button.nw-button--cid_setLabelShrinked
+           {:on-click example020-set-label-shrinked-button-on-click-handler
+            :type "button"}
+           "Set labelShrinked"]
+          [:button.nw-button.nw-button--cid_unsetLabelShrinked
+           {:on-click example020-unset-label-shrinked-button-on-click-handler
+            :type "button"}
+           "Unset labelShrinked"]]
+         [:div                                              ; TODO Use button-group widget
+          [:button.nw-button.nw-button--cid_setWidgetToIcon
+           {:on-click example020-set-widget-to-icon-button-on-click-handler
+            :type "button"}
+           "Set widget to icon"]
+          [:button.nw-button.nw-button--cid_setWidgetToNative
+           {:on-click example020-set-widget-to-native-button-on-click-handler
+            :type "button"}
+           "Set widget to native"]]
          "```clojure
            [radio-group-input/widget
             {:inline true
