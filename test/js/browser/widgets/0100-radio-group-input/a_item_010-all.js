@@ -57,7 +57,21 @@ test("010 It should allow obtain radio group input item", async () => {
   await item.expectIsExist();
 });
 
-test("015 It should allow obtain radio group input item - case of custom 'label' spec", async () => {
+test("015 It should allow obtain radio group input item - case of custom 'checked' spec", async () => {
+  const example020 = new ManPageExample({ cid: '020' });
+  await example020.expectIsExist();
+
+  const checkedItem = new RadioGroupInputItem({ checked: true, parent: example020 });
+  await checkedItem.expectIsExist();
+  await checkedItem.hover();
+  await checkedItem.expectIsChecked();
+  await checkedItem.expectExistsAndConformsRequirements({ textContent: 'Option 3' });
+
+  const uncheckedItem = new RadioGroupInputItem({ checked: false, parent: example020 });
+  await uncheckedItem.expectIsExist({ allowMultiple: true });
+});
+
+test("017 It should allow obtain radio group input item - case of custom 'label' spec", async () => {
   const example020 = new ManPageExample({ cid: '020' });
   await example020.expectIsExist();
 

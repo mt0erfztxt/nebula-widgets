@@ -50,19 +50,17 @@ class GroupInputItem extends GroupInputItemBaseClass {
       return spec;
     }
 
-    if (!_.isEmpty(initializedSpec.label)) {
-      initializedSpec.custom = function(sel, spec, opts) {
-        const { bemBase } = opts;
-        const labelElementBemBase = bemBase.setElt('label', { fresh: true });
-
-        return selector
-          .filterByText(sel.child(`.${labelElementBemBase}`), spec.label)
-          .parent(`.${bemBase}`)
-          .nth(0);
-      };
-    }
-
     super(initializedSpec, initializedOpts);
+
+    const { label } = initializedSpec;
+
+    if (!_.isEmpty(label)) {
+      const labelElementBemBase = this.cloneBemBase().setElt('label');
+      this.selector = selector
+        .filterByText(this.selector.child(`.${labelElementBemBase}`), label)
+        .parent(`.${this.bemBase}`)
+        .nth(0);
+    }
 
     return this;
   }

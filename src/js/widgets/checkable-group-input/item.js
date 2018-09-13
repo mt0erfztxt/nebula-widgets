@@ -46,6 +46,17 @@ class CheckableGroupInputItem extends CheckableGroupInputItemBaseClass {
 
     super(initializedSpec, initializedOpts);
 
+    const { checked } = initializedSpec;
+
+    if (checked === true || checked === false) {
+      this.selector = this.selector.filter((node) => {
+        return (checked === node.classList.contains(checkdeModifierClassName));
+      }, {
+        checked,
+        checkdeModifierClassName: this.cloneBemBase().setMod('checked').toString()
+      });
+    }
+
     return this;
   }
 
