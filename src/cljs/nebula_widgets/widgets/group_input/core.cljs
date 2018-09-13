@@ -33,7 +33,7 @@
      ["invalid" invalid]
      ["size" (-> size keyword #{:large :normal :small} (or :normal))]
      ["stacked-on-mobile" stacked-on-mobile]
-     ["widget" (-> widget keyword #{:button :icon :native} (or :icon))]]))
+     ["widget" widget]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -59,7 +59,7 @@
   * :stacked-on-mobile - logical true/false, no default. whether items forcibly stacked on mobile screens.
   * :value - any, no default. Used as values for items, for example, in checkbox group input it used to determine which
     items are checked.
-  * :widget - any, no default. Widget visual look, see concrete group input item implementation for details."
+  * :widget - any, no default. Widget visual look, see concrete group input implementation for details."
   [& _args]
   (let [[{:keys [bem columns errors soft-columns] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}
