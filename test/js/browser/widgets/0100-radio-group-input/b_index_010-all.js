@@ -342,3 +342,111 @@ test("130 It should allow obtain item using `#getItem()`", async () => {
     RadioGroupInputItem
   );
 });
+
+test("140 It should allow assert on checked item existence using `#expectHasCheckedItem()`", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+
+  const item = rgi.getItem({ cid: 'option2' })
+  await item.expectIsExist();
+  await item.expectIsNotChecked();
+  await item.click();
+  await item.expectIsChecked();
+
+  await rgi.expectHasCheckedItem({ label: 'Option 2' });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await item.constructor.reloadBrowserPage();
+  await item.expectIsExist();
+  await item.expectIsNotChecked();
+
+  try {
+    const ci = await rgi.expectHasCheckedItem({ label: 'Option 2' });
+    await ci.expectIsExist();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: .+\.radio-group-input\.item.+DOM element.+: expected 0 to deeply equal 1/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("150 It should allow assert on checked item existence using `#expectHasCheckedItem()` - case with idx", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+
+  const item = rgi.getItem({ cid: 'option2' })
+  await item.expectIsExist();
+  await item.expectIsNotChecked();
+  await item.click();
+  await item.expectIsChecked();
+
+  await rgi.expectHasCheckedItem({ label: 'Option 2' }, null, 1);
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await item.constructor.reloadBrowserPage();
+  await item.expectIsExist();
+  await item.expectIsNotChecked();
+
+  try {
+    const ci = await rgi.expectHasCheckedItem({ label: 'Option 2' }, null, 1);
+    await ci.expectIsExist();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: .+\.radio-group-input\.item#expectIsEqual.+: expected 0 to deeply equal 1/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("160 It should allow assert on checked items existence using `#expectHasCheckedItems()`", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+  await rgi.expectHasCheckedItems([]);
+
+  const item3 = new RadioGroupInputItem({ idx: 2, parent: rgi });
+  await item3.expectIsExist();
+  await item3.click();
+  await rgi.expectHasCheckedItems([
+    [{ label: 'Option 3' }]
+  ]);
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await rgi.expectHasCheckedItems([
+      [{ label: 'Option 2' }]
+    ]);
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: .+\.radio-group-input\.item.+DOM element.+: expected 0 to deeply equal 1/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});

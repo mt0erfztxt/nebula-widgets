@@ -27,9 +27,9 @@
           {:cid "010"
            :item-props {:on-change example010-item-on-change-handler}
            :items
-           [{:label "Option 1" :value :option1}
-            {:label "Option 2" :value :option2}
-            {:label "Option 3" :value :option3}]
+           [{:cid "option1" :label "Option 1" :value :option1}
+            {:cid "option2" :label "Option 2" :value :option2}
+            {:cid "option3" :label "Option 3" :value :option3}]
            :value value}]
          "```clojure
            [radio-group-input/widget

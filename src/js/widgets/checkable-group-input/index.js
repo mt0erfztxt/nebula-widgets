@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 import { t } from 'testcafe';
 
