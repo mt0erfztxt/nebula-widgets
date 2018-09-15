@@ -65,16 +65,16 @@ test("020 It should allow assert on item existence using `#expectHasItem()`", as
   expect(isThrown, 'to be true');
 });
 
-test("030 It should allow assert on item existence using `#expectHasItem()` - case with idx", async () => {
+test("030 It should allow assert on item existence using `#expectHasItem()` - case with 'idx' option", async () => {
   let isThrown = false;
   const rgi = getRadioGroupInput('010', '010');
 
   await rgi.expectIsExist();
-  await rgi.expectHasItem({ label: 'Option 3' }, null, 2);
+  await rgi.expectHasItem({ label: 'Option 3' }, null, { idx: 2 });
 
   // Check failing case.
   try {
-    await rgi.expectHasItem({ label: 'Option 3' }, null, 1);
+    await rgi.expectHasItem({ label: 'Option 3' }, null, { idx: 1 });
   }
   catch (e) {
     expect(
@@ -380,7 +380,7 @@ test("140 It should allow assert on checked item existence using `#expectHasChec
   expect(isThrown, 'to be true');
 });
 
-test("150 It should allow assert on checked item existence using `#expectHasCheckedItem()` - case with idx", async () => {
+test("150 It should allow assert on checked item existence using `#expectHasCheckedItem()` - case with 'idx' option", async () => {
   const rgi = getRadioGroupInput('010', '010');
   await rgi.expectIsExist();
 
@@ -390,7 +390,7 @@ test("150 It should allow assert on checked item existence using `#expectHasChec
   await item.click();
   await item.expectIsChecked();
 
-  await rgi.expectHasCheckedItem({ label: 'Option 2' }, null, 1);
+  await rgi.expectHasCheckedItem({ label: 'Option 2' }, null, { idx: 1 });
 
   // -- Failing case
 
@@ -401,7 +401,7 @@ test("150 It should allow assert on checked item existence using `#expectHasChec
   await item.expectIsNotChecked();
 
   try {
-    const ci = await rgi.expectHasCheckedItem({ label: 'Option 2' }, null, 1);
+    const ci = await rgi.expectHasCheckedItem({ label: 'Option 2' }, null, { idx: 1 });
     await ci.expectIsExist();
   }
   catch (e) {

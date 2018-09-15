@@ -53,11 +53,12 @@ class CheckableGroupInput extends GroupInput {
    * 
    * @param {*} [spec] See `spec` parameter of item fragment's class constructor
    * @param {*} [opts] See `opts` parameter of item fragment's class constructor
-   * @param {Number} [idx] A position (integer gte 0) at which item must be found in group input to pass assertion
+   * @param {Options|Object} [options]
+   * @param {Number} [optios.idx] A position (integer gte 0) at which item must be found in group input to pass assertion
    * @returns {Promise<Object>} Checked item.
    */
-  async expectHasCheckedItem(spec, opts, idx) {
-    return this.expectHasSomething('Item', _.assign({}, spec, { checked: true }), opts, { idx });
+  async expectHasCheckedItem(spec, opts, options) {
+    return this.expectHasSomething('Item', _.assign({}, spec, { checked: true }), opts, options);
   }
 
   /**

@@ -342,11 +342,12 @@ class GroupInput extends BaseClass {
    * 
    * @param {*} [spec] See `spec` parameter of item fragment's class constructor
    * @param {*} [opts] See `opts` parameter of item fragment's class constructor
-   * @param {Number} [idx] A position (integer gte 0) at which item must be found in group input to pass assertion
-   * @returns {Promise<void>}
+   * @param {Options|Object} [options]
+   * @param {Number} [options.idx] A position (integer gte 0) at which item must be found in group input to pass assertion
+   * @returns {Promise<Object>} Item.
    */
-  async expectHasItem(spec, opts, idx) {
-    await this.expectHasSomething('Item', spec, opts, { idx });
+  async expectHasItem(spec, opts, options) {
+    return this.expectHasSomething('Item', spec, opts, options);
   }
 
   /**
