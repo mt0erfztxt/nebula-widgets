@@ -60,8 +60,6 @@ class CheckableGroupInput extends GroupInput {
     return this.expectHasSomething('Item', _.assign({}, spec, { checked: true }), opts, { idx });
   }
 
-  // TODO It can be implemented in terms of `Fragment#expectHasSomethings` if we allow composable specs, e.g.
-  //      we only need to add 'checked: true' to `spec` to get only checked items.
   /**
    * Asserts that checkable group input fragment has checked checkable group
    * input item fragments specified in `specAndOptsList`. Optionally, asserts
@@ -76,7 +74,7 @@ class CheckableGroupInput extends GroupInput {
    * @returns {Promise<Array<Object>>} Checked items.
    */
   async expectHasCheckedItems(specAndOptsList, options) {
-    const opts = _.chain(new Options(options)).set('counterMethodName', 'expectCheckedItemsCountIs').value();
+    const opts = _.chain(new Options(options)).set('expectSomethingsCountIs', 'expectCheckedItemsCountIs').value();
     const checkedSpecAndOpts = _.map(specAndOptsList, ([s, o]) => [_.assign({}, s, { checked: true }), o]);
     return this.expectHasSomethings('Item', checkedSpecAndOpts, opts);
   }
