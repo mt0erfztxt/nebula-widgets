@@ -1,15 +1,14 @@
 import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
-import { t } from 'testcafe';
 
 import GroupInput from '../group-input';
 
+import CheckableGroupInputCheckedItem from './checked-item';
 import CheckableGroupInputItem from './item';
 
 const {
   Fragment,
-  Options,
-  utils
+  Options
 } = testFragment;
 
 /**
@@ -29,6 +28,8 @@ class CheckableGroupInput extends GroupInput {
    *
    * @param {CheckableGroupInput|Object} [spec] When it's already instance of `CheckableGroupInput` it would be returned as-is otherwise it's same as `GroupInput` constructor `spec` parameter
    * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
+   * @param {Object} [opts.CheckedItemFragmentSpec] Default `opts` for checked item fragment's constructor
+   * @param {Object} [opts.CheckedItemFragmentOpts] Default `spec` for checked item fragment's constructor
    */
   constructor(spec, opts) {
     const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
@@ -42,13 +43,50 @@ class CheckableGroupInput extends GroupInput {
     return this;
   }
 
+  /**
+   * BEM base for fragment's 'item--checked' element.
+   *
+   * @returns {BemBase}
+   */
+  get checkedItemElementBemBase() {
+    if (!this._checkedItemElementBemBase) {
+      this._checkedItemElementBemBase = this.cloneBemBase().setElt('item').setMod('checked');
+    }
+
+    return this._checkedItemElementBemBase;
+  }
+
+  /**
+   * TestCafe selector for fragment's 'item--checked' element.
+   *
+   * @returns {Selector}
+   */
+  get checkedItemElementSelector() {
+    if (!this._checkedItemElementSelector) {
+      this._checkedItemElementSelector = this.selector.find(`.${this.checkedItemElementBemBase}`);
+    }
+
+    return this._checkedItemElementSelector;
+  }
+
+  /**
+   * Class of checked item fragment used in this fragment.
+   *
+   * @returns {class}
+   * @throws {TypeError} When checked item fragment class is not valid.
+   */
+  get CheckedItemFragment() {
+    if (!this._CheckedItemFragment) {
+      this._CheckedItemFragment = this.getSomethingFragment('CheckedItem', CheckableGroupInput);
+    }
+
+    return this._CheckedItemFragment;
+  }
+
   // ---------------------------------------------------------------------------
   // Assertions
   // ---------------------------------------------------------------------------
 
-  // TODO How to treat 'idx'? Index in between all items - checked and
-  //      unchecked, or only in checked items?! Also see todo for
-  //      `expectHasCheckedItems()` below.
   /**
    * Asserts that checkable group input fragment has checked item fragment
    * specified by `spec` and `opts`. Optionally, asserts that specified checked
@@ -57,15 +95,13 @@ class CheckableGroupInput extends GroupInput {
    * @param {*} [spec] See `spec` parameter of item fragment's class constructor
    * @param {*} [opts] See `opts` parameter of item fragment's class constructor
    * @param {Options|Object} [options]
-   * @param {Number} [optios.idx] A position (integer gte 0) at which item must be found in group input to pass assertion
+   * @param {Number} [options.idx] A position (integer gte 0) at which checked item must be found in group input to pass assertion
    * @returns {Promise<Object>} Checked item.
    */
   async expectHasCheckedItem(spec, opts, options) {
-    return this.expectHasSomething('Item', _.assign({}, spec, { checked: true }), opts, options);
+    return this.expectHasSomething('CheckedItem', spec, opts, options);
   }
 
-  // TODO How to treat 'only' and 'sameOrder' options? In all or only checked
-  //      items. Also see question for `#expectHasCheckedItem()` above.
   /**
    * Asserts that checkable group input fragment has checked checkable group
    * input item fragments specified in `specAndOptsList`. Optionally, asserts
@@ -80,13 +116,20 @@ class CheckableGroupInput extends GroupInput {
    * @returns {Promise<Array<Object>>} Checked items.
    */
   async expectHasCheckedItems(specAndOptsList, options) {
-    const opts = _
-      .chain(new Options(options))
-      .set('expectHasSomething', 'expectHasCheckedItem')
-      .set('expectSomethingsCountIs', 'expectCheckedItemsCountIs')
-      .value();
-    const checkedSpecAndOpts = _.map(specAndOptsList, ([s, o]) => [_.assign({}, s, { checked: true }), o]);
-    return this.expectHasSomethings('Item', checkedSpecAndOpts, opts);
+    return this.expectHasSomethings('CheckedItem', specAndOptsList, options);
+  }
+
+  /**
+   * Asserts that checkable group input checked item fragment specified by
+   * `spec` found in checkable group input fragment at index specified by `idx`.
+   *
+   * @param {*} spec See `spec` parameter of checked item fragment's class constructor
+   * @param {*} opts See `opts` parameter of checked item fragment's class constructor
+   * @param {Number} idx Checked item must be found in checkable group input at this position to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectCheckedItemIndexIs(spec, opts, idx) {
+    await this.getCheckedItem(spec, opts).expectIndexInParentIs(this.selector, idx);
   }
 
   /**
@@ -94,7 +137,7 @@ class CheckableGroupInput extends GroupInput {
    * checked item fragments passed in `specAndOptsList` list and they appears
    * in same order as in `specAndOptsList`.
    *
-   * @param {Array} specAndOptsList Each element is a tuple of item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
+   * @param {Array} specAndOptsList Each element is a tuple of checked item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
    * @returns {Promise<Array<Object>>} Checked items.
    */
   async expectCheckedItemsAre(specAndOptsList) {
@@ -111,15 +154,7 @@ class CheckableGroupInput extends GroupInput {
    * @return {Promise<void>}
    */
   async expectCheckedItemsCountIs(count, options) {
-    let assertionName = 'eql';
-    const checkedItems = await this.getCheckedItems();
-
-    if (_.isArray(count)) {
-      [assertionName, count] = count;
-    }
-
-    assertionName = utils.buildTestCafeAssertionName(assertionName, options);
-    await t.expect(checkedItems.length)[assertionName](count);
+    await CheckableGroupInput.expectSomethingsCountIs(this.checkedItemElementSelector, count, options);
   }
 
   async expectHasValue() {
@@ -135,40 +170,26 @@ class CheckableGroupInput extends GroupInput {
   // ---------------------------------------------------------------------------
 
   /**
-   * Returns list of all checked item fragments in checkable group input
-   * fragment.
-   * 
-   * @returns {Promise<Array<Object>>}
-   */
-  async getCheckedItems() {
-    const checkedItems = [];
-    const itemsCount = await this.itemElementSelector.count;
-
-    for (let i = 0; i < itemsCount; i++) {
-      const item = this.getItem({ idx: i });
-
-      if (await item.getCheckedPartOfState()) {
-        checkedItems.push(item);
-      }
-    }
-
-    return checkedItems;
-  }
-
-  /**
-   * Returns checkable group input item fragment that matches `spec` and `opts`
-   * and also is checked.
+   * Returns checkable group input checked item fragment that matches `spec`
+   * and `opts`.
    *
-   * @param {*} [spec] See `spec` parameter of item fragment's class constructor
-   * @param {*} [opts] See `opts` parameter of item fragment's class constructor
+   * @param {*} [spec] See `spec` parameter of checked item fragment's class constructor
+   * @param {*} [opts] See `opts` parameter of checked item fragment's class constructor
    * @returns {Fragment}
    */
   getCheckedItem(spec, opts) {
-    return this.getItem(_.assign({}, spec, { checked: true }), opts);
+    return this.getSomething(
+      this.CheckedItemFragment,
+      _.assign({}, this._opts.CheckedItemFragmentSpec, { parent: this.selector }, spec),
+      _.assign({}, this._opts.CheckedItemFragmentOpts, opts)
+    );
   }
 }
 
 Object.defineProperties(CheckableGroupInput, {
+  CheckedItemFragment: {
+    value: CheckableGroupInputCheckedItem
+  },
   displayName: {
     value: fragmentDisplayName
   },

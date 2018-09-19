@@ -55,7 +55,10 @@ class GroupInputItem extends GroupInputItemBaseClass {
     const { label } = initializedSpec;
 
     if (!_.isEmpty(label)) {
-      const labelElementBemBase = this.cloneBemBase().setElt('label');
+      // We need to reset BEM modifier because checked item of checkable group
+      // input has it (--checked) and that would result in
+      // 'nw-groupInput__label--checked' which is not we expect.
+      const labelElementBemBase = this.cloneBemBase().setElt('label').setMod();
       this.selector = selector
         .filterByText(this.selector.child(`.${labelElementBemBase}`), label)
         .parent(`.${this.bemBase}`)

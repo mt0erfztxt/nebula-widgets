@@ -34,7 +34,8 @@ class CheckableGroupInputItem extends CheckableGroupInputItemBaseClass {
   /**
    * Creates fragment.
    *
-   * @param {CheckableGroupInputItem|Object} [spec] When it's already instance of `CheckableGroupInputItem` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
+   * @param {CheckableGroupInputItem|Object} [spec] When it's already instance of `CheckableGroupInputItem` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter plus it implements following custom specs - 'checked'
+   * @param {Boolean} [spec.checked] Allows to find item that is checked or not. Can be combined with specs of extended fragment
    * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    */
   constructor(spec, opts) {

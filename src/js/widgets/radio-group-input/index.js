@@ -2,6 +2,7 @@ import testFragment from 'nebula-test-fragment';
 
 import CheckableGroupInput from '../checkable-group-input';
 
+import RadioGroupInputCheckedItem from './checked-item';
 import RadioGroupInputItem from './item';
 
 const {
@@ -43,6 +44,9 @@ class RadioGroupInput extends CheckableGroupInput {
 Object.defineProperties(RadioGroupInput, {
   bemBase: {
     value: 'nw-radioGroupInput'
+  },
+  CheckedItemFragment: {
+    value: RadioGroupInputCheckedItem
   },
   displayName: {
     value: fragmentDisplayName
