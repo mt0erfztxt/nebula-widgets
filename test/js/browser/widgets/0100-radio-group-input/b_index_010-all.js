@@ -450,3 +450,79 @@ test("160 It should allow assert on checked items existence using `#expectHasChe
 
   expect(isThrown, 'to be true');
 });
+
+test("170 It should allow assert on checked items existence using `#expectHasCheckedItems()` - case with 'only' option", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+  await rgi.expectHasCheckedItems([]);
+
+  const item1 = new RadioGroupInputItem({ idx: 0, parent: rgi });
+  await item1.expectIsExist();
+  await item1.click();
+  await rgi.expectHasCheckedItems([
+    [{ label: 'Option 1' }]
+  ], {
+    only: true
+  });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await rgi.expectHasCheckedItems([
+      [{ label: 'Option 1' }],
+      [{ label: 'Option 2' }]
+    ], {
+      only: true
+    });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: expected 1 to deeply equal 2/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("180 It should allow assert on checked items existence using `#expectHasCheckedItems()` - case with 'sameOrder' option", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+  await rgi.expectHasCheckedItems([]);
+
+  const item2 = new RadioGroupInputItem({ idx: 1, parent: rgi });
+  await item2.expectIsExist();
+  await item2.click();
+  await rgi.expectHasCheckedItems([
+    [{ label: 'Option 2' }]
+  ], {
+    only: true,
+    sameOrder: true
+  });
+});
+
+test("190 It should allow assert on checked items existence at specified indexes using `#expectCheckedItemsAre()`", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+
+  const item3 = new RadioGroupInputItem({ idx: 2, parent: rgi });
+  await item3.expectIsExist();
+  await item3.click();
+
+  const checkedItems = [
+    [{ label: 'Option 3' }]
+  ];
+
+  const expectHasCheckedItemsSpy = sinon.spy(rgi, 'expectHasCheckedItems');
+  await rgi.expectCheckedItemsAre(checkedItems);
+
+  expect(expectHasCheckedItemsSpy, 'was called times', 1);
+  expect(expectHasCheckedItemsSpy, 'to have a call satisfying', {
+    args: [checkedItems, { only: true, sameOrder: true }]
+  });
+});

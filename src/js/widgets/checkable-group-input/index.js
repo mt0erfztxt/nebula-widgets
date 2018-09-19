@@ -46,6 +46,9 @@ class CheckableGroupInput extends GroupInput {
   // Assertions
   // ---------------------------------------------------------------------------
 
+  // TODO How to treat 'idx'? Index in between all items - checked and
+  //      unchecked, or only in checked items?! Also see todo for
+  //      `expectHasCheckedItems()` below.
   /**
    * Asserts that checkable group input fragment has checked item fragment
    * specified by `spec` and `opts`. Optionally, asserts that specified checked
@@ -61,6 +64,8 @@ class CheckableGroupInput extends GroupInput {
     return this.expectHasSomething('Item', _.assign({}, spec, { checked: true }), opts, options);
   }
 
+  // TODO How to treat 'only' and 'sameOrder' options? In all or only checked
+  //      items. Also see question for `#expectHasCheckedItem()` above.
   /**
    * Asserts that checkable group input fragment has checked checkable group
    * input item fragments specified in `specAndOptsList`. Optionally, asserts
@@ -75,7 +80,11 @@ class CheckableGroupInput extends GroupInput {
    * @returns {Promise<Array<Object>>} Checked items.
    */
   async expectHasCheckedItems(specAndOptsList, options) {
-    const opts = _.chain(new Options(options)).set('expectSomethingsCountIs', 'expectCheckedItemsCountIs').value();
+    const opts = _
+      .chain(new Options(options))
+      .set('expectHasSomething', 'expectHasCheckedItem')
+      .set('expectSomethingsCountIs', 'expectCheckedItemsCountIs')
+      .value();
     const checkedSpecAndOpts = _.map(specAndOptsList, ([s, o]) => [_.assign({}, s, { checked: true }), o]);
     return this.expectHasSomethings('Item', checkedSpecAndOpts, opts);
   }

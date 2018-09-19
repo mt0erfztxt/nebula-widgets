@@ -360,10 +360,10 @@ class GroupInput extends BaseClass {
    * @param {Options|Object} [options] Options
    * @param {Boolean} [options.only=false] Group input must have only specified items to pass assertion
    * @param {Boolean} [options.sameOrder=false] Items must be found in group input in same order as in `specAndOptsList` to pass assertion. Work only in conjunction with `options.only` parameter
-   * @returns {Promise<void>}
+   * @returns {Promise<Array<Object>>} Items.
    */
   async expectHasItems(specAndOptsList, options) {
-    await this.expectHasSomethings('Item', specAndOptsList, options);
+    return this.expectHasSomethings('Item', specAndOptsList, options);
   }
 
   /**
