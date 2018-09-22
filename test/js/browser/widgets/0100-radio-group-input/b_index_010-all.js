@@ -576,3 +576,197 @@ test("200 It should allow assert on checked items existence at specified indexes
     args: [checkedItems, { only: true, sameOrder: true }]
   });
 });
+
+test("210 It should allow assert on number of checked items using `#expectCheckedItemsCountIs()` - simple case", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+  await rgi.expectCheckedItemsCountIs(0);
+
+  const item1 = rgi.getItem({ cid: 0 });
+  await item1.click();
+  await rgi.expectCheckedItemsCountIs(1);
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await rgi.expectCheckedItemsCountIs(0);
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected 1 to deeply equal 0'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("220 It should allow assert on number of items using `#expectCheckedItemsCountIs()` - simple case with 'isNot' option", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+  await rgi.expectCheckedItemsCountIs(1, { isNot: true });
+
+  const item1 = rgi.getItem({ cid: 0 });
+  await item1.click();
+  await rgi.expectCheckedItemsCountIs(0, { isNot: true });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await rgi.expectCheckedItemsCountIs(1, { isNot: true });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected 1 to not deeply equal 1'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("230 It should allow assert on number of items using `#expectCheckedItemsCountIs()` - complex case", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+  await rgi.expectCheckedItemsCountIs(['gt', -1]);
+  await rgi.expectCheckedItemsCountIs(['gte', 0]);
+  await rgi.expectCheckedItemsCountIs(['lt', 1]);
+
+  const item1 = rgi.getItem({ cid: 0 });
+  await item1.click();
+  await rgi.expectCheckedItemsCountIs(['gt', 0]);
+  await rgi.expectCheckedItemsCountIs(['gte', 1]);
+  await rgi.expectCheckedItemsCountIs(['lt', 2]);
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await rgi.expectCheckedItemsCountIs(['gte', 2]);
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected 1 to be at least 2'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("240 It should allow assert on number of items using `#expectCheckedItemsCountIs()` - complex case with 'isNot' option", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+  await rgi.expectCheckedItemsCountIs(['lt', 0], { isNot: true });
+  await rgi.expectCheckedItemsCountIs(['gte', 4], { isNot: true });
+
+  const item1 = rgi.getItem({ cid: 0 });
+  await item1.click();
+  await rgi.expectCheckedItemsCountIs(['lt', 1], { isNot: true });
+  await rgi.expectCheckedItemsCountIs(['gte', 2], { isNot: true });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await rgi.expectCheckedItemsCountIs(['lt', 4], { isNot: true });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected 1 to be at least 4'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("250 It should allow assert on whether radio group input has checked items using `#expectHasValue()`", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+  await rgi.expectCheckedItemsCountIs(0);
+
+  const item1 = rgi.getItem({ cid: 0 });
+  await item1.click();
+
+  await rgi.expectCheckedItemsCountIs(1);
+  await rgi.expectHasValue();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.constructor.reloadBrowserPage();
+  await rgi.expectCheckedItemsCountIs(0);
+
+  try {
+    await rgi.expectHasValue();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected 0 to be above 0'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("260 It should allow assert on whether radio group input has no checked items using `#expectHasNoValue()`", async () => {
+  const rgi = getRadioGroupInput('010', '010');
+  await rgi.expectIsExist();
+  await rgi.expectCheckedItemsCountIs(0);
+  await rgi.expectHasNoValue();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  const item1 = rgi.getItem({ cid: 0 });
+  await item1.click();
+  await rgi.expectCheckedItemsCountIs(1);
+
+  try {
+    await rgi.expectHasNoValue();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected 1 to deeply equal 0'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("270 It should allow obtain checked item using `#getCheckedItem()`", async () => {
+  expect(
+    getRadioGroupInput('010', '010').getCheckedItem({ idx: 3 }),
+    'to be a',
+    RadioGroupInputCheckedItem
+  );
+});
