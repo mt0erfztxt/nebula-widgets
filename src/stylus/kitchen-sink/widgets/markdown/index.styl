@@ -1,13 +1,21 @@
 .markdown
+    line-height: 1.68;
+
+
+    a
+        color: inherit;
+
+
     code
         background-color: darken($g_color_background, 8%);
         border: 1px solid mix($g_color_primary_text, $g_color_background, 10%);
         border-radius: 2px;
+        font-size: 13px;
+        padding: 1px 4px;
 
 
     p
-        margin: 0;
-        padding: 16px 0;
+        margin: 16px 0;
 
 
         code
@@ -16,3 +24,18 @@
 
     pre
         margin: 12px 0;
+
+
+        code
+            background-color: darken($g_color_background, 8%);
+            border: 1px solid mix($g_color_primary_text, $g_color_background, 10%);
+            border-radius: 2px;
+            line-height: normal;
+            padding: 16px;
+
+    ul
+        margin: 16px 0;
+
+
+        ul
+            margin: 0;
