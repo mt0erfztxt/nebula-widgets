@@ -43,22 +43,24 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "Renders item of group input. Not intended to be used directly but rather as base for item of more specific group
-  input widgets.
+  "Renders item of [group-input](/widgets/group-input) widget.\\
+  Not intended to be used directly but rather as a base for item of more specific group input widgets.
+
   Arguments:
-  props - required, map:
-  * :bem  - string, nw-groupInput-item by default. Would be used as widget's BEM.
-  * :checked - logical true/false, no default. Whether item is checked or not.
-  * :cid - any, no default. Component id.
-  * :cns - any, no default. Component namespace.
-  * :disabled - logical true/false, no default. Whether item is disabled or not.
-  * :invalid - logical true/false, no default. Whether item has errors or not.
-  * :label - string, renderable or map, no default. Item's label. Can be a map to provide more props for label:
-    - :shrinked - logical true/false, no default. Whether label shrinked (using ellipsis) when too long or not.
-    - :text - string, renderable, no default. Label's text. Same value (not map) that can be passed directly to :label.
-  * :widget - any, no default. Widget visual look, see concrete group input item implementation for details.
-  input-cmp - required, any component, e.g :input.
-  input-cmp-props - required, map, props for :input-cmp. Any React supported props can be passed here."
+  * `props` - required, map. Supported keys:
+    - `:bem`  - string, nw-groupInput-item by default. Would be used as widget's BEM.
+    - `:checked` - logical true/false, no default. Whether item is checked or not.
+    - `:cid` - any, no default. Component id.
+    - `:cns` - any, no default. Component namespace.
+    - `:disabled` - logical true/false, no default. Whether item is disabled or not.
+    - `:invalid` - logical true/false, no default. Whether item has errors or not.
+    - `:label` - string, renderable or map, no default. Item's label. Can be a map to provide more props for label:
+      * `:shrinked` - logical true/false, no default. Whether label shrinked (using ellipsis) when too long or not.
+      * `:text` - string, renderable, no default. Label's text. Same value (not map) that can be passed directly to :label.
+    - `:widget` - any, no default. Widget visual look, see concrete group input item implementation for details.
+  * `input-cmp` - required, any component
+  * `input-cmp-props` - required, map. Props for component passed as :input-cmp. Any React supported props can be passed
+    here."
   [{:keys [bem] :as props} input-cmp input-cmp-props]
   (let [input-hcp [input-cmp (-> (apply dissoc input-cmp-props non-input-props) (assoc :class (build-input-bem bem)))]
         label (extract-label props)]

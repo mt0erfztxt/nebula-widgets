@@ -7,6 +7,10 @@
     [nebula-widgets.widgets.radio-group-input.core :as radio-group-input]
     [re-frame.core :as rf]))
 
+;;------------------------------------------------------------------------------
+;; Example 010
+;;------------------------------------------------------------------------------
+
 (def ^:private panel-path->keyword
   (partial utils/path->keyword :panels :radio-group-input-widget))
 
@@ -40,6 +44,10 @@
               {:label \"Option 3\" :value :option3}]
              :value :option9}]
            ```"]))))
+
+;;------------------------------------------------------------------------------
+;; Example 020
+;;------------------------------------------------------------------------------
 
 (def ^:private example020-path->keyword
   (partial panel-path->keyword :example020 "/"))
@@ -153,6 +161,10 @@
              :value :option3}]
            ```"]))))
 
+;;------------------------------------------------------------------------------
+;; Example 030
+;;------------------------------------------------------------------------------
+
 (def ^:private example030-path->keyword
   (partial panel-path->keyword :example030 "/"))
 
@@ -260,6 +272,10 @@
               :value :option1}]
             ```"]]))))
 
+;;------------------------------------------------------------------------------
+;; Example 040
+;;------------------------------------------------------------------------------
+
 (def ^:private example040-path->keyword
   (partial panel-path->keyword :example040 "/"))
 
@@ -308,7 +324,7 @@
 (defn widget []
   [:div.radioGroupInputWidgetPanel
    [man-page/widget {:title "Radio group input widget"}
-    [markdown/widget "Widget that represents group of inputs of type `radio`."]
+    [markdown/widget (-> #'radio-group-input/widget meta :doc)]
     [example010-cmp]
     [example020-cmp]
     [example030-cmp]

@@ -7,9 +7,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "Renders item of radio group input. Accepts same props map as in group-input-item/widget but:
-  * :bem - forcibly set to nw-radioGroupInput-item.
-  * :widget - set to :icon by default."
+  "Renders item of [radio-group-input](/widgets/radio-group-input) widget.
+
+  Arguments:
+  * `props` - optional, map. Same as in [group-input-item](/widgets/group-input-item) widget, plus:
+    - `:bem` - forcibly set to 'nw-radioGroupInput-item'
+    - `:widget` - set to :icon by default"
   [{:keys [checked disabled on-change value widget] :as props}]
   [group-input-item/widget
    (assoc props :bem "nw-radioGroupInput-item", :widget (if (nil? widget) :icon widget))

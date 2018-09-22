@@ -8,10 +8,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "Renders group of radio inputs. Accepts same props map as in group-input/widget plus following:
-  * :items - seq of maps, no default. Group radios, each map is a props for radio-group-input-item widget.
-  * :value - any, no default. Item, which have :value prop equal that value, would be checked.
-  * :widget - one of :button, :icon (default), :native or their string/symbol equivalents. Specifies how widget looks."
+  "Renders group of radio inputs.
+
+  Arguments:
+  * `props` - optional, map. Same as in [group-input](/widgets/group-input) widget, plus:
+    - `:items` - seq of maps, no default. Group items, each map is a props for
+      [radio-group-input-item](/widgets/radio-group-input-item) widget.
+    - `:value` - any, no default.Item, which have :value prop equal that value, would be checked.
+    - `:widget` - one of :button, :icon (default), :native or their string/symbol equivalents. Specifies how widget looks."
   [{:keys [item-props items value] :as props}]
   (let [widget (-> props :widget keyword #{:button :icon :native} (or :icon))]
     (into [group-input/widget (assoc props :bem "nw-radioGroupInput")]

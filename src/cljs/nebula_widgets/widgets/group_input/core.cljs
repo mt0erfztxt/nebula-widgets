@@ -40,26 +40,29 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "Renders group input. Not intended to be used directly but rather as base for more specific group input widgets.
-  Accepts optional props map and variable number of child components.
-  Supported props:
-  * :bem - string, nw-groupInput by default. Would be used as widget's BEM.
-  * :cid - any, no default. Component id.
-  * :columns - integer, no default. Number of items per row.
-  * :cns - any, no default. Component namespace.
-  * :disabled - logical true/false, no default. Whether widget disabled or not.
-  * :equidistant - logical true/false, no default. Whether items have same width.
-  * :errors - seq of strings, no default. would be displayed only when not empty and :invalid.
-  * :inline - logical true/false, no default. Whether items grouped stacked or inline.
-  * :invalid - logical true/false, no default. Whether widget is in invalid state or not.
-  * :item-props - map, no default. Common props for all items in group, for example, event handlers.
-  * :size - one of :large, :normal (default), :small or their string/symbol equivalents. Widget size.
-  * :soft-columns - logical true/false, no default. When logical true and :columns is also set then 'min-width' style is
-    used instead of 'width'.
-  * :stacked-on-mobile - logical true/false, no default. whether items forcibly stacked on mobile screens.
-  * :value - any, no default. Used as values for items, for example, in checkbox group input it used to determine which
-    items are checked.
-  * :widget - any, no default. Widget visual look, see concrete group input implementation for details."
+  "Renders group input.\\
+  Not intended to be used directly but rather as base for more specific group input widgets.
+
+  Arguments:
+  * `props` - optional, map, no default. Supported keys:
+    - `:bem` - string, 'nw-groupInput' by default. Would be used as widget's BEM.
+    - `:cid` - any, no default. Component id.
+    - `:columns` - integer, no default. Number of items per row.
+    - `:cns` - any, no default. Component namespace.
+    - `:disabled` - logical true/false, no default. Whether widget disabled or not.
+    - `:equidistant` - logical true/false, no default. Whether items have same width.
+    - `:errors` - seq of strings, no default. would be displayed only when not empty and :invalid.
+    - `:inline` - logical true/false, no default. Whether items grouped stacked or inline.
+    - `:invalid` - logical true/false, no default. Whether widget is in invalid state or not.
+    - `:item-props` - map, no default. Common props for all items in group, for example, event handlers.
+    - `:size` - one of :large, :normal (default), :small or their string/symbol equivalents. Widget size.
+    - `:soft-columns` - logical true/false, no default. When logical true and :columns is also set then 'min-width' style
+      is used instead of 'width'.
+    - `:stacked-on-mobile` - logical true/false, no default. whether items forcibly stacked on mobile screens.
+    - `:value` - any, no default. Used as values for items, for example, in checkbox group input it used to determine
+      which items are checked.
+    - `:widget` - any, no default. Widget visual look, see concrete group input implementation for details.
+  *  `& children` - optional, any number of child components"
   [& _args]
   (let [[{:keys [bem columns errors soft-columns] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}
