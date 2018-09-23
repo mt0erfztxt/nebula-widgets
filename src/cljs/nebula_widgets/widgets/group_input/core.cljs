@@ -41,7 +41,7 @@
 
 (defn widget
   "Renders group input.\\
-  Not intended to be used directly but rather as base for more specific group input widgets.
+  Not intended to be used directly but rather as a base for more specific group input widgets.
 
   Arguments:
   * `props` - optional, map, no default. Supported keys:

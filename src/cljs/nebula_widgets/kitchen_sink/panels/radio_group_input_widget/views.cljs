@@ -324,7 +324,10 @@
 (defn widget []
   [:div.radioGroupInputWidgetPanel
    [man-page/widget {:title "Radio group input widget"}
-    [markdown/widget (-> #'radio-group-input/widget meta :doc)]
+    [markdown/widget
+     (str
+       (-> #'radio-group-input/widget meta :doc)
+       "\n\n## Examples")]
     [example010-cmp]
     [example020-cmp]
     [example030-cmp]
