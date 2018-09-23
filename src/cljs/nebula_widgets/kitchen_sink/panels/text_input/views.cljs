@@ -12,6 +12,6 @@
     (fn []
       [:div.textInputPanel
        [text-input/widget
-        {:busy?     true
+        {:busy? true
          :on-change #(rf/dispatch [:text-input-panel/set-value (-> % .-target .-value)])
-         :value     @value-atom}]])))
+         :value @value-atom}]])))

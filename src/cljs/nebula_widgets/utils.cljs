@@ -1,18 +1,23 @@
 (ns nebula-widgets.utils
   (:require
-    [clojure.string :as str]))
+    [clojure.string :as str]
+    [oops.core :as oops]))
 
 (defn calculate-prop-value
   "Returns keyword from coll of supported keywords when keyword made from value found in it or default value otherwise.
   Default value is optional and is nil by default."
   ([value supported-keywords] (calculate-prop-value value supported-keywords nil))
-  ([value supported-keywords default-value] (-> value keyword ((set supported-keywords)) (or default-value))))
+  ([value supported-keywords default-value]
+   (-> value
+       (keyword)
+       ((set supported-keywords))
+       (or default-value))))
 
 (defn calculate-size-like-prop-value [value]
   (calculate-prop-value value #{:large :normal :small}))
 
 (defn event->checked [event]
-  (-> event .-target .-checked))
+  (oops/oget event "target.checked"))
 
 (defn path-str->segments
   "Returns lazy seq of segments (strings) obtained by splitting passed in string on dot character. Returned seq doesn't
@@ -59,6 +64,7 @@
               (true? keywordize?) (map keyword)))))
 
 ;; TODO: Unused?
+;; TODO: Tests.
 (defn- set-map-defaults
   "Accepts two maps and returns map which is a result of merging key-value pairs from second map into first when first
   map doesn't contain key from second or when replace-nil option is set to true."
@@ -71,3 +77,13 @@
          (assoc acc k v) acc))
      m
      defaults)))
+
+(defn update-hcp-props
+  "Accepts seq with first optional props map element and optional children elements and updates props using specified
+  updater. When no props map in seq then updater would be called with empty map. Returns Hiccup vector with updated
+  props map as first element and all children elements from args."
+  [args updater]
+  (let [[p & c :as args] (if (sequential? args) args [args])
+        has-props? (map? p)
+        props (updater (if has-props? p {}))]
+    (into [props] (if has-props? c args))))

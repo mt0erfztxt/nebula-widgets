@@ -1,6 +1,6 @@
 import testFragment from 'nebula-test-fragment';
 
-import GroupInputItem from '../checkable-group-input/item';
+import GroupInputItem from '../group-input/item';
 
 const {
   Fragment,
@@ -9,8 +9,11 @@ const {
 
 /**
  * Base class for checkable group input item fragment.
+ * 
+ * @class
+ * @extends {GroupInputItem}
  */
-const BaseClass = Fragment.makeFragmentClass(GroupInputItem, {
+const CheckableGroupInputItemBaseClass = Fragment.makeFragmentClass(GroupInputItem, {
   stateParts: [
     'checked'
   ]
@@ -26,13 +29,14 @@ const fragmentDisplayName = 'nebula-widgets.widgets.checkable-group-input.item';
 /**
  * Fragment that represents checkable group input item.
  */
-class Item extends BaseClass {
+class CheckableGroupInputItem extends CheckableGroupInputItemBaseClass {
 
   /**
    * Creates fragment.
    *
-   * @param {Item|Object} [spec] - When it's already instance of `Item` it would be returned as-is otherwise it's same as `Fragment` constructor `spec` parameter
-   * @param {Options|Object} [opts] - Options
+   * @param {CheckableGroupInputItem|Object} [spec] When it's already instance of `CheckableGroupInputItem` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter plus it implements following custom specs - 'checked'
+   * @param {Boolean} [spec.checked] Allows to find item that is checked or not. Can be combined with specs of extended fragment
+   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    */
   constructor(spec, opts) {
     const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
@@ -42,6 +46,17 @@ class Item extends BaseClass {
     }
 
     super(initializedSpec, initializedOpts);
+
+    const { checked } = initializedSpec;
+
+    if (checked === true || checked === false) {
+      this.selector = this.selector.filter((node) => {
+        return (checked === node.classList.contains(checkdeModifierClassName));
+      }, {
+        checked,
+        checkdeModifierClassName: this.cloneBemBase().setMod('checked').toString()
+      });
+    }
 
     return this;
   }
@@ -71,7 +86,7 @@ class Item extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * @name Item#getCheckedPartOfState
+   * @name CheckableGroupInputItem#getCheckedPartOfState
    * @method
    * @param {Options|Object} options
    * @returns {Promise<*>}
@@ -81,8 +96,8 @@ class Item extends BaseClass {
    * Sets item's 'Checked' part of state to boolean true or false depending on
    * whether passed in `value` is truthy or not.
    * 
-   * @param {*} value - Whether item must be checked or not
-   * @param {Options|Object} [options] - Options
+   * @param {*} value Whether item must be checked or not
+   * @param {Options|Object} [options] Options
    * @return {Promise<*>} Current value of 'Checked' part of fragment's state after set state operation is done.
    */
   async setCheckedPartOfState(value, options) {
@@ -92,23 +107,22 @@ class Item extends BaseClass {
   }
 
   /**
-   * @name Item#expectIsChecked
+   * @name CheckableGroupInputItem#expectIsChecked
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsNotChecked
+   * @name CheckableGroupInputItem#expectIsNotChecked
    * @method
    * @returns {Promise<void>}
    */
-
 }
 
-Object.defineProperties(Item, {
+Object.defineProperties(CheckableGroupInputItem, {
   displayName: {
     value: fragmentDisplayName
   }
 });
 
-export default Item;
+export default CheckableGroupInputItem;

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
-import { Selector } from 'testcafe';
+import { Selector, t } from 'testcafe';
 
 const {
   bem: { BemBase },
@@ -12,12 +12,14 @@ const {
 /**
  * Base class for group input item fragment.
  * 
- * @type {Fragment}
+ * @class
+ * @extends {Fragment}
  */
-const BaseClass = Fragment.makeFragmentClass(Fragment, {
+const GroupInputItemBaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
     ['disabled', { antonym: 'enabled' }],
     ['invalid', { antonym: 'valid' }],
+    ['labelShrinked'],
     ['widget', { isBoolean: false }]
   ]
 });
@@ -32,15 +34,14 @@ const fragmentDisplayName = 'nebula-widgets.widgets.group-input.item';
 /**
  * Fragment that represents group input item.
  */
-class Item extends BaseClass {
+class GroupInputItem extends GroupInputItemBaseClass {
 
-  // TODO: Copy implementation of spec.label somewhere as reference implementation of custom spec. Remove it because no more errors in group input item.
   /**
    * Creates fragment.
    *
-   * @param {Item|Object} [spec] - When it's already instance of `Item` it would be returned as-is otherwise it's same as `Fragment` constructor `spec` parameter plus it implements following `custom` specs - `label`
-   * @param {String|RegExp} [spec.label] - Error's label. Allows to find item with error text equal or matches given value
-   * @param {Options|Object} [opts] - Options. Same as in `Fragment`
+   * @param {GroupInputItem|Object} [spec]  When it's already instance of `GroupInputItem` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter plus it implements following `custom` specs - `label`
+   * @param {String|RegExp} [spec.label] Item's label. Allows to find item with label equal or matches given value
+   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    */
   constructor(spec, opts) {
     const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
@@ -49,19 +50,20 @@ class Item extends BaseClass {
       return spec;
     }
 
-    if (!_.isEmpty(initializedSpec.label)) {
-      initializedSpec.custom = function(sel, spec, opts) {
-        const { bemBase } = opts;
-        const labelElementBemBase = bemBase.setElt('label', { fresh: true });
-
-        return selector
-          .filterSelectorByText(sel.child(`.${labelElementBemBase}`), spec.label)
-          .parent(`.${bemBase}`)
-          .nth(0);
-      };
-    }
-
     super(initializedSpec, initializedOpts);
+
+    const { label } = initializedSpec;
+
+    if (!_.isEmpty(label)) {
+      // We need to reset BEM modifier because checked item of checkable group
+      // input has it (--checked) and that would result in
+      // 'nw-groupInput__label--checked' which is not we expect.
+      const labelElementBemBase = this.cloneBemBase().setElt('label').setMod();
+      this.selector = selector
+        .filterByText(this.selector.child(`.${labelElementBemBase}`), label)
+        .parent(`.${this.bemBase}`)
+        .nth(0);
+    }
 
     return this;
   }
@@ -145,32 +147,32 @@ class Item extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * @name Item#getDisabledPartOfState
+   * @name GroupInputItem#getDisabledPartOfState
    * @method
    * @param {Options|Object} options
    * @returns {Promise<*>}
    */
 
   /**
-   * @name Item#expectIsDisabled
+   * @name GroupInputItem#expectIsDisabled
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsNotDisabled
+   * @name GroupInputItem#expectIsNotDisabled
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsEnabled
+   * @name GroupInputItem#expectIsEnabled
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsNotEnabled
+   * @name GroupInputItem#expectIsNotEnabled
    * @method
    * @returns {Promise<void>}
    */
@@ -182,32 +184,57 @@ class Item extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * @name Item#getInvalidPartOfState
+   * @name GroupInputItem#getInvalidPartOfState
    * @method
    * @param {Options|Object} options
    * @returns {Promise<*>}
    */
 
   /**
-   * @name Item#expectIsInvalid
+   * @name GroupInputItem#expectIsInvalid
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsNotInvalid
+   * @name GroupInputItem#expectIsNotInvalid
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsValid
+   * @name GroupInputItem#expectIsValid
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Item#expectIsNotValid
+   * @name GroupInputItem#expectIsNotValid
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: LabelShrinked (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name GroupInputItem#getLabelShrinkedPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name GroupInputItem#expectIsLabelShrinked
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name GroupInputItem#expectIsNotLabelShrinked
    * @method
    * @returns {Promise<void>}
    */
@@ -219,14 +246,14 @@ class Item extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * @name Item#getWidgetPartOfState
+   * @name GroupInputItem#getWidgetPartOfState
    * @method
    * @param {Options|Object} options
    * @returns {Promise<*>}
    */
 
   /**
-   * @name Item#expectWidgetPartOfStateIs
+   * @name GroupInputItem#expectWidgetPartOfStateIs
    * @method
    * @param {*} value
    * @param {Options|Object} options
@@ -240,9 +267,26 @@ class Item extends BaseClass {
   // ---------------------------------------------------------------------------
   // Other Methods
   // ---------------------------------------------------------------------------
+
+  /**
+   * Hovers on item.
+   * 
+   * @param {Options|Object} [options] Options
+   * @param {Number} [options.wait] Wait specified number of milliseconds after hover is done
+   * @returns {Promise<void>}
+   */
+  async hover(options) {
+    const { wait } = new Options(options);
+
+    await t.hover(this.selector);
+
+    if (wait) {
+      await t.wait(wait);
+    }
+  }
 }
 
-Object.defineProperties(Item, {
+Object.defineProperties(GroupInputItem, {
   bemBase: {
     value: 'nw-groupInput-item'
   },
@@ -251,4 +295,4 @@ Object.defineProperties(Item, {
   }
 });
 
-export default Item;
+export default GroupInputItem;

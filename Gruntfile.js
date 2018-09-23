@@ -75,7 +75,7 @@ module.exports = function(grunt) {
         cmd: 'yarn webpack --config config/webpack.kitchen-sink.prod.js'
       },
       kitchenSinkProdStaticServe: {
-        cmd: 'yarn serve --single'
+        cmd: 'yarn serve --listen 3449 --single'
       }
     },
     sprite: {
@@ -140,6 +140,7 @@ module.exports = function(grunt) {
     'copy:fonts', 'copy:images', 'copy:kitchenSinkHtml',
     'sprite',
     'sh:kitchenSinkProdCssBuild',
+    'sh:kitchenSinkProdJsBuild',
     'sh:kitchenSinkProdCljsBuild'
   ]);
 

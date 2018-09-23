@@ -9,9 +9,10 @@ const {
 /**
  * Base class for input fragment.
  * 
+ * @class
  * @extends {Fragment}
  */
-const BaseClass = Fragment.makeFragmentClass(Input, {
+const BaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
     ['disabled', { antonym: 'enabled' }],
     ['invalid', { antonym: 'valid' }]

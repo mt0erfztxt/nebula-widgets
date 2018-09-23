@@ -1,6 +1,7 @@
 (ns nebula-widgets.widgets.app-panel.head)
 
-(def ^:private bem "nw-appPanel-head")
+(def ^:private bem
+  "nw-appPanel-head")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC

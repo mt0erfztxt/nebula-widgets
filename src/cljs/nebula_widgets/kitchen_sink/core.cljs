@@ -1,5 +1,6 @@
 (ns nebula-widgets.kitchen-sink.core
   (:require
+    [js-bundle]
     [nebula-widgets.kitchen-sink.events]
     [nebula-widgets.kitchen-sink.routes :as routes]
     [nebula-widgets.kitchen-sink.setup :as setup]

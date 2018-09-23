@@ -3,56 +3,79 @@
     [nebula-widgets.utils.bem :as bem-utils]
     [reagent.core :as r]))
 
-(def ^:private bem "nw-groupInput")
-(def ^:private bem-error (str bem "__error"))
-(def ^:private bem-errors (str bem "__errors"))
-(def ^:private bem-inner (str bem "__inner"))
-(def ^:private bem-item (str bem "__item"))
+(def ^:private default-bem
+  "nw-groupInput")
 
-(defn- build-class [{:keys [cid columns cns disabled equidistant inline size stacked-on-mobile widget]}]
+(defn- build-bem [bem]
+  (or bem default-bem))
+
+(defn- build-error-elt-bem [bem]
+  (str (build-bem bem) "__error"))
+
+(defn- build-errors-elt-bem [bem]
+  (str (build-bem bem) "__errors"))
+
+(defn- build-inner-elt-bem [bem]
+  (str (build-bem bem) "__inner"))
+
+(defn- build-item-elt-bem [bem]
+  (str (build-bem bem) "__item"))
+
+(defn- build-class [{:keys [bem cid columns cns disabled equidistant inline invalid size stacked-on-mobile widget]}]
   (bem-utils/build-class
-    bem
+    (build-bem bem)
     [["cns" cns]
      ["cid" cid]
+     ["columns" columns]
      ["disabled" disabled]
      ["equidistant" equidistant]
      ["inline" (or inline (pos? columns))]
+     ["invalid" invalid]
      ["size" (-> size keyword #{:large :normal :small} (or :normal))]
      ["stacked-on-mobile" stacked-on-mobile]
-     ["widget" (-> widget keyword #{:button :icon :native} (or :icon))]]))
+     ["widget" widget]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "props   - optional, map:
-    :cid               - optional, any, no default, component id
-    :columns           - optional, integer, no default, number of items per row
-    :cns               - optional, any, no default, component namespace
-    :disabled          - optional, logical true/false, no default
-    :equidistant       - optional, logical true/false, no default, whether items have same width
-    :errors            - optional, seq of strings, no default, would be displayed only when not empty and :invalid
-    :inline            - optional, logical true/false, no default, whether items grouped stacked or inline
-    :invalid           - optional, logical true/false, no default, whether widget is in invalid state or not
-    :item-props        - optional, map, no default, common props for all items in group, for example, event handlers
-    :size              - optional, one of :large, :normal (default), :small or their string/symbol equivalents
-    :soft-columns      - optional, logical true/false, no default, when logical true and :columns is also set then
-                         'min-width' style is used instead of 'width'
-    :stacked-on-mobile - optional, logical true/false, no default, whether items forcibly stacked on mobile screens
-    :value             - optional, any, no default, used as values for items, for example, in checkbox group input it
-                         used to determine which items are checked
-    :widget            - optional, any, item widget, see concrete group input implementation for details
-  children - optional, seq of renderables"
+  "Renders group input.\\
+  Not intended to be used directly but rather as a base for more specific group input widgets.
+
+  Arguments:
+  * `props` - optional, map, no default. Supported keys:
+    - `:bem` - string, 'nw-groupInput' by default. Would be used as widget's BEM.
+    - `:cid` - any, no default. Component id.
+    - `:columns` - integer, no default. Number of items per row.
+    - `:cns` - any, no default. Component namespace.
+    - `:disabled` - logical true/false, no default. Whether widget disabled or not.
+    - `:equidistant` - logical true/false, no default. Whether items have same width.
+    - `:errors` - seq of strings, no default. would be displayed only when not empty and :invalid.
+    - `:inline` - logical true/false, no default. Whether items grouped stacked or inline.
+    - `:invalid` - logical true/false, no default. Whether widget is in invalid state or not.
+    - `:item-props` - map, no default. Common props for all items in group, for example, event handlers.
+    - `:size` - one of :large, :normal (default), :small or their string/symbol equivalents. Widget size.
+    - `:soft-columns` - logical true/false, no default. When logical true and :columns is also set then 'min-width' style
+      is used instead of 'width'.
+    - `:stacked-on-mobile` - logical true/false, no default. whether items forcibly stacked on mobile screens.
+    - `:value` - any, no default. Used as values for items, for example, in checkbox group input it used to determine
+      which items are checked.
+    - `:widget` - any, no default. Widget visual look, see concrete group input implementation for details.
+  *  `& children` - optional, any number of child components"
   [& _args]
-  (let [[{:keys [columns errors invalid soft-columns] :as props} children] ((juxt r/props r/children) (r/current-component))]
+  (let [[{:keys [bem columns errors soft-columns] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}
-     (into [:div {:class bem-inner}]
-           (for [{:keys [checked] :as item} children]
-             [:div (cond-> (assoc {} :class (bem-utils/build-class bem-item [["checked" checked]]))
-                           (and (integer? columns) (pos? columns))
-                           (update :style assoc (if soft-columns :min-width :width) (str (/ 100 columns) "%")))
-              item]))
-     (when (and invalid (seq errors))
-       (into [:ul {:class bem-errors}]
-             (for [error errors] [:li {:class bem-error} error])))]))
+     (into [:div {:class (build-inner-elt-bem bem)}]
+           (for [child children]
+             (let []
+               [:div (cond-> {:class
+                              (bem-utils/build-class
+                                (build-item-elt-bem bem)
+                                [["checked" (-> child second :checked)]])}
+                             (and (integer? columns) (pos? columns))
+                             (update :style assoc (if soft-columns :min-width :width) (str (/ 100 columns) "%")))
+                child])))
+     (when (and (:invalid props) (seq errors))
+       (into [:ul {:class (build-errors-elt-bem bem)}]
+             (for [error errors] [:li {:class (build-error-elt-bem bem)} error])))]))

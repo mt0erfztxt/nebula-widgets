@@ -1,6 +1,7 @@
 (ns nebula-widgets.kitchen-sink.panels.app-panel-widget.common)
 
-(def ^:private event-ns "app-panel-widget-panel")
+(def ^:private event-ns
+  "app-panel-widget-panel")
 
 (defn build-bar-setter-event-name [placement property]
   (keyword event-ns

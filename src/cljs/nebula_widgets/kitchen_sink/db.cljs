@@ -13,5 +13,6 @@
          text-input-panel-db/default-db))
 
 (def default-db
-  {:app    {:route {:id :home :params nil :query nil}}
+  {:app
+   {:route {:id :home, :params nil, :query nil}}
    :panels db-panels})

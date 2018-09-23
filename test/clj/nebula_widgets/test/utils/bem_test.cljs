@@ -1,6 +1,6 @@
-(ns nebula-widgets.utils.bem-test
+(ns nebula-widgets.test.utils.bem-test
   (:require
-    [cljs.test :refer-macros [deftest is testing]]
+    [cljs.test :refer [deftest is testing]]
     [nebula-widgets.utils.bem :as bem-utils]))
 
 (deftest to-modifier-name-test
