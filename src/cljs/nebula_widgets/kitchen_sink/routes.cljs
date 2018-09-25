@@ -7,6 +7,7 @@
   (bide/router
     [["" :home]
      ["/widgets/app-panel" :widgets/app-panel]
+     ["/widgets/button" :widgets/button]
      ["/widgets/card" :widgets/card]
      ["/widgets/group-input" :widgets/group-input]
      ["/widgets/group-input-item" :widgets/group-input-item]

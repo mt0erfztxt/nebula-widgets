@@ -1,4 +1,4 @@
-(ns nebula-widgets.widgets.button
+(ns nebula-widgets.widgets.button.core
   (:require
     [nebula-widgets.utils.bem :as bem-utils]))
 
