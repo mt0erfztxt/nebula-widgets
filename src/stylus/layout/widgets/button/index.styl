@@ -1,16 +1,16 @@
 .nw-button
     background-color: transparent;
     border: 1px solid $g_color_primary_text;
+    border-radius: 2px;
     color: $g_color_primary_text;
     display: inline-block;
-    height: 32px; // TODO Extract to var?
-    line-height: 32px; // TODO Use it or not?
     outline: none;
     margin-right: 8px;
-    padding: 0 24px;
+    padding: 7px 24px;
     text-decoration: none;
     text-transform: uppercase;
     transition: color .3s;
+    vertical-align: middle;
 
     &:last-child
         margin-right: 0;
@@ -18,7 +18,7 @@
 
     &--disabled
         border-color: $g_color_primary_text--disabled;
-        color: $g_color_primary_text--disabled;
+        color: @border-color;
 
 
     &--flat
@@ -43,5 +43,6 @@
         text-shadow: -1px 1px 0 shade($g_color_accent, 9%);
 
 
+    // TODO Does we need such variation?
     &--primary&--secondary
         border-color: alpha($g_color_primary_text--active, 0.72);
