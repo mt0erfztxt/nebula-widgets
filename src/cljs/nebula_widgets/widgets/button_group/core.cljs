@@ -1,14 +1,14 @@
-(ns nebula-widgets.widgets.button-group
+(ns nebula-widgets.widgets.button-group.core
   (:require
     [nebula-widgets.utils.bem :as bem-utils]
-    [nebula-widgets.widgets.button :as button]))
+    [nebula-widgets.widgets.button.core :as button]))
 
 (def ^:private bem
   "nw-buttonGroup")
 
 (def custom-props-vec
   "Vector of props that React doesn't allow on `<DIV>` tag plus :class prop because we not allow override CSS class."
-  [:alignment :cid :class :cns :items])
+  [:alignment :buttons :cid :class :cns])
 
 (defn- build-class [{:keys [alignment cid cns disabled]}]
   (bem-utils/build-class

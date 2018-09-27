@@ -8,6 +8,7 @@
     [["/" :home]
      ["/widgets/app-panel" :widgets/app-panel]
      ["/widgets/button" :widgets/button]
+     ["/widgets/button-group" :widgets/button-group]
      ["/widgets/card" :widgets/card]
      ["/widgets/group-input" :widgets/group-input]
      ["/widgets/group-input-item" :widgets/group-input-item]

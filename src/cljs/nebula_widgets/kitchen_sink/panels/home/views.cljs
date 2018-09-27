@@ -5,6 +5,7 @@
 (def ^:private widgets-routes
   [:widgets/app-panel
    :widgets/button
+   :widgets/button-group
    :widgets/card
    :widgets/group-input
    :widgets/group-input-item
