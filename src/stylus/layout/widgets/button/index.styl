@@ -26,23 +26,20 @@
         padding-left: 16px;
         padding-right: 16px;
 
-        &:hover
-            color: $g_color_primary_text--active;
+    &--flat:hover:not(&--disabled)
+        color: $g_color_primary_text--active;
 
 
-    // Must be defined before `--primary` or styles would broke.
     &--secondary
         border-style: dashed;
-        color: $g_color_primary_text;
 
 
     &--primary
         background-color: $g_color_accent;
         border-color: $g_color_accent;
         color: $g_color_primary_text--active;
-        text-shadow: -1px 1px 0 shade($g_color_accent, 9%);
+        text-shadow: -1px 1px 0 shade($g_color_accent, 18%);
 
-
-    // TODO Does we need such variation?
-    &--primary&--secondary
-        border-color: alpha($g_color_primary_text--active, 0.72);
+    &--primary&--disabled
+        color: mix($g_color_primary_text--active, $g_color_accent, 36%);
+        text-shadow: -1px 1px 0 shade($g_color_accent, 12%);

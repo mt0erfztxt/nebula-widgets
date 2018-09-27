@@ -37,8 +37,7 @@
        [:<>
         [button/widget {:cid "010", :primary true, :text "Normal"}]
         [button/widget {:cid "020", :disabled true, :primary true, :text "Disabled"}]
-        [button/widget {:cid "030", :href href, :primary true, :text "Link"}]
-        [button/widget {:cid "040", :primary true, :secondary true, :text "Primary+Secondary"}]]
+        [button/widget {:cid "030", :href href, :primary true, :text "Link"}]]
        "```clojure
          [button/widget {:primary true}]
          ```"]
