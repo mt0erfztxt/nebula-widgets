@@ -34,7 +34,11 @@
     - `:cns` - any, no default. Component namespace.
     - `:disabled` - logical true/false, no default. Whether button group is disabled or not. When true all buttons in
       group would be disabled.
-    - any props that React supports for `<DIV>` tag"
+    - any props that React supports for `<DIV>` tag
+
+  Notes:
+  * alignment implemented through parent's CSS, so parent must have 'text-align' set to 'center' and 'position' set to
+    'relative' or something"
   [{:keys [buttons disabled] :as props}]
   (into [:div (merge {:class (build-class props)} (apply dissoc props custom-props-vec))]
         (for [button-props buttons]
