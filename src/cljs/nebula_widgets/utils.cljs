@@ -87,3 +87,16 @@
         has-props? (map? p)
         props (updater (if has-props? p {}))]
     (into [props] (if has-props? c args))))
+
+(defn remove-padding
+  "Accepts string and removes number of spaces, that second non-blank line have at left, from all lines. Convenient when
+  multi-line clojure string literals must be used in white-space dependent formats like Markdown."
+  [s]
+  (str/replace
+    s
+    (->> (str/replace s #"(?m)^[\t\s]*$(\n)" "")
+         (re-find #"^.*\n( *)")
+         (second)
+         (str "(?m)^")
+         (re-pattern))
+    ""))
