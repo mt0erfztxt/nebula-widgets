@@ -15,8 +15,8 @@
     [:div.buttonWidgetPanel
      [man-page/widget {:title "Button widget"}
       [markdown/widget
-       (str (-> #'button/widget meta :doc)
-            "\n\n## Examples")]
+       (-> #'button/widget meta :doc)
+       "## Examples"]
       [example/widget {:cid "010", :title "default button"}
        [:<>
         [button/widget {:cid "010", :text "Normal"}]

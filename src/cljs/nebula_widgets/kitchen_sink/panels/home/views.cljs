@@ -6,6 +6,7 @@
   [:widgets/app-panel
    :widgets/button
    :widgets/button-group
+   :widgets/button-group-set
    :widgets/card
    :widgets/group-input
    :widgets/group-input-item
