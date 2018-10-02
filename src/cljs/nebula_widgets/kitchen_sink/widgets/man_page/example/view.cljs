@@ -14,9 +14,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "Renders man page example's view. Accepts optional props map and any number of child components.
-  Supported props:
-  * :cid - any, no default. Component id."
+  "Renders man page example's view.
+
+  Arguments:
+  * `props` - optional, map, no default. Supported keys:
+    - :cid - any, no default. Component id.
+  *  `& children` - optional, any number of child components"
   [& _args]
   (let [[props children] ((juxt r/props r/children) (r/current-component))]
     (into [:div {:class (build-class props)}] children)))

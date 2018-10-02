@@ -28,22 +28,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "Renders man page's example. Accepts optional props map and any number of child components. When last child is a
-  string, it would be rendered as code block (supports Markdown syntax).
-  Supported props:
-  * :cid - any, no default. Component id, it would be rendered as example's number when provided.
-  * :title - string, no default. Example title."
+  "Renders man page's example.
+
+  Arguments:
+  * `props` - optional, map, no default. Supported keys:
+    - :cid - any, no default. Component id, it would be rendered as example's number when provided.
+    - :title - string, no default. Example title.
+  *  `& children` - optional, any number of child components. Strings rendered as Markdown, other as-is."
   [& _args]
-  (let [[{:keys [cid title] :as props} children] ((juxt r/props r/children) (r/current-component))
-        last-child (last children)
-        code (when (string? last-child) last-child)]
+  (let [[{:keys [cid title] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}
      [:h4 {:class title-elt-bem}
       (str "Example" (when cid (str " # " cid)) " - ")
       [:span {:class title-text-elt-bem} title]]
      (into [:div {:class views-elt-bem}]
-           (for [child (if code (butlast children) children)]
-             [view/widget child]))
-     (when code
-       [:div {:class code-elt-bem}
-        [markdown/widget (markdown/cleanup-code code)]])]))
+           (for [child children]
+             (if (string? child)
+               [markdown/widget child]
+               [view/widget child])))]))

@@ -16,9 +16,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "Renders man page. Accepts optional props map and any number of child components.
-  Supported props:
-  * :title - string, no default. Man page title."
+  "Renders man page.
+
+  Arguments:
+  * `props` - optional, map, no default. Supported keys:
+    - :title - string, no default. Man page title.
+  *  `& children` - optional, any number of child components"
   [& _args]
   (let [[{:keys [title]} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class bem}
