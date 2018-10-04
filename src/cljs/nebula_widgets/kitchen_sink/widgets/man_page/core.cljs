@@ -1,15 +1,14 @@
 (ns nebula-widgets.kitchen-sink.widgets.man-page.core
   (:require
+    [nebula-widgets.kitchen-sink.widgets.markdown.core :as markdown]
+    [nebula-widgets.utils.bem :as bem-utils]
     [reagent.core :as r]))
 
 (def ^:private bem
   "manPage")
 
-(def ^:private body-elt-bem
-  (str bem "__body"))
-
-(def ^:private title-elt-bem
-  (str bem "__title"))
+(defn- build-class [{:keys [cid]}]
+  (bem-utils/build-class bem [["cid" cid]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -20,10 +19,9 @@
 
   Arguments:
   * `props` - optional, map, no default. Supported keys:
-    - :title - string, no default. Man page title.
-  *  `& children` - optional, any number of child components"
+    - :cid - any, no default. Component id.
+  * `& children` - optional, any number of child components"
   [& _args]
-  (let [[{:keys [title]} children] ((juxt r/props r/children) (r/current-component))]
-    [:div {:class bem}
-     [:h1 {:class title-elt-bem} title]
-     (into [:div {:class body-elt-bem}] children)]))
+  (let [[props children] ((juxt r/props r/children) (r/current-component))]
+    (into [:div {:class (build-class props)}]
+          (map #(if (string? %) [markdown/widget %] %) children))))
