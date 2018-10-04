@@ -34,7 +34,7 @@
   * `props` - optional, map, no default. Supported keys:
     - :cid - any, no default. Component id, it would be rendered as example's number when provided.
     - :title - string, no default. Example title.
-  *  `& children` - optional, any number of child components. Strings rendered as Markdown, other as-is."
+  * `& children` - optional, any number of child components. Strings rendered as Markdown, other as-is."
   [& _args]
   (let [[{:keys [cid title] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}

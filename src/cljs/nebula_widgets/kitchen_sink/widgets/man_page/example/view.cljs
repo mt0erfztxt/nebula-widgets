@@ -19,7 +19,7 @@
   Arguments:
   * `props` - optional, map, no default. Supported keys:
     - :cid - any, no default. Component id.
-  *  `& children` - optional, any number of child components"
+  * `& children` - optional, any number of child components"
   [& _args]
   (let [[props children] ((juxt r/props r/children) (r/current-component))]
     (into [:div {:class (build-class props)}] children)))
