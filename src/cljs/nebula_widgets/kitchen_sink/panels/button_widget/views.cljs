@@ -3,7 +3,6 @@
     [nebula-widgets.kitchen-sink.routes :as routes]
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
-    [nebula-widgets.kitchen-sink.widgets.markdown.core :as markdown]
     [nebula-widgets.widgets.button.core :as button]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13,10 +12,10 @@
 (defn widget []
   (let [href (routes/resolve :widgets/button)]
     [:div.buttonWidgetPanel
-     [man-page/widget {:title "Button widget"}
-      [markdown/widget
-       (-> #'button/widget meta :doc)
-       "## Examples"]
+     [man-page/widget
+      "# Button widget"
+      (-> #'button/widget meta :doc)
+      "## Examples"
       [example/widget {:cid "010", :title "default button"}
        [:<>
         [button/widget {:cid "010", :text "Normal"}]
