@@ -19,4 +19,21 @@
        [button-group-set/widget
         {:cid "010"
          :groups (for [alignment [:left :center :right]]
-                   {:alignment alignment, :buttons (repeat 2 {:text "Button"})})}]]]]))
+                   {:alignment alignment, :buttons (repeat 2 {:text "Button"})})}]
+       "```clj
+         [button-group-set/widget
+          {:groups [{:alignment \"left\", :buttons [{...} {...}]}
+                    {:alignment \"center\", :buttons [{...} {...}]}
+                    {:alignment \"right\", :buttons [{...} {...}]}]
+         ```"]
+      [example/widget {:cid "020", :title "disabled button group set"}
+       [button-group-set/widget
+        {:cid "010"
+         :disabled true
+         :groups (for [alignment [:left :center :right]]
+                   {:alignment alignment, :buttons (repeat 2 {:disabled false, :text "Button"})})}]
+       "```clj
+         [button-group-set/widget
+          {:disabled true
+           :groups [{:disabled false, :buttons [{:disabled false, :text \"Button\"} ...]}]
+         ```"]]]))
