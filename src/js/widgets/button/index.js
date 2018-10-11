@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 import { t } from 'testcafe';
 
@@ -207,6 +208,15 @@ class Button extends BaseClass {
    */
   async click() {
     await t.click(this.selector);
+  }
+
+  /**
+   * Hovers on button.
+   * 
+   * @returns {Promise<void>}
+   */
+  async hover() {
+    await t.hover(this.selector);
   }
 }
 
