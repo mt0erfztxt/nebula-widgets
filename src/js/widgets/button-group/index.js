@@ -39,7 +39,8 @@ class ButtonGroup extends BaseClass {
   /**
    * Creates fragment.
    *
-   * @param {ButtonGroup|Object} [spec] When it's already instance of `ButtonGroup` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
+   * @param {ButtonGroup|Object} [spec] When it's already instance of `ButtonGroup` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter plus it implements following custom specs - 'alignment'
+   * @param {String} [spec.alignment] Button group's alignment. Allows to find button group by its alignment
    * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    * @param {Object} [opts.ButtonFragmentOpts] Default `opts` for button fragment's constructor
    * @param {Object} [opts.ButtonFragmentSpec] Default `spec` for button fragment's constructor
@@ -48,6 +49,7 @@ class ButtonGroup extends BaseClass {
     const {
       initializedOpts,
       initializedSpec,
+      initializedSpec: { alignment },
       isInstance
     } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
 
@@ -56,6 +58,14 @@ class ButtonGroup extends BaseClass {
     }
 
     super(initializedSpec, initializedOpts);
+
+    if (alignment) {
+      const className = this
+        .cloneBemBase()
+        .setMod(['alignment', alignment]);
+
+      this.selector = this.selector.filter(`.${className}`);
+    }
 
     return this;
   }
