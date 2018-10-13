@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
+import typeOf from 'typeof--';
 import { t } from 'testcafe';
 
 import Button from '../button';
@@ -59,7 +60,28 @@ class ButtonGroupSet extends BaseClass {
 
     super(initializedSpec, initializedOpts);
 
+    this._buttons = {};
+    this._buttonGroups = {};
+
     return this;
+  }
+
+  /**
+   * Returns initialized button fragments mapping.
+   * 
+   * @returns {Object}
+   */
+  get buttons() {
+    return this._buttons;
+  }
+
+  /**
+   * Returns initialized button group fragments mapping.
+   * 
+   * @returns {Object}
+   */
+  get buttonGroups() {
+    return this._buttonGroups;
   }
 
   /**
@@ -174,7 +196,7 @@ class ButtonGroupSet extends BaseClass {
    */
   getButtonGroup(spec, opts) {
     return this.getSomething(
-      this.ButtonFragment,
+      this.ButtonGroupFragment,
       _.assign({}, this._opts.ButtonGroupFragmentSpec, { parent: this.selector }, spec),
       _.assign({}, this._opts.ButtonGroupFragmentOpts, opts)
     );
@@ -196,6 +218,77 @@ class ButtonGroupSet extends BaseClass {
    */
   async hover() {
     await t.hover(this.selector);
+  }
+
+  /**
+   * Accepts config object and creates button and button group fragments.
+   *
+   * @param {Object} [config] Config
+   * @param {Object} [config.buttons] Object where each key is a name for button and value is an array of button fragment spec and opts or just a button spec
+   * @param {Object} [config.buttonGroups] Object where each key is a name for button group and value is an array of button group fragment spec and opts or just a button group spec
+   * @throws {TypeError} When `cfg` argument is not valid.
+   * @example
+   * {
+   *   buttons: {
+   *     myButton1: [{ // button spec }, { // button opts }],
+   *     myButton2: [{ // button spec }],
+   *     myButton3:  { // button spec },
+   *   },
+   *   buttonGroups: {
+   *     myButtonGroup1: [{ // button group spec }, { // button group opts }],
+   *     myButtonGroup2: [{ // button group spec }],
+   *     myButtonGroup3:  { // button group spec },
+   *   },
+   * }
+   */
+  init(config) {
+    if (_.isNil(config)) {
+      return;
+    }
+
+    if (!_.isPlainObject(config)) {
+      throw new TypeError(
+        `${this.displayName}.init(): 'config' argument must be a plain ` +
+        `but it is ${typeOf(config)} (${config})`
+      );
+    }
+
+    const { buttons, buttonGroups } = config || {};
+
+    if (buttons) {
+      if (!_.isPlainObject(buttons)) {
+        throw new TypeError(
+          `${this.displayName}.init(): 'config.buttons' argument must be a ` +
+          `plain but it is ${typeOf(buttons)} (${buttons})`
+        );
+      }
+
+      _.forOwn(
+        buttons,
+        (v, k) => {
+          let opts, spec = v;
+
+          if (_.isArray(spec)) {
+            [spec, opts] = spec;
+          }
+
+          this._buttons[k] = this.getButton(spec, opts);
+        }
+      );
+
+      _.forOwn(
+        buttonGroups,
+        (v, k) => {
+          let opts, spec = v;
+
+          if (_.isArray(spec)) {
+            [spec, opts] = spec;
+          }
+
+          this._buttonGroups[k] = this.getButtonGroup(spec, opts);
+        }
+      );
+    }
   }
 }
 

@@ -4,6 +4,19 @@
     [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
     [nebula-widgets.widgets.button-group-set.core :as button-group-set]))
 
+(defn- build-alignment-data
+  "Accept integer and returns seq.
+
+  Examples:
+  - (build-data 2) => `[[:left [1 2]] [:center [3 4]] [:right [5 6]]]`
+  - (build-data 3) => `[[:left [1 2 3]] [:center [4 5 6]] [:right [7 8 9]]]`."
+  [n]
+  (loop [m 1, [alignment :as alignments] [:left :center :right], result []]
+    (if (empty? alignments)
+      result
+      (let [p (+ n m)]
+        (recur p (rest alignments) (conj result [alignment (range m p)]))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18,8 +31,8 @@
       [example/widget {:cid "010", :title "default button group set"}
        [button-group-set/widget
         {:cid "010"
-         :groups (for [alignment [:left :center :right]]
-                   {:alignment alignment, :buttons (repeat 2 {:text "Button"})})}]
+         :groups (for [[alignment xs] (build-alignment-data 2)]
+                   {:alignment alignment, :buttons (for [n xs] {:cid n, :text (str "Button" n)})})}]
        "```clj
          [button-group-set/widget
           {:groups [{:alignment \"left\", :buttons [{...} {...}]}
