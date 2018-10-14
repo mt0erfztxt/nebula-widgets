@@ -17,7 +17,7 @@
 ;;------------------------------------------------------------------------------
 
 ;; Register events for specified properties. Property can be keyword - then its
-;; event handler registered for all examples, or cab be a tuple of property
+;; event handler registered for all examples, or can be a tuple of property
 ;; (keyword) and a set of examples (string) for which event handler must be
 ;; registered.
 (doseq [s ["010" "020" "030" "040"] :let [example (str "example" s)]]
