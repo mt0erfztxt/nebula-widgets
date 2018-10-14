@@ -97,3 +97,15 @@
     (testing "070 It should allow args to be something not sequential"
       (is (= [{} "foo"] (sut "foo" identity)))
       (is (= [updated-props 42] (sut 42 updater))))))
+
+(deftest remove-padding-test
+  (let [sut #'utils/remove-padding]
+    (testing "010 It should exist and be a function"
+      (is (fn? sut)))
+    (testing "020 It should remove padding from string"
+      (is (= "foo\n\nbar\n   42"
+             (sut
+               "foo
+
+                bar
+                   42"))))))

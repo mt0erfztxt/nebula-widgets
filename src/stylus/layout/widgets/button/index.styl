@@ -1,0 +1,45 @@
+.nw-button
+    background-color: transparent;
+    border: 1px solid $g_color_primary_text;
+    border-radius: 2px;
+    color: $g_color_primary_text;
+    display: inline-block;
+    outline: none;
+    margin-right: 8px;
+    padding: 7px 24px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color .3s;
+    vertical-align: middle;
+
+    &:last-child
+        margin-right: 0;
+
+
+    &--disabled
+        border-color: $g_color_primary_text--disabled;
+        color: @border-color;
+
+
+    &--flat
+        border-color: transparent;
+        padding-left: 16px;
+        padding-right: 16px;
+
+    &--flat:hover:not(&--disabled)
+        color: $g_color_primary_text--active;
+
+
+    &--secondary
+        border-style: dashed;
+
+
+    &--primary
+        background-color: $g_color_accent;
+        border-color: $g_color_accent;
+        color: $g_color_primary_text--active;
+        text-shadow: -1px 1px 0 shade($g_color_accent, 18%);
+
+    &--primary&--disabled
+        color: mix($g_color_primary_text--active, $g_color_accent, 36%);
+        text-shadow: -1px 1px 0 shade($g_color_accent, 12%);

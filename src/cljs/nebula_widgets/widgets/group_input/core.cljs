@@ -62,7 +62,7 @@
     - `:value` - any, no default. Used as values for items, for example, in checkbox group input it used to determine
       which items are checked.
     - `:widget` - any, no default. Widget visual look, see concrete group input implementation for details.
-  *  `& children` - optional, any number of child components"
+  * `& children` - optional, any number of child components"
   [& _args]
   (let [[{:keys [bem columns errors soft-columns] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}

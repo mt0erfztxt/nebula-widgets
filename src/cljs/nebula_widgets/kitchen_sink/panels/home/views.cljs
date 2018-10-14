@@ -2,14 +2,20 @@
   (:require
     [nebula-widgets.kitchen-sink.routes :as routes]))
 
+(def ^:private widgets-routes
+  [:widgets/app-panel
+   :widgets/button
+   :widgets/button-group
+   :widgets/button-group-set
+   :widgets/card
+   :widgets/group-input
+   :widgets/group-input-item
+   :widgets/radio-group-input
+   :widgets/radio-group-input-item])
+
 (def ^:private pages-href-and-text
-  [[(routes/resolve :widgets/app-panel) "app-panel"]
-   [(routes/resolve :widgets/card) "card"]
-   [(routes/resolve :widgets/group-input) "group-input"]
-   [(routes/resolve :widgets/group-input-item) "group-input-item"]
-   [(routes/resolve :widgets/radio-group-input) "radio-group-input"]
-   [(routes/resolve :widgets/radio-group-input-item) "radio-group-input-item"]
-   [(routes/resolve :widgets/text-input) "text-input"]])
+  (for [route widgets-routes]
+    [(routes/resolve route) (name route)]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC

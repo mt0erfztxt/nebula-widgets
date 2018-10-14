@@ -1,7 +1,8 @@
 (ns nebula-widgets.kitchen-sink.panels.radio-group-input-item-widget.views
-  (:require [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
-            [nebula-widgets.kitchen-sink.widgets.markdown.core :as markdown]
-            [nebula-widgets.widgets.radio-group-input.item :as radio-group-input-item]))
+  (:require
+    [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
+    [nebula-widgets.kitchen-sink.widgets.markdown.core :as markdown]
+    [nebula-widgets.widgets.radio-group-input.item :as radio-group-input-item]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC

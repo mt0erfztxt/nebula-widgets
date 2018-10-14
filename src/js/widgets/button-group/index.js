@@ -2,10 +2,11 @@ import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 import { t } from 'testcafe';
 
+import Button from '../button';
+
 const {
   Fragment,
-  Options,
-  selector
+  Options
 } = testFragment;
 
 /**
@@ -16,10 +17,8 @@ const {
  */
 const BaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
-    ['disabled', { antonym: 'enabled' }],
-    ['flat'],
-    ['primary'],
-    ['secondary']
+    ['alignment', { isBoolean: false }],
+    ['disabled', { antonym: 'enabled' }]
   ]
 });
 
@@ -28,26 +27,29 @@ const BaseClass = Fragment.makeFragmentClass(Fragment, {
  *
  * @type {String}
  */
-const fragmentDisplayName = 'nebula-widgets.widgets.button';
+const fragmentDisplayName = 'nebula-widgets.widgets.button-group';
 
 /**
- * Fragment that represents button.
+ * Fragment that represents button group.
  * 
  * @extends {Fragment}
  */
-class Button extends BaseClass {
+class ButtonGroup extends BaseClass {
 
   /**
    * Creates fragment.
    *
-   * @param {Button|Object} [spec] When it's already instance of `Button` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter plus it implements following `custom` specs - `text`
-   * @param {String|RegExp} [spec.text] Button's text. Allows to find button with text equal or matches given value
+   * @param {ButtonGroup|Object} [spec] When it's already instance of `ButtonGroup` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter plus it implements following custom specs - 'alignment'
+   * @param {String} [spec.alignment] Button group's alignment. Allows to find button group by its alignment
    * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
+   * @param {Object} [opts.ButtonFragmentOpts] Default `opts` for button fragment's constructor
+   * @param {Object} [opts.ButtonFragmentSpec] Default `spec` for button fragment's constructor
    */
   constructor(spec, opts) {
     const {
       initializedOpts,
       initializedSpec,
+      initializedSpec: { alignment },
       isInstance
     } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
 
@@ -57,11 +59,29 @@ class Button extends BaseClass {
 
     super(initializedSpec, initializedOpts);
 
-    if (_.has(initializedSpec, 'text')) {
-      this.selector = selector.filterByText(this.selector, initializedSpec.text);
+    if (alignment) {
+      const className = this
+        .cloneBemBase()
+        .setMod(['alignment', alignment]);
+
+      this.selector = this.selector.filter(`.${className}`);
     }
 
     return this;
+  }
+
+  /**
+   * Class of button fragment used in this fragment.
+   *
+   * @returns {class}
+   * @throws {TypeError} When item fragment class is not valid.
+   */
+  get ButtonFragment() {
+    if (!this._buttonFragment) {
+      this._buttonFragment = this.getSomethingFragment('Button', ButtonGroup);
+    }
+
+    return this._buttonFragment;
   }
 
   // ---------------------------------------------------------------------------
@@ -77,13 +97,38 @@ class Button extends BaseClass {
     }
     else {
       return _.concat(parts, [
-        'disabled',
-        'flat',
-        'primary',
-        'secondary'
+        'alignment',
+        'disabled'
       ]);
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // State :: Alignment (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name ButtonGroup#getAlignmentPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<String>}
+   */
+
+  /**
+   * @name ButtonGroup#expectAlignmentIs
+   * @method
+   * @param {String} alignment
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name ButtonGroup#expectAlignmentIsNot
+   * @method
+   * @param {String} alignment
+   * @returns {Promise<void>}
+   */
 
   // ---------------------------------------------------------------------------
   // State :: Disabled (read-only, antonym: Enabled)
@@ -92,107 +137,32 @@ class Button extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * @name Button#getDisabledPartOfState
+   * @name ButtonGroup#getDisabledPartOfState
    * @method
    * @param {Options|Object} options
    * @returns {Promise<Boolean>}
    */
 
   /**
-   * @name Button#expectIsDisabled
+   * @name ButtonGroup#expectIsDisabled
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Button#expectIsNotDisabled
+   * @name ButtonGroup#expectIsNotDisabled
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Button#expectIsEnabled
+   * @name ButtonGroup#expectIsEnabled
    * @method
    * @returns {Promise<void>}
    */
 
   /**
-   * @name Button#expectIsNotEnabled
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
-  // State :: Flat (read-only)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name Button#getFlatPartOfState
-   * @method
-   * @param {Options|Object} options
-   * @returns {Promise<Boolean>}
-   */
-
-  /**
-   * @name Button#expectIsFlat
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name Button#expectIsNotFlat
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
-  // State :: Primary (read-only)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name Button#getPrimaryPartOfState
-   * @method
-   * @param {Options|Object} options
-   * @returns {Promise<Boolean>}
-   */
-
-  /**
-   * @name Button#expectIsPrimary
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name Button#expectIsNotPrimary
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
-  // State :: Secondary (read-only)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name Button#getSecondaryPartOfState
-   * @method
-   * @param {Options|Object} options
-   * @returns {Promise<Boolean>}
-   */
-
-  /**
-   * @name Button#expectIsSecondary
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name Button#expectIsNotSecondary
+   * @name ButtonGroup#expectIsNotEnabled
    * @method
    * @returns {Promise<void>}
    */
@@ -202,16 +172,22 @@ class Button extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * Clicks on button.
-   * 
-   * @returns {Promise<void>}
+   * Returns button fragment that matches `spec` and `opts`.
+   *
+   * @param {*} [spec] See `spec` parameter of button fragment's class constructor
+   * @param {*} [opts] See `opts` parameter of button fragment's class constructor
+   * @returns {Fragment}
    */
-  async click() {
-    await t.click(this.selector);
+  getButton(spec, opts) {
+    return this.getSomething(
+      this.ButtonFragment,
+      _.assign({}, this._opts.ButtonFragmentSpec, { parent: this.selector }, spec),
+      _.assign({}, this._opts.ButtonFragmentOpts, opts)
+    );
   }
 
   /**
-   * Hovers on button.
+   * Hovers on button group.
    * 
    * @returns {Promise<void>}
    */
@@ -220,13 +196,16 @@ class Button extends BaseClass {
   }
 }
 
-Object.defineProperties(Button, {
+Object.defineProperties(ButtonGroup, {
   bemBase: {
-    value: 'nw-button'
+    value: 'nw-buttonGroup'
+  },
+  ButtonFragment: {
+    value: Button
   },
   displayName: {
     value: fragmentDisplayName
   }
 });
 
-export default Button;
+export default ButtonGroup;
