@@ -1,33 +1,20 @@
 (ns nebula-widgets.kitchen-sink.panels.checkbox-group-input-widget.subs
   (:require
+    [nebula-widgets.kitchen-sink.panels.checkbox-group-input-widget.common :as common]
     [re-frame.core :as rf]))
 
+(def ^:private panel-subscription-key
+  (common/panel-path->keyword))
+
 (rf/reg-sub
-  :panels.checkbox-group-input-widget
+  panel-subscription-key
   :<- [:panels]
   (fn [panels _]
-    (:checkbox-group-input-widget panels)))
+    (get panels common/panel-key)))
 
-(rf/reg-sub
-  :panels.checkbox-group-input-widget.example010
-  :<- [:panels.checkbox-group-input-widget]
-  (fn [panel _]
-    (:example010 panel)))
-
-(rf/reg-sub
-  :panels.checkbox-group-input-widget.example020
-  :<- [:panels.checkbox-group-input-widget]
-  (fn [panel _]
-    (:example020 panel)))
-
-(rf/reg-sub
-  :panels.checkbox-group-input-widget.example030
-  :<- [:panels.checkbox-group-input-widget]
-  (fn [panel _]
-    (:example030 panel)))
-
-(rf/reg-sub
-  :panels.checkbox-group-input-widget.example040
-  :<- [:panels.checkbox-group-input-widget]
-  (fn [panel _]
-    (:example040 panel)))
+(doseq [s ["010" "020" "025" "030" "040"] :let [example (keyword (str "example" s))]]
+  (rf/reg-sub
+    (common/panel-path->keyword example)
+    :<- [panel-subscription-key]
+    (fn [panel _]
+      (get panel example))))

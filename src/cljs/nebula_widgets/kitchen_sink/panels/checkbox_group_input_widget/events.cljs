@@ -20,7 +20,7 @@
 ;; event handler registered for all examples, or can be a tuple of property
 ;; (keyword) and a set of examples (string) for which event handler must be
 ;; registered.
-(doseq [s ["010" "020" "030" "040"] :let [example (str "example" s)]]
+(doseq [s ["010" "020" "025" "030" "040"] :let [example (str "example" s)]]
   (doseq [property [[:disabled #{"020"}] [:invalid #{"020"}] [:label-shrinked #{"020"}] :value [:widget #{"020"}]]]
     (let [sparse? (sequential? property)]
       (when (if-let [only-for (when sparse? (second property))] (only-for s) true)

@@ -17,10 +17,16 @@
     - `:items` - seq of maps, no default. Group items, each map is a props for
       [checkbox-group-input-item](/widgets/checkbox-group-input-item) widget.
     - `:value` - map or set, no default. Used to determine checked items. When `:boolean` prop is logical true it must
-      be a map where each key is an item path and its value is an item value, otherwise it must be a set of values of
-      checked items.
+      be a map where each key is a path to item's value (as in `clojure.core/get-in`, but for convenience it can be just
+      first element of path when path contains only one element) and its value is an item's value (true/false, but
+      logical true/false would also work), otherwise it must be a set of values of checked items.
     - `:widget` - one of :button, :icon (default), :native or their string/symbol equivalents. Specifies how widget
-      looks."
+      looks.
+
+  Notes:
+  * item path (see `:boolean` prop) is convenient to group multiple boolean fields in one widget, meantime item value
+    convenient when single field is a collection of distinct elements
+  * `:soft-columns` prop can be convenient in case of small containers with just 2-3 columns"
   [{:keys [disabled item-props items value widget] :as props}]
   (into
     [group-input/widget (assoc props :bem "nw-checkboxGroupInput")]
