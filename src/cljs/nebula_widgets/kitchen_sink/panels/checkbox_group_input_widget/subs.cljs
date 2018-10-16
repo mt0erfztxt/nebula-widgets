@@ -12,7 +12,7 @@
   (fn [panels _]
     (get panels common/panel-key)))
 
-(doseq [s ["010" "020" "025" "030" "040"] :let [example (keyword (str "example" s))]]
+(doseq [s ["010" "020" "025" "030" "040" "900"] :let [example (keyword (str "example" s))]]
   (rf/reg-sub
     (common/panel-path->keyword example)
     :<- [panel-subscription-key]

@@ -20,8 +20,8 @@
 ;; event handler registered for all examples, or can be a tuple of property
 ;; (keyword) and a set of examples (string) for which event handler must be
 ;; registered.
-(doseq [s ["010" "020" "025" "030" "040"] :let [example (str "example" s)]]
-  (doseq [property [[:disabled #{"020"}] [:invalid #{"020"}] [:label-shrinked #{"020"}] :value [:widget #{"020"}]]]
+(doseq [s ["010" "020" "025" "030" "040" "900"] :let [example (str "example" s)]]
+  (doseq [property [[:disabled #{"900"}] [:invalid #{"900"}] [:label-shrinked #{"900"}] :value [:widget #{"900"}]]]
     (let [sparse? (sequential? property)]
       (when (if-let [only-for (when sparse? (second property))] (only-for s) true)
         (let [event (common/panel-path->keyword example "/" :set (if sparse? (first property) property))]

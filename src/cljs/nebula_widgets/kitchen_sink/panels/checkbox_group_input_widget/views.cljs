@@ -5,6 +5,7 @@
     [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
     [nebula-widgets.utils :as utils]
     [nebula-widgets.widgets.checkbox-group-input.core :as checkbox-group-input]
+    [nebula-widgets.widgets.radio-group-input.core :as radio-group-input]
     [re-frame.core :as rf]))
 
 ;;------------------------------------------------------------------------------
@@ -297,55 +298,55 @@
 ;; Interactive example
 ;;------------------------------------------------------------------------------
 
-(def ^:private example22-path->keyword
-  (partial common/panel-path->keyword :example22 "/"))
+(def ^:private example900-path->keyword
+  (partial common/panel-path->keyword :example900 "/"))
 
-(defn- example22-item-on-change-handler [event value]
+(defn- example900-item-on-change-handler [event value]
   (let [checked? (utils/event->checked event)]
     (rf/dispatch
-      [(example22-path->keyword :set :value)
+      [(example900-path->keyword :set :value)
        #(if checked? (conj % value) (disj % value))])))
 
-(defn- example22-dispatch-set-disabled [v]
-  (rf/dispatch [(example22-path->keyword :set :disabled) v]))
+(defn- example900-dispatch-set-disabled [v]
+  (rf/dispatch [(example900-path->keyword :set :disabled) v]))
 
-(defn- example22-set-disabled-button-on-click-handler [_]
-  (example22-dispatch-set-disabled true))
+(defn- example900-set-disabled-button-on-click-handler [_]
+  (example900-dispatch-set-disabled true))
 
-(defn- example22-unset-disabled-button-on-click-handler [_]
-  (example22-dispatch-set-disabled false))
+(defn- example900-unset-disabled-button-on-click-handler [_]
+  (example900-dispatch-set-disabled false))
 
-(defn- example22-dispatch-set-invalid [v]
-  (rf/dispatch [(example22-path->keyword :set :invalid) v]))
+(defn- example900-dispatch-set-invalid [v]
+  (rf/dispatch [(example900-path->keyword :set :invalid) v]))
 
-(defn- example22-set-invalid-button-on-click-handler [_]
-  (example22-dispatch-set-invalid true))
+(defn- example900-set-invalid-button-on-click-handler [_]
+  (example900-dispatch-set-invalid true))
 
-(defn- example22-unset-invalid-button-on-click-handler [_]
-  (example22-dispatch-set-invalid false))
+(defn- example900-unset-invalid-button-on-click-handler [_]
+  (example900-dispatch-set-invalid false))
 
-(defn- example22-dispatch-set-label-shrinked [v]
-  (rf/dispatch [(example22-path->keyword :set :label-shrinked) v]))
+(defn- example900-dispatch-set-label-shrinked [v]
+  (rf/dispatch [(example900-path->keyword :set :label-shrinked) v]))
 
-(defn- example22-set-label-shrinked-button-on-click-handler [_]
-  (example22-dispatch-set-label-shrinked true))
+(defn- example900-set-label-shrinked-button-on-click-handler [_]
+  (example900-dispatch-set-label-shrinked true))
 
-(defn- example22-unset-label-shrinked-button-on-click-handler [_]
-  (example22-dispatch-set-label-shrinked false))
+(defn- example900-unset-label-shrinked-button-on-click-handler [_]
+  (example900-dispatch-set-label-shrinked false))
 
-(defn- example22-dispatch-set-widget [v]
-  (rf/dispatch [(example22-path->keyword :set :widget) v]))
+(defn- example900-dispatch-set-widget [v]
+  (rf/dispatch [(example900-path->keyword :set :widget) v]))
 
-(defn- example22-set-widget-to-icon-button-on-click-handler [_]
-  (example22-dispatch-set-widget "icon"))
+(defn- example900-set-widget-to-icon-button-on-click-handler [_]
+  (example900-dispatch-set-widget "icon"))
 
-(defn- example22-set-widget-to-native-button-on-click-handler [_]
-  (example22-dispatch-set-widget "native"))
+(defn- example900-set-widget-to-native-button-on-click-handler [_]
+  (example900-dispatch-set-widget "native"))
 
-(defn- example22-cmp []
-  (let [*example22 (rf/subscribe [(example22-path->keyword)])]
+(defn- example900-cmp []
+  (let [*example900 (rf/subscribe [(example900-path->keyword)])]
     (fn []
-      (let [{:keys [disabled invalid label-shrinked value widget]} @*example22]
+      (let [{:keys [disabled invalid label-shrinked value widget]} @*example900]
         [example/widget
          {:cid "020"
           :title "widget with checked items - case when `:boolean` prop is false)"}
@@ -354,7 +355,7 @@
            :columns 5
            :disabled disabled
            :inline true
-           :item-props {:on-change example22-item-on-change-handler}
+           :item-props {:on-change example900-item-on-change-handler}
            :items
            (for [n (range 1 19)]
              {:cid n
@@ -367,38 +368,38 @@
            :widget widget}]
          [:div                                              ; TODO Use button-group widget
           [:button.nw-button.nw-button--cid_setDisabled
-           {:on-click example22-set-disabled-button-on-click-handler
+           {:on-click example900-set-disabled-button-on-click-handler
             :type "button"}
            "Set disabled"]
           [:button.nw-button.nw-button--cid_unsetDisabled
-           {:on-click example22-unset-disabled-button-on-click-handler
+           {:on-click example900-unset-disabled-button-on-click-handler
             :type "button"}
            "Unset disabled"]]
          [:div                                              ; TODO Use button-group widget
           [:button.nw-button.nw-button--cid_setInvalid
-           {:on-click example22-set-invalid-button-on-click-handler
+           {:on-click example900-set-invalid-button-on-click-handler
             :type "button"}
            "Set invalid"]
           [:button.nw-button.nw-button--cid_unsetInvalid
-           {:on-click example22-unset-invalid-button-on-click-handler
+           {:on-click example900-unset-invalid-button-on-click-handler
             :type "button"}
            "Unset invalid"]]
          [:div                                              ; TODO Use button-group widget
           [:button.nw-button.nw-button--cid_setLabelShrinked
-           {:on-click example22-set-label-shrinked-button-on-click-handler
+           {:on-click example900-set-label-shrinked-button-on-click-handler
             :type "button"}
            "Set labelShrinked"]
           [:button.nw-button.nw-button--cid_unsetLabelShrinked
-           {:on-click example22-unset-label-shrinked-button-on-click-handler
+           {:on-click example900-unset-label-shrinked-button-on-click-handler
             :type "button"}
            "Unset labelShrinked"]]
          [:div                                              ; TODO Use button-group widget
           [:button.nw-button.nw-button--cid_setWidgetToIcon
-           {:on-click example22-set-widget-to-icon-button-on-click-handler
+           {:on-click example900-set-widget-to-icon-button-on-click-handler
             :type "button"}
            "Set widget to icon"]
           [:button.nw-button.nw-button--cid_setWidgetToNative
-           {:on-click example22-set-widget-to-native-button-on-click-handler
+           {:on-click example900-set-widget-to-native-button-on-click-handler
             :type "button"}
            "Set widget to native"]]
          "```clj
@@ -426,4 +427,6 @@
     [example020-cmp]
     [example025-cmp]
     [example030-cmp]
-    [example040-cmp]]])
+    [example040-cmp]
+    "## Interactive example"
+    [example900-cmp]]])
