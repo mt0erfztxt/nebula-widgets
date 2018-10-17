@@ -13,6 +13,7 @@
      ["/widgets/card" :widgets/card]
      ["/widgets/checkbox-group-input" :widgets/checkbox-group-input]
      ["/widgets/checkbox-group-input-item" :widgets/checkbox-group-input-item]
+     ["/widgets/form-field" :widgets/form-field]
      ["/widgets/group-input" :widgets/group-input]
      ["/widgets/group-input-item" :widgets/group-input-item]
      ["/widgets/radio-group-input" :widgets/radio-group-input]

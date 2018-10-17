@@ -1,0 +1,66 @@
+@require 'error'
+
+
+.nw-formField
+    display: block;
+    padding-bottom: 27px;
+
+
+    &__errors
+        color: $g_color_primary_text--error;
+        display: block;
+        list-style: none;
+        margin: 0;
+        padding: 0 0 0 8px;
+
+
+    // Needed for counting in UI tests, otherwise we must rely on count of
+    // direct children or provide form field error fragment's BEM base to form
+    // field fragment.
+    &__errors-item
+        padding: 4px 0 0 0;
+
+
+    &__label
+        color: $g_color_primary_text;
+        display: block;
+        padding-bottom: 10px;
+
+
+    &__label-aux
+        color: $g_color_primary_text--darker;
+        display: inline;
+        font-size: 11px;
+        padding-left: 3px;
+
+
+    &:last-child
+        padding-bottom: 0;
+
+
+    // TODO Assign group input (checkbox, radio) margin-bottom to
+    //      variable and use that variable here instead of numeric
+    //      value.
+    &--consider-input-margin
+        padding-bottom: @padding-bottom - 8px;
+
+
+    &--inline
+        display: table;
+
+
+    &--inline &__input
+        display: table-cell;
+
+
+    &--inline &__label
+        display: table-cell;
+        padding-right: 16px;
+        vertical-align: middle;
+
+
+    &--required &__label:after
+        color: $g_color_primary_text--error;
+        content: '*';
+        display: inline-block;
+        padding-left: 1px;

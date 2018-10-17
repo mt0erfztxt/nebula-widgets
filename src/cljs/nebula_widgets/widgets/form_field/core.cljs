@@ -22,21 +22,21 @@
 (def ^:private label-aux-elt-bem
   (str label-elt-bem "-aux"))
 
-(defn- build-class [{:keys [cid consider-input-margin disabled errors inline required]}]
+(defn- build-class [{:keys [cid consider-input-margin errors inline required]}]
   (bem-utils/build-class
     bem
     [["cid" cid]
      ["consider-input-margin" consider-input-margin]
-     ["disabled" disabled]
      ["inline" inline]
-     ["invalid" (seq errors)]
+     ["invalid" (boolean (seq errors))]
      ["required" required]]))
 
 (defn- label-elt-cmp [label]
-  [:div {:class label-elt-bem}
-   (if (coll? label)
-     [(first label) [:span {:class label-aux-elt-bem} (second label)]]
-     [label])])
+  (into
+    [:div {:class label-elt-bem}]
+    (if (coll? label)
+      [(first label) [:span {:class label-aux-elt-bem} (second label)]]
+      [label])))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -51,13 +51,16 @@
     - `:consider-input-margin` - logical true/false, no default. When logical true then field would have smaller bottom
       padding, for example, it need to be set when field wraps group input component in which each child have bottom
       margin/padding.
-    - `:disabled` - logical true/false, no default. Whether widget disabled or not.
     - `:errors` - collection, no default. Errors to display.
     - `:inline` - logical true/false, no default. Whether label must be placed before or above input.
     - `:label` - string, tuple of strings, no default. Short description for field. When it's a tuple then first element
       would be used as label's main text and second element as auxiliary text.
     - `:required` - logical true/false, no default. When logical true then '*' would be appended to label.
-  * `& children` - optional, any number of child components"
+  * `& children` - optional, any number of child components
+
+  TODO:
+  * fix styles when using `:inline` and `:columns` with number of items that fit into one row (see inline widget
+    example for details)"
   [& _args]
   (let [[{:keys [errors label] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}
