@@ -22,12 +22,12 @@
 (def ^:private label-aux-elt-bem
   (str label-elt-bem "-aux"))
 
-(defn- build-class [{:keys [cid consider-input-margin errors inline required]}]
+(defn- build-class [{:keys [cid consider-input-margin display errors required]}]
   (bem-utils/build-class
     bem
     [["cid" cid]
      ["consider-input-margin" consider-input-margin]
-     ["inline" inline]
+     ["display" (-> display keyword #{:inline :stacked :table} (or :stacked))]
      ["invalid" (boolean (seq errors))]
      ["required" required]]))
 
@@ -52,7 +52,7 @@
       padding, for example, it need to be set when field wraps group input component in which each child have bottom
       margin/padding.
     - `:errors` - collection, no default. Errors to display.
-    - `:inline` - logical true/false, no default. Whether label must be placed before or above input.
+    - `:display` - one of :inline, :stacked (default) or :table, or their string symbol equivalents
     - `:label` - string, tuple of strings, no default. Short description for field. When it's a tuple then first element
       would be used as label's main text and second element as auxiliary text.
     - `:required` - logical true/false, no default. When logical true then '*' would be appended to label.
@@ -60,7 +60,9 @@
 
   TODO:
   * fix styles when using `:inline` and `:columns` with number of items that fit into one row (see inline widget
-    example for details)"
+    example for details)
+  * fix errors positioning when `:display` prop is 'inline or 'table
+  * fix styles to vertically center label with `:display` set to 'table (interactive example with radio group input)"
   [& _args]
   (let [[{:keys [errors label] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}

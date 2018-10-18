@@ -45,18 +45,36 @@
         padding-bottom: @padding-bottom - 8px;
 
 
-    &--inline
+    &--display_inline
         display: table;
 
-
-    &--inline &__input
+    &--display_inline &__input
         display: table-cell;
 
-
-    &--inline &__label
+    &--display_inline &__label
         display: table-cell;
         padding-right: 16px;
         vertical-align: middle;
+
+
+    &--display_stacked
+        //
+
+
+    &--display_table
+        display: table-row;
+        padding-bottom: 0;
+
+    &--display_table &__input
+        display: table-cell;
+        padding: 8px 16px;
+
+    &--display_table &__label
+        display: table-cell;
+        padding: 8px 16px;
+        vertical-align: middle;
+        white-space: nowrap;
+        width: 1px;
 
 
     &--required &__label:after
