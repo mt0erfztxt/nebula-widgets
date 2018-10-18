@@ -21,7 +21,8 @@
 (defn- build-item-elt-bem [bem]
   (str (build-bem bem) "__item"))
 
-(defn- build-class [{:keys [bem cid columns cns disabled equidistant inline invalid size stacked-on-mobile widget]}]
+(defn- build-class
+  [{:keys [bem cid columns cns disabled equidistant inline invalid no-row-gap size stacked-on-mobile widget]}]
   (bem-utils/build-class
     (build-bem bem)
     [["cns" cns]
@@ -31,6 +32,7 @@
      ["equidistant" equidistant]
      ["inline" (or inline (pos? columns))]
      ["invalid" invalid]
+     ["noRowGap" no-row-gap]
      ["size" (-> size keyword #{:large :normal :small} (or :normal))]
      ["stacked-on-mobile" stacked-on-mobile]
      ["widget" widget]]))
@@ -55,6 +57,7 @@
     - `:inline` - logical true/false, no default. Whether items grouped stacked or inline.
     - `:invalid` - logical true/false, no default. Whether widget is in invalid state or not.
     - `:item-props` - map, no default. Common props for all items in group, for example, event handlers.
+    - `:no-row-gap` - logical true/false, no default. Whether to have (false) space between rows or not (true).
     - `:size` - one of :large, :normal (default), :small or their string/symbol equivalents. Widget size.
     - `:soft-columns` - logical true/false, no default. When logical true and :columns is also set then 'min-width' style
       is used instead of 'width'.
@@ -62,20 +65,27 @@
     - `:value` - any, no default. Used as values for items, for example, in checkbox group input it used to determine
       which items are checked.
     - `:widget` - any, no default. Widget visual look, see concrete group input implementation for details.
-  * `& children` - optional, any number of child components"
+  * `& children` - optional, any number of child components
+
+  TODO:
+  * add tests for `:no-row-gap` prop"
   [& _args]
   (let [[{:keys [bem columns errors soft-columns] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}
-     (into [:div {:class (build-inner-elt-bem bem)}]
-           (for [child children]
-             (let []
-               [:div (cond-> {:class
-                              (bem-utils/build-class
-                                (build-item-elt-bem bem)
-                                [["checked" (-> child second :checked)]])}
-                             (and (integer? columns) (pos? columns))
-                             (update :style assoc (if soft-columns :min-width :width) (str (/ 100 columns) "%")))
-                child])))
+     (into
+       [:div {:class (build-inner-elt-bem bem)}]
+       (for [child children]
+         (let []
+           [:div
+            (cond->
+              {:class
+               (bem-utils/build-class
+                 (build-item-elt-bem bem)
+                 [["checked" (-> child second :checked)]])}
+              (and (integer? columns) (pos? columns))
+              (update :style assoc (if soft-columns :min-width :width) (str (/ 100 columns) "%")))
+            child])))
      (when (and (:invalid props) (seq errors))
-       (into [:ul {:class (build-errors-elt-bem bem)}]
-             (for [error errors] [:li {:class (build-error-elt-bem bem)} error])))]))
+       (into
+         [:ul {:class (build-errors-elt-bem bem)}]
+         (for [error errors] [:li {:class (build-error-elt-bem bem)} error])))]))
