@@ -1,9 +1,12 @@
 (ns nebula-widgets.kitchen-sink.panels.form-field-widget.views
   (:require
+    [nebula-widgets.kitchen-sink.panels.form-field-widget.common :as common]
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
+    [nebula-widgets.kitchen-sink.widgets.interactive-example.core :as interactive-example]
     [nebula-widgets.widgets.form-field.core :as form-field]
-    [nebula-widgets.widgets.radio-group-input.core :as radio-group-input]))
+    [nebula-widgets.widgets.radio-group-input.core :as radio-group-input]
+    [re-frame.core :as rf]))
 
 (defn- base-form-field [ff-props rgi-props n]
   [form-field/widget (merge {:label "Field"} ff-props)
@@ -16,6 +19,102 @@
          {:label label, :value n})
        :value 2}
       rgi-props)]])
+
+(def ^:private interactive-example-path->keyword
+  (partial common/panel-path->keyword :interactive-example "/"))
+
+(def ^:private ie-setters
+  (->> [:consider-input-margin :errors :display :label :required]
+       (map
+         (fn [prop]
+           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %2])]))
+       (into {})))
+
+;; TODO Extract common prop of ff and rgi widgets.
+(defn- interactive-example-cmp []
+  (let [*data (rf/subscribe [(interactive-example-path->keyword)])]
+    (fn []
+      (let [{:keys [consider-input-margin errors display label required] :as ff-props} @*data]
+        [interactive-example/widget
+         [:<>
+          [form-field/widget
+           ff-props
+           [radio-group-input/widget
+            {:columns 5
+             :inline true
+             :items (for [n (range 1 10) :let [label (str "choice" n)]] {:label label, :value n})
+             :value 1}]]
+          [form-field/widget {:label "Other field"}
+           [radio-group-input/widget
+            {:columns 5
+             :disabled true
+             :inline true
+             :items (for [n (range 1 10) :let [label (str "choice" n)]] {:label label, :value n})
+             :value 2}]]]
+         [form-field/widget
+          {:cid "consider-input-margin"
+           :consider-input-margin true
+           :display "table"
+           :label ":consider-input-margin"}
+          [radio-group-input/widget
+           {:columns 8
+            :inline true
+            :item-props {:on-change (:consider-input-margin ie-setters)}
+            :items (for [v [false true]] {:label (str v), :value v})
+            :no-row-gap true
+            :value consider-input-margin}]]
+         [form-field/widget
+          {:cid "errors"
+           :consider-input-margin true
+           :display "table"
+           :label ":errors"}
+          [radio-group-input/widget
+           {:columns 8
+            :inline true
+            :item-props {:on-change (:errors ie-setters)}
+            :items
+            [{:label "false", :value nil}
+             {:label "true", :value ["Error message 1" "Error message 2"]}]
+            :no-row-gap true
+            :value errors}]]
+         [form-field/widget
+          {:cid "display"
+           :consider-input-margin true
+           :display "table"
+           :label ":display"}
+          [radio-group-input/widget
+           {:columns 8
+            :inline true
+            :item-props {:on-change (:display ie-setters)}
+            :items (for [v ["inline" "stacked" "table"]] {:label v, :value v})
+            :no-row-gap true
+            :value display}]]
+         [form-field/widget
+          {:cid "label"
+           :consider-input-margin true
+           :display "table"
+           :label ":label"}
+          [radio-group-input/widget
+           {:columns 8
+            :inline true
+            :item-props {:on-change (:label ie-setters)}
+            :items
+            [{:label "string", :value "Field"}
+             {:label "tuple", :value ["Field" "something"]}]
+            :no-row-gap true
+            :value label}]]
+         [form-field/widget
+          {:cid "required"
+           :consider-input-margin true
+           :display "table"
+           :label ":required"}
+          [radio-group-input/widget
+           {:columns 8
+            :inline true
+            :item-props {:on-change (:required ie-setters)}
+            :items (for [v [false true]] {:label (str v), :value v})
+            :no-row-gap true
+            :value required}]]]))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -75,4 +174,6 @@
      [base-form-field {:required true}]
      "```clj
        [form-field/widget {:label \"Field\", :required true} ...]
-       ```"]]])
+       ```"]
+    "## Interactive example"
+    [interactive-example-cmp]]])
