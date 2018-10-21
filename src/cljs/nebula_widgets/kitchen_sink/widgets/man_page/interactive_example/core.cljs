@@ -1,7 +1,7 @@
-(ns nebula-widgets.kitchen-sink.widgets.interactive-example.core)
+(ns nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core)
 
 (def ^:private bem
-  "interactiveExample")
+  "manPage-interactiveExample")
 
 (def ^:private knob-elt-bem
   (str bem "__knob"))

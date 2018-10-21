@@ -1,6 +1,6 @@
-(ns nebula-widgets.kitchen-sink.widgets.interactive-example.knob.radio-group-input
+(ns nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.radio-group-input
   (:require
-    [nebula-widgets.kitchen-sink.widgets.interactive-example.knob.core :as knob]
+    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.core :as knob]
     [nebula-widgets.widgets.radio-group-input.core :as radio-group-input]))
 
 (def ^:private default-rgi-props

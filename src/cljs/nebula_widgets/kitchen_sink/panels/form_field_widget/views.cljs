@@ -3,8 +3,8 @@
     [nebula-widgets.kitchen-sink.panels.form-field-widget.common :as common]
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
-    [nebula-widgets.kitchen-sink.widgets.interactive-example.core :as ie]
-    [nebula-widgets.kitchen-sink.widgets.interactive-example.knob.radio-group-input :as ie-rgi-knob]
+    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
+    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.radio-group-input :as ie-rgi-knob]
     [nebula-widgets.widgets.form-field.core :as form-field]
     [nebula-widgets.widgets.radio-group-input.core :as rgi]
     [re-frame.core :as rf]))

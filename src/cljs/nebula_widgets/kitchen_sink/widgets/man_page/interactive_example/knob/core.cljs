@@ -1,9 +1,9 @@
-(ns nebula-widgets.kitchen-sink.widgets.interactive-example.knob.core
+(ns nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.core
   (:require
     [nebula-widgets.utils.bem :as bem-utils]))
 
 (def ^:private bem
-  "interactiveExample-knob")
+  "manPage-interactiveExample-knob")
 
 (def ^:private input-elt-bem
   (str bem "__input"))
