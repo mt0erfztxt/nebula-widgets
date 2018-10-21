@@ -22,10 +22,15 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO Add docs.
-(defn widget [view & knobs]
+(defn widget
+  "Renders interactive example.
+
+  Arguments:
+  * `subject` - required, renderable. A subject which behaviours must be demonstrated.
+  * `& knobs` - optional, seq of renderables. Knobs used to demonstrate subject's behaviors."
+  [subject & knobs]
   [:div {:class bem}
-   [:div {:class view-elt-bem} view]
+   [:div {:class view-elt-bem} subject]
    (into
      [:div {:class knobs-elt-bem}
       [:div {:class knobs-headers-elt-bem}
