@@ -64,8 +64,11 @@
                  [:required]]]
             [ie-rgi-knob/widget
              {:cid cid}
-             (cond-> {:item-props {:on-change (get ie-setters cid)}, :value (get ff-props cid)}
-                     items (assoc :items items))]))))))
+             (cond->
+               {:cid cid
+                :item-props {:on-change (get ie-setters cid)}
+                :value (get ff-props cid)}
+               items (assoc :items items))]))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC

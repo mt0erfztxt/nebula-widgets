@@ -156,8 +156,6 @@ class FormField extends BaseClass {
   // Assertions
   // ---------------------------------------------------------------------------
 
-  // TODO Perhaps we need to user textContent instead of text here because of
-  //      label can have auxiliary text (in child element).
   /**
    * Asserts that form field's label equal or matches specified value. Accepts
    * same arguments as {@link Fragment#expectTextIs} except that 'selector'
