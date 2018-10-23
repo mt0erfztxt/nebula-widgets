@@ -422,6 +422,21 @@ class GroupInput extends BaseClass {
       _.assign({}, this._opts.ItemFragmentOpts, opts)
     );
   }
+
+  /**
+   * Clicks on item that matches `spec` and `opts`. Returns clicked item.
+   * 
+   * @param {*} [spec] See `spec` parameter of item fragment's class constructor
+   * @param {*} [opts] See `opts` parameter of item fragment's class constructor
+   * @returns {Promise<Fragment>}
+   */
+  async clickItem(spec, opts) {
+    const item = this.getItem(spec, opts);
+    await item.expectIsExist();
+    await item.click();
+
+    return item;
+  }
 }
 
 Object.defineProperties(GroupInput, {

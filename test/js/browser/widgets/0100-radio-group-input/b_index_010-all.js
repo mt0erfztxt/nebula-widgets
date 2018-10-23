@@ -770,3 +770,19 @@ test("270 It should allow obtain checked item using `#getCheckedItem()`", async 
     RadioGroupInputCheckedItem
   );
 });
+
+test("280 It should allow click on item using `#clickItem()", async () => {
+  const parent = new ManPageExample({ cid: '010' });
+  await parent.expectIsExist();
+
+  const rgi = new RadioGroupInput({ cid: '010', parent });
+  await rgi.expectIsExist();
+
+  const option1 = rgi.getItem({ label: 'Option 1' });
+  await option1.expectIsExist();
+  await option1.expectIsNotChecked();
+
+  const rgiItem = await rgi.clickItem({ label: 'Option 1' });
+  await option1.expectIsChecked();
+  await rgiItem.expectIsEqual(option1);
+});
