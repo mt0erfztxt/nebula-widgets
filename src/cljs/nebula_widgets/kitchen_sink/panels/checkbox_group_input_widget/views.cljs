@@ -3,416 +3,276 @@
     [nebula-widgets.kitchen-sink.panels.checkbox-group-input-widget.common :as common]
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
+    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
+    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.radio-group-input :as ie-rgi-knob]
     [nebula-widgets.utils :as utils]
     [nebula-widgets.widgets.checkbox-group-input.core :as checkbox-group-input]
-    [nebula-widgets.widgets.radio-group-input.core :as radio-group-input]
     [re-frame.core :as rf]))
 
 ;;------------------------------------------------------------------------------
 ;; Example 010
 ;;------------------------------------------------------------------------------
 
-(def ^:private example010-path->keyword
-  (partial common/panel-path->keyword :example010 "/"))
-
-(defn- example010-item-on-change-handler [event value]
-  (let [checked? (utils/event->checked event)]
-    (rf/dispatch
-      [(example010-path->keyword :set :value)
-       #(if checked? (conj % value) (disj % value))])))
-
 (defn- example010-cmp []
-  (let [*example010 (rf/subscribe [(example010-path->keyword)])]
-    (fn []
-      (let [{:keys [value]} @*example010]
-        [example/widget
-         {:cid "010"
-          :title "widget without checked items"}
-         [checkbox-group-input/widget
-          {:cid "010"
-           :item-props {:on-change example010-item-on-change-handler}
-           :items
-           (for [n (range 1 4)]
-             {:cid n
-              :label (str "Option " n)
-              :value (->> n (str "option") keyword)})
-           :value value}]
-         "```clj
-           [checkbox-group-input/widget
-            {:item-props {:on-change (fn [event value] ...)}
-             :items
-             [{:label \"Option 1\" :value :option1}
-              {:label \"Option 2\" :value :option2}
-              {:label \"Option 3\" :value :option3}]
-             :value #{}}]
-           ```"]))))
+  [example/widget
+   {:cid "010"
+    :title "without checked items"}
+   [checkbox-group-input/widget
+    {:items
+     (for [n (range 1 4)]
+       {:cid n
+        :label (str "Option " n)
+        :value (->> n (str "option") keyword)})
+     :value #{}}]
+   "```clj
+     [checkbox-group-input/widget
+      {:item-props {:on-change (fn [event value] ...)}
+       :items
+       [{:label \"Option 1\" :value :option1}
+        {:label \"Option 2\" :value :option2}
+        {:label \"Option 3\" :value :option3}]
+       :value #{}}]
+     ```"])
 
 ;;------------------------------------------------------------------------------
 ;; Example 020
 ;;------------------------------------------------------------------------------
 
-(def ^:private example020-path->keyword
-  (partial common/panel-path->keyword :example020 "/"))
-
-(defn- example020-item-on-change-handler [event value]
-  (let [checked? (utils/event->checked event)]
-    (rf/dispatch
-      [(example020-path->keyword :set :value)
-       #(if checked? (conj % value) (disj % value))])))
-
 (defn- example020-cmp []
-  (let [*example020 (rf/subscribe [(example020-path->keyword)])]
-    (fn []
-      (let [{:keys [value]} @*example020]
-        [example/widget
-         {:cid "020"
-          :title "widget with checked items - case when `:boolean` prop is false"}
-         [checkbox-group-input/widget
-          {:cid "010"
-           :item-props {:on-change example020-item-on-change-handler}
-           :items
-           (for [n (range 1 4)]
-             {:cid n
-              :label (str "Option " n)
-              :value (->> n (str "option") keyword)})
-           :value value}]
-         "```clj
-           [checkbox-group-input/widget
-            {:item-props {:on-change (fn [event value] ...)}
-             :items
-             [{:label \"Option 1\" :value :option1}
-              {:label \"Option 2\" :value :option2}
-              {:label \"Option 3\" :value :option3}
-              ...]
-             :value #{:option1 :option3}}]
-           ```"]))))
+  [example/widget
+   {:cid "020"
+    :title "with checked items - case when :boolean prop is false"}
+   [checkbox-group-input/widget
+    {:items
+     (for [n (range 1 4)]
+       {:cid n
+        :label (str "Option " n)
+        :value (->> n (str "option") keyword)})
+     :value #{:option1 :option3}}]
+   "```clj
+     [checkbox-group-input/widget
+      {:item-props {:on-change (fn [event value] ...)}
+       :items
+       [{:label \"Option 1\" :value :option1}
+        {:label \"Option 2\" :value :option2}
+        {:label \"Option 3\" :value :option3}
+        ...]
+       :value #{:option1 :option3}}]
+     ```"])
 
 ;;------------------------------------------------------------------------------
 ;; Example 025
 ;;------------------------------------------------------------------------------
 
-(def ^:private example025-path->keyword
-  (partial common/panel-path->keyword :example025 "/"))
-
-(defn- example025-item-on-change-handler [event path]
-  (let [checked? (utils/event->checked event)]
-    (rf/dispatch
-      [(example025-path->keyword :set :value)
-       #(assoc % path checked?)])))
-
 (defn- example025-cmp []
-  (let [*example025 (rf/subscribe [(example025-path->keyword)])]
-    (fn []
-      (let [{:keys [value]} @*example025]
-        [example/widget
-         {:cid "025"
-          :title "widget with checked items - case when `:boolean` prop is true"}
-         [checkbox-group-input/widget
-          {:boolean true
-           :cid "010"
-           :item-props {:on-change example025-item-on-change-handler}
-           :items
-           (for [n (range 1 4)]
-             {:cid n
-              :label (str "Option " n)
-              :path (keyword (str "option" n))})
-           :value value}]
-         "```clj
-           [checkbox-group-input/widget
-            {:inline true
-             :item-props {:on-change (fn [event path] ...)}
-             :items
-             [{:label \"Option 1\" :path :option1 :value :option1}
-              {:label \"Option 2\" :path :option2 :value :option2}
-              {:label \"Option 3\" :path :option3 :value :option3}
-              ...]
-             :value {:option1 true, :option3 true}}]
-           ```"]))))
+  [example/widget
+   {:cid "025"
+    :title "with checked items - case when :boolean prop is true"}
+   [checkbox-group-input/widget
+    {:boolean true
+     :items
+     (for [n (range 1 4)]
+       {:cid n
+        :label (str "Option " n)
+        :path (keyword (str "option" n))})
+     :value {:option1 true, :option3 true}}]
+   "```clj
+     [checkbox-group-input/widget
+      {:inline true
+       :item-props {:on-change (fn [event path] ...)}
+       :items
+       [{:label \"Option 1\" :path :option1 :value :option1}
+        {:label \"Option 2\" :path :option2 :value :option2}
+        {:label \"Option 3\" :path :option3 :value :option3}
+        ...]
+       :value {:option1 true, :option3 true}}]
+     ```"])
 
 ;;------------------------------------------------------------------------------
 ;; Example 030
 ;;------------------------------------------------------------------------------
 
-(def ^:private example030-path->keyword
-  (partial common/panel-path->keyword :example030 "/"))
-
-(defn- example030-item-on-change-handler [event value]
-  (let [checked? (utils/event->checked event)]
-    (rf/dispatch
-      [(example030-path->keyword :set :value)
-       #(if checked? (conj % value) (disj % value))])))
-
 (defn- example030-cmp []
-  (let [*example030 (rf/subscribe [(example030-path->keyword)])]
-    (fn []
-      (let [{:keys [value]} @*example030]
-        [:<>
-         [example/widget
-          {:cid "030a"
-           :title "widget with inline and columns props - case without items with label that spans multiple columns"}
-          [checkbox-group-input/widget
-           {:cid "010"
-            :columns 5
-            :item-props {:on-change example030-item-on-change-handler}
-            :items
-            (for [n (range 1 15)]
-              {:label (str "Option " n)
-               :value (->> n (str "option") keyword)})
-            :value value}]
-          "```clj
-            [checkbox-group-input/widget
-             {:columns 5
-              :inline true
-              :item-props {:on-change (fn [event value] ...)}
-              :items
-              [{:label \"Option 1\" :value :option1}
-               {:label \"Option 2\" :value :option2}
-               {:label \"Option 3\" :value :option3}
-               ...]
-              :value #{:option1 :option3 :option4}]
-            ```"]
-         [example/widget
-          {:cid "030b"
-           :title "widget with inline and columns props - case with item with label that spans multiple columns"}
-          [checkbox-group-input/widget
-           {:cid "010"
-            :columns 5
-            :item-props {:on-change example030-item-on-change-handler}
-            :items
-            (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Option " n))]]
-              {:label label
-               :value (->> n (str "option") keyword)})
-            :value value}]
-          "```clj
-            [checkbox-group-input/widget
-             {:columns 5
-              :inline true
-              :item-props {:on-change (fn [event value] ...)}
-              :items
-              [{:label \"Option 1\" :value :option1}
-               {:label \"Option 2\" :value :option2}
-               {:label \"Option 3\" :value :option3}
-               ...]
-              :value #{:option1 :option3 :option4}}]
-            ```"]
-         [example/widget
-          {:cid "030c"
-           :title "widget with inline and columns props - case with item with label that spans multiple columns and label/shrinked prop"}
-          [checkbox-group-input/widget
-           {:cid "010"
-            :columns 5
-            :item-props {:on-change example030-item-on-change-handler}
-            :items
-            (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Option " n))]]
-              {:label {:shrinked true, :text label}
-               :value (->> n (str "option") keyword)})
-            :value value}]
-          "```clj
-            [checkbox-group-input/widget
-             {:columns 5
-              :inline true
-              :item-props {:on-change (fn [event value] ...)}
-              :items
-              [{:label {:shrinked true :text \"Option 1\"} :value :option1}
-               {:label {:shrinked true :text \"Option 2\"} :value :option2}
-               {:label {:shrinked true :text \"Option 3\"} :value :option3}
-               ...]
-              :value :option1}]
-            ```"]
-         [example/widget
-          {:cid "030d"
-           :title "widget with inline and columns props - case with item with label that spans multiple columns and soft-columns prop"}
-          [checkbox-group-input/widget
-           {:cid "010"
-            :columns 5
-            :item-props {:on-change example030-item-on-change-handler}
-            :items
-            (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Option " n))]]
-              {:label label
-               :value (->> n (str "option") keyword)})
-            :soft-columns true
-            :value value}]
-          "```clj
-            [checkbox-group-input/widget
-             {:columns 5
-              :inline true
-              :item-props {:on-change (fn [event value] ...)}
-              :items
-              [{:label \"Option 1\" :value :option1}
-               {:label \"Option 2\" :value :option2}
-               {:label \"Option 3\" :value :option3}
-               ...]
-              :soft-columns true
-              :value :option1}]
-            ```"]]))))
+  [:<>
+   [example/widget
+    {:cid "030a"
+     :title "with :inline and :columns props - case without items with label that spans multiple columns"}
+    [checkbox-group-input/widget
+     {:columns 5
+      :items
+      (for [n (range 1 15)]
+        {:label (str "Option " n)
+         :value (->> n (str "option") keyword)})
+      :value #{:option1 :option3 :option4}}]
+    "```clj
+      [checkbox-group-input/widget
+       {:columns 5
+        :inline true
+        :item-props {:on-change (fn [event value] ...)}
+        :items
+        [{:label \"Option 1\" :value :option1}
+         {:label \"Option 2\" :value :option2}
+         {:label \"Option 3\" :value :option3}
+         ...]
+        :value #{:option1 :option3 :option4}]
+      ```"]
+   [example/widget
+    {:cid "030b"
+     :title "widget with inline and columns props - case with item with label that spans multiple columns"}
+    [checkbox-group-input/widget
+     {:columns 5
+      :items
+      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Option " n))]]
+        {:label label
+         :value (->> n (str "option") keyword)})
+      :value #{:option1 :option3 :option4}}]
+    "```clj
+      [checkbox-group-input/widget
+       {:columns 5
+        :inline true
+        :item-props {:on-change (fn [event value] ...)}
+        :items
+        [{:label \"Option 1\" :value :option1}
+         {:label \"Option 2\" :value :option2}
+         {:label \"Option 3\" :value :option3}
+         ...]
+        :value #{:option1 :option3 :option4}}]
+      ```"]
+   [example/widget
+    {:cid "030c"
+     :title "with :inline and :columns props - case with item with label that spans multiple columns and :label.shrinked prop"}
+    [checkbox-group-input/widget
+     {:columns 5
+      :items
+      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Option " n))]]
+        {:label {:shrinked true, :text label}
+         :value (->> n (str "option") keyword)})
+      :value #{:option1 :option3 :option4}}]
+    "```clj
+      [checkbox-group-input/widget
+       {:columns 5
+        :inline true
+        :item-props {:on-change (fn [event value] ...)}
+        :items
+        [{:label {:shrinked true :text \"Option 1\"} :value :option1}
+         {:label {:shrinked true :text \"Option 2\"} :value :option2}
+         {:label {:shrinked true :text \"Option 3\"} :value :option3}
+         ...]
+        :value #{:option1 :option3 :option4}}]
+      ```"]
+   [example/widget
+    {:cid "030d"
+     :title "with :inline and :columns props - case with item with label that spans multiple columns and :soft-columns prop"}
+    [checkbox-group-input/widget
+     {:columns 5
+      :items
+      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Option " n))]]
+        {:label label
+         :value (->> n (str "option") keyword)})
+      :soft-columns true
+      :value #{:option1 :option3 :option4}}]
+    "```clj
+      [checkbox-group-input/widget
+       {:columns 5
+        :inline true
+        :item-props {:on-change (fn [event value] ...)}
+        :items
+        [{:label \"Option 1\" :value :option1}
+         {:label \"Option 2\" :value :option2}
+         {:label \"Option 3\" :value :option3}
+         ...]
+        :soft-columns true
+        :value #{:option1 :option3 :option4}}]
+      ```"]])
 
 ;;------------------------------------------------------------------------------
 ;; Example 040
 ;;------------------------------------------------------------------------------
 
-(def ^:private example040-path->keyword
-  (partial common/panel-path->keyword :example040 "/"))
-
-(defn- example040-item-on-change-handler [event value]
-  (let [checked? (utils/event->checked event)]
-    (rf/dispatch
-      [(example040-path->keyword :set :value)
-       #(if checked? (conj % value) (disj % value))])))
-
 (defn- example040-cmp []
-  (let [*example040 (rf/subscribe [(example040-path->keyword)])]
-    (fn []
-      (let [{:keys [value]} @*example040
-            default-props
-            {:equidistant true
-             :item-props {:on-change example040-item-on-change-handler}
-             :items
-             (map-indexed
-               (fn [idx label]
-                 {:label label, :value (->> idx inc (str "option") keyword)})
-               ["Label" "Long label" "Very, very long label" "Label"])
-             :value value
-             :widget "button"}]
-        [example/widget
-         {:cid "040"
-          :title "widget with equidistant, size and widget props"}
-         [checkbox-group-input/widget (merge default-props {:cid "010", :size "large"})]
-         [checkbox-group-input/widget (merge default-props {:cid "020"})]
-         [checkbox-group-input/widget (merge default-props {:cid "030", :size "small"})]
-         "```clj
-           [checkbox-group-input/widget
-            {:equidistant true
-             :inline true
-             :item-props {:on-change (fn [event value] ...)}
-             :items
-             [{:label \"Option 1\" :value :option1}
-              {:label \"Option 2\" :value :option2}
-              {:label \"Option 3\" :value :option3}
-              ...]
-             :size \"large\"   ; \"normal\", \"small\"
-             :value #{:option1 :option2}
-             :widget \"button\"}]
-           ```"]))))
+  (let [default-props
+        {:equidistant true
+         :items
+         (map-indexed
+           (fn [idx label]
+             {:label label, :value (->> idx inc (str "option") keyword)})
+           ["Label" "Long label" "Very, very long label" "Label"])
+         :value #{:option1 :option2}
+         :widget "button"}]
+    [example/widget
+     {:cid "040"
+      :title "with :equidistant, :size and :widget props"}
+     [checkbox-group-input/widget (merge default-props {:size "large"})]
+     [checkbox-group-input/widget default-props]
+     [checkbox-group-input/widget (merge default-props {:size "small"})]
+     "```clj
+       [checkbox-group-input/widget
+        {:equidistant true
+         :inline true
+         :item-props {:on-change (fn [event value] ...)}
+         :items [{:label \"Label\" :value :option1}...]
+         :size \"large\"   ; \"normal\", \"small\"
+         :value #{:option1 :option2}
+         :widget \"button\"}]
+       ```"]))
 
 ;;------------------------------------------------------------------------------
 ;; Interactive example
 ;;------------------------------------------------------------------------------
 
-(def ^:private example900-path->keyword
-  (partial common/panel-path->keyword :example900 "/"))
+(def ^:private interactive-example-path->keyword
+  (partial common/panel-path->keyword :interactive-example "/"))
 
-(defn- example900-item-on-change-handler [event value]
-  (let [checked? (utils/event->checked event)]
-    (rf/dispatch
-      [(example900-path->keyword :set :value)
-       #(if checked? (conj % value) (disj % value))])))
+(def ^:private ie-setters
+  (->> [:columns :disabled :equidistant :errors :inline :invalid :label-shrinked :no-row-gap :size :soft-columns
+        :stacked-on-mobile :value :widget]
+       (map
+         (fn [prop]
+           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %2])]))
+       (into {})))
 
-(defn- example900-dispatch-set-disabled [v]
-  (rf/dispatch [(example900-path->keyword :set :disabled) v]))
+(defn- update-ie-value [event value]
+  (let [updater (if (utils/event->checked event) conj disj)]
+    ((:value ie-setters) event #(updater % value))))
 
-(defn- example900-set-disabled-button-on-click-handler [_]
-  (example900-dispatch-set-disabled true))
-
-(defn- example900-unset-disabled-button-on-click-handler [_]
-  (example900-dispatch-set-disabled false))
-
-(defn- example900-dispatch-set-invalid [v]
-  (rf/dispatch [(example900-path->keyword :set :invalid) v]))
-
-(defn- example900-set-invalid-button-on-click-handler [_]
-  (example900-dispatch-set-invalid true))
-
-(defn- example900-unset-invalid-button-on-click-handler [_]
-  (example900-dispatch-set-invalid false))
-
-(defn- example900-dispatch-set-label-shrinked [v]
-  (rf/dispatch [(example900-path->keyword :set :label-shrinked) v]))
-
-(defn- example900-set-label-shrinked-button-on-click-handler [_]
-  (example900-dispatch-set-label-shrinked true))
-
-(defn- example900-unset-label-shrinked-button-on-click-handler [_]
-  (example900-dispatch-set-label-shrinked false))
-
-(defn- example900-dispatch-set-widget [v]
-  (rf/dispatch [(example900-path->keyword :set :widget) v]))
-
-(defn- example900-set-widget-to-icon-button-on-click-handler [_]
-  (example900-dispatch-set-widget "icon"))
-
-(defn- example900-set-widget-to-native-button-on-click-handler [_]
-  (example900-dispatch-set-widget "native"))
-
-(defn- example900-cmp []
-  (let [*example900 (rf/subscribe [(example900-path->keyword)])]
+(defn- interactive-example-cmp []
+  (let [*cgi-props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [disabled invalid label-shrinked value widget]} @*example900]
-        [example/widget
-         {:cid "020"
-          :title "widget with checked items - case when `:boolean` prop is false)"}
-         [checkbox-group-input/widget
-          {:cid "010"
-           :columns 5
-           :disabled disabled
-           :inline true
-           :item-props {:on-change example900-item-on-change-handler}
-           :items
-           (for [n (range 1 19)]
-             {:cid n
-              :invalid invalid
-              :label {:shrinked label-shrinked :text (str "Option " n (when (= 11 n) " (Longish text for label)"))}
-              :value (->> n (str "option") keyword)
-              :widget widget})
-           :invalid invalid
-           :value value
-           :widget widget}]
-         [:div                                              ; TODO Use button-group widget
-          [:button.nw-button.nw-button--cid_setDisabled
-           {:on-click example900-set-disabled-button-on-click-handler
-            :type "button"}
-           "Set disabled"]
-          [:button.nw-button.nw-button--cid_unsetDisabled
-           {:on-click example900-unset-disabled-button-on-click-handler
-            :type "button"}
-           "Unset disabled"]]
-         [:div                                              ; TODO Use button-group widget
-          [:button.nw-button.nw-button--cid_setInvalid
-           {:on-click example900-set-invalid-button-on-click-handler
-            :type "button"}
-           "Set invalid"]
-          [:button.nw-button.nw-button--cid_unsetInvalid
-           {:on-click example900-unset-invalid-button-on-click-handler
-            :type "button"}
-           "Unset invalid"]]
-         [:div                                              ; TODO Use button-group widget
-          [:button.nw-button.nw-button--cid_setLabelShrinked
-           {:on-click example900-set-label-shrinked-button-on-click-handler
-            :type "button"}
-           "Set labelShrinked"]
-          [:button.nw-button.nw-button--cid_unsetLabelShrinked
-           {:on-click example900-unset-label-shrinked-button-on-click-handler
-            :type "button"}
-           "Unset labelShrinked"]]
-         [:div                                              ; TODO Use button-group widget
-          [:button.nw-button.nw-button--cid_setWidgetToIcon
-           {:on-click example900-set-widget-to-icon-button-on-click-handler
-            :type "button"}
-           "Set widget to icon"]
-          [:button.nw-button.nw-button--cid_setWidgetToNative
-           {:on-click example900-set-widget-to-native-button-on-click-handler
-            :type "button"}
-           "Set widget to native"]]
-         "```clj
+      (let [cgi-props @*cgi-props]
+        (into
+          [ie/widget
            [checkbox-group-input/widget
-            {:inline true
-             :item-props {:on-change (fn [event value] ...)}
-             :items
-             [{:label \"Option 1\" :value :option1}
-              {:label \"Option 2\" :value :option2}
-              {:label \"Option 3\" :value :option3}
-              ...]
-             :value #{:option1 :option3 :option4}}]
-           ```"]))))
+            (assoc cgi-props
+              :item-props {:on-change update-ie-value}
+              :items
+              (for [n (range 1 10) :let [label (str "option" n)]]
+                {:label
+                 {:shrinked (get cgi-props :label-shrinked)
+                  :text (str label (when (= 2 n) " (some long text here)"))}
+                 :value (keyword label)}))]]
+          (for [[cid items]
+                [[:columns (for [v [nil 3 5]] {:label (if (nil? v) "nil" v), :value v})]
+                 [:disabled]
+                 [:equidistant]
+                 [:errors
+                  [{:label "no"}
+                   {:label "yes", :value #{"error 1" "error 2"}}]]
+                 [:inline]
+                 [:invalid]
+                 [:label-shrinked]
+                 [:no-row-gap]
+                 [:size (for [s ["small" "normal" "large"]] {:label s, :value s})]
+                 [:soft-columns]
+                 [:stacked-on-mobile]
+                 [:widget (for [s ["button" "icon" "native"]] {:label s, :value s})]]]
+            [ie-rgi-knob/widget
+             {:cid cid}
+             (cond->
+               {:cid cid
+                :item-props {:on-change (get ie-setters cid)}
+                :value (get cgi-props cid)}
+               items (assoc :items items))]))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -429,4 +289,4 @@
     [example030-cmp]
     [example040-cmp]
     "## Interactive example"
-    [example900-cmp]]])
+    [interactive-example-cmp]]])

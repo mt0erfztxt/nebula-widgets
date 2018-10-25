@@ -41,8 +41,11 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO Currently we passing child components as Hiccup, but maybe better to pass input-cmp and seq of props (or args?)
+;;      instead?! See interactive example knob for example.
 (defn widget
-  "Renders group input.\\
+  "Renders group input.
+
   Not intended to be used directly but rather as a base for more specific group input widgets.
 
   Arguments:
