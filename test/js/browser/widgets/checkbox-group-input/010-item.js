@@ -239,3 +239,355 @@ test("100 It should allow assert on whether item isn't disabled using `#expectIs
 
   expect(isThrown, 'to be true');
 });
+
+test("110 It should allow assert on whether item is enabled using `#expectIsEnabled()`", async () => {
+  const parent = new InteractiveExample();
+  await parent.expectIsExist();
+
+  const rgi = new RadioGroupInput({ cid: 'disabled', parent });
+  await rgi.expectIsExist();
+
+  const item = new CheckboxGroupInputItem({ label: 'option5', parent });
+  await item.expectIsExist();
+
+  // -- Successful case
+
+  await item.hover();
+  await item.expectIsEnabled();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'true' });
+  await item.hover();
+
+  try {
+    await item.expectIsEnabled();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input\.item.+must not have BEM modifier 'disabled,'.+but it does/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("120 It should allow assert on whether item isn't enabled using `#expectIsNotEnabled()`", async () => {
+  const parent = new InteractiveExample();
+  await parent.expectIsExist();
+
+  const rgi = new RadioGroupInput({ cid: 'disabled', parent });
+  await rgi.expectIsExist();
+
+  const item = new CheckboxGroupInputItem({ label: 'option5', parent });
+  await item.expectIsExist();
+
+  // -- Successful case
+
+  await rgi.clickItem({ label: 'true' });
+  await item.hover();
+  await item.expectIsNotEnabled();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'false' });
+  await item.hover();
+
+  try {
+    await item.expectIsNotEnabled();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input\.item.+must have BEM modifier 'disabled,'.+but it doesn't/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("130 It should allow get item's 'Invalid' part of state using `#getInvalidPartOfState()`", async () => {
+  const parent = new InteractiveExample();
+  await parent.expectIsExist();
+
+  const rgi = new RadioGroupInput({ cid: 'invalid', parent });
+  await rgi.expectIsExist();
+
+  const item = new CheckboxGroupInputItem({ label: 'option5', parent });
+  await item.expectIsExist();
+
+  // -- Check when valid
+
+  await item.hover();
+  expect(await item.getInvalidPartOfState(), 'to be false');
+
+  // -- Check when invalid
+
+  await rgi.clickItem({ label: 'true' });
+  await item.hover();
+  expect(await item.getInvalidPartOfState(), 'to be true');
+});
+
+test("140 It should allow assert on whether item is invalid using `#expectIsInvalid()`", async () => {
+  const parent = new InteractiveExample();
+  await parent.expectIsExist();
+
+  const rgi = new RadioGroupInput({ cid: 'invalid', parent });
+  await rgi.expectIsExist();
+
+  const item = new CheckboxGroupInputItem({ label: 'option5', parent });
+  await item.expectIsExist();
+
+  // -- Successful case
+
+  await rgi.clickItem({ label: 'true' });
+  await item.hover();
+  await item.expectIsInvalid();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'false' });
+  await item.hover();
+
+  try {
+    await item.expectIsInvalid();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input\.item.+must have BEM modifier 'invalid,'.+but it doesn't/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("150 It should allow assert on whether item isn't invalid using `#expectIsNotInvalid()`", async () => {
+  const parent = new InteractiveExample();
+  await parent.expectIsExist();
+
+  const rgi = new RadioGroupInput({ cid: 'invalid', parent });
+  await rgi.expectIsExist();
+
+  const item = new CheckboxGroupInputItem({ label: 'option5', parent });
+  await item.expectIsExist();
+
+  // -- Successful case
+
+  await item.hover();
+  await item.expectIsNotInvalid();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'true' });
+  await item.hover();
+
+  try {
+    await item.expectIsNotInvalid();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input\.item.+must not have BEM modifier 'invalid,'.+but it does/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("160 It should allow assert on whether item is valid using `#expectIsValid()`", async () => {
+  const parent = new InteractiveExample();
+  await parent.expectIsExist();
+
+  const rgi = new RadioGroupInput({ cid: 'invalid', parent });
+  await rgi.expectIsExist();
+
+  const item = new CheckboxGroupInputItem({ label: 'option5', parent });
+  await item.expectIsExist();
+
+  // -- Successful case
+
+  await item.hover();
+  await item.expectIsValid();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'true' });
+  await item.hover();
+
+  try {
+    await item.expectIsValid();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input\.item.+must not have BEM modifier 'invalid,'.+but it does/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("170 It should allow assert on whether item isn't valid using `#expectIsNotValid()`", async () => {
+  const parent = new InteractiveExample();
+  await parent.expectIsExist();
+
+  const rgi = new RadioGroupInput({ cid: 'invalid', parent });
+  await rgi.expectIsExist();
+
+  const item = new CheckboxGroupInputItem({ label: 'option5', parent });
+  await item.expectIsExist();
+
+  // -- Successful case
+
+  await rgi.clickItem({ label: 'true' });
+  await item.hover();
+  await item.expectIsNotValid();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'false' });
+  await item.hover();
+
+  try {
+    await item.expectIsNotValid();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input\.item.+must have BEM modifier 'invalid,'.+but it doesn't/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("180 It should allow get item's 'LabelShrinked' part of state using `#getLabelShrinkedPartOfState()`", async () => {
+  const parent = new InteractiveExample();
+  await parent.expectIsExist();
+
+  const rgi = new RadioGroupInput({ cid: 'label-shrinked', parent });
+  await rgi.expectIsExist();
+
+  const item = new CheckboxGroupInputItem({ label: 'option5', parent });
+  await item.expectIsExist();
+
+  // -- Check when not shrinked
+
+  await item.hover();
+  expect(await item.getLabelShrinkedPartOfState(), 'to be false');
+
+  // -- Check when shrinked
+
+  await rgi.clickItem({ label: 'true' });
+  await item.hover();
+  expect(await item.getLabelShrinkedPartOfState(), 'to be true');
+});
+
+test("190 It should allow assert on whether item's label is shrinked using `#expectIsLabelShrinked()`", async () => {
+  const parent = new InteractiveExample();
+  await parent.expectIsExist();
+
+  const rgi = new RadioGroupInput({ cid: 'label-shrinked', parent });
+  await rgi.expectIsExist();
+
+  const item = new CheckboxGroupInputItem({ label: 'option5', parent });
+  await item.expectIsExist();
+
+  // -- Successful case
+
+  await rgi.clickItem({ label: 'true' });
+  await item.hover();
+  await item.expectIsLabelShrinked();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'false' });
+  await item.hover();
+
+  try {
+    await item.expectIsLabelShrinked();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input\.item.+must have BEM modifier 'labelShrinked,'.+but it doesn't/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("200 It should allow assert on whether item's label isn't shrinked using `#expectIsNotLabelShrinked()`", async () => {
+  const parent = new InteractiveExample();
+  await parent.expectIsExist();
+
+  const rgi = new RadioGroupInput({ cid: 'label-shrinked', parent });
+  await rgi.expectIsExist();
+
+  const item = new CheckboxGroupInputItem({ label: 'option5', parent });
+  await item.expectIsExist();
+
+  // -- Successful case
+
+  await item.hover();
+  await item.expectIsNotLabelShrinked();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'true' });
+  await item.hover();
+
+  try {
+    await item.expectIsNotLabelShrinked();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input\.item.+must not have BEM modifier 'labelShrinked,'.+but it does/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});

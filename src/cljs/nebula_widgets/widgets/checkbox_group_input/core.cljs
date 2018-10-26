@@ -26,8 +26,9 @@
   Notes:
   * item path (see `:boolean` prop) is convenient to group multiple boolean fields in one widget, meantime item value
     convenient when single field is a collection of distinct elements
+  * `:invalid` prop of group overrides same prop of item
   * `:soft-columns` prop can be convenient in case of small containers with just 2-3 columns"
-  [{:keys [disabled item-props items value widget] :as props}]
+  [{:keys [disabled invalid item-props items value widget] :as props}]
   (into
     [group-input/widget (assoc props :bem "nw-checkboxGroupInput")]
     (for [{:keys [path] :as item} items]
@@ -40,4 +41,5 @@
             (->> (if (sequential? path) path [path]) (get-in value) boolean)
             (->> item :value (contains? value)))}
          {:disabled disabled
+          :invalid invalid
           :widget (-> widget keyword #{:button :icon :native} (or :icon))})])))
