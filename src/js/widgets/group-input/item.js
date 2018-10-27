@@ -272,17 +272,30 @@ class GroupInputItem extends GroupInputItemBaseClass {
    * Hovers on item.
    * 
    * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.label] When truthy, then hover on item's label instead of item itself
    * @param {Number} [options.wait] Wait specified number of milliseconds after hover is done
    * @returns {Promise<void>}
    */
   async hover(options) {
-    const { wait } = new Options(options);
+    const { label, wait } = new Options(options);
 
-    await t.hover(this.selector);
+    await t.hover(label ? this.labelElementSelector : this.selector);
 
     if (wait) {
       await t.wait(wait);
     }
+  }
+
+  /**
+   * Hovers on item's label. Same as @see GroupInputItem.hover but
+   * 'options.label' forcibly set to true.
+   */
+  async hoverLabel(options) {
+    await this.hover(_
+      .chain(new Options(options))
+      .set('label', true)
+      .value()
+    );
   }
 }
 
