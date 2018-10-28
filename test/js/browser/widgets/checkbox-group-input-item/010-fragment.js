@@ -4,7 +4,7 @@ import InteractiveExample from '../../../../../src/js/kitchen-sink/widgets/man-p
 import CheckboxGroupInputItem from '../../../../../src/js/widgets/checkbox-group-input/item';
 import RadioGroupInput from '../../../../../src/js/widgets/radio-group-input'
 
-fixture `Widgets :: Checkbox Group Input Item :: 010 All`
+fixture `Widgets :: Checkbox Group Input Item :: 010 Fragment`
   .page('http://localhost:3449/widgets/checkbox-group-input-item');
 
 test("010 It should allow obtain checkbox group input item", async () => {
