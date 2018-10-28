@@ -71,19 +71,6 @@ class CheckboxGroupInputItem extends CheckableGroupInputItem {
 
     return value;
   }
-
-  // ---------------------------------------------------------------------------
-  // Other Methods
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Clicks on item.
-   * 
-   * @returns {Promise<void>}
-   */
-  async click() {
-    await t.click(this.labelElementSelector);
-  }
 }
 
 Object.defineProperties(CheckboxGroupInputItem, {

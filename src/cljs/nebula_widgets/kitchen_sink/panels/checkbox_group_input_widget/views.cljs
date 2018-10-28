@@ -28,9 +28,9 @@
      [checkbox-group-input/widget
       {:item-props {:on-change (fn [event value] ...)}
        :items
-       [{:label \"Option 1\" :value :option1}
-        {:label \"Option 2\" :value :option2}
-        {:label \"Option 3\" :value :option3}]
+       [{:label \"Option 1\", :value :option1}
+        {:label \"Option 2\", :value :option2}
+        {:label \"Option 3\", :value :option3}]
        :value #{}}]
      ```"])
 
@@ -53,10 +53,9 @@
      [checkbox-group-input/widget
       {:item-props {:on-change (fn [event value] ...)}
        :items
-       [{:label \"Option 1\" :value :option1}
-        {:label \"Option 2\" :value :option2}
-        {:label \"Option 3\" :value :option3}
-        ...]
+       [{:label \"Option 1\", :value :option1}
+        {:label \"Option 2\", :value :option2}
+        {:label \"Option 3\", :value :option3}]
        :value #{:option1 :option3}}]
      ```"])
 
@@ -81,10 +80,9 @@
       {:inline true
        :item-props {:on-change (fn [event path] ...)}
        :items
-       [{:label \"Option 1\" :path :option1 :value :option1}
-        {:label \"Option 2\" :path :option2 :value :option2}
-        {:label \"Option 3\" :path :option3 :value :option3}
-        ...]
+       [{:label \"Option 1\", :path :option1}
+        {:label \"Option 2\", :path :option2}
+        {:label \"Option 3\", :path :option3}]
        :value {:option1 true, :option3 true}}]
      ```"])
 
@@ -110,9 +108,9 @@
         :inline true
         :item-props {:on-change (fn [event value] ...)}
         :items
-        [{:label \"Option 1\" :value :option1}
-         {:label \"Option 2\" :value :option2}
-         {:label \"Option 3\" :value :option3}
+        [{:label \"Option 1\", :value :option1}
+         {:label \"Option 2\", :value :option2}
+         {:label \"Option 3\", :value :option3}
          ...]
         :value #{:option1 :option3 :option4}]
       ```"]
@@ -132,9 +130,9 @@
         :inline true
         :item-props {:on-change (fn [event value] ...)}
         :items
-        [{:label \"Option 1\" :value :option1}
-         {:label \"Option 2\" :value :option2}
-         {:label \"Option 3\" :value :option3}
+        [{:label \"Option 1\", :value :option1}
+         {:label \"Option 2\", :value :option2}
+         {:label \"Option 3\", :value :option3}
          ...]
         :value #{:option1 :option3 :option4}}]
       ```"]
@@ -154,9 +152,9 @@
         :inline true
         :item-props {:on-change (fn [event value] ...)}
         :items
-        [{:label {:shrinked true :text \"Option 1\"} :value :option1}
-         {:label {:shrinked true :text \"Option 2\"} :value :option2}
-         {:label {:shrinked true :text \"Option 3\"} :value :option3}
+        [{:label {:shrinked true, :text \"Option 1\"}, :value :option1}
+         {:label {:shrinked true, :text \"Option 2\"}, :value :option2}
+         {:label {:shrinked true, :text \"Option 3\"}, :value :option3}
          ...]
         :value #{:option1 :option3 :option4}}]
       ```"]
@@ -177,9 +175,9 @@
         :inline true
         :item-props {:on-change (fn [event value] ...)}
         :items
-        [{:label \"Option 1\" :value :option1}
-         {:label \"Option 2\" :value :option2}
-         {:label \"Option 3\" :value :option3}
+        [{:label \"Option 1\", :value :option1}
+         {:label \"Option 2\", :value :option2}
+         {:label \"Option 3\", :value :option3}
          ...]
         :soft-columns true
         :value #{:option1 :option3 :option4}}]
@@ -210,7 +208,7 @@
         {:equidistant true
          :inline true
          :item-props {:on-change (fn [event value] ...)}
-         :items [{:label \"Label\" :value :option1}...]
+         :items [{:label \"Label\", :value :option1}, ...]
          :size \"large\"   ; \"normal\", \"small\"
          :value #{:option1 :option2}
          :widget \"button\"}]

@@ -44,7 +44,11 @@ class GroupInputItem extends GroupInputItemBaseClass {
    * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    */
   constructor(spec, opts) {
-    const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
+    const {
+      initializedOpts,
+      initializedSpec,
+      isInstance
+    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
 
     if (isInstance === true) {
       return spec;
@@ -261,15 +265,20 @@ class GroupInputItem extends GroupInputItemBaseClass {
    */
 
   // ---------------------------------------------------------------------------
-  // Assertions
-  // ---------------------------------------------------------------------------
-
-  // ---------------------------------------------------------------------------
   // Other Methods
   // ---------------------------------------------------------------------------
 
   /**
-   * Hovers on item.
+   * Clicks on group input item.
+   * 
+   * @returns {Promise<void>}
+   */
+  async click() {
+    await t.click(this.labelElementSelector);
+  }
+
+  /**
+   * Hovers on group input item.
    * 
    * @param {Options|Object} [options] Options
    * @param {Boolean} [options.label] When truthy, then hover on item's label instead of item itself
@@ -287,7 +296,7 @@ class GroupInputItem extends GroupInputItemBaseClass {
   }
 
   /**
-   * Hovers on item's label. Same as @see GroupInputItem.hover but
+   * Hovers on group input item's label. Same as @see GroupInputItem.hover but
    * 'options.label' forcibly set to true.
    */
   async hoverLabel(options) {

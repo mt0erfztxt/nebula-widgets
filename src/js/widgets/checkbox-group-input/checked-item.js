@@ -29,7 +29,11 @@ class CheckboxGroupInputCheckedItem extends CheckableGroupInputCheckedItem {
    * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    */
   constructor(spec, opts) {
-    const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
+    const {
+      initializedOpts,
+      initializedSpec,
+      isInstance
+    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
 
     if (isInstance === true) {
       return spec;
@@ -67,20 +71,6 @@ class CheckboxGroupInputCheckedItem extends CheckableGroupInputCheckedItem {
     }
 
     return value;
-  }
-
-  // ---------------------------------------------------------------------------
-  // Other Methods
-  // ---------------------------------------------------------------------------
-
-  // TODO Copied as-is from './item' - find a better way (mixins?).
-  /**
-   * Clicks on checked item.
-   * 
-   * @returns {Promise<void>}
-   */
-  async click() {
-    await t.click(this.labelElementSelector);
   }
 }
 
