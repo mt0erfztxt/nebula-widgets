@@ -61,7 +61,7 @@ class GroupInputItem extends GroupInputItemBaseClass {
     if (!_.isEmpty(label)) {
       // We need to reset BEM modifier because checked item of checkable group
       // input has it (--checked) and that would result in
-      // 'nw-groupInput__label--checked' which is not we expect.
+      // 'nw-groupInput-item__label--checked' which is not we expect.
       const labelElementBemBase = this.cloneBemBase().setElt('label').setMod();
       this.selector = selector
         .filterByText(this.selector.child(`.${labelElementBemBase}`), label)
@@ -79,7 +79,10 @@ class GroupInputItem extends GroupInputItemBaseClass {
    */
   get inputElementBemBase() {
     if (!this._inputElementBemBase) {
-      this._inputElementBemBase = this.cloneBemBase().setElt('input');
+      this._inputElementBemBase = this
+        .cloneBemBase()
+        .setElt('input')
+        .setMod(); // required, see 'label' spec for details
     }
 
     return this._inputElementBemBase;
@@ -92,7 +95,9 @@ class GroupInputItem extends GroupInputItemBaseClass {
    */
   get inputElementSelector() {
     if (!this._inputElementSelector) {
-      this._inputElementSelector = this.selector.find(`.${this.inputElementBemBase}`);
+      this._inputElementSelector = this
+        .selector
+        .find(`.${this.inputElementBemBase}`);
     }
 
     return this._inputElementSelector;
@@ -105,7 +110,10 @@ class GroupInputItem extends GroupInputItemBaseClass {
    */
   get labelElementBemBase() {
     if (!this._labelElementBemBase) {
-      this._labelElementBemBase = this.cloneBemBase().setElt('label');
+      this._labelElementBemBase = this
+        .cloneBemBase()
+        .setElt('label')
+        .setMod(); // required, see 'label' spec for details
     }
 
     return this._labelElementBemBase;
@@ -118,7 +126,9 @@ class GroupInputItem extends GroupInputItemBaseClass {
    */
   get labelElementSelector() {
     if (!this._labelElementSelector) {
-      this._labelElementSelector = this.selector.find(`.${this.labelElementBemBase}`);
+      this._labelElementSelector = this
+        .selector
+        .find(`.${this.labelElementBemBase}`);
     }
 
     return this._labelElementSelector;
