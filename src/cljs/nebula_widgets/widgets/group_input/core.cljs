@@ -22,7 +22,7 @@
   (str (build-bem bem) "__item"))
 
 (defn- build-class
-  [{:keys [bem cid columns cns disabled equidistant inline invalid no-row-gap size stacked-on-mobile widget]}]
+  [{:keys [bem cid columns cns disabled equidistant inline invalid no-row-gap size soft-columns stacked-on-mobile widget]}]
   (bem-utils/build-class
     (build-bem bem)
     [["cns" cns]
@@ -34,7 +34,8 @@
      ["invalid" invalid]
      ["noRowGap" no-row-gap]
      ["size" (-> size keyword #{:large :normal :small} (or :normal))]
-     ["stacked-on-mobile" stacked-on-mobile]
+     ["softColumns" soft-columns]
+     ["stackedOnMobile" stacked-on-mobile]
      ["widget" widget]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

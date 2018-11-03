@@ -4,11 +4,17 @@
  * because of that it tested using checkbox group input fragment.
  */
 
-import expect from 'unexpected';
+import sinon from 'sinon';
+import unexpected from 'unexpected';
+import unexpectedSinon from 'unexpected-sinon';
 
 import CheckboxGroupInput from '../../../../../src/js/widgets/checkbox-group-input';
+import GroupInputItem from '../../../../../src/js/widgets/group-input/item';
 import InteractiveExample from '../../../../../src/js/kitchen-sink/widgets/man-page/interactive-example';
 import RadioGroupInput from '../../../../../src/js/widgets/radio-group-input'
+
+const expect = unexpected.clone();
+expect.use(unexpectedSinon);
 
 async function getInteractiveExample() {
   const ie = new InteractiveExample();
@@ -655,4 +661,599 @@ test("240 It should allow assert on group's 'Size' part of state value using `#e
   }
 
   expect(isThrown, 'to be true');
+});
+
+test("250 It should allow get group's 'SoftColumns' part of state using `#getSoftColumnsPartOfState()`", async () => {
+  const [group, rgi] = await getHelperFragments('soft-columns');
+
+  // -- Check when not soft columns
+
+  await group.hover();
+  expect(await group.getSoftColumnsPartOfState(), 'to be false');
+
+  // -- Check when soft columns
+
+  await rgi.clickItem({ label: 'true' });
+  await group.hover();
+  expect(await group.getSoftColumnsPartOfState(), 'to be true');
+});
+
+test("260 It should allow assert on whether group is soft columns using `#expectIsSoftColumns()`", async () => {
+  const [group, rgi] = await getHelperFragments('soft-columns');
+
+  // -- Successful case
+
+  await rgi.clickItem({ label: 'true' });
+  await group.hover();
+  await group.expectIsSoftColumns();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'false' });
+  await group.hover();
+
+  try {
+    await group.expectIsSoftColumns();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input.+must have BEM modifier 'softColumns,'.+but it doesn't/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("270 It should allow assert on whether group isn't soft columns using `#expectIsNotSoftColumns()`", async () => {
+  const [group, rgi] = await getHelperFragments('soft-columns');
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectIsNotSoftColumns();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'true' });
+  await group.hover();
+
+  try {
+    await group.expectIsNotSoftColumns();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input.+must not have BEM modifier 'softColumns,'.+but it does/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("280 It should allow get group's 'StackedOnMobile' part of state using `#getStackedOnMobilePartOfState()`", async () => {
+  const [group, rgi] = await getHelperFragments('stacked-on-mobile');
+
+  // -- Check when not stacked-on-mobile
+
+  await group.hover();
+  expect(await group.getStackedOnMobilePartOfState(), 'to be false');
+
+  // -- Check when stacked-on-mobile
+
+  await rgi.clickItem({ label: 'true' });
+  await group.hover();
+  expect(await group.getStackedOnMobilePartOfState(), 'to be true');
+});
+
+test("290 It should allow assert on whether group is stacked on mobile using `#expectIsStackedOnMobile()`", async () => {
+  const [group, rgi] = await getHelperFragments('stacked-on-mobile');
+
+  // -- Successful case
+
+  await rgi.clickItem({ label: 'true' });
+  await group.hover();
+  await group.expectIsStackedOnMobile();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'false' });
+  await group.hover();
+
+  try {
+    await group.expectIsStackedOnMobile();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input.+must have BEM modifier 'stackedOnMobile,'.+but it doesn't/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("300 It should allow assert on whether group isn't stacked on mobile using `#expectIsNotStackedOnMobile()`", async () => {
+  const [group, rgi] = await getHelperFragments('stacked-on-mobile');
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectIsNotStackedOnMobile();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await rgi.clickItem({ label: 'true' });
+  await group.hover();
+
+  try {
+    await group.expectIsNotStackedOnMobile();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input.+must not have BEM modifier 'stackedOnMobile,'.+but it does/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("310 It should allow get group's 'Widget' part of state using `#getWidgetPartOfState()`", async () => {
+  const group = await getSut();
+  await group.hover();
+  expect(await group.getWidgetPartOfState(), 'to equal', 'icon');
+});
+
+test("320 It should allow assert on group's 'Widget' part of state value using `#expectWidgetPartOfStateIs()`", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectWidgetPartOfStateIs('icon');
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectWidgetPartOfStateIs('native');
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input.+must have BEM modifier 'widget,native'.+but it doesn't/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("330 It should allow assert on group's 'Widget' part of state value using `#expectWidgetPartOfStateIs()` - with 'isNot' option set", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectWidgetPartOfStateIs('button', { isNot: true });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectWidgetPartOfStateIs('icon', { isNot: true });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkbox-group-input.+must not have BEM modifier 'widget,icon'.+but it does/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("340 It should allow assert on item existence using `#expectHasItem()`", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectHasItem({ label: 'option3' });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectHasItem({ label: 'non-existent option' });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: .+\.checkbox-group-input\.item.+DOM element.+: expected 0 to deeply equal 1/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("350 It should allow assert on item existence using `#expectHasItem()` - case with 'idx' option", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectHasItem({ label: 'option3' }, null, { idx: 2 });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectHasItem({ label: 'option3' }, null, { idx: 0 });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: .+\.checkbox-group-input\.item#expectIsEqual().+: expected 'option3' to deeply equal 'option1'/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("360 It should allow assert on items existence using `#expectHasItems()`", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectHasItems([
+    [{ label: 'option6' }],
+    [{ label: 'option1' }],
+    [{ label: 'option4' }]
+  ]);
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectHasItems([
+      [{ label: 'option2' }], // this item has different label
+      [{ label: 'option1' }],
+      [{ label: 'option4' }],
+      [{ label: 'option3' }]
+    ]);
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: .+\.checkbox-group-input\.item.+DOM element.+: expected 0 to deeply equal 1/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("370 It should allow assert on items existence using `#expectHasItems()` - case with 'only' option", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectHasItems([
+    [{ label: 'option2 (some long text here)' }],
+    [{ label: 'option4' }],
+    [{ label: 'option8' }],
+    [{ label: 'option9' }],
+    [{ label: 'option7' }],
+    [{ label: 'option5' }],
+    [{ label: 'option6' }],
+    [{ label: 'option1' }],
+    [{ label: 'option3' }]
+  ], {
+    only: true
+  });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectHasItems([
+      // Omit 'option2...' item for testing.
+      [{ label: 'option4' }],
+      [{ label: 'option8' }],
+      [{ label: 'option9' }],
+      [{ label: 'option7' }],
+      [{ label: 'option5' }],
+      [{ label: 'option6' }],
+      [{ label: 'option1' }],
+      [{ label: 'option3' }]
+    ], {
+      only: true
+    });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: expected 9 to deeply equal 8/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("380 It should allow assert on items existence using `#expectHasItems()` - case with 'sameOrder' option", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectHasItems([
+    [{ label: 'option1' }],
+    [{ label: 'option2 (some long text here)' }],
+    [{ label: 'option3' }],
+    [{ label: 'option4' }],
+    [{ label: 'option5' }],
+    [{ label: 'option6' }],
+    [{ label: 'option7' }],
+    [{ label: 'option8' }],
+    [{ label: 'option9' }]
+  ], {
+    only: true,
+    sameOrder: true
+  });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectHasItems([
+      [{ label: 'option1' }],
+      [{ label: 'option2 (some long text here)' }],
+      [{ label: 'option3' }],
+      [{ label: 'option5' }], // swap 'option4' and 'option5' items for testing
+      [{ label: 'option4' }],
+      [{ label: 'option6' }],
+      [{ label: 'option7' }],
+      [{ label: 'option8' }],
+      [{ label: 'option9' }]
+    ], {
+      only: true,
+      sameOrder: true
+    });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: .+\.checkbox-group-input\.item#expectIsEqual().+: expected 'option5' to deeply equal 'option4'/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("390 It should allow assert on item's index using `#expectItemIndexIs()`", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectItemIndexIs({ label: 'option3' }, null, 2);
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectItemIndexIs({ label: 'option3' }, null, 3);
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: .+\.checkbox-group-input\.item#expectIsEqual().+: expected 'option3' to deeply equal 'option4'/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("400 It should allow assert on items existence at specified indexes using `#expectItemsAre()`", async () => {
+  const group = await getSut();
+  const expectHasItemsSpy = sinon.spy(group, 'expectHasItems');
+  const items = [
+    [{ label: 'option1' }],
+    [{ label: 'option2 (some long text here)' }],
+    [{ label: 'option3' }],
+    [{ label: 'option4' }],
+    [{ label: 'option5' }],
+    [{ label: 'option6' }],
+    [{ label: 'option7' }],
+    [{ label: 'option8' }],
+    [{ label: 'option9' }]
+  ];
+
+  await group.hover();
+  await group.expectItemsAre(items);
+
+  expect(expectHasItemsSpy, 'was called times', 1);
+  expect(expectHasItemsSpy, 'to have a call satisfying', {
+    args: [
+      items,
+      {
+        only: true,
+        sameOrder: true
+      }
+    ]
+  });
+});
+
+test("410 It should allow assert on number of items using `#expectItemsCountIs()` - simple case", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectItemsCountIs(9);
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectItemsCountIs(1);
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected 9 to deeply equal 1'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("420 It should allow assert on number of items using `#expectItemsCountIs()` - simple case with 'isNot' option", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectItemsCountIs(1, { isNot: true });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectItemsCountIs(9, { isNot: true });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected 9 to not deeply equal 9'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("430 It should allow assert on number of items using `#expectItemsCountIs()` - complex case", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectItemsCountIs(['gt', 2]);
+  await group.expectItemsCountIs(['gte', 9]);
+  await group.expectItemsCountIs(['lt', 10]);
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectItemsCountIs(['gte', 10]);
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected 9 to be at least 10'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("440 It should allow assert on number of items using `#expectItemsCountIs()` - complex case with 'isNot' option", async () => {
+  const group = await getSut();
+
+  // -- Successful case
+
+  await group.hover();
+  await group.expectItemsCountIs(['lt', 9], { isNot: true });
+  await group.expectItemsCountIs(['gte', 10], { isNot: true });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await group.expectItemsCountIs(['lt', 10], { isNot: true });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected 9 to be at least 10'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("450 It should allow obtain item using `#getItem()`", async () => {
+  const group = await getSut();
+  expect(group.getItem({ idx: 0 }), 'to be a', GroupInputItem);
 });
