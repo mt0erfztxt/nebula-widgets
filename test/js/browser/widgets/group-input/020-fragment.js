@@ -47,7 +47,7 @@ async function getHelperFragments(rgiCid) {
   ];
 }
 
-fixture `Widgets :: Group Input :: 010 Fragment`
+fixture `Widgets :: Group Input :: 020 Fragment`
   .page('http://localhost:3449/widgets/checkbox-group-input');
 
 test("010 It should allow obtain radio group input", async () => {

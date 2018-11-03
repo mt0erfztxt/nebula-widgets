@@ -38,7 +38,7 @@ async function getHelperFragments(rgiCid) {
   ];
 }
 
-fixture `Widgets :: Group Input Item :: 010 Fragment`
+fixture `Widgets :: Group Input :: 010 Item Fragment`
   .page('http://localhost:3449/widgets/checkbox-group-input-item');
 
 test("010 It should allow obtain group input item using 'label' spec", async () => {

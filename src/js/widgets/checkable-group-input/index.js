@@ -32,7 +32,11 @@ class CheckableGroupInput extends GroupInput {
    * @param {Object} [opts.CheckedItemFragmentOpts] Default `spec` for checked item fragment's constructor
    */
   constructor(spec, opts) {
-    const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
+    const {
+      initializedOpts,
+      initializedSpec,
+      isInstance
+    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
 
     if (isInstance === true) {
       return spec;
