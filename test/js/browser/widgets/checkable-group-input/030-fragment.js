@@ -79,7 +79,6 @@ test("010 It should allow assert on checked item existence using `#expectHasChec
   expect(isThrown, 'to be true');
 });
 
-
 test("020 It should allow assert on checked item existence using `#expectHasCheckedItem()` - case with 'idx' option", async () => {
   const sut = await getSut();
   await sut.hover();
