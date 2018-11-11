@@ -7,7 +7,7 @@
     [nebula-widgets.kitchen-sink.panels.form-field-widget.db :as form-field-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.radio-group-input-item-widget.db :as radio-group-input-item-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.radio-group-input-widget.db :as radio-group-input-widget-panel-db]
-    [nebula-widgets.kitchen-sink.panels.text-input.db :as text-input-panel-db]))
+    [nebula-widgets.kitchen-sink.panels.text-input-widget.db :as text-input-widget-panel-db]))
 
 (def ^:private db-panels
   (merge
@@ -19,7 +19,7 @@
     form-field-widget-panel-db/default-db
     radio-group-input-item-widget-panel-db/default-db
     radio-group-input-widget-panel-db/default-db
-    text-input-panel-db/default-db))
+    text-input-widget-panel-db/default-db))
 
 (def default-db
   {:app {:route {:id :home, :params nil, :query nil}}

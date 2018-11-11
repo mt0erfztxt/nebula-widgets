@@ -13,7 +13,7 @@
     [nebula-widgets.kitchen-sink.panels.group-input-item-widget.views :as group-input-item-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.radio-group-input-widget.views :as radio-group-input-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.radio-group-input-item-widget.views :as radio-group-input-item-widget-panel-views]
-    [nebula-widgets.kitchen-sink.panels.text-input.views :as text-input-panel-views]
+    [nebula-widgets.kitchen-sink.panels.text-input-widget.views :as text-input-widget-panel-views]
     [oops.core :as oops]
     [re-frame.core :as rf]
     [reagent.core :as r]))
@@ -35,7 +35,7 @@
         :widgets/group-input-item [group-input-item-widget-panel-views/widget]
         :widgets/radio-group-input [radio-group-input-widget-panel-views/widget]
         :widgets/radio-group-input-item [radio-group-input-item-widget-panel-views/widget]
-        :widgets/text-input [text-input-panel-views/widget]))))
+        :widgets/text-input [text-input-widget-panel-views/widget]))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC

@@ -57,7 +57,7 @@
     - `:cns` - any, no default. Component namespace.
     - `:disabled` - logical true/false, no default. Whether widget disabled or not.
     - `:equidistant` - logical true/false, no default. Whether items have same width.
-    - `:errors` - seq of strings, no default. would be displayed only when not empty and :invalid.
+    - `:errors` - seq of strings, no default. Would be displayed only when not empty and :invalid.
     - `:inline` - logical true/false, no default. Whether items grouped stacked or inline.
     - `:invalid` - logical true/false, no default. Whether widget is in invalid state or not.
     - `:item-props` - map, no default. Common props for all items in group, for example, event handlers.

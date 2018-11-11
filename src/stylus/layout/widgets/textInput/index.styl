@@ -1,4 +1,5 @@
-$nw_textInput_height = $g_size--s;
+$nw_textInput_backgroundColor = darken($g_color_background, 8%);
+$nw_textInput_height          = $g_size--s;
 
 
 .nw-textInput
@@ -16,12 +17,20 @@ $nw_textInput_height = $g_size--s;
         transition: opacity 0.5s;
 
 
+    &__errors
+        color: $g_color_primary_text--error;
+        list-style: none;
+        margin: 0;
+        padding: 2px 0 0 0;
+
+
     &__input
         +placeholder()
             color: blend(alpha($g_color_primary_text, .15), $g_color_secondary);
 
-        background-color: $g_color_secondary;
+        background-color: $nw_textInput_backgroundColor;
         border: 1px solid $g_color_secondary;
+        border-radius: 2px;
         color: $g_color_primary_text;
         line-height: 36px;
         max-width: 100%;
@@ -41,7 +50,7 @@ $nw_textInput_height = $g_size--s;
 
 
     &--disabled &__input
-        background-color: $g_color_primary;
+        opacity: 0.45;
 
 
     &--invalid &__input
@@ -67,13 +76,13 @@ $nw_textInput_height = $g_size--s;
         line-height: 28px;
 
 
-    &--text-align_center &__input
+    &--textAlignment_center &__input
         text-align: center;
 
 
-    &--text-align_left &__input
+    &--textAlignment_left &__input
         text-align: left;
 
 
-    &__input &--text-align_right
+    &--textAlignment_right &__input
         text-align: right;
