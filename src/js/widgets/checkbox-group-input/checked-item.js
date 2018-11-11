@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 import typeOf from 'typeof--';
-import { t } from 'testcafe';
 
 import CheckableGroupInputCheckedItem from '../checkable-group-input/checked-item';
 

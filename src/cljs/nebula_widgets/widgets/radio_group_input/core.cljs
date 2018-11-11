@@ -15,14 +15,20 @@
     - `:items` - seq of maps, no default. Group items, each map is a props for
       [radio-group-input-item](/widgets/radio-group-input-item) widget.
     - `:value` - any, no default. Item, which have :value prop equal that value, would be checked.
-    - `:widget` - one of :button, :icon (default), :native or their string/symbol equivalents. Specifies how widget looks."
+    - `:widget` - one of :button, :icon (default), :native or their string/symbol equivalents. Specifies how widget
+      looks.
+
+  Notes:
+  * `:invalid` prop of group overrides same prop of item
+  * `:soft-columns` prop can be convenient in case of small containers with just 2-3 columns "
   [{:keys [item-props items value] :as props}]
-  (let [widget (-> props :widget keyword #{:button :icon :native} (or :icon))]
-    (into [group-input/widget (assoc props :bem "nw-radioGroupInput")]
-          (for [{v :value :as item} items]
-            [radio-group-input-item/widget
-             (merge item-props
-                    item
-                    {:checked (= v value)}
-                    (select-keys props [:disabled])
-                    {:widget widget})]))))
+  (into
+    [group-input/widget (assoc props :bem "nw-radioGroupInput")]
+    (for [{v :value :as item} items]
+      [radio-group-input-item/widget
+       (merge
+         item-props
+         item
+         {:checked (= v value)}
+         (select-keys props [:disabled :invalid])
+         {:widget (-> props :widget keyword #{:button :icon :native} (or :icon))})])))

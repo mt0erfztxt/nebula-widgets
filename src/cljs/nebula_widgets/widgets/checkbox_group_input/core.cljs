@@ -32,7 +32,7 @@
   TODO:
   * fix styles for case when `:widget` is :native
   * fix styles for case when `:widget` is :button and item's label is shrinked"
-  [{:keys [disabled invalid item-props items value widget] :as props}]
+  [{:keys [item-props items value] :as props}]
   (into
     [group-input/widget (assoc props :bem "nw-checkboxGroupInput")]
     (for [{:keys [path] :as item} items]
@@ -44,6 +44,5 @@
           (if (:boolean props)
             (->> (if (sequential? path) path [path]) (get-in value) boolean)
             (->> item :value (contains? value)))}
-         {:disabled disabled
-          :invalid invalid
-          :widget (-> widget keyword #{:button :icon :native} (or :icon))})])))
+         (select-keys props [:disabled :invalid])
+         {:widget (-> props :widget keyword #{:button :icon :native} (or :icon))})])))
