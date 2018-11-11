@@ -2,7 +2,17 @@
 
 (def default-db
   {:radio-group-input-widget
-   {:example010 {:value :option9}
-    :example020 {:disabled false, :invalid false, :label-shrinked false, :value :option3, :widget "icon"}
-    :example030 {:value :option1}
-    :example040 {:value :option1}}})
+   {:interactive-example
+    {:columns nil
+     :disabled false
+     :equidistant false
+     :errors nil
+     :inline false
+     :invalid false
+     :label-shrinked false
+     :no-row-gap false
+     :size "normal"
+     :soft-columns false
+     :stacked-on-mobile false
+     :value :choice2
+     :widget "icon"}}})

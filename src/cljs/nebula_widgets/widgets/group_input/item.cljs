@@ -43,7 +43,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "Renders item of [group-input](/widgets/group-input) widget.\\
+  "Renders item of [group-input](/widgets/group-input) widget.
+
   Not intended to be used directly but rather as a base for item of more specific group input widgets.
 
   Arguments:

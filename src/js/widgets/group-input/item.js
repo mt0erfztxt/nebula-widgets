@@ -44,7 +44,11 @@ class GroupInputItem extends GroupInputItemBaseClass {
    * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    */
   constructor(spec, opts) {
-    const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
+    const {
+      initializedOpts,
+      initializedSpec,
+      isInstance
+    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
 
     if (isInstance === true) {
       return spec;
@@ -57,7 +61,7 @@ class GroupInputItem extends GroupInputItemBaseClass {
     if (!_.isEmpty(label)) {
       // We need to reset BEM modifier because checked item of checkable group
       // input has it (--checked) and that would result in
-      // 'nw-groupInput__label--checked' which is not we expect.
+      // 'nw-groupInput-item__label--checked' which is not we expect.
       const labelElementBemBase = this.cloneBemBase().setElt('label').setMod();
       this.selector = selector
         .filterByText(this.selector.child(`.${labelElementBemBase}`), label)
@@ -75,7 +79,10 @@ class GroupInputItem extends GroupInputItemBaseClass {
    */
   get inputElementBemBase() {
     if (!this._inputElementBemBase) {
-      this._inputElementBemBase = this.cloneBemBase().setElt('input');
+      this._inputElementBemBase = this
+        .cloneBemBase()
+        .setElt('input')
+        .setMod(); // required, see 'label' spec for details
     }
 
     return this._inputElementBemBase;
@@ -88,7 +95,9 @@ class GroupInputItem extends GroupInputItemBaseClass {
    */
   get inputElementSelector() {
     if (!this._inputElementSelector) {
-      this._inputElementSelector = this.selector.find(`.${this.inputElementBemBase}`);
+      this._inputElementSelector = this
+        .selector
+        .find(`.${this.inputElementBemBase}`);
     }
 
     return this._inputElementSelector;
@@ -101,7 +110,10 @@ class GroupInputItem extends GroupInputItemBaseClass {
    */
   get labelElementBemBase() {
     if (!this._labelElementBemBase) {
-      this._labelElementBemBase = this.cloneBemBase().setElt('label');
+      this._labelElementBemBase = this
+        .cloneBemBase()
+        .setElt('label')
+        .setMod(); // required, see 'label' spec for details
     }
 
     return this._labelElementBemBase;
@@ -114,7 +126,9 @@ class GroupInputItem extends GroupInputItemBaseClass {
    */
   get labelElementSelector() {
     if (!this._labelElementSelector) {
-      this._labelElementSelector = this.selector.find(`.${this.labelElementBemBase}`);
+      this._labelElementSelector = this
+        .selector
+        .find(`.${this.labelElementBemBase}`);
     }
 
     return this._labelElementSelector;
@@ -261,28 +275,46 @@ class GroupInputItem extends GroupInputItemBaseClass {
    */
 
   // ---------------------------------------------------------------------------
-  // Assertions
-  // ---------------------------------------------------------------------------
-
-  // ---------------------------------------------------------------------------
   // Other Methods
   // ---------------------------------------------------------------------------
 
   /**
-   * Hovers on item.
+   * Clicks on group input item.
+   * 
+   * @returns {Promise<void>}
+   */
+  async click() {
+    await t.click(this.labelElementSelector);
+  }
+
+  /**
+   * Hovers on group input item.
    * 
    * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.label] When truthy, then hover on item's label instead of item itself
    * @param {Number} [options.wait] Wait specified number of milliseconds after hover is done
    * @returns {Promise<void>}
    */
   async hover(options) {
-    const { wait } = new Options(options);
+    const { label, wait } = new Options(options);
 
-    await t.hover(this.selector);
+    await t.hover(label ? this.labelElementSelector : this.selector);
 
     if (wait) {
       await t.wait(wait);
     }
+  }
+
+  /**
+   * Hovers on group input item's label. Same as @see GroupInputItem.hover but
+   * 'options.label' forcibly set to true.
+   */
+  async hoverLabel(options) {
+    await this.hover(_
+      .chain(new Options(options))
+      .set('label', true)
+      .value()
+    );
   }
 }
 

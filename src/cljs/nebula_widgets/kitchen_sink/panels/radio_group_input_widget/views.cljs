@@ -1,8 +1,10 @@
 (ns nebula-widgets.kitchen-sink.panels.radio-group-input-widget.views
   (:require
+    [nebula-widgets.kitchen-sink.panels.radio-group-input-widget.common :as common]
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
-    [nebula-widgets.kitchen-sink.widgets.markdown.core :as markdown]
+    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
+    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.radio-group-input :as ie-rgi-knob]
     [nebula-widgets.utils :as utils]
     [nebula-widgets.widgets.radio-group-input.core :as radio-group-input]
     [re-frame.core :as rf]))
@@ -11,311 +13,232 @@
 ;; Example 010
 ;;------------------------------------------------------------------------------
 
-(def ^:private panel-path->keyword
-  (partial utils/path->keyword :panels :radio-group-input-widget))
-
-(def ^:private example010-path->keyword
-  (partial panel-path->keyword :example010 "/"))
-
-(defn- example010-item-on-change-handler [_ value]
-  (rf/dispatch [(example010-path->keyword :set :value) value]))
-
 (defn- example010-cmp []
-  (let [*example010 (rf/subscribe [(example010-path->keyword)])]
-    (fn []
-      (let [{:keys [value]} @*example010]
-        [example/widget
-         {:cid "010"
-          :title "widget with value prop not equal to value of any item"}
-         [radio-group-input/widget
-          {:cid "010"
-           :item-props {:on-change example010-item-on-change-handler}
-           :items
-           [{:cid "option1" :label "Option 1" :value :option1}
-            {:cid "option2" :label "Option 2" :value :option2}
-            {:cid "option3" :label "Option 3" :value :option3}]
-           :value value}]
-         "```clojure
-           [radio-group-input/widget
-            {:item-props {:on-change (fn [event value] ...)}
-             :items
-             [{:label \"Option 1\" :value :option1}
-              {:label \"Option 2\" :value :option2}
-              {:label \"Option 3\" :value :option3}]
-             :value :option9}]
-           ```"]))))
+  [example/widget
+   {:cid "010"
+    :title "without checked item"}
+   [radio-group-input/widget
+    {:items
+     (for [n (range 1 4)]
+       {:cid n
+        :label (str "Choice " n)
+        :value (->> n (str "choice") keyword)})
+     :value nil}]
+   "```clj
+     [radio-group-input/widget
+      {:item-props {:on-change (fn [event value] ...)}
+       :items
+       [{:label \"Choice 1\", :value :choice1}
+        {:label \"Choice 2\", :value :choice2}
+        {:label \"Choice 3\", :value :choice3}]
+       :value nil}]
+     ```"])
 
 ;;------------------------------------------------------------------------------
 ;; Example 020
 ;;------------------------------------------------------------------------------
 
-(def ^:private example020-path->keyword
-  (partial panel-path->keyword :example020 "/"))
-
-(defn- example020-item-on-change-handler [_ v]
-  (rf/dispatch [(example020-path->keyword :set :value) v]))
-
-(defn- example020-dispatch-set-disabled [v]
-  (rf/dispatch [(example020-path->keyword :set :disabled) v]))
-
-(defn- example020-set-disabled-button-on-click-handler [_]
-  (example020-dispatch-set-disabled true))
-
-(defn- example020-unset-disabled-button-on-click-handler [_]
-  (example020-dispatch-set-disabled false))
-
-(defn- example020-dispatch-set-invalid [v]
-  (rf/dispatch [(example020-path->keyword :set :invalid) v]))
-
-(defn- example020-set-invalid-button-on-click-handler [_]
-  (example020-dispatch-set-invalid true))
-
-(defn- example020-unset-invalid-button-on-click-handler [_]
-  (example020-dispatch-set-invalid false))
-
-(defn- example020-dispatch-set-label-shrinked [v]
-  (rf/dispatch [(example020-path->keyword :set :label-shrinked) v]))
-
-(defn- example020-set-label-shrinked-button-on-click-handler [_]
-  (example020-dispatch-set-label-shrinked true))
-
-(defn- example020-unset-label-shrinked-button-on-click-handler [_]
-  (example020-dispatch-set-label-shrinked false))
-
-(defn- example020-dispatch-set-widget [v]
-  (rf/dispatch [(example020-path->keyword :set :widget) v]))
-
-(defn- example020-set-widget-to-icon-button-on-click-handler [_]
-  (example020-dispatch-set-widget "icon"))
-
-(defn- example020-set-widget-to-native-button-on-click-handler [_]
-  (example020-dispatch-set-widget "native"))
-
 (defn- example020-cmp []
-  (let [*example020 (rf/subscribe [(example020-path->keyword)])]
-    (fn []
-      (let [{:keys [disabled invalid label-shrinked value widget]} @*example020]
-        [example/widget
-         {:cid "020"
-          :title "widget with value prop equal to value of one of items and inline props set"}
-         [radio-group-input/widget
-          {:cid "020"
-           :disabled disabled
-           :inline true
-           :item-props {:on-change example020-item-on-change-handler}
-           :items
-           (for [n (range 1 19)]
-             {:cid (str "020-" n)
-              :invalid invalid
-              :label {:shrinked label-shrinked :text (str "Option " n)}
-              :value (->> n (str "option") keyword)
-              :widget widget})
-           :invalid invalid
-           :value value
-           :widget widget}]
-         [:div                                              ; TODO Use button-group widget
-          [:button.nw-button.nw-button--cid_setDisabled
-           {:on-click example020-set-disabled-button-on-click-handler
-            :type "button"}
-           "Set disabled"]
-          [:button.nw-button.nw-button--cid_unsetDisabled
-           {:on-click example020-unset-disabled-button-on-click-handler
-            :type "button"}
-           "Unset disabled"]]
-         [:div                                              ; TODO Use button-group widget
-          [:button.nw-button.nw-button--cid_setInvalid
-           {:on-click example020-set-invalid-button-on-click-handler
-            :type "button"}
-           "Set invalid"]
-          [:button.nw-button.nw-button--cid_unsetInvalid
-           {:on-click example020-unset-invalid-button-on-click-handler
-            :type "button"}
-           "Unset invalid"]]
-         [:div                                              ; TODO Use button-group widget
-          [:button.nw-button.nw-button--cid_setLabelShrinked
-           {:on-click example020-set-label-shrinked-button-on-click-handler
-            :type "button"}
-           "Set labelShrinked"]
-          [:button.nw-button.nw-button--cid_unsetLabelShrinked
-           {:on-click example020-unset-label-shrinked-button-on-click-handler
-            :type "button"}
-           "Unset labelShrinked"]]
-         [:div                                              ; TODO Use button-group widget
-          [:button.nw-button.nw-button--cid_setWidgetToIcon
-           {:on-click example020-set-widget-to-icon-button-on-click-handler
-            :type "button"}
-           "Set widget to icon"]
-          [:button.nw-button.nw-button--cid_setWidgetToNative
-           {:on-click example020-set-widget-to-native-button-on-click-handler
-            :type "button"}
-           "Set widget to native"]]
-         "```clojure
-           [radio-group-input/widget
-            {:inline true
-             :item-props {:on-change (fn [event value] ...)}
-             :items
-             [{:label \"Option 1\" :value :option1}
-              {:label \"Option 2\" :value :option2}
-              {:label \"Option 3\" :value :option3}
-              ...]
-             :value :option3}]
-           ```"]))))
+  [example/widget
+   {:cid "020"
+    :title "with checked item"}
+   [radio-group-input/widget
+    {:items
+     (for [n (range 1 4)]
+       {:cid n
+        :label (str "Choice " n)
+        :value (->> n (str "choice") keyword)})
+     :value :choice2}]
+   "```clj
+     [radio-group-input/widget
+      {:item-props {:on-change (fn [event value] ...)}
+       :items
+       [{:label \"Choice 1\", :value :choice1}
+        {:label \"Choice 2\", :value :choice2}
+        {:label \"Choice 3\", :value :choice3}]
+       :value :choice2}]
+     ```"])
 
 ;;------------------------------------------------------------------------------
 ;; Example 030
 ;;------------------------------------------------------------------------------
 
-(def ^:private example030-path->keyword
-  (partial panel-path->keyword :example030 "/"))
-
-(defn- example030-item-on-change-handler [_ value]
-  (rf/dispatch [(example030-path->keyword :set :value) value]))
-
 (defn- example030-cmp []
-  (let [*example030 (rf/subscribe [(example030-path->keyword)])]
-    (fn []
-      (let [{:keys [value]} @*example030]
-        [:<>
-         [example/widget
-          {:cid "030-010"
-           :title "widget with inline and columns props set and without items with label that spans multiple columns"}
-          [radio-group-input/widget
-           {:cid "030-010"
-            :columns 5
-            :item-props {:on-change example030-item-on-change-handler}
-            :items (for [n (range 1 19)] {:label (str "Option " n), :value (->> n (str "option") keyword)})
-            :value value}]
-          "```clojure
-            [radio-group-input/widget
-             {:columns 5
-              :inline true
-              :item-props {:on-change (fn [event value] ...)}
-              :items
-              [{:label \"Option 1\" :value :option1}
-               {:label \"Option 2\" :value :option2}
-               {:label \"Option 3\" :value :option3}
-               ...]
-              :value :option1}]
-            ```"]
-         [example/widget
-          {:cid "030-020"
-           :title "widget with inline and columns props set and one item with label that spans multiple columns"}
-          [radio-group-input/widget
-           {:cid "030-020"
-            :columns 5
-            :item-props {:on-change example030-item-on-change-handler}
-            :items
-            (for [n (range 1 19) :let [label (if (= n 3) "A label that spans multiple columns" (str "Option " n))]]
-              {:label label
-               :value (->> n (str "option") keyword)})
-            :value value}]
-          "```clojure
-            [radio-group-input/widget
-             {:columns 5
-              :inline true
-              :item-props {:on-change (fn [event value] ...)}
-              :items
-              [{:label \"Option 1\" :value :option1}
-               {:label \"Option 2\" :value :option2}
-               {:label \"Option 3\" :value :option3}
-               ...]
-              :value :option1}]
-            ```"]
-         [example/widget
-          {:cid "030-030"
-           :title "widget with inline, columns and label/shrinked props set and one item with label that spans multiple columns"}
-          [radio-group-input/widget
-           {:cid "030-030"
-            :columns 5
-            :item-props {:on-change example030-item-on-change-handler}
-            :items
-            (for [n (range 1 19) :let [label (if (= n 3) "A label that spans multiple columns" (str "Option " n))]]
-              {:label {:shrinked true :text label}
-               :value (->> n (str "option") keyword)})
-            :value value}]
-          "```clojure
-            [radio-group-input/widget
-             {:columns 5
-              :inline true
-              :item-props {:on-change (fn [event value] ...)}
-              :items
-              [{:label {:shrinked true :text \"Option 1\"} :value :option1}
-               {:label {:shrinked true :text \"Option 2\"} :value :option2}
-               {:label {:shrinked true :text \"Option 3\"} :value :option3}
-               ...]
-              :value :option1}]
-            ```"]
-         [example/widget
-          {:cid "030-040"
-           :title "widget with inline, columns and soft-columns props set and one item with label that spans multiple columns"}
-          [radio-group-input/widget
-           {:cid "030-040"
-            :columns 5
-            :item-props {:on-change example030-item-on-change-handler}
-            :items
-            (for [n (range 1 19) :let [label (if (= n 3) "A label that spans multiple columns" (str "Option " n))]]
-              {:label label
-               :value (->> n (str "option") keyword)})
-            :soft-columns true
-            :value value}]
-          "```clojure
-            [radio-group-input/widget
-             {:columns 5
-              :inline true
-              :item-props {:on-change (fn [event value] ...)}
-              :items
-              [{:label \"Option 1\" :value :option1}
-               {:label \"Option 2\" :value :option2}
-               {:label \"Option 3\" :value :option3}
-               ...]
-              :soft-columns true
-              :value :option1}]
-            ```"]]))))
+  [:<>
+   [example/widget
+    {:cid "030a"
+     :title "with :inline and :columns props - case without items with label that spans multiple columns"}
+    [radio-group-input/widget
+     {:columns 5
+      :items
+      (for [n (range 1 15)]
+        {:label (str "Choice " n)
+         :value (->> n (str "choice") keyword)})
+      :value :choice2}]
+    "```clj
+      [radio-group-input/widget
+       {:columns 5
+        :inline true
+        :item-props {:on-change (fn [event value] ...)}
+        :items
+        [{:label \"Choice 1\", :value :choice1}
+         {:label \"Choice 2\", :value :choice2}
+         {:label \"Choice 3\", :value :choice3}
+         ...]
+        :value :choice2]
+      ```"]
+   [example/widget
+    {:cid "030b"
+     :title "widget with inline and columns props - case with item with label that spans multiple columns"}
+    [radio-group-input/widget
+     {:columns 5
+      :items
+      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Choice " n))]]
+        {:label label
+         :value (->> n (str "choice") keyword)})
+      :value :choice2}]
+    "```clj
+      [radio-group-input/widget
+       {:columns 5
+        :inline true
+        :item-props {:on-change (fn [event value] ...)}
+        :items
+        [{:label \"Choice 1\", :value :choice1}
+         {:label \"Choice 2\", :value :choice2}
+         {:label \"Choice 3\", :value :choice3}
+         ...]
+        :value :choice2}]
+      ```"]
+   [example/widget
+    {:cid "030c"
+     :title "with :inline and :columns props - case with item with label that spans multiple columns and :label.shrinked prop"}
+    [radio-group-input/widget
+     {:columns 5
+      :items
+      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Choice " n))]]
+        {:label {:shrinked true, :text label}
+         :value (->> n (str "choice") keyword)})
+      :value :choice2}]
+    "```clj
+      [radio-group-input/widget
+       {:columns 5
+        :inline true
+        :item-props {:on-change (fn [event value] ...)}
+        :items
+        [{:label {:shrinked true, :text \"Choice 1\"}, :value :choice1}
+         {:label {:shrinked true, :text \"Choice 2\"}, :value :choice2}
+         {:label {:shrinked true, :text \"Choice 3\"}, :value :choice3}
+         ...]
+        :value :choice2}]
+      ```"]
+   [example/widget
+    {:cid "030d"
+     :title "with :inline and :columns props - case with item with label that spans multiple columns and :soft-columns prop"}
+    [radio-group-input/widget
+     {:columns 5
+      :items
+      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Choice " n))]]
+        {:label label
+         :value (->> n (str "choice") keyword)})
+      :soft-columns true
+      :value :choice2}]
+    "```clj
+      [radio-group-input/widget
+       {:columns 5
+        :inline true
+        :item-props {:on-change (fn [event value] ...)}
+        :items
+        [{:label \"Choice 1\", :value :choice1}
+         {:label \"Choice 2\", :value :choice2}
+         {:label \"Choice 3\", :value :choice3}
+         ...]
+        :soft-columns true
+        :value :choice2}]
+      ```"]])
 
 ;;------------------------------------------------------------------------------
 ;; Example 040
 ;;------------------------------------------------------------------------------
 
-(def ^:private example040-path->keyword
-  (partial panel-path->keyword :example040 "/"))
-
-(defn- example040-item-on-change-handler [_ value]
-  (rf/dispatch [(example040-path->keyword :set :value) value]))
-
 (defn- example040-cmp []
-  (let [*example040 (rf/subscribe [(example040-path->keyword)])]
+  (let [default-props
+        {:equidistant true
+         :items
+         (map-indexed
+           (fn [idx label]
+             {:label label, :value (->> idx inc (str "choice") keyword)})
+           ["Label" "Long label" "Very, very long label" "Label"])
+         :value :choice2
+         :widget "button"}]
+    [example/widget
+     {:cid "040"
+      :title "with :equidistant, :size and :widget props"}
+     [radio-group-input/widget (merge default-props {:size "large"})]
+     [radio-group-input/widget default-props]
+     [radio-group-input/widget (merge default-props {:size "small"})]
+     "```clj
+       [radio-group-input/widget
+        {:equidistant true
+         :inline true
+         :item-props {:on-change (fn [event value] ...)}
+         :items [{:label \"Label\", :value :choice1}, ...]
+         :size \"large\"   ; \"normal\", \"small\"
+         :value :choice2
+         :widget \"button\"}]
+       ```"]))
+
+;;------------------------------------------------------------------------------
+;; Interactive example
+;;------------------------------------------------------------------------------
+
+(def ^:private interactive-example-path->keyword
+  (partial common/panel-path->keyword :interactive-example "/"))
+
+(def ^:private ie-setters
+  (->> [:columns :disabled :equidistant :errors :inline :invalid :label-shrinked :no-row-gap :size :soft-columns
+        :stacked-on-mobile :value :widget]
+       (map
+         (fn [prop]
+           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %2])]))
+       (into {})))
+
+(defn- interactive-example-cmp []
+  (let [*rgi-props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [value]} @*example040
-            default-props
-            {:equidistant true
-             :item-props {:on-change example040-item-on-change-handler}
-             :items
-             [{:label "Label" :value :option1}
-              {:label "Long label" :value :option2}
-              {:label "Very, very long label" :value :option3}
-              {:label "Label" :value :option4}]
-             :value value
-             :widget "button"}]
-        [example/widget
-         {:cid "040-010"
-          :title "widget with equidistant, size and widget props set"}
-         [radio-group-input/widget (merge default-props {:cid "040-010" :size "large"})]
-         [radio-group-input/widget (merge default-props {:cid "040-020"})]
-         [radio-group-input/widget (merge default-props {:cid "ex040-03" :size "small"})]
-         "```clojure
+      (let [rgi-props @*rgi-props]
+        (into
+          [ie/widget
            [radio-group-input/widget
-            {:equidistant true
-             :inline true
-             :item-props {:on-change (fn [event value] ...)}
-             :items
-             [{:label \"Option 1\" :value :option1}
-              {:label \"Option 2\" :value :option2}
-              {:label \"Option 3\" :value :option3}
-              ...]
-             :size \"large\"   ; \"normal\", \"small\"
-             :value :option3
-             :widget \"button\"}]
-           ```"]))))
+            (assoc rgi-props
+              :item-props {:on-change (:value ie-setters)}
+              :items
+              (for [n (range 1 10) :let [label (str "choice" n)]]
+                {:label
+                 {:shrinked (get rgi-props :label-shrinked)
+                  :text (str label (when (= 2 n) " (some long text here)"))}
+                 :value (keyword label)}))]]
+          (for [[cid items]
+                [[:columns (for [v [nil 3 5]] {:label (if (nil? v) "nil" v), :value v})]
+                 [:disabled]
+                 [:equidistant]
+                 [:errors
+                  [{:label "no"}
+                   {:label "yes", :value #{"error 1" "error 2"}}]]
+                 [:inline]
+                 [:invalid]
+                 [:label-shrinked]
+                 [:no-row-gap]
+                 [:size (for [s ["small" "normal" "large"]] {:label s, :value s})]
+                 [:soft-columns]
+                 [:stacked-on-mobile]
+                 [:widget (for [s ["button" "icon" "native"]] {:label s, :value s})]]]
+            [ie-rgi-knob/widget
+             {:cid cid}
+             (cond->
+               {:cid cid
+                :item-props {:on-change (get ie-setters cid)}
+                :value (get rgi-props cid)}
+               items (assoc :items items))]))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -323,12 +246,13 @@
 
 (defn widget []
   [:div.radioGroupInputWidgetPanel
-   [man-page/widget {:title "Radio group input widget"}
-    [markdown/widget
-     (str
-       (-> #'radio-group-input/widget meta :doc)
-       "\n\n## Examples")]
+   [man-page/widget
+    "# Radio group input widget"
+    (-> #'radio-group-input/widget meta :doc)
+    "## Examples"
     [example010-cmp]
     [example020-cmp]
     [example030-cmp]
-    [example040-cmp]]])
+    [example040-cmp]
+    "## Interactive example"
+    [interactive-example-cmp]]])

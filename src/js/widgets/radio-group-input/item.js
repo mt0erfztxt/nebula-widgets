@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 import typeOf from 'typeof--';
-import { t } from 'testcafe';
 
 import CheckableGroupInputItem from '../checkable-group-input/item';
 
@@ -29,7 +28,11 @@ class RadioGroupInputItem extends CheckableGroupInputItem {
    * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
    */
   constructor(spec, opts) {
-    const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
+    const {
+      initializedOpts,
+      initializedSpec,
+      isInstance
+    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
 
     if (isInstance === true) {
       return spec;
@@ -66,19 +69,6 @@ class RadioGroupInputItem extends CheckableGroupInputItem {
     }
 
     return value;
-  }
-
-  // ---------------------------------------------------------------------------
-  // Other Methods
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Clicks on item.
-   * 
-   * @returns {Promise<void>}
-   */
-  async click() {
-    await t.click(this.labelElementSelector);
   }
 }
 

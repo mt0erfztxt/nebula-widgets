@@ -24,7 +24,13 @@ const BaseClass = Fragment.makeFragmentClass(Input, {
   stateParts: [
     ['columns', { isBoolean: false }],
     ['disabled', { antonym: 'enabled' }],
+    ['equidistant'],
+    ['inline'],
     ['invalid', { antonym: 'valid' }],
+    ['noRowGap'],
+    ['size', { isBoolean: false }],
+    ['softColumns'],
+    ['stackedOnMobile'],
     ['widget', { isBoolean: false }]
   ]
 });
@@ -50,7 +56,11 @@ class GroupInput extends BaseClass {
    * @param {Object} [opts.ItemFragmentSpec] Default `spec` for group input item fragment's constructor
    */
   constructor(spec, opts) {
-    const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
+    const {
+      initializedOpts,
+      initializedSpec,
+      isInstance
+    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
 
     if (isInstance === true) {
       return spec;
@@ -116,8 +126,15 @@ class GroupInput extends BaseClass {
     }
     else {
       return _.concat(parts, [
+        'columns',
         'disabled',
+        'equidistant',
+        'inline',
         'invalid',
+        'noRowGap',
+        'size',
+        'softColumns',
+        'stckedOnMobile',
         'widget'
       ]);
     }
@@ -177,6 +194,56 @@ class GroupInput extends BaseClass {
 
   /**
    * @name GroupInput#expectIsNotEnabled
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: Equidistant (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name GroupInput#getEquidistantPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name GroupInput#expectIsEquidistant
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name GroupInput#expectIsNotEquidistant
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: Inline (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name GroupInput#getInlinePartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name GroupInput#expectIsInline
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name GroupInput#expectIsNotInline
    * @method
    * @returns {Promise<void>}
    */
@@ -311,6 +378,102 @@ class GroupInput extends BaseClass {
   }
 
   // ---------------------------------------------------------------------------
+  // State :: NoRowGap (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name GroupInput#getNoRowGapPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name GroupInput#expectIsNoRowGap
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name GroupInput#expectIsNotNoRowGap
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: Size (read-only, not boolean)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name GroupInput#getSizePartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name GroupInput#expectSizePartOfStateIs
+   * @method
+   * @param {*} value
+   * @param {Options|Object} options
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: SoftColumns (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name GroupInput#getSoftColumnsPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name GroupInput#expectIsSoftColumns
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name GroupInput#expectIsNotSoftColumns
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: StackedOnMobile (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name GroupInput#getStackedOnMobilePartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name GroupInput#expectIsStackedOnMobile
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name GroupInput#expectIsNotStackedOnMobile
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
   // State :: Widget (read-only, not boolean)
   // ---------------------------------------------------------------------------
   // Inherited from `BaseClass`
@@ -421,6 +584,21 @@ class GroupInput extends BaseClass {
       _.assign({}, this._opts.ItemFragmentSpec, { parent: this.selector }, spec),
       _.assign({}, this._opts.ItemFragmentOpts, opts)
     );
+  }
+
+  /**
+   * Clicks on item that matches `spec` and `opts`. Returns clicked item.
+   * 
+   * @param {*} [spec] See `spec` parameter of item fragment's class constructor
+   * @param {*} [opts] See `opts` parameter of item fragment's class constructor
+   * @returns {Promise<Fragment>}
+   */
+  async clickItem(spec, opts) {
+    const item = this.getItem(spec, opts);
+    await item.expectIsExist();
+    await item.click();
+
+    return item;
   }
 }
 

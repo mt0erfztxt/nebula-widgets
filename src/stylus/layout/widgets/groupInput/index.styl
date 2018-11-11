@@ -22,8 +22,15 @@ nw-groupInput(bem = 'nw-groupInput')
     line-height: normal;
 
 
+    &__errors
+        color: $g_color_primary_text--error;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+
     &__inner
-        //
+        margin-bottom: 8px;
 
 
     &__item
@@ -45,12 +52,20 @@ nw-groupInput(bem = 'nw-groupInput')
         text-align: center;
 
 
+    &--inline &__inner
+        margin-bottom: 0;
+
+
     &--inline &__item
         display: inline-block;
         padding-right: 24px;
 
 
     &:not(&--inline) &__item:last-child
+        margin-bottom: 0;
+
+
+    &--noRowGap &__item
         margin-bottom: 0;
 
 
@@ -62,7 +77,11 @@ nw-groupInput(bem = 'nw-groupInput')
         line-height: $group-input-height-tiny-bordered;
 
 
-    &--stacked-on-mobile &__item
+    &--softColumns
+        // Styles inlined into widget element, see widget code.
+
+
+    &--stackedOnMobile &__item
         +below('ts')
             display: block;
 
@@ -82,9 +101,6 @@ nw-groupInput(bem = 'nw-groupInput')
         margin-bottom: 0;
         outline: none;
         padding: 0;
-
-        input
-            display: none;
 
         &:last-child
             border-right: none;
