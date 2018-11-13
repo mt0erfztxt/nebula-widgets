@@ -14,6 +14,8 @@ const {
   Options
 } = testFragment;
 
+// TODO Input fragment already have 'Disabled' and 'Invalid' parts of state
+//      defined.
 /**
  * Base class for group input fragment.
  * 

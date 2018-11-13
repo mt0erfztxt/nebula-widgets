@@ -135,6 +135,48 @@
        :value \"Some text\"}]
      ```"])
 
+;;------------------------------------------------------------------------------
+;; Interactive example
+;;------------------------------------------------------------------------------
+
+(def ^:private interactive-example-path->keyword
+  (partial common/panel-path->keyword :interactive-example "/"))
+
+(def ^:private ie-setters
+  (->> [:busy :disabled :errors :invalid :multi-line :size :text-alignment :value]
+       (map
+         (fn [prop]
+           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %2])]))
+       (into {})))
+
+(defn- update-ie-value [event]
+  ((:value ie-setters) event (utils/event->value event)))
+
+(defn- interactive-example-cmp []
+  (let [*ti-props (rf/subscribe [(interactive-example-path->keyword)])]
+    (fn []
+      (let [ti-props @*ti-props]
+        (into
+          [ie/widget
+           [text-input/widget (assoc ti-props :on-change update-ie-value)]]
+          (for [[cid items]
+                [[:busy]
+                 [:disabled]
+                 [:errors
+                  [{:label "no"}
+                   {:label "yes", :value #{"error 1" "error 2"}}]]
+                 [:invalid]
+                 [:multi-line]
+                 [:size (for [s ["small" "normal" "large"]] {:label s, :value s})]
+                 [:text-alignment (for [s ["left" "center" "right"]] {:label s, :value s})]]]
+            [ie-rgi-knob/widget
+             {:cid cid}
+             (cond->
+               {:cid cid
+                :item-props {:on-change (get ie-setters cid)}
+                :value (get ti-props cid)}
+               items (assoc :items items))]))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -151,4 +193,5 @@
     [example040-cmp]
     [example050-cmp]
     [example060-cmp]
-    "## Interactive example"]])
+    "## Interactive example"
+    [interactive-example-cmp]]])

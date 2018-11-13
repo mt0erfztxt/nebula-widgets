@@ -10,4 +10,4 @@
      :multi-line false
      :size "normal"
      :text-alignment "left"
-     :value "foo"}}})
+     :value nil}}})

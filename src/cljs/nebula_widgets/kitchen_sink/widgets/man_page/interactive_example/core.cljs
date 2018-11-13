@@ -27,7 +27,7 @@
 
   Arguments:
   * `subject` - required, renderable. A subject which behaviours must be demonstrated.
-  * `& knobs` - optional, seq of renderables. Knobs used to demonstrate subject's behaviors."
+  * `& knobs` - optional, any number of renderables. Knobs used to demonstrate subject's behaviors."
   [subject & knobs]
   [:div {:class bem}
    [:div {:class view-elt-bem} subject]

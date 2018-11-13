@@ -19,6 +19,9 @@
 (defn event->checked [event]
   (oops/oget event "target.checked"))
 
+(defn event->value [event]
+  (oops/oget event "target.value"))
+
 (defn path-str->segments
   "Returns lazy seq of segments (strings) obtained by splitting passed in string on dot character. Returned seq doesn't
   contain blank items and each item is whitespace-trimmed."
