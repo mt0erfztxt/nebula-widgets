@@ -14,8 +14,6 @@ const {
   Options
 } = testFragment;
 
-// TODO Input fragment already have 'Disabled' and 'Invalid' parts of state
-//      defined.
 /**
  * Base class for group input fragment.
  * 
@@ -25,10 +23,8 @@ const {
 const BaseClass = Fragment.makeFragmentClass(Input, {
   stateParts: [
     ['columns', { isBoolean: false }],
-    ['disabled', { antonym: 'enabled' }],
     ['equidistant'],
     ['inline'],
-    ['invalid', { antonym: 'valid' }],
     ['noRowGap'],
     ['size', { isBoolean: false }],
     ['softColumns'],
@@ -129,10 +125,8 @@ class GroupInput extends BaseClass {
     else {
       return _.concat(parts, [
         'columns',
-        'disabled',
         'equidistant',
         'inline',
-        'invalid',
         'noRowGap',
         'size',
         'softColumns',
@@ -160,43 +154,6 @@ class GroupInput extends BaseClass {
    * @method
    * @param {*} value
    * @param {Options|Object} options
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
-  // State :: Disabled (read-only, antonym: Enabled)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name GroupInput#getDisabledPartOfState
-   * @method
-   * @param {Options|Object} options
-   * @returns {Promise<*>}
-   */
-
-  /**
-   * @name GroupInput#expectIsDisabled
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInput#expectIsNotDisabled
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInput#expectIsEnabled
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInput#expectIsNotEnabled
-   * @method
    * @returns {Promise<void>}
    */
 
@@ -246,43 +203,6 @@ class GroupInput extends BaseClass {
 
   /**
    * @name GroupInput#expectIsNotInline
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
-  // State :: Invalid (read-only, antonym: Valid)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name GroupInput#getInvalidPartOfState
-   * @method
-   * @param {Options|Object} options
-   * @returns {Promise<*>}
-   */
-
-  /**
-   * @name GroupInput#expectIsInvalid
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInput#expectIsNotInvalid
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInput#expectIsValid
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInput#expectIsNotValid
    * @method
    * @returns {Promise<void>}
    */

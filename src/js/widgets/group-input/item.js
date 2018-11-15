@@ -2,6 +2,8 @@ import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 import { Selector, t } from 'testcafe';
 
+import Input from '../input';
+
 const {
   bem: { BemBase },
   Fragment,
@@ -13,12 +15,10 @@ const {
  * Base class for group input item fragment.
  * 
  * @class
- * @extends {Fragment}
+ * @extends {Input}
  */
-const GroupInputItemBaseClass = Fragment.makeFragmentClass(Fragment, {
+const GroupInputItemBaseClass = Fragment.makeFragmentClass(Input, {
   stateParts: [
-    ['disabled', { antonym: 'enabled' }],
-    ['invalid', { antonym: 'valid' }],
     ['labelShrinked'],
     ['widget', { isBoolean: false }]
   ]
@@ -147,86 +147,10 @@ class GroupInputItem extends GroupInputItemBaseClass {
     }
     else {
       return _.concat(parts, [
-        'disabled',
-        'invalid',
         'widget'
       ]);
     }
   }
-
-  // ---------------------------------------------------------------------------
-  // State :: Disabled (read-only, antonym: Enabled)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name GroupInputItem#getDisabledPartOfState
-   * @method
-   * @param {Options|Object} options
-   * @returns {Promise<*>}
-   */
-
-  /**
-   * @name GroupInputItem#expectIsDisabled
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInputItem#expectIsNotDisabled
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInputItem#expectIsEnabled
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInputItem#expectIsNotEnabled
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
-  // State :: Invalid (read-only, antonym: Valid)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name GroupInputItem#getInvalidPartOfState
-   * @method
-   * @param {Options|Object} options
-   * @returns {Promise<*>}
-   */
-
-  /**
-   * @name GroupInputItem#expectIsInvalid
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInputItem#expectIsNotInvalid
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInputItem#expectIsValid
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name GroupInputItem#expectIsNotValid
-   * @method
-   * @returns {Promise<void>}
-   */
 
   // ---------------------------------------------------------------------------
   // State :: LabelShrinked (read-only)
