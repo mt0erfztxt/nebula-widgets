@@ -121,6 +121,49 @@ class CheckableGroupInputItem extends CheckableGroupInputItemBaseClass {
    * @method
    * @returns {Promise<void>}
    */
+
+  // ---------------------------------------------------------------------------
+  // State :: Value
+  // ---------------------------------------------------------------------------
+  // Overrides Input
+  // Checkable input's value is same as for 'Checked' part of state
+  // ---------------------------------------------------------------------------
+
+  // TODO Tests
+  /**
+   * Obtains 'Value' part of fragment's state and returns it.
+   * 
+   * @param {Options|Object} [options] Options
+   * @returns {Promise<Boolean>}
+   */
+  async getValuePartOfState(options) {
+    return this.getCheckedPartOfState(options);
+  }
+
+  // TODO Tests
+  /**
+   * Sets 'Value' part of fragment's state and returns it.
+   * 
+   * @param {Boolean} value New value for 'Value' part of fragment's state
+   * @param {Options|Object} [options] Options
+   * @return {Promise<Boolean>} Current value of 'Value' part of fragment's state after set state operation is done.
+   */
+  async setValuePartOfState(value, options) {
+    return this.setCheckedPartOfState(value, options);
+  }
+
+  // TODO Tests
+  /**
+   * Asserts that 'Value' part of fragment's state is equal specified value.
+   *
+   * @param {Boolean} value Part of state must equal that value to pass assertion
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.isNot=false] When truthy assertion would be inverted
+   * @return {Promise<void>}
+   */
+  async expectValuePartOfStateIs(value, options) {
+    await this.expectCheckedPartOfStateIs(value, options);
+  }
 }
 
 Object.defineProperties(CheckableGroupInputItem, {

@@ -137,3 +137,5 @@ test("040 It should allow assert on whether item isn't checked using `#expectIsN
 
   expect(isThrown, 'to be true');
 });
+
+// TODO Add test for 'Value' part of state.

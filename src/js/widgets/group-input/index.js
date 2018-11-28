@@ -11,7 +11,8 @@ import GroupInputItem from './item';
 const {
   bem: { BemBase },
   Fragment,
-  Options
+  Options,
+  utils
 } = testFragment;
 
 /**
@@ -415,6 +416,77 @@ class GroupInput extends BaseClass {
    * @param {Options|Object} options
    * @returns {Promise<void>}
    */
+
+  // ---------------------------------------------------------------------------
+  // State :: Value
+  // ---------------------------------------------------------------------------
+  // TODO getter/setter can be implemented here because it's just a list of
+  //      items values.
+
+  // TODO Docs and tests
+  async getValuePartOfState(options) {
+    const itemsCount = await this.itemElementSelector.count;
+    const statePromises = [];
+
+    for (let i = 0; i < itemsCount; i++) {
+      statePromises.push(
+        this.getItem({ idx: i }).getValuePartOfState(options)
+      );
+    }
+
+    return Promise.all(statePromises);
+  }
+
+  // TODO Docs and tests
+  async setValuePartOfState(value, options) {
+    if (_.isUndefined(value)) {
+      return this.getValuePartOfState(options);
+    }
+
+    if (!_.isArray(value)) {
+      throw new TypeError(
+        `${this.displayName}#setValuePartOfState(): 'value' argument must ` +
+        `be an array but it is ${typeOf(value)} (${value})`
+      );
+    }
+
+    const itemsCount = await this.itemElementSelector.count;
+
+    for (let i = 0; i < itemsCount; i++) {
+      const item = this.getItem({ idx: i });
+      await item.setValuePartOfState(value[i], options);
+    }
+
+    return this.getValuePartOfState(options);
+  }
+
+  // TODO Docs and tests
+  async expectValuePartOfStateIs(value, options) {
+    const { isNot, sameOrder } = new Options(options, {
+      defaults: {
+        isNot: false,
+        sameOrder: true
+      }
+    });
+
+    const val = await this.getValuePartOfState(options);
+
+    if (sameOrder) {
+      const assertionName = utils.buildTestCafeAssertionName('eql', { isNot });
+      await t.expect(val)[assertionName](value);
+    }
+    else {
+      const matched = _.every(value, (v) => _.includes(val, v));
+      const assertionName = utils.buildTestCafeAssertionName('ok', { isNot });
+
+      await t.expect(matched)[assertionName](
+        `${this.displayName}.expectValuePartOfStateIs(): Expected ` +
+        `'${JSON.stringify(val)}' to ` + (isNot ? 'not ' : '') + 'have same ' +
+        `set of elements as '${JSON.stringify(value)}' but it ` +
+        (isNot ? 'has' : `hasn't`)
+      );
+    }
+  }
 
   // ---------------------------------------------------------------------------
   // Assertions
