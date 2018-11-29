@@ -2,7 +2,7 @@ import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 
 const {
-  Fragment,
+  Fragment1,
   Options
 } = testFragment;
 
@@ -10,12 +10,13 @@ const {
  * Base class for input fragment.
  * 
  * @class
- * @extends {Fragment}
+ * @extends {Fragment1}
  */
-const BaseClass = Fragment.makeFragmentClass(Fragment, {
+const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
   stateParts: [
     ['disabled', { antonym: 'enabled' }],
-    ['invalid', { antonym: 'valid' }]
+    ['invalid', { antonym: 'valid' }],
+    ['widget', { isBoolean: false }]
   ]
 });
 
@@ -31,41 +32,29 @@ const fragmentDisplayName = 'nebula-widgets.widgets.input';
  */
 class Input extends BaseClass {
 
-  /**
-   * Creates fragment.
-   *
-   * @param {Input|Object} [spec] - When it's already instance of `Input` it would be returned as-is otherwise it's same as `Fragment` constructor `spec` parameter
-   * @param {Options|Object} [opts] - Options. Same as in `Fragment`
-   */
-  constructor(spec, opts) {
-    const { initializedOpts, initializedSpec, isInstance } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
-
-    if (isInstance === true) {
-      return spec;
-    }
-
-    super(initializedSpec, initializedOpts);
-
-    return this;
-  }
-
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
 
-  getStateParts(onlyWritable = false) {
-    const parentParts = super.getStateParts(onlyWritable);
-    const parts = _.concat(parentParts, [
+  getStateParts(options) {
+    const { onlyWritable } = new Options(options, {
+      defaults: {
+        onlyWritable: false
+      }
+    });
+
+    const writableParts = _.concat(super.getStateParts(onlyWritable), [
       'value'
     ]);
 
     if (onlyWritable) {
-      return parts;
+      return writableParts;
     }
     else {
-      return _.concat(parts, [
+      return _.concat(writableParts, [
         'disabled',
-        'invalid'
+        'invalid',
+        'widget'
       ]);
     }
   }
@@ -154,7 +143,7 @@ class Input extends BaseClass {
   /**
    * Obtains 'Value' part of fragment's state and returns it.
    * 
-   * @param {Options|Object} [options] - Options
+   * @param {Options|Object} [options] Options
    * @returns {Promise<*>}
    */
   async getValuePartOfState(options) {
@@ -166,8 +155,8 @@ class Input extends BaseClass {
   /**
    * Sets 'Value' part of fragment's state and returns it.
    * 
-   * @param {*} value - New value for 'Value' part of fragment's state
-   * @param {Options|Object} [options] - Options
+   * @param {*} value New value for 'Value' part of fragment's state
+   * @param {Options|Object} [options] Options
    * @return {Promise<*>} Current value of 'Value' part of fragment's state after set state operation is done.
    */
   async setValuePartOfState(value, options) {
@@ -179,9 +168,9 @@ class Input extends BaseClass {
   /**
    * Asserts that 'Value' part of fragment's state is equal specified value.
    *
-   * @param {*} value - Part of state must match that value to pass assertion
-   * @param {Options|Object} [options] - Options
-   * @param {Boolean} [options.isNot=false] - When truthy assertion would be inverted
+   * @param {*} value Part of state must match that value to pass assertion
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.isNot=false] When truthy assertion would be inverted
    * @return {Promise<void>}
    */
   async expectValuePartOfStateIs(value, options) {
@@ -189,6 +178,27 @@ class Input extends BaseClass {
       `'${this.displayName}.expectValuePartOfStateIs()' not implemented`
     );
   }
+
+  // ---------------------------------------------------------------------------
+  // State :: Widget (read-only, not boolean)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name Input#getWidgetPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name Input#expectWidgetPartOfStateIs
+   * @method
+   * @param {*} value
+   * @param {Options|Object} options
+   * @returns {Promise<void>}
+   */
 
   // ---------------------------------------------------------------------------
   // Assertions
@@ -219,7 +229,7 @@ class Input extends BaseClass {
   /**
    * Asserts that fragment's value is equal specified one.
    * 
-   * @param {*} value - Fragment's value must be equal specified one to pass assertion
+   * @param {*} value Fragment's value must be equal specified one to pass assertion
    * @returns {Promise<void>}
    */
   async expectValueIs(value) {
@@ -231,7 +241,7 @@ class Input extends BaseClass {
   /**
    * Asserts that fragment's value is not equal specified one.
    * 
-   * @param {*} value - Fragment's value must be not equal specified one to pass assertion
+   * @param {*} value Fragment's value must be not equal specified one to pass assertion
    * @returns {Promise<void>}
    */
   async expectValueIsNot(value) {
@@ -247,7 +257,7 @@ class Input extends BaseClass {
   /**
    * Just a convenience alias for `getValuePartOfState` method.
    *
-   * @param {Options|Object} [options] - Options
+   * @param {Options|Object} [options] Options
    * @returns {Promise<*>} Value of input.
    */
   async getValue(options) {
@@ -257,8 +267,8 @@ class Input extends BaseClass {
   /**
    * Just a convenience alias for `setValuePartOfState` method.
    *
-   * @param {*} value - New value for input
-   * @param {Options|Object} [options] - Options
+   * @param {*} value New value for input
+   * @param {Options|Object} [options] Options
    * @returns {Promise<*>} New value of input.
    */
   async setValue(value, options) {

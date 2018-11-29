@@ -5,9 +5,11 @@
     [nebula-widgets.kitchen-sink.panels.card-widget.events]
     [nebula-widgets.kitchen-sink.panels.checkbox-group-input-item-widget.events]
     [nebula-widgets.kitchen-sink.panels.checkbox-group-input-widget.events]
+    [nebula-widgets.kitchen-sink.panels.checkbox-input-widget.events]
     [nebula-widgets.kitchen-sink.panels.form-field-widget.events]
     [nebula-widgets.kitchen-sink.panels.radio-group-input-item-widget.events]
     [nebula-widgets.kitchen-sink.panels.radio-group-input-widget.events]
+    [nebula-widgets.kitchen-sink.panels.radio-input-widget.events]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.events]
     [re-frame.core :as rf]))
 

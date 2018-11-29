@@ -10,11 +10,13 @@
    :widgets/card
    :widgets/checkbox-group-input
    :widgets/checkbox-group-input-item
+   :widgets/checkbox-input
    :widgets/form-field
    :widgets/group-input
    :widgets/group-input-item
    :widgets/radio-group-input
    :widgets/radio-group-input-item
+   :widgets/radio-input
    :widgets/text-input])
 
 (def ^:private pages-href-and-text
