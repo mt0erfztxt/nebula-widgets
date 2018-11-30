@@ -19,11 +19,11 @@
   (->> [:checked :disabled :invalid :label-shrinked :widget]
        (map
          (fn [prop]
-           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %2])]))
+           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
        (into {})))
 
-(defn- update-ie-checked [event _]
-  ((:checked ie-setters) event (utils/event->checked event)))
+(defn- on-change-handler [event]
+  ((:checked ie-setters) (utils/event->checked event)))
 
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
@@ -37,7 +37,7 @@
                props
                {:checked (get props :checked)
                 :label {:shrinked label-shrinked, :text "Radio input label"}
-                :on-change update-ie-checked})]]]
+                :on-change on-change-handler})]]]
           (for [[cid items]
                 [[:checked]
                  [:disabled]
@@ -48,7 +48,7 @@
              {:cid cid}
              (cond->
                {:cid cid
-                :item-props {:on-change (get ie-setters cid)}
+                :on-change (get ie-setters cid)
                 :value (get props cid)}
                items (assoc :items items))]))))))
 

@@ -39,7 +39,23 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn widget [{:keys [checked disabled on-change] :as props}]
+(defn widget
+  "Renders radio input.
+
+  Arguments:
+  * `props` - map:
+    - `:checked` - logical true/false, no default. Whether input is checked or not.
+    - `:cid` - any, no default. Component id.
+    - `:cns` - any, no default. Component namespace.
+    - `:disabled` - logical true/false, no default. Whether input is disabled or not.
+    - `:invalid` - logical true/false, no default. Whether input is in invalid state or not.
+    - `:label` - string, renderable or map, no default. Input's label. Can be a map to provide more props for label:
+      * `:shrinked` - logical true/false, no default. Whether label shrinked (using ellipsis) when too long or not.
+      * `:text` - renderable, no default. Label's text. Same value (not map) that can be passed directly to `:label`.
+    - `:on-change` - function, no default. Called with browser event as argument when input changes to checked.
+    - `:widget` - one of :button, :icon (default), :native or their string/symbol equivalents. Specifies how widget
+      looks."
+  [{:keys [checked disabled on-change] :as props}]
   [:div {:class (build-class props)}
    [:label {:class label-bem}
     [:input

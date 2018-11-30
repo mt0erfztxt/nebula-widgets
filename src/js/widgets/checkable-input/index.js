@@ -225,6 +225,37 @@ class CheckableInput extends BaseClass {
       .expect(this.getValuePartOfState(options))
       .eql(value);
   }
+
+  // ---------------------------------------------------------------------------
+  // Other Methods
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Clicks on checkable input (on label element).
+   * 
+   * @returns {Promise<void>}
+   */
+  async click() {
+    await t.click(this.labelElementSelector);
+  }
+
+  /**
+   * Hovers checkable input (on label element).
+   * 
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.label] When truthy, then hover on item's label instead of item itself
+   * @param {Number} [options.wait] Wait specified number of milliseconds after hover is done
+   * @returns {Promise<void>}
+   */
+  async hover(options) {
+    const { wait } = new Options(options);
+
+    await t.hover(this.labelElementSelector);
+
+    if (wait) {
+      await t.wait(wait);
+    }
+  }
 }
 
 Object.defineProperties(CheckableInput, {

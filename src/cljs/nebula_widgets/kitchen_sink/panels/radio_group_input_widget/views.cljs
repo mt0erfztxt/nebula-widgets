@@ -5,7 +5,6 @@
     [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.radio-group-input :as ie-rgi-knob]
-    [nebula-widgets.utils :as utils]
     [nebula-widgets.widgets.radio-group-input.core :as radio-group-input]
     [re-frame.core :as rf]))
 
@@ -199,7 +198,7 @@
         :stacked-on-mobile :value :widget]
        (map
          (fn [prop]
-           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %2])]))
+           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
        (into {})))
 
 (defn- interactive-example-cmp []
@@ -210,13 +209,13 @@
           [ie/widget
            [radio-group-input/widget
             (assoc rgi-props
-              :item-props {:on-change (:value ie-setters)}
               :items
               (for [n (range 1 10) :let [label (str "choice" n)]]
                 {:label
                  {:shrinked (get rgi-props :label-shrinked)
                   :text (str label (when (= 2 n) " (some long text here)"))}
-                 :value (keyword label)}))]]
+                 :value (keyword label)})
+              :on-change (:value ie-setters))]]
           (for [[cid items]
                 [[:columns (for [v [nil 3 5]] {:label (if (nil? v) "nil" v), :value v})]
                  [:disabled]
@@ -236,7 +235,7 @@
              {:cid cid}
              (cond->
                {:cid cid
-                :item-props {:on-change (get ie-setters cid)}
+                :on-change (get ie-setters cid)
                 :value (get rgi-props cid)}
                items (assoc :items items))]))))))
 
