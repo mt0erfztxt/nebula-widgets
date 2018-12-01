@@ -14,8 +14,7 @@
   Arguments:
   * `props` - map. Same as in [group-input](/widgets/group-input) widget, plus:
     - `:items` - seq of maps, no default. Each map is a props for [radio-input](/widgets/radio-input) widget.
-    - `:on-change` - function, no default. Called with item's value and browser event as arguments when item checked or
-      unchecked.
+    - `:on-change` - function, no default. Called with item's value and browser event as arguments when item is checked.
     - `:value` - any, no default. Item, which have `:value` prop equal that value, would be checked."
   [{:keys [item-props items on-change value] :as props}]
   [group-input/widget

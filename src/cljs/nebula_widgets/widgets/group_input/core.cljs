@@ -66,11 +66,13 @@
     - `:cid` - any, no default. Component id.
     - `:columns` - integer, no default. Number of items per row.
     - `:cns` - any, no default. Component namespace.
-    - `:disabled` - logical true/false, no default. Whether widget disabled or not.
+    - `:disabled` - logical true/false, no default. Whether widget disabled or not. When all items must be disabled just
+      set `:disabled` to logical true in `:item-props` of concrete group input widget.
     - `:equidistant` - logical true/false, no default. Whether items have same width.
     - `:errors` - seq of strings, no default. Would be displayed only when not empty and :invalid.
     - `:inline` - logical true/false, no default. Whether items grouped stacked or inline.
-    - `:invalid` - logical true/false, no default. Whether widget is in invalid state or not.
+    - `:invalid` - logical true/false, no default. Whether widget is in invalid state or not. When all items must be
+      marked invalid just set `:invalid` to logical true in `:item-props` of concrete group input widget.
     - `:item-props` - map, no default. Common props for all items in group, for example, event handlers.
     - `:items` - seq of maps, no default. Used to render group items, see concrete group input widget implementation for
       details.
@@ -87,7 +89,6 @@
       looks.
 
   Notes:
-  * `:invalid` prop of group overrides same prop of item
   * `:soft-columns` prop can be convenient in case of small containers, e.g. with just 2-3 columns
 
   TODO:
