@@ -38,6 +38,12 @@ class RadioInput extends CheckableInput {
         `must be a boolean but it is ${typeOf(value)} (${value})`
       );
     }
+    else if (value === false){
+      throw new TypeError(
+        `'${this.displayName}#setCheckedPartOfState():' 'value' argument ` +
+        `can't be false because radio input can't uncheck itself`
+      );
+    }
 
     const isChecked = await this.getCheckedPartOfState(options);
 

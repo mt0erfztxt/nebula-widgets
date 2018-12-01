@@ -6,11 +6,8 @@ import typeOf from 'typeof--';
 
 import Input from '../input';
 
-import GroupInputItem from './item';
-
 const {
   bem: { BemBase },
-  Fragment,
   Options,
   utils
 } = testFragment;
@@ -21,16 +18,14 @@ const {
  * @class
  * @extends {Input}
  */
-const BaseClass = Fragment.makeFragmentClass(Input, {
+const BaseClass = Input.makeFragmentClass(Input, {
   stateParts: [
     ['columns', { isBoolean: false }],
     ['equidistant'],
     ['inline'],
     ['noRowGap'],
-    ['size', { isBoolean: false }],
     ['softColumns'],
-    ['stackedOnMobile'],
-    ['widget', { isBoolean: false }]
+    ['stackedOnMobile']
   ]
 });
 
@@ -47,37 +42,15 @@ const fragmentDisplayName = 'nebula-widgets.widgets.group-input';
 class GroupInput extends BaseClass {
 
   /**
-   * Creates fragment.
-   *
-   * @param {GroupInput|Object} [spec] When it's already instance of `GroupInput` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
-   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
-   * @param {Object} [opts.ItemFragmentOpts] Default `opts` for group input item fragment's constructor
-   * @param {Object} [opts.ItemFragmentSpec] Default `spec` for group input item fragment's constructor
-   */
-  constructor(spec, opts) {
-    const {
-      initializedOpts,
-      initializedSpec,
-      isInstance
-    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
-
-    if (isInstance === true) {
-      return spec;
-    }
-
-    super(initializedSpec, initializedOpts);
-
-    return this;
-  }
-
-  /**
    * BEM base for fragment's 'item' element.
    *
    * @returns {BemBase}
    */
   get itemElementBemBase() {
     if (!this._itemElementBemBase) {
-      this._itemElementBemBase = this.cloneBemBase().setElt('item');
+      this._itemElementBemBase = this
+        .cloneBemBase()
+        .setElt('item');
     }
 
     return this._itemElementBemBase;
@@ -90,7 +63,9 @@ class GroupInput extends BaseClass {
    */
   get itemElementSelector() {
     if (!this._itemElementSelector) {
-      this._itemElementSelector = this.selector.find(`.${this.itemElementBemBase}`);
+      this._itemElementSelector = this
+        .selector
+        .find(`.${this.itemElementBemBase}`);
     }
 
     return this._itemElementSelector;
@@ -104,7 +79,7 @@ class GroupInput extends BaseClass {
    */
   get ItemFragment() {
     if (!this._ItemFragment) {
-      this._ItemFragment = this.getSomethingFragment('Item', GroupInput);
+      this._ItemFragment = this.getSomethingFragment('item', GroupInput);
     }
 
     return this._ItemFragment;
@@ -114,25 +89,30 @@ class GroupInput extends BaseClass {
   // State
   // ---------------------------------------------------------------------------
 
-  getStateParts(onlyWritable = false) {
-    const parentParts = super.getStateParts(onlyWritable);
-    const parts = _.concat(parentParts, [
+  getStateParts(options) {
+    const { onlyWritable } = new Options(options, {
+      defaults: {
+        onlyWritable: false
+      }
+    });
+
+    // 'Items' part of state is writable because some group inputs, e.g. text
+    // group input, allows to add/remove items.
+    const writableParts = _.concat(super.getStateParts({ onlyWritable }), [
       'items'
     ]);
 
     if (onlyWritable) {
-      return parts;
+      return writableParts;
     }
     else {
-      return _.concat(parts, [
+      return _.concat(writableParts, [
         'columns',
         'equidistant',
         'inline',
         'noRowGap',
-        'size',
         'softColumns',
-        'stckedOnMobile',
-        'widget'
+        'stckedOnMobile'
       ]);
     }
   }
@@ -326,27 +306,6 @@ class GroupInput extends BaseClass {
    */
 
   // ---------------------------------------------------------------------------
-  // State :: Size (read-only, not boolean)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name GroupInput#getSizePartOfState
-   * @method
-   * @param {Options|Object} options
-   * @returns {Promise<*>}
-   */
-
-  /**
-   * @name GroupInput#expectSizePartOfStateIs
-   * @method
-   * @param {*} value
-   * @param {Options|Object} options
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
   // State :: SoftColumns (read-only)
   // ---------------------------------------------------------------------------
   // Inherited from `BaseClass`
@@ -393,27 +352,6 @@ class GroupInput extends BaseClass {
   /**
    * @name GroupInput#expectIsNotStackedOnMobile
    * @method
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
-  // State :: Widget (read-only, not boolean)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name GroupInput#getWidgetPartOfState
-   * @method
-   * @param {Options|Object} options
-   * @returns {Promise<*>}
-   */
-
-  /**
-   * @name GroupInput#expectWidgetPartOfStateIs
-   * @method
-   * @param {*} value
-   * @param {Options|Object} options
    * @returns {Promise<void>}
    */
 
@@ -558,7 +496,11 @@ class GroupInput extends BaseClass {
    * @return {Promise<void>}
    */
   async expectItemsCountIs(count, options) {
-    await GroupInput.expectSomethingsCountIs(this.itemElementSelector, count, options);
+    await GroupInput.expectSomethingsCountIs(
+      this.itemElementSelector,
+      count,
+      options
+    );
   }
 
   // ---------------------------------------------------------------------------
@@ -566,32 +508,27 @@ class GroupInput extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * Returns group input item fragment that matches `spec` and `opts`.
+   * Returns group input item fragment.
    *
-   * @param {*} [spec] See `spec` parameter of item fragment's class constructor
-   * @param {*} [opts] See `opts` parameter of item fragment's class constructor
+   * @param {*} [locator] See `locator` parameter of item fragment's class constructor
+   * @param {*} [options] See `options` parameter of item fragment's class constructor
    * @returns {Fragment}
    */
-  getItem(spec, opts) {
-    return this.getSomething(
-      this.ItemFragment,
-      _.assign({}, this._opts.ItemFragmentSpec, { parent: this.selector }, spec),
-      _.assign({}, this._opts.ItemFragmentOpts, opts)
-    );
+  getItem(locator, options) {
+    return this.getSomething('item', locator, options);
   }
 
   /**
-   * Clicks on item that matches `spec` and `opts`. Returns clicked item.
+   * Clicks on item and returns it.
    * 
-   * @param {*} [spec] See `spec` parameter of item fragment's class constructor
-   * @param {*} [opts] See `opts` parameter of item fragment's class constructor
+   * @param {*} [locator] See `locator` parameter of item fragment's class constructor
+   * @param {*} [options] See `options` parameter of item fragment's class constructor
    * @returns {Promise<Fragment>}
    */
-  async clickItem(spec, opts) {
-    const item = this.getItem(spec, opts);
+  async clickItem(locator, options) {
+    const item = this.getItem(locator, options);
     await item.expectIsExist();
     await item.click();
-
     return item;
   }
 }
@@ -604,7 +541,7 @@ Object.defineProperties(GroupInput, {
     value: fragmentDisplayName
   },
   ItemFragment: {
-    value: GroupInputItem
+    value: null
   }
 });
 

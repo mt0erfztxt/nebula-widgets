@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 import typeOf from 'typeof--';
 
@@ -6,7 +7,6 @@ import { t } from 'testcafe';
 
 const {
   bem: { BemBase },
-  Fragment1,
   Options,
   selector,
   utils
@@ -18,7 +18,7 @@ const {
  * @class
  * @extends {Input}
  */
-const BaseClass = Fragment1.makeFragmentClass(Input, {
+const BaseClass = Input.makeFragmentClass(Input, {
   stateParts: [
     'checked'
   ]
@@ -132,7 +132,7 @@ class CheckableInput extends BaseClass {
       }
     });
 
-    const writableParts = _.concat(super.getStateParts(onlyWritable), [
+    const writableParts = _.concat(super.getStateParts({ onlyWritable }), [
       'checked'
     ]);
 
@@ -231,7 +231,7 @@ class CheckableInput extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * Clicks on checkable input (on label element).
+   * Clicks on checkable input (actually on its label).
    * 
    * @returns {Promise<void>}
    */
@@ -240,21 +240,22 @@ class CheckableInput extends BaseClass {
   }
 
   /**
-   * Hovers checkable input (on label element).
+   * Hovers on fragment.
    * 
    * @param {Options|Object} [options] Options
-   * @param {Boolean} [options.label] When truthy, then hover on item's label instead of item itself
+   * @param {Boolean} [options.selector=this.labelElementSelector] Selector to hover on
    * @param {Number} [options.wait] Wait specified number of milliseconds after hover is done
    * @returns {Promise<void>}
    */
   async hover(options) {
-    const { wait } = new Options(options);
-
-    await t.hover(this.labelElementSelector);
-
-    if (wait) {
-      await t.wait(wait);
-    }
+    await Input.prototype.hover.call(
+      this,
+      new Options(options, {
+        defaults: {
+          selector: this.labelElementSelector
+        }
+      })
+    );
   }
 }
 
