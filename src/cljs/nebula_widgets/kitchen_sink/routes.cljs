@@ -12,13 +12,10 @@
      ["/widgets/button-group-set" :widgets/button-group-set]
      ["/widgets/card" :widgets/card]
      ["/widgets/checkbox-group-input" :widgets/checkbox-group-input]
-     ["/widgets/checkbox-group-input-item" :widgets/checkbox-group-input-item]
      ["/widgets/checkbox-input" :widgets/checkbox-input]
      ["/widgets/form-field" :widgets/form-field]
      ["/widgets/group-input" :widgets/group-input]
-     ["/widgets/group-input-item" :widgets/group-input-item]
      ["/widgets/radio-group-input" :widgets/radio-group-input]
-     ["/widgets/radio-group-input-item" :widgets/radio-group-input-item]
      ["/widgets/radio-input" :widgets/radio-input]
      ["/widgets/text-input" :widgets/text-input]]))
 

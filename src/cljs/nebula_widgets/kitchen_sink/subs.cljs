@@ -2,11 +2,9 @@
   (:require
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.subs]
     [nebula-widgets.kitchen-sink.panels.card-widget.subs]
-    [nebula-widgets.kitchen-sink.panels.checkbox-group-input-item-widget.subs]
     [nebula-widgets.kitchen-sink.panels.checkbox-group-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.checkbox-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.form-field-widget.subs]
-    [nebula-widgets.kitchen-sink.panels.radio-group-input-item-widget.subs]
     [nebula-widgets.kitchen-sink.panels.radio-group-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.radio-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.subs]

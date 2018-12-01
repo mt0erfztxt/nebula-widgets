@@ -73,7 +73,7 @@
      (for [n (range 1 4)]
        {:cid n
         :label (str "Option " n)
-        :path (keyword (str "option" n))})
+        :path [(keyword (str "option" n))]})
      :value {:option1 true, :option3 true}}]
    "```clj
      [checkbox-group-input/widget
@@ -226,12 +226,12 @@
         :stacked-on-mobile :value :widget]
        (map
          (fn [prop]
-           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %2])]))
+           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
        (into {})))
 
-(defn- update-ie-value [event value]
+(defn- on-change-handler [value event]
   (let [updater (if (utils/event->checked event) conj disj)]
-    ((:value ie-setters) event #(updater % value))))
+    ((:value ie-setters) #(updater % value))))
 
 (defn- interactive-example-cmp []
   (let [*cgi-props (rf/subscribe [(interactive-example-path->keyword)])]
@@ -241,13 +241,13 @@
           [ie/widget
            [checkbox-group-input/widget
             (assoc cgi-props
-              :item-props {:on-change update-ie-value}
               :items
               (for [n (range 1 10) :let [label (str "option" n)]]
                 {:label
                  {:shrinked (get cgi-props :label-shrinked)
                   :text (str label (when (= 2 n) " (some long text here)"))}
-                 :value (keyword label)}))]]
+                 :value (keyword label)})
+              :on-change on-change-handler)]]
           (for [[cid items]
                 [[:columns (for [v [nil 3 5]] {:label (if (nil? v) "nil" v), :value v})]
                  [:disabled]
@@ -267,7 +267,7 @@
              {:cid cid}
              (cond->
                {:cid cid
-                :item-props {:on-change (get ie-setters cid)}
+                :on-change (get ie-setters cid)
                 :value (get cgi-props cid)}
                items (assoc :items items))]))))))
 
