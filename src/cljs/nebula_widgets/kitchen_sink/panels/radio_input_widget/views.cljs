@@ -16,7 +16,7 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:checked :disabled :invalid :label-shrinked :widget]
+  (->> [:checked :disabled :invalid :label-shrinked :size :widget]
        (map
          (fn [prop]
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
@@ -43,6 +43,7 @@
                  [:disabled]
                  [:invalid]
                  [:label-shrinked]
+                 [:size (for [s ["small" "normal" "large"]] {:label s, :value s})]
                  [:widget (for [s ["button" "icon" "native"]] {:label s, :value s})]]]
             [ie-rgi-knob/widget
              {:cid cid}

@@ -7,4 +7,5 @@
      :disabled false
      :invalid false
      :label-shrinked false
+     :size "normal"
      :widget "icon"}}})
