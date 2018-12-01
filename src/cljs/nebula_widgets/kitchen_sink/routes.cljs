@@ -11,6 +11,7 @@
      ["/widgets/button-group" :widgets/button-group]
      ["/widgets/button-group-set" :widgets/button-group-set]
      ["/widgets/card" :widgets/card]
+     ["/widgets/checkable-input" :widgets/checkable-input]
      ["/widgets/checkbox-group-input" :widgets/checkbox-group-input]
      ["/widgets/checkbox-input" :widgets/checkbox-input]
      ["/widgets/form-field" :widgets/form-field]

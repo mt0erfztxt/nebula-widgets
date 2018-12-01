@@ -57,7 +57,9 @@
 (defn widget
   "Renders group input.
 
-  Not intended to be used directly but rather as a base for more specific checkable group input widgets.
+  Not intended to be used directly but rather as a base for more specific checkable group input widgets:
+  * [checkbox-group-input](/widgets/checkbox-group-input)
+  * [radio-group-input](/widgets/radio-group-input)
 
   Arguments:
   * `props` - optional, map, no default. Supported keys:

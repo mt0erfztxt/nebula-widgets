@@ -45,7 +45,9 @@
 (defn widget
   "Renders checkable input.
 
-  Not intended to be used directly but rather as a base for more specific checkable input widgets.
+  Not intended to be used directly but rather as a base for more specific checkable input widgets:
+  * [checkbox-input](/widgets/checkbox-input)
+  * [radio-input](/widgets/radio-input)
 
   Arguments:
   * `props` - map:

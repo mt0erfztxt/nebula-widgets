@@ -8,6 +8,7 @@
    :widgets/button-group
    :widgets/button-group-set
    :widgets/card
+   :widgets/checkable-input
    :widgets/checkbox-input
    :widgets/radio-input
    :widgets/group-input
