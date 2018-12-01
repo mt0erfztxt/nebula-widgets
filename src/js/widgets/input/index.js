@@ -16,6 +16,7 @@ const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
   stateParts: [
     ['disabled', { antonym: 'enabled' }],
     ['invalid', { antonym: 'valid' }],
+    ['size', { isBoolean: false }],
     ['widget', { isBoolean: false }]
   ]
 });
@@ -43,7 +44,7 @@ class Input extends BaseClass {
       }
     });
 
-    const writableParts = _.concat(super.getStateParts(onlyWritable), [
+    const writableParts = _.concat(super.getStateParts({ onlyWritable }), [
       'value'
     ]);
 
@@ -54,6 +55,7 @@ class Input extends BaseClass {
       return _.concat(writableParts, [
         'disabled',
         'invalid',
+        'size',
         'widget'
       ]);
     }
@@ -130,6 +132,27 @@ class Input extends BaseClass {
   /**
    * @name Input#expectIsNotValid
    * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: Size (read-only, not boolean)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name Input#getSizePartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name Input#expectSizePartOfStateIs
+   * @method
+   * @param {*} value
+   * @param {Options|Object} options
    * @returns {Promise<void>}
    */
 
