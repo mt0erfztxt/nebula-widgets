@@ -153,3 +153,81 @@ test("050 It should allow assert on whether input isn't checked using '#expectIs
 
   expect(isThrown, 'to be true');
 });
+
+test("060 It should allow get input's 'LabelShrinked' part of state using '#getLabelShrinkedPartOfState()'", async () => {
+  const { knob, sut } = await getHelperFragments('label-shrinked');
+
+  // -- Check when not shrinked
+
+  await sut.hover();
+  expect(await sut.getLabelShrinkedPartOfState(), 'to be false');
+
+  // -- Check when shrinked
+
+  await knob.clickItem({ value: 'true' });
+  await sut.hover();
+  expect(await sut.getLabelShrinkedPartOfState(), 'to be true');
+});
+
+test("070 It should allow assert on whether input's label is shrinked using '#expectIsLabelShrinked()'", async () => {
+  const { knob, sut } = await getHelperFragments('label-shrinked');
+
+  // -- Successful case
+
+  await knob.clickItem({ value: 'true' });
+  await sut.hover();
+  await sut.expectIsLabelShrinked();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await knob.clickItem({ value: 'false' });
+  await sut.hover();
+
+  try {
+    await sut.expectIsLabelShrinked();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.radio-input.+must have BEM modifier 'labelShrinked,'.+but it doesn't/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("080 It should allow assert on whether input's label isn't shrinked using '#expectIsNotLabelShrinked()'", async () => {
+  const { knob, sut } = await getHelperFragments('label-shrinked');
+
+  // -- Successful case
+
+  await sut.hover();
+  await sut.expectIsNotLabelShrinked();
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  await knob.clickItem({ value: 'true' });
+  await sut.hover();
+
+  try {
+    await sut.expectIsNotLabelShrinked();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.radio-input.+must not have BEM modifier 'labelShrinked,'.+but it does/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});

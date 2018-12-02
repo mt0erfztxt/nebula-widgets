@@ -20,7 +20,8 @@ const {
  */
 const BaseClass = Input.makeFragmentClass(Input, {
   stateParts: [
-    'checked'
+    'checked',
+    'labelShrinked'
   ]
 });
 
@@ -140,7 +141,9 @@ class CheckableInput extends BaseClass {
       return writableParts;
     }
     else {
-      return _.concat(writableParts, []);
+      return _.concat(writableParts, [
+        'labelShrinked'
+      ]);
     }
   }
 
@@ -179,6 +182,31 @@ class CheckableInput extends BaseClass {
 
   /**
    * @name CheckableInput#expectIsNotChecked
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: LabelShrinked (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name CheckableInput#getLabelShrinkedPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<Boolean>}
+   */
+
+  /**
+   * @name CheckableInput#expectIsLabelShrinked
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name CheckableInput#expectIsNotLabelShrinked
    * @method
    * @returns {Promise<void>}
    */
