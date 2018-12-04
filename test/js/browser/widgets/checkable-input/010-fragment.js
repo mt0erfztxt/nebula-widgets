@@ -37,7 +37,6 @@ async function getHelperFragments(knobCid) {
   };
 }
 
-
 fixture('Widgets :: Checkable Input :: 010 Fragment')
   .page('http://localhost:3449/widgets/radio-input');
 

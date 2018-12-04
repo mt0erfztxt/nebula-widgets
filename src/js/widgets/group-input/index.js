@@ -36,6 +36,7 @@ const BaseClass = Input.makeFragmentClass(Input, {
  */
 const fragmentDisplayName = 'nebula-widgets.widgets.group-input';
 
+// TODO Add Error Fragment to allow expectations on error presence and etc.
 /**
  * Fragment that represents group input.
  */
@@ -96,8 +97,9 @@ class GroupInput extends BaseClass {
       }
     });
 
-    // 'Items' part of state is writable because some group inputs, e.g. text
-    // group input, allows to add/remove items.
+    // 'Items' part of state is writable because it used to set state of items.
+    // For some input fragments, e.g. text group input, items would be
+    // automatically added/removed when needed.
     const writableParts = _.concat(super.getStateParts({ onlyWritable }), [
       'items'
     ]);
@@ -431,64 +433,68 @@ class GroupInput extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * Asserts that group input fragment has group input item fragment specified
-   * by `spec` and `opts`. Optionally, asserts that specified item found in
-   * group input in position specified by `idx`.
+   * Asserts that group input fragment has item fragment. Optionally, asserts
+   * that specified item found in group input in position specified by `idx`.
    * 
-   * @param {*} [spec] See `spec` parameter of item fragment's class constructor
-   * @param {*} [opts] See `opts` parameter of item fragment's class constructor
+   * @param {*} [itemLocator] See `locator` parameter of item fragment's class constructor
+   * @param {*} [itemOptions] See `options` parameter of item fragment's class constructor
    * @param {Options|Object} [options]
    * @param {Number} [options.idx] A position (integer gte 0) at which item must be found in group input to pass assertion
-   * @returns {Promise<Object>} Item.
+   * @returns {Promise<Object>} Item fragment.
    */
-  async expectHasItem(spec, opts, options) {
-    return this.expectHasSomething('Item', spec, opts, options);
+  async expectHasItem(itemLocator, itemOptions, options) {
+    return this.expectHasSomething('Item', itemLocator, itemOptions, options);
   }
 
   /**
-   * Asserts that group input fragment has group input item fragments specified
-   * in `specAndOptsList`. Optionally, asserts that group input has only
+   * Asserts that group input fragment has item fragments specified in
+   * `itemLocatorAndOptions`. Optionally, asserts that group input has only
    * specified items, and, also optionally, asserts that items found in group
-   * input in same order as in `specAndOptsList`.
+   * input in same order as in `itemLocatorAndOptions`.
    *
-   * @param {Array} specAndOptsList Each element is a tuple of item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
+   * @param {Array} itemLocatorAndOptions Each element is a tuple of item fragment's `locator` and `optiions`. See corresponding parameters of item fragment's class constructor
    * @param {Options|Object} [options] Options
    * @param {Boolean} [options.only=false] Group input must have only specified items to pass assertion
-   * @param {Boolean} [options.sameOrder=false] Items must be found in group input in same order as in `specAndOptsList` to pass assertion. Work only in conjunction with `options.only` parameter
-   * @returns {Promise<Array<Object>>} Items.
+   * @param {Boolean} [options.sameOrder=false] Items must be found in group input in same order as in `itemLocatorAndOptions E` to pass assertion. Work only in conjunction with 'only' option
+   * @returns {Promise<Array<Object>>} Item fragments.
    */
-  async expectHasItems(specAndOptsList, options) {
-    return this.expectHasSomethings('Item', specAndOptsList, options);
+  async expectHasItems(itemLocatorAndOptions, options) {
+    return this.expectHasSomethings('Item', itemLocatorAndOptions, options);
   }
 
   /**
-   * Asserts that group input item fragment specified by `spec` found in group
-   * input fragment at index specified by `idx`.
+   * Asserts that item fragment found in group input fragment at index
+   * specified by `idx`.
    *
-   * @param {*} spec See `spec` parameter of item fragment's class constructor
-   * @param {*} opts See `opts` parameter of item fragment's class constructor
+   * @param {*} locator See `locator` parameter of item fragment's class constructor
+   * @param {Options|Object} options See `options` parameter of item fragment's class constructor
    * @param {Number} idx Item must be found in group input at this position to pass assertion
    * @returns {Promise<void>}
    */
-  async expectItemIndexIs(spec, opts, idx) {
-    await this.getItem(spec, opts).expectIndexInParentIs(this.selector, idx);
+  async expectItemIndexIs(locator, options, idx) {
+    await this
+      .getItem(locator, options)
+      .expectIndexInParentIs(this.selector, idx);
   }
 
   /**
-   * Asserts that group input fragment contains all and only all group input
-   * item fragments passed in `specAndOptsList` list and they appears in same
-   * order as in `specAndOptsList`.
+   * Asserts that group input fragment contains all and only all item fragments
+   * passed in `locatorAndOptionsList` list and they appears in same order as
+   * in `locatorAndOptionsList`.
    *
-   * @param {Array} specAndOptsList Each element is a tuple of item fragment's `spec` and `opts`. See corresponding parameters of item fragment's class constructor
+   * @param {Array} locatorAndOptionsList Each element is a tuple of item fragment's `locator` and `options`. See corresponding parameters of item fragment's class constructor
    * @returns {Promise<void>}
    */
-  async expectItemsAre(specAndOptsList) {
-    await this.expectHasItems(specAndOptsList, { only: true, sameOrder: true });
+  async expectItemsAre(locatorAndOptionsList) {
+    await this.expectHasItems(locatorAndOptionsList, {
+      only: true,
+      sameOrder: true
+    });
   }
 
   /**
-   * Asserts that count of group input item fragments in group input fragment
-   * equal value specified in `count`.
+   * Asserts that count of item fragments in group input fragment equal value
+   * specified in `count`.
    *
    * @param {Number|Array} count Group input fragment must have that number of item fragments to pass assertion. When you need more flexibility than just equality pass an `Array` with TestCafe assertion name (default to 'eql') as first element and expected value for assertion as second, for example, `['gte', 3]`
    * @param {Options|Object} [options] Options
