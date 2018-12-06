@@ -1,9 +1,9 @@
-(ns nebula-widgets.kitchen-sink.panels.checkbox-input-widget.common
+(ns nebula-widgets.kitchen-sink.panels.checkable-group-input-widget.common
   (:require
     [nebula-widgets.utils :as utils]))
 
 (def panel-key
-  :checkbox-input-widget)
+  :checkable-group-input-widget)
 
 (def panel-path
   [:panels panel-key])

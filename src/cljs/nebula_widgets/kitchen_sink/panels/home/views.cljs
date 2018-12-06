@@ -9,11 +9,8 @@
    :widgets/button-group-set
    :widgets/card
    :widgets/checkable-input
-   :widgets/checkbox-input
-   :widgets/radio-input
    :widgets/group-input
-   :widgets/checkbox-group-input
-   :widgets/radio-group-input
+   :widgets/checkable-group-input
    :widgets/text-input
    :widgets/form-field])
 

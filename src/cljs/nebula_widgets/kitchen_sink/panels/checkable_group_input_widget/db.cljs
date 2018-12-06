@@ -1,7 +1,7 @@
-(ns nebula-widgets.kitchen-sink.panels.checkbox-group-input-widget.db)
+(ns nebula-widgets.kitchen-sink.panels.checkable-group-input-widget.db)
 
 (def default-db
-  {:checkbox-group-input-widget
+  {:checkable-group-input-widget
    {:interactive-example
     {:columns nil
      :disabled false
@@ -11,8 +11,9 @@
      :invalid false
      :label-shrinked false
      :no-row-gap false
+     :selection-mode "multi"
      :size "normal"
      :soft-columns false
      :stacked-on-mobile false
-     :value #{:option1 :option3 :option4}
+     :value #{:choice2}
      :widget "icon"}}})

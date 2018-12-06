@@ -4,6 +4,7 @@
  * because of that it tested using radio group input fragment.
  */
 
+import lo from 'lodash';
 import sinon from 'sinon';
 import unexpected from 'unexpected';
 import unexpectedSinon from 'unexpected-sinon';
@@ -54,7 +55,7 @@ test("010 It should allow obtain group input", async () => {
   await sut.expectIsExist();
 });
 
-test("020 It should alloW get group's 'Columns' part of state using '#getColumnsPartOfState()'", async () => {
+test("020 It should allow get group's 'Columns' part of state using '#getColumnsPartOfState()'", async () => {
   const { knob, sut } = await getHelperFragments('columns');
 
   // -- Check when no columns
@@ -915,3 +916,53 @@ test("310 It should allow obtain item using '#getItem()'", async () => {
 // TODO Add tests for:
 //      1. 'Items' part of state
 //      2. 'Value' part of state
+
+test("320 It should allow get group's 'Items' part of state using '#getItemsPartOfState()'", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  const itemsState = await sut.getItemsPartOfState();
+  const expectedItemsState = lo
+    .range(1, 10)
+    .map((v) => {
+      return {
+        // From Input
+        disabled: false,
+        invalid: false,
+        size: 'normal',
+        value: `choice${v}` + (v === 2 ? ' (some long text here)' : ''),
+        widget: 'icon',
+
+        // From CheckableInput
+        checked: v === 2,
+        labelShrinked: false
+      };
+    });
+
+  expect(itemsState, 'to equal', expectedItemsState);
+});
+
+test("330 It should allow set group's 'Items' part of state using '#setItemsPartOfState()'", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  const item2 = sut.getItem({ idx: 1 });
+  await item2.expectIsChecked()
+
+  const item5 = sut.getItem({ idx: 4 });
+  await item5.expectIsNotChecked()
+
+  const expectedItemsState = lo
+    .range(1, 10)
+    .map((v) => {
+      return {
+        checked: v === 5 // only writable field
+      };
+    });
+
+  const itemsState = await sut.setItemsPartOfState(expectedItemsState);
+  await item2.expectIsNotChecked()
+  await item5.expectIsChecked()
+
+  // expect(itemsState, 'to equal', expectedItemsState);
+});

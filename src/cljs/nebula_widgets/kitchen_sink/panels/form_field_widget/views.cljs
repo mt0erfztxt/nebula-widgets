@@ -4,17 +4,17 @@
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
-    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.radio-group-input :as ie-rgi-knob]
+    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.checkable-group-input :as ie-cgi-knob]
     [nebula-widgets.widgets.form-field.core :as form-field]
-    [nebula-widgets.widgets.radio-group-input.core :as rgi]
+    [nebula-widgets.widgets.checkable-group-input.core :as checkable-group-input]
     [re-frame.core :as rf]))
 
 (defn- base-form-field [ff-props rgi-props n]
   (let [n (some #(when (number? %) %) [ff-props rgi-props n])
         ff-props (if (number? ff-props) {} ff-props)
-        rgi-props (if (number? rgi-props) {} rgi-props)]
+        cgi-props (if (number? rgi-props) {} rgi-props)]
     [form-field/widget (merge {:label "Field"} ff-props)
-     [rgi/widget
+     [checkable-group-input/widget
       (merge
         {:columns 5
          :inline true
@@ -22,7 +22,7 @@
          (for [n (range 1 (or n 10)) :let [label (str "choice" n)]]
            {:label label, :value n})
          :value 2}
-        rgi-props)]]))
+        cgi-props)]]))
 
 (def ^:private interactive-example-path->keyword
   (partial common/panel-path->keyword :interactive-example "/"))
@@ -42,7 +42,7 @@
           [ie/widget
            [:<>
             [form-field/widget ff-props
-             [rgi/widget
+             [checkable-group-input/widget
               {:columns 5
                :inline true
                :items (for [n (range 1 10) :let [label (str "choice" n)]] {:label label, :value n})
@@ -50,7 +50,7 @@
             [form-field/widget
              {:inline (:inline ff-props)
               :label "Other field"}
-             [rgi/widget
+             [checkable-group-input/widget
               {:columns 5
                :disabled true
                :inline true
@@ -62,7 +62,7 @@
                   [{:label "string", :value "Field"}
                    {:label "tuple", :value ["Field" "auxiliary text"]}]]
                  [:required]]]
-            [ie-rgi-knob/widget
+            [ie-cgi-knob/widget
              {:cid cid}
              (cond->
                {:cid cid

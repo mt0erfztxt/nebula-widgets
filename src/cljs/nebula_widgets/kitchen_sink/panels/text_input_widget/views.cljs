@@ -4,7 +4,7 @@
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
-    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.radio-group-input :as ie-rgi-knob]
+    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.checkable-group-input :as ie-cgi-knob]
     [nebula-widgets.utils :as utils]
     [nebula-widgets.widgets.text-input.core :as text-input]
     [re-frame.core :as rf]))
@@ -169,7 +169,7 @@
                  [:multi-line]
                  [:size (for [s ["small" "normal" "large"]] {:label s, :value s})]
                  [:text-alignment (for [s ["left" "center" "right"]] {:label s, :value s})]]]
-            [ie-rgi-knob/widget
+            [ie-cgi-knob/widget
              {:cid cid}
              (cond->
                {:cid cid

@@ -2,20 +2,17 @@
   (:require
     [nebula-widgets.utils.bem :as bem-utils]))
 
-(def ^:private default-bem
+(def ^:private bem
   "nw-checkableInput")
 
-(defn- build-bem [bem]
-  (or bem default-bem))
+(def ^:private input-bem
+  (str bem "__input"))
 
-(defn- build-input-bem [bem]
-  (str (build-bem bem) "__input"))
+(def ^:private label-bem
+  (str bem "__label"))
 
-(defn- build-label-bem [bem]
-  (str (build-bem bem) "__label"))
-
-(defn- build-label-text-bem [bem]
-  (str (build-label-bem bem) "-text"))
+(def ^:private label-text-bem
+  (str label-bem "-text"))
 
 (defn- extract-label [{:keys [label]}]
   (if (map? label) (:text label) label))
@@ -24,21 +21,25 @@
   (when (map? label)
     label))
 
+(def ^:private selection-mode-prop-set
+  #{:multi :single})
+
 (def ^:private size-prop-set
   #{:large :normal :small})
 
 (def ^:private widget-prop-set
   #{:button :icon :native})
 
-(defn- build-class [{:keys [bem checked cid cns disabled invalid size widget] :as props}]
+(defn- build-class [{:keys [checked cid cns disabled invalid selection-mode size widget] :as props}]
   (bem-utils/build-class
-    (build-bem bem)
+    bem
     [["cns" cns]
      ["cid" cid]
      ["checked" checked]
      ["disabled" disabled]
      ["invalid" invalid]
      ["labelShrinked" (-> props extract-label-props :shrinked)]
+     ["selectionMode" (-> selection-mode keyword selection-mode-prop-set (or :multi))]
      ["size" (-> size keyword size-prop-set (or :normal))]
      ["widget" (-> widget keyword widget-prop-set (or :icon))]]))
 
@@ -49,14 +50,8 @@
 (defn widget
   "Renders checkable input.
 
-  Not intended to be used directly but rather as a base for more specific checkable input widgets:
-  * [checkbox-input](/widgets/checkbox-input)
-  * [radio-input](/widgets/radio-input)
-
   Arguments:
   * `props` - map:
-    - `:bem` - string, 'nw-checkableInput' by default. Would be used as widget's BEM. Provided by concrete checkable
-      input widget to augment styling.
     - `:checked` - logical true/false, no default. Whether input is checked or not.
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.
@@ -67,16 +62,21 @@
       * `:shrinked` - logical true/false, no default. Whether label shrinked (using ellipsis) when too long or not.
       * `:text` - renderable, no default. Label's text. Same value (not map) that can be passed directly to `:label`.
     - `:on-change` - function, no default. Called with browser event as argument when input changes to checked.
+    - `:selection-mode` - one of :multi (default), :single or their string/symbol equivalents. The difference is like
+      between radio button and checkbox inputs, but here radio button can be unchecked.
     - `:size` - one of :large, :normal (default), :small or their string/symbol equivalents. Widget size.
     - `:widget` - one of :button, :icon (default), :native or their string/symbol equivalents. Specifies how widget
-      looks."
-  [{:keys [bem checked disabled input-type on-change] :as props}]
+      looks.
+
+  Notes:
+  * input in any `:selection-mode` can be checked and then unchecked"
+  [{:keys [checked disabled on-change] :as props}]
   [:div {:class (build-class props)}
-   [:label {:class (build-label-bem bem)}
+   [:label {:class label-bem}
     [:input
      {:checked (boolean checked)
-      :class (build-input-bem bem)
+      :class input-bem
       :disabled (boolean disabled)
       :on-change on-change
-      :type (name input-type)}]
-    [:span {:class (build-label-text-bem bem)} (extract-label props)]]])
+      :type "checkbox"}]
+    [:span {:class label-text-bem} (extract-label props)]]])

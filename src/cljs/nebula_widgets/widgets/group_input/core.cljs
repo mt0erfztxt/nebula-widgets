@@ -20,6 +20,9 @@
 (defn- build-item-elt-bem [bem]
   (str (build-bem bem) "__item"))
 
+(def ^:private selection-mode-prop-set
+  #{:multi :single})
+
 (def ^:private size-prop-set
   #{:large :normal :small})
 
@@ -27,8 +30,8 @@
   #{:button :icon :native})
 
 (defn- build-class
-  [{:keys [bem cid columns cns disabled equidistant inline invalid no-row-gap size soft-columns stacked-on-mobile
-           widget]}]
+  [{:keys [bem cid columns cns disabled equidistant inline invalid no-row-gap selection-mode size soft-columns
+           stacked-on-mobile widget]}]
   (bem-utils/build-class
     (build-bem bem)
     [["cns" cns]
@@ -39,6 +42,7 @@
      ["inline" (or inline (pos? columns))]
      ["invalid" invalid]
      ["noRowGap" no-row-gap]
+     ["selectionMode" (-> selection-mode keyword selection-mode-prop-set (or :multi))]
      ["size" (-> size keyword size-prop-set (or :normal))]
      ["softColumns" soft-columns]
      ["stackedOnMobile" stacked-on-mobile]
@@ -57,9 +61,9 @@
 (defn widget
   "Renders group input.
 
-  Not intended to be used directly but rather as a base for more specific checkable group input widgets:
-  * [checkbox-group-input](/widgets/checkbox-group-input)
-  * [radio-group-input](/widgets/radio-group-input)
+  Not intended to be used directly but rather as a base for more specific group input widgets:
+  * [checkable-group-input](/widgets/checkable-group-input)
+  * [text-group-input](/widgets/text-group-input)
 
   Arguments:
   * `props` - optional, map, no default. Supported keys:
@@ -81,6 +85,9 @@
     - `:no-row-gap` - logical true/false, no default. Whether to have (false) space between rows or not (true).
     - `:on-change` - function, no default. Called when browser input's on-change fired, see concrete group input widget
       implementation for details.
+    - `:selection-mode` - one of :multi (default), :single or their string/symbol equivalents. The difference is like
+      between group of radio button and checkbox inputs, but here radio button can be unchecked. Currently only for
+      checkable group input.
     - `:size` - one of :large, :normal (default), :small or their string/symbol equivalents. Widget size.
     - `:soft-columns` - logical true/false, no default. When logical true and `:columns` is also set then 'min-width'
       style is used instead of 'width'.
@@ -94,7 +101,8 @@
   * `:soft-columns` prop can be convenient in case of small containers, e.g. with just 2-3 columns
 
   TODO:
-  * add tests for `:no-row-gap` prop"
+  * add tests for `:no-row-gap` prop
+  * how to pass `:selection-mode` from checkable group input"
   [{:keys [bem errors invalid item-widget items widget] :as props}]
   (let [widget (-> widget keyword widget-prop-set (or :icon))]
     [:div {:class (build-class (assoc props :widget widget))}

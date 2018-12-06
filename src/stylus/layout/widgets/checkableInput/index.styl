@@ -1,6 +1,4 @@
-// Produces styles for widget. Can be called directly, see below, or used as
-// mixin, see `.nw-checkboxInput` for example.
-nw-checkableInput(bem = 'nw-checkableInput')
+.nw-checkableInput
     &__label
         cursor: pointer;
         display: inline-block;
@@ -70,6 +68,14 @@ nw-checkableInput(bem = 'nw-checkableInput')
             top: 50%;
             transform: translateY(-50%);
 
+    &--widget_icon&--selectionMode_multi &__label:before
+        sprite($icon_checkbox);
 
-.nw-checkableInput
-    nw-checkableInput: '';
+    &--widget_icon&--selectionMode_multi&--checked &__label:before
+        sprite($icon_checkbox_checked);
+
+    &--widget_icon&--selectionMode_single &__label:before
+        sprite($icon_radio);
+
+    &--widget_icon&--selectionMode_single&--checked &__label:before
+        sprite($icon_radio_checked);

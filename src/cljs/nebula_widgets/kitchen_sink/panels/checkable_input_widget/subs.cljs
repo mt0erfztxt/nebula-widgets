@@ -1,6 +1,6 @@
-(ns nebula-widgets.kitchen-sink.panels.checkbox-input-widget.subs
+(ns nebula-widgets.kitchen-sink.panels.checkable-input-widget.subs
   (:require
-    [nebula-widgets.kitchen-sink.panels.checkbox-input-widget.common :as common]
+    [nebula-widgets.kitchen-sink.panels.checkable-input-widget.common :as common]
     [re-frame.core :as rf]))
 
 (def ^:private panel-subscription-key
