@@ -1,14 +1,8 @@
-/**
- * Checkable input fragment doesn't represent concrete widget and used to
- * aggregate common functionality of fragments for concrete input widgets, and
- * because of that it tested using radio input fragment.
- */
-
 import expect from 'unexpected';
 
+import CheckableGroupInput from '../../../../../src/js/widgets/checkable-group-input';
+import CheckableInput from '../../../../../src/js/widgets/checkable-input';
 import InteractiveExample from '../../../../../src/js/kitchen-sink/widgets/man-page/interactive-example';
-import RadioGroupInput from '../../../../../src/js/widgets/radio-group-input';
-import RadioInput from '../../../../../src/js/widgets/radio-input';
 
 async function getInteractiveExample() {
   const ie = new InteractiveExample();
@@ -17,15 +11,15 @@ async function getInteractiveExample() {
 }
 
 async function getKnob(cid, parent) {
-  const rgi = new RadioGroupInput({ cid }, { parent });
-  await rgi.expectIsExist();
-  return rgi;
+  const knob = new CheckableGroupInput({ cid }, { parent });
+  await knob.expectIsExist();
+  return knob;
 }
 
 async function getSut(parent) {
-  const ri = new RadioInput({ idx: 0 }, { parent });
-  await ri.expectIsExist();
-  return ri;
+  const sut = new CheckableInput({ idx: 0 }, { parent });
+  await sut.expectIsExist();
+  return sut;
 }
 
 async function getHelperFragments(knobCid) {
@@ -33,19 +27,19 @@ async function getHelperFragments(knobCid) {
   return {
     knob: await getKnob(knobCid, parent),
     parent: parent.viewElementSelector,
-    sut: await getSut(parent)
+    sut: await getSut(parent.viewElementSelector)
   };
 }
 
 fixture('Widgets :: Checkable Input :: 010 Fragment')
-  .page('http://localhost:3449/widgets/radio-input');
+  .page('http://localhost:3449/widgets/checkable-input');
 
 test("010 It should allow obtain checkable input fragment - case of 'checked' selector tranformation", async () => {
   const { knob, parent } = await getHelperFragments('checked');
 
   // -- Unchecked input case
 
-  const uncheckedInput = new RadioInput({ checked: false }, { parent });
+  const uncheckedInput = new CheckableInput({ checked: false }, { parent });
   await uncheckedInput.expectIsExist();
   await uncheckedInput.hover();
 
@@ -53,7 +47,7 @@ test("010 It should allow obtain checkable input fragment - case of 'checked' se
 
   await knob.clickItem({ value: 'true' });
 
-  const checkedInput = new RadioInput({ checked: true }, { parent });
+  const checkedInput = new CheckableInput({ checked: true }, { parent });
   await checkedInput.expectIsExist();
   await checkedInput.hover();
 });
@@ -63,13 +57,13 @@ test("020 It should allow obtain checkable input fragment - case of 'value' sele
 
   // -- Fragment with specified value (label) exists
 
-  const input1 = new RadioInput({ value: 'Radio input label' }, { parent });
+  const input1 = new CheckableInput({ value: 'Checkable input label' }, { parent });
   await input1.expectIsExist();
   await input1.hover();
 
   // -- Fragment with specified value (label) not exists
 
-  const input2 = new RadioInput({ value: 'Checkbox input label' }, { parent });
+  const input2 = new CheckableInput({ value: 'Non-existent' }, { parent });
   await input2.expectIsNotExist();
 });
 
@@ -87,6 +81,27 @@ test("030 It should allow get input's 'Checked' part of state using '#getChecked
   await knob.clickItem({ value: 'false' });
   await sut.hover();
   expect(await sut.getCheckedPartOfState(), 'to be false');
+});
+
+test("035 It should allow set input's 'Checked' part of state using '#setCheckedPartOfState()'", async () => {
+  const { knob, sut } = await getHelperFragments('checked');
+  await knob.clickItem({ value: 'true' });
+
+  // -- Check when checked
+
+  await sut.setCheckedPartOfState(true);
+  expect(await sut.getCheckedPartOfState(), 'to be true');
+
+  await sut.setCheckedPartOfState(false);
+  expect(await sut.getCheckedPartOfState(), 'to be false');
+
+  // -- Check when not checked
+
+  await sut.setCheckedPartOfState(false);
+  expect(await sut.getCheckedPartOfState(), 'to be false');
+
+  await sut.setCheckedPartOfState(true);
+  expect(await sut.getCheckedPartOfState(), 'to be true');
 });
 
 test("040 It should allow assert on whether input is checked using '#expectIsChecked()'", async () => {
@@ -112,7 +127,7 @@ test("040 It should allow assert on whether input is checked using '#expectIsChe
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must have BEM modifier 'checked,'.+but it doesn't/
+      /AssertionError:.+\.checkable-input.+must have BEM modifier 'checked,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -144,7 +159,7 @@ test("050 It should allow assert on whether input isn't checked using '#expectIs
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must not have BEM modifier 'checked,'.+but it does/
+      /AssertionError:.+\.checkable-input.+must not have BEM modifier 'checked,'.+but it does/
     );
 
     isThrown = true;
@@ -179,10 +194,10 @@ test("070 It should allow assert on whether input's label is shrinked using '#ex
 
   // -- Failing case
 
-  let isThrown = false;
-
   await knob.clickItem({ value: 'false' });
   await sut.hover();
+
+  let isThrown = false;
 
   try {
     await sut.expectIsLabelShrinked();
@@ -191,7 +206,7 @@ test("070 It should allow assert on whether input's label is shrinked using '#ex
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must have BEM modifier 'labelShrinked,'.+but it doesn't/
+      /AssertionError:.+\.checkable-input.+must have BEM modifier 'labelShrinked,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -210,10 +225,10 @@ test("080 It should allow assert on whether input's label isn't shrinked using '
 
   // -- Failing case
 
-  let isThrown = false;
-
   await knob.clickItem({ value: 'true' });
   await sut.hover();
+
+  let isThrown = false;
 
   try {
     await sut.expectIsNotLabelShrinked();
@@ -222,7 +237,7 @@ test("080 It should allow assert on whether input's label isn't shrinked using '
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must not have BEM modifier 'labelShrinked,'.+but it does/
+      /AssertionError:.+\.checkable-input.+must not have BEM modifier 'labelShrinked,'.+but it does/
     );
 
     isThrown = true;
@@ -230,3 +245,7 @@ test("080 It should allow assert on whether input's label isn't shrinked using '
 
   expect(isThrown, 'to be true');
 });
+
+// TODO Add tests for:
+//      1. 'SelectionMode' part of state
+//      2. 'Value' part of state

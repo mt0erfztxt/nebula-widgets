@@ -228,8 +228,8 @@ class GroupInput extends BaseClass {
 
     if (!_.isArray(value)) {
       throw new TypeError(
-        `${this.displayName}.setItemsPartOfState(): 'value' argument must be an array ` +
-        `but it is ${typeOf(value)} (${value})`
+        `${this.displayName}.setItemsPartOfState(): 'value' argument must ` +
+        `be an array but it is ${typeOf(value)} (${value})`
       );
     }
 
@@ -260,8 +260,8 @@ class GroupInput extends BaseClass {
   async expectItemsPartOfStateIs(value, options) {
     if (!_.isArray(value)) {
       throw new TypeError(
-        `${this.displayName}.expectItemsPartOfStateIs(): 'value' argument must be an array ` +
-        `but it is ${typeOf(value)} (${value})`
+        `${this.displayName}.expectItemsPartOfStateIs(): 'value' argument ` +
+        `must be an array but it is ${typeOf(value)} (${value})`
       );
     }
 
@@ -270,7 +270,10 @@ class GroupInput extends BaseClass {
 
     await t
       .expect(itemsCount.length)
-      .eql(value.length, `Number of items in ${this.displayName} not equal that in 'value'`);
+      .eql(
+        value.length,
+        `Number of items in ${this.displayName} not equal that in 'value'`
+      );
 
     if (itemsCount) {
       for (let i = 0; i < itemsCount; i++) {

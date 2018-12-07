@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 import typeOf from 'typeof--';
+import { t } from 'testcafe';
 
 import Input from '../input';
-import { t } from 'testcafe';
 
 const {
   bem: { BemBase },
@@ -21,7 +21,8 @@ const {
 const BaseClass = Input.makeFragmentClass(Input, {
   stateParts: [
     'checked',
-    'labelShrinked'
+    'labelShrinked',
+    ['selectionMode', { isBoolean: false }]
   ]
 });
 
@@ -142,7 +143,8 @@ class CheckableInput extends BaseClass {
     }
     else {
       return _.concat(writableParts, [
-        'labelShrinked'
+        'labelShrinked',
+        'selectionMode'
       ]);
     }
   }
@@ -161,17 +163,27 @@ class CheckableInput extends BaseClass {
    */
 
   /**
-   * Sets item's 'Checked' part of state to boolean true or false depending on
-   * whether passed in `value` is truthy or not.
-   * 
-   * @param {*} value Whether item must be checked or not
-   * @param {Options|Object} [options] Options
-   * @return {Promise<*>} Current value of 'Checked' part of fragment's state after set state operation is done.
+   * Sets 'Checked' part of state to boolean true or false.
+   *
+   * @param {Boolean} value New value for 'Checked' part of state
+   * @param {Options|Object} [options] Options. Passed as-is to `#getCheckedPartOfState()` to get current value before setting new one
+   * @return {Promise<Boolean>} Current value of 'Checked' part of fragment's state after set state operation is done.
    */
   async setCheckedPartOfState(value, options) {
-    throw new Error(
-      `${this.displayName}.setCheckedPartOfState(): not implemented`
-    );
+    if (!_.isBoolean(value)) {
+      throw new TypeError(
+        `'${this.displayName}#setCheckedPartOfState():' 'value' argument ` +
+        `must be a boolean but it is ${typeOf(value)} (${value})`
+      );
+    }
+
+    const isChecked = await this.getCheckedPartOfState(options);
+
+    if (isChecked !== value) {
+      await this.click();
+    }
+
+    return value;
   }
 
   /**
@@ -208,6 +220,27 @@ class CheckableInput extends BaseClass {
   /**
    * @name CheckableInput#expectIsNotLabelShrinked
    * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: SelectionMode (read-only, not boolean)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name CheckableInput#getSelectionModePartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name CheckableInput#expectSelectionModePartOfStateIs
+   * @method
+   * @param {*} value
+   * @param {Options|Object} options
    * @returns {Promise<void>}
    */
 
@@ -288,6 +321,9 @@ class CheckableInput extends BaseClass {
 }
 
 Object.defineProperties(CheckableInput, {
+  bemBase: {
+    value: 'nw-checkableInput'
+  },
   displayName: {
     value: fragmentDisplayName
   }

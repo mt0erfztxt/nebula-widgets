@@ -1,14 +1,14 @@
 /**
  * Input fragment doesn't represent concrete widget and used to aggregate
  * common functionality of fragments for concrete input widgets, and because
- * of that it tested using radio input fragment.
+ * of that it tested using checkable input fragment.
  */
 
 import expect from 'unexpected';
 
+import CheckableGroupInput from '../../../../../src/js/widgets/checkable-group-input';
+import CheckableInput from '../../../../../src/js/widgets/checkable-input';
 import InteractiveExample from '../../../../../src/js/kitchen-sink/widgets/man-page/interactive-example';
-import RadioGroupInput from '../../../../../src/js/widgets/radio-group-input';
-import RadioInput from '../../../../../src/js/widgets/radio-input';
 
 async function getInteractiveExample() {
   const ie = new InteractiveExample();
@@ -17,29 +17,27 @@ async function getInteractiveExample() {
 }
 
 async function getKnob(cid, parent) {
-  const rgi = new RadioGroupInput({ cid }, { parent });
-  await rgi.expectIsExist();
-  return rgi;
+  const knob = new CheckableGroupInput({ cid }, { parent });
+  await knob.expectIsExist();
+  return knob;
 }
 
 async function getSut(parent) {
-  const ri = new RadioInput({ idx: 0 }, { parent });
-  await ri.expectIsExist();
-  return ri;
+  const sut = new CheckableInput({ idx: 0 }, { parent });
+  await sut.expectIsExist();
+  return sut;
 }
 
 async function getHelperFragments(knobCid) {
   const parent = await getInteractiveExample();
   return {
     knob: await getKnob(knobCid, parent),
-    parent,
-    sut: await getSut(parent)
+    sut: await getSut(parent.viewElementSelector)
   };
 }
 
-
 fixture('Widgets :: Input :: 010 Fragment')
-  .page('http://localhost:3449/widgets/radio-input');
+  .page('http://localhost:3449/widgets/checkable-input');
 
 test("010 It should allow get input's 'Disabled' part of state using '#getDisabledPartOfState()'", async () => {
   const { knob, sut } = await getHelperFragments('disabled');
@@ -79,7 +77,7 @@ test("020 It should allow assert on whether input is disabled using '#expectIsDi
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must have BEM modifier 'disabled,'.+but it doesn't/
+      /AssertionError:.+\.checkable-input.+must have BEM modifier 'disabled,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -110,7 +108,7 @@ test("030 It should allow assert on whether input isn't disabled using '#expectI
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must not have BEM modifier 'disabled,'.+but it does/
+      /AssertionError:.+\.checkable-input.+must not have BEM modifier 'disabled,'.+but it does/
     );
 
     isThrown = true;
@@ -141,7 +139,7 @@ test("040 It should allow assert on whether input is enabled using '#expectIsEna
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must not have BEM modifier 'disabled,'.+but it does/
+      /AssertionError:.+\.checkable-input.+must not have BEM modifier 'disabled,'.+but it does/
     );
 
     isThrown = true;
@@ -173,7 +171,7 @@ test("050 It should allow assert on whether input isn't enabled using '#expectIs
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must have BEM modifier 'disabled,'.+but it doesn't/
+      /AssertionError:.+\.checkable-input.+must have BEM modifier 'disabled,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -220,7 +218,7 @@ test("070 It should allow assert on whether input is invalid using '#expectIsInv
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must have BEM modifier 'invalid,'.+but it doesn't/
+      /AssertionError:.+\.checkable-input.+must have BEM modifier 'invalid,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -251,7 +249,7 @@ test("080 It should allow assert on whether input isn't invalid using '#expectIs
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must not have BEM modifier 'invalid,'.+but it does/
+      /AssertionError:.+\.checkable-input.+must not have BEM modifier 'invalid,'.+but it does/
     );
 
     isThrown = true;
@@ -282,7 +280,7 @@ test("090 It should allow assert on whether input is valid using '#expectIsValid
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must not have BEM modifier 'invalid,'.+but it does/
+      /AssertionError:.+\.checkable-input.+must not have BEM modifier 'invalid,'.+but it does/
     );
 
     isThrown = true;
@@ -314,7 +312,7 @@ test("100 It should allow assert on whether input isn't valid using '#expectIsNo
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must have BEM modifier 'invalid,'.+but it doesn't/
+      /AssertionError:.+\.checkable-input.+must have BEM modifier 'invalid,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -352,7 +350,7 @@ test("120 It should allow assert on input's 'Size' part of state using '#expectS
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must have BEM modifier 'size,large'.+but it doesn't/
+      /AssertionError:.+\.checkable-input.+must have BEM modifier 'size,large'.+but it doesn't/
     );
 
     isThrown = true;
@@ -380,7 +378,7 @@ test("130 It should allow assert on input's 'Size' part of state using '#expectS
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must not have BEM modifier 'size,normal'.+but it does/
+      /AssertionError:.+\.checkable-input.+must not have BEM modifier 'size,normal'.+but it does/
     );
 
     isThrown = true;
@@ -402,12 +400,6 @@ test("140 It should allow get input's 'Widget' part of state using '#getWidgetPa
   await knob.clickItem({ value: 'button' });
   await sut.hover();
   expect(await sut.getWidgetPartOfState(), 'to equal', 'button');
-
-  // -- Check when native
-
-  await knob.clickItem({ value: 'native' });
-  await sut.hover();
-  expect(await sut.getWidgetPartOfState(), 'to equal', 'native');
 });
 
 test("150 It should allow assert on input's 'Widget' part of state using '#expectWidgetPartOfStateIs()'", async () => {
@@ -433,7 +425,7 @@ test("150 It should allow assert on input's 'Widget' part of state using '#expec
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must have BEM modifier 'widget,icon'.+but it doesn't/
+      /AssertionError:.+\.checkable-input.+must have BEM modifier 'widget,icon'.+but it doesn't/
     );
 
     isThrown = true;
@@ -449,23 +441,20 @@ test("160 It should allow assert on input's 'Widget' part of state using '#expec
 
   await knob.clickItem({ value: 'icon' });
   await sut.hover();
-  await sut.expectWidgetPartOfStateIs('native', { isNot: true });
+  await sut.expectWidgetPartOfStateIs('button', { isNot: true });
 
   // -- Failing case
 
   let isThrown = false;
 
-  await knob.clickItem({ value: 'native' });
-  await sut.hover();
-
   try {
-    await sut.expectWidgetPartOfStateIs('native', { isNot: true });
+    await sut.expectWidgetPartOfStateIs('icon', { isNot: true });
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-input.+must not have BEM modifier 'widget,native'.+but it does/
+      /AssertionError:.+\.checkable-input.+must not have BEM modifier 'widget,icon'.+but it does/
     );
 
     isThrown = true;
