@@ -35,10 +35,10 @@
     widget, meantime item value convenient when single field is a collection of distinct elements
 
   TODO:
-  * fix styles for case when `:widget` is :native
   * fix styles for case when `:widget` is :button and item's label is shrinked"
   [{:keys [item-props items on-change selection-mode value] :as props}]
-  (let [multi-selection? (= :multi selection-mode)
+  (let [selection-mode (or selection-mode "multi")
+        multi-selection? (= "multi" (name selection-mode))
         use-path? (and multi-selection? (:boolean props))]
     [group-input/widget
      (-> props
@@ -50,24 +50,11 @@
              (merge
                item-props
                item
-               {:checked                                    ; FIX: Doesn't work for multi selection (see ie)
+               {:checked
                 (cond
                   use-path? (->> path (get-in value) boolean)
                   multi-selection? (contains? value v)
                   :else (= v value))
                 :on-change (r/partial on-change (if use-path? path v))
                 :selection-mode selection-mode})))
-         (dissoc :item-props))])
-  #_[group-input/widget
-     (-> props
-         (assoc
-           :bem "nw-radioGroupInput"
-           :item-widget checkable-input/widget
-           :items
-           (for [{v :value :as item} items]
-             (merge
-               item-props
-               item
-               {:checked (= v value)
-                :on-change (r/partial on-change v)})))
-         (dissoc :item-props))])
+         (dissoc :item-props))]))

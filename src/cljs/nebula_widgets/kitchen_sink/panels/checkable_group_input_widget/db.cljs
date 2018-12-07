@@ -15,5 +15,5 @@
      :size "normal"
      :soft-columns false
      :stacked-on-mobile false
-     :value #{:choice2}
+     :value #{:option2}
      :widget "icon"}}})

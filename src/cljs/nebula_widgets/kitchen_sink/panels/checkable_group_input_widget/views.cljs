@@ -22,17 +22,17 @@
     {:items
      (for [n (range 1 4)]
        {:cid n
-        :label (str "Choice " n)
-        :value (->> n (str "choice") keyword)})
+        :label (str "Option " n)
+        :value (->> n (str "option") keyword)})
      :on-change identity
      :value nil}]
    "```clj
      [checkable-group-input/widget
       {:item-props {:on-change (fn [event value] ...)}
        :items
-       [{:label \"Choice 1\", :value :choice1}
-        {:label \"Choice 2\", :value :choice2}
-        {:label \"Choice 3\", :value :choice3}]
+       [{:label \"Option 1\", :value :option1}
+        {:label \"Option 2\", :value :option2}
+        {:label \"Option 3\", :value :option3}]
        :on-change identity
        :value nil}]
      ```"])
@@ -49,19 +49,19 @@
     {:items
      (for [n (range 1 4)]
        {:cid n
-        :label (str "Choice " n)
-        :value (->> n (str "choice") keyword)})
+        :label (str "Option " n)
+        :value (->> n (str "option") keyword)})
      :on-change identity
-     :value :choice2}]
+     :value :option2}]
    "```clj
      [checkable-group-input/widget
       {:item-props {:on-change (fn [event value] ...)}
        :items
-       [{:label \"Choice 1\", :value :choice1}
-        {:label \"Choice 2\", :value :choice2}
-        {:label \"Choice 3\", :value :choice3}]
+       [{:label \"Option 1\", :value :option1}
+        {:label \"Option 2\", :value :option2}
+        {:label \"Option 3\", :value :option3}]
        :on-change identity
-       :value :choice2}]
+       :value :option2}]
      ```"])
 
 ;;------------------------------------------------------------------------------
@@ -77,22 +77,22 @@
      {:columns 5
       :items
       (for [n (range 1 15)]
-        {:label (str "Choice " n)
-         :value (->> n (str "choice") keyword)})
+        {:label (str "Option " n)
+         :value (->> n (str "option") keyword)})
       :on-change identity
-      :value :choice2}]
+      :value :option2}]
     "```clj
       [checkable-group-input/widget
        {:columns 5
         :inline true
         :item-props {:on-change (fn [event value] ...)}
         :items
-        [{:label \"Choice 1\", :value :choice1}
-         {:label \"Choice 2\", :value :choice2}
-         {:label \"Choice 3\", :value :choice3}
+        [{:label \"Option 1\", :value :option1}
+         {:label \"Option 2\", :value :option2}
+         {:label \"Option 3\", :value :option3}
          ...]
         :on-change identity
-        :value :choice2]
+        :value :option2]
       ```"]
    [example/widget
     {:cid "030b"
@@ -100,23 +100,23 @@
     [checkable-group-input/widget
      {:columns 5
       :items
-      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Choice " n))]]
+      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Option " n))]]
         {:label label
-         :value (->> n (str "choice") keyword)})
+         :value (->> n (str "option") keyword)})
       :on-change identity
-      :value :choice2}]
+      :value :option2}]
     "```clj
       [checkable-group-input/widget
        {:columns 5
         :inline true
         :item-props {:on-change (fn [event value] ...)}
         :items
-        [{:label \"Choice 1\", :value :choice1}
-         {:label \"Choice 2\", :value :choice2}
-         {:label \"Choice 3\", :value :choice3}
+        [{:label \"Option 1\", :value :option1}
+         {:label \"Option 2\", :value :option2}
+         {:label \"Option 3\", :value :option3}
          ...]
         :on-change identity
-        :value :choice2}]
+        :value :option2}]
       ```"]
    [example/widget
     {:cid "030c"
@@ -124,23 +124,23 @@
     [checkable-group-input/widget
      {:columns 5
       :items
-      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Choice " n))]]
+      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Option " n))]]
         {:label {:shrinked true, :text label}
-         :value (->> n (str "choice") keyword)})
+         :value (->> n (str "option") keyword)})
       :on-change identity
-      :value :choice2}]
+      :value :option2}]
     "```clj
       [checkable-group-input/widget
        {:columns 5
         :inline true
         :item-props {:on-change (fn [event value] ...)}
         :items
-        [{:label {:shrinked true, :text \"Choice 1\"}, :value :choice1}
-         {:label {:shrinked true, :text \"Choice 2\"}, :value :choice2}
-         {:label {:shrinked true, :text \"Choice 3\"}, :value :choice3}
+        [{:label {:shrinked true, :text \"Option 1\"}, :value :option1}
+         {:label {:shrinked true, :text \"Option 2\"}, :value :option2}
+         {:label {:shrinked true, :text \"Option 3\"}, :value :option3}
          ...]
         :on-change identity
-        :value :choice2}]
+        :value :option2}]
       ```"]
    [example/widget
     {:cid "030d"
@@ -148,25 +148,25 @@
     [checkable-group-input/widget
      {:columns 5
       :items
-      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Choice " n))]]
+      (for [n (range 1 15) :let [label (if (= n 7) "A label that spans multiple columns" (str "Option " n))]]
         {:label label
-         :value (->> n (str "choice") keyword)})
+         :value (->> n (str "option") keyword)})
       :on-change identity
       :soft-columns true
-      :value :choice2}]
+      :value :option2}]
     "```clj
       [checkable-group-input/widget
        {:columns 5
         :inline true
         :item-props {:on-change (fn [event value] ...)}
         :items
-        [{:label \"Choice 1\", :value :choice1}
-         {:label \"Choice 2\", :value :choice2}
-         {:label \"Choice 3\", :value :choice3}
+        [{:label \"Option 1\", :value :option1}
+         {:label \"Option 2\", :value :option2}
+         {:label \"Option 3\", :value :option3}
          ...]
         :on-change identity
         :soft-columns true
-        :value :choice2}]
+        :value :option2}]
       ```"]])
 
 ;;------------------------------------------------------------------------------
@@ -179,10 +179,10 @@
          :items
          (map-indexed
            (fn [idx label]
-             {:label label, :value (->> idx inc (str "choice") keyword)})
+             {:label label, :value (->> idx inc (str "option") keyword)})
            ["Label" "Long label" "Very, very long label" "Label"])
          :on-change identity
-         :value :choice2
+         :value :option2
          :widget "button"}]
     [example/widget
      {:cid "040"
@@ -195,12 +195,41 @@
         {:equidistant true
          :inline true
          :item-props {:on-change (fn [event value] ...)}
-         :items [{:label \"Label\", :value :choice1}, ...]
+         :items [{:label \"Label\", :value :option1}, ...]
          :on-change identity
          :size \"large\"   ; \"normal\", \"small\"
-         :value :choice2
+         :value :option2
          :widget \"button\"}]
        ```"]))
+
+;;------------------------------------------------------------------------------
+;; Example 050
+;;------------------------------------------------------------------------------
+
+(defn- example050-cmp []
+  [example/widget
+   {:cid "050"
+    :title "with :selection-mode set to single"}
+   [checkable-group-input/widget
+    {:items
+     (for [n (range 1 4)]
+       {:cid n
+        :label (str "Choice " n)
+        :value (->> n (str "choice") keyword)})
+     :on-change identity
+     :selection-mode "single"
+     :value nil}]
+   "```clj
+     [checkable-group-input/widget
+      {:item-props {:on-change (fn [event value] ...)}
+       :items
+       [{:label \"Choice 1\", :value :choice1}
+        {:label \"Choice 2\", :value :choice2}
+        {:label \"Choice 3\", :value :choice3}]
+       :on-change identity
+       :selection-mode \"single\"
+       :value nil}]
+     ```"])
 
 ;;------------------------------------------------------------------------------
 ;; Interactive example
@@ -217,32 +246,29 @@
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
        (into {})))
 
-;(defn- on-change-handler [event]
-;  ((:checked ie-setters) (utils/event->checked event)))
-
 (defn- on-change-handler [selection-mode value event]
   (let [checked (utils/event->checked event)]
-    (js/console.log 1 selection-mode value checked)
     ((:value ie-setters)
       (if (= "multi" selection-mode)
         #((if checked conj disj) % value)
         #(when checked value)))))
 
-;(defn- on-change-handler [value event]
-;  (let [updater (if (utils/event->checked event) conj disj)]
-;    ((:value ie-setters) #(updater % value))))
+(defn- on-selection-mode-change-handler [value _]
+  ((:selection-mode ie-setters) value)
+  ((:value ie-setters)
+    (if (= "multi" value) #{:option2} :choice2)))
 
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [selection-mode] :as props} @*props]
-        (js/console.log props)
+      (let [{:keys [selection-mode] :as props} @*props
+            multi-selection? (= "multi" selection-mode)]
         (into
           [ie/widget
            [checkable-group-input/widget
             (assoc props
               :items
-              (for [n (range 1 10) :let [label (str "choice" n)]]
+              (for [n (range 1 10) :let [label (str (if multi-selection? "option" "choice") n)]]
                 {:label
                  {:shrinked (get props :label-shrinked)
                   :text (str label (when (= 2 n) " (some long text here)"))}
@@ -263,12 +289,12 @@
                  [:size (for [s ["small" "normal" "large"]] {:label s, :value s})]
                  [:soft-columns]
                  [:stacked-on-mobile]
-                 [:widget (for [s ["button" "icon" "native"]] {:label s, :value s})]]]
+                 [:widget (for [s ["button" "icon"]] {:label s, :value s})]]]
             [ie-cgi-knob/widget
              {:cid cid}
              (cond->
                {:cid cid
-                :on-change (get ie-setters cid)
+                :on-change (if (= :selection-mode cid) on-selection-mode-change-handler (get ie-setters cid))
                 :value (get props cid)}
                items (assoc :items items))]))))))
 
@@ -286,5 +312,6 @@
     [example020-cmp]
     [example030-cmp]
     [example040-cmp]
+    [example050-cmp]
     "## Interactive example"
     [interactive-example-cmp]]])

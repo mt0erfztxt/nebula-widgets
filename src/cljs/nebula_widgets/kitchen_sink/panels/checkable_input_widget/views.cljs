@@ -45,7 +45,7 @@
                  [:label-shrinked]
                  [:selection-mode (for [s ["single" "multi"]] {:label s, :value s})]
                  [:size (for [s ["small" "normal" "large"]] {:label s, :value s})]
-                 [:widget (for [s ["button" "icon" "native"]] {:label s, :value s})]]]
+                 [:widget (for [s ["button" "icon"]] {:label s, :value s})]]]
             [ie-cgi-knob/widget
              {:cid cid}
              (cond->

@@ -28,7 +28,7 @@
   #{:large :normal :small})
 
 (def ^:private widget-prop-set
-  #{:button :icon :native})
+  #{:button :icon})
 
 (defn- build-class [{:keys [checked cid cns disabled invalid selection-mode size widget] :as props}]
   (bem-utils/build-class
@@ -65,8 +65,7 @@
     - `:selection-mode` - one of :multi (default), :single or their string/symbol equivalents. The difference is like
       between radio button and checkbox inputs, but here radio button can be unchecked.
     - `:size` - one of :large, :normal (default), :small or their string/symbol equivalents. Widget size.
-    - `:widget` - one of :button, :icon (default), :native or their string/symbol equivalents. Specifies how widget
-      looks.
+    - `:widget` - one of :button, :icon (default) or their string/symbol equivalents. Specifies how widget looks.
 
   Notes:
   * input in any `:selection-mode` can be checked and then unchecked"

@@ -27,7 +27,7 @@
   #{:large :normal :small})
 
 (def ^:private widget-prop-set
-  #{:button :icon :native})
+  #{:button :icon})
 
 (defn- build-class
   [{:keys [bem cid columns cns disabled equidistant inline invalid no-row-gap selection-mode size soft-columns
@@ -94,8 +94,7 @@
     - `:stacked-on-mobile` - logical true/false, no default. Whether items forcibly stacked on mobile screens.
     - `:value` - any, no default. Used as values for items, for example, in checkbox group input it used to determine
       which items are checked.
-    - `:widget` - one of :button, :icon (default), :native or their string/symbol equivalents. Specifies how widget
-      looks.
+    - `:widget` - one of :button, :icon (default) or their string/symbol equivalents. Specifies how widget looks.
 
   Notes:
   * `:soft-columns` prop can be convenient in case of small containers, e.g. with just 2-3 columns
