@@ -3,7 +3,7 @@ import testFragment from 'nebula-test-fragment';
 import typeOf from 'typeof--';
 import { t } from 'testcafe';
 
-import Input from '../input';
+import Input from '../../fragments/group-input';
 
 const {
   bem: { BemBase },
@@ -13,7 +13,7 @@ const {
 } = testFragment;
 
 /**
- * Base class for checkable input fragment.
+ * Base class for fragment.
  * 
  * @class
  * @extends {Input}
@@ -27,20 +27,13 @@ const BaseClass = Input.makeFragmentClass(Input, {
 });
 
 /**
- * Display name of fragment.
- *
- * @type {String}
- */
-const fragmentDisplayName = 'nebula-widgets.widgets.checkable-input';
-
-/**
  * Fragment that represents checkable input.
  */
 class CheckableInput extends BaseClass {
 
   /**
    * Provides custom transformations for selector:
-   * 1. 'checked' - Boolean
+   * 1. 'checked' - Boolean, whether input is checked or not
    * 2. 'value' - String, label text
    * 
    * @param {*} transformations 
@@ -282,9 +275,14 @@ class CheckableInput extends BaseClass {
    * @return {Promise<void>}
    */
   async expectValuePartOfStateIs(value, options) {
-    await t
-      .expect(this.getValuePartOfState(options))
-      .eql(value);
+    const { isNot } = new Options(options, {
+      defaults: {
+        isNot: false
+      }
+    });
+    const v = await this.getValuePartOfState(options);
+    const assertionName = utils.buildTestCafeAssertionName('eql', { isNot });
+    await t.expect(v)[assertionName](value);
   }
 
   // ---------------------------------------------------------------------------
@@ -325,7 +323,7 @@ Object.defineProperties(CheckableInput, {
     value: 'nw-checkableInput'
   },
   displayName: {
-    value: fragmentDisplayName
+    value: 'nebula-widgets.widgets.checkable-input'
   }
 });
 

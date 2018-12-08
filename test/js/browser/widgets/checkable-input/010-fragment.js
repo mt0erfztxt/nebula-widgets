@@ -17,7 +17,9 @@ async function getKnob(cid, parent) {
 }
 
 async function getSut(parent) {
-  const sut = new CheckableInput({ idx: 0 }, { parent });
+  const sut = new CheckableInput({ idx: 0 }, {
+    parent: parent || await getInteractiveExample().viewElementSelector
+  });
   await sut.expectIsExist();
   return sut;
 }
@@ -246,6 +248,141 @@ test("080 It should allow assert on whether input's label isn't shrinked using '
   expect(isThrown, 'to be true');
 });
 
-// TODO Add tests for:
-//      1. 'SelectionMode' part of state
-//      2. 'Value' part of state
+test("090 It should allow get input's 'SelectionMode' part of state using '#getSelectionModePartOfState()'", async () => {
+  const { knob, sut } = await getHelperFragments('selection-mode');
+
+  // -- Check when multi
+
+  await knob.clickItem({ value: 'multi' });
+  await sut.hover();
+  expect(await sut.getSelectionModePartOfState(), 'to equal', 'multi');
+
+  // -- Check when single
+
+  await knob.clickItem({ value: 'single' });
+  await sut.hover();
+  expect(await sut.getSelectionModePartOfState(), 'to equal', 'single');
+});
+
+test("100 It should allow assert on input's 'SelectionMode' part of state using '#expectSelectionModePartOfStateIs()'", async () => {
+  const { knob, sut } = await getHelperFragments('selection-mode');
+
+  // -- Successful case
+
+  await knob.clickItem({ value: 'single' });
+  await sut.hover();
+  await sut.expectSelectionModePartOfStateIs('single');
+
+  // -- Failing case
+
+  await knob.clickItem({ value: 'multi' });
+  await sut.hover();
+
+  let isThrown = false;
+
+  try {
+    await sut.expectSelectionModePartOfStateIs('single');
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkable-input.+must have BEM modifier 'selectionMode,single'.+but it doesn't/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("110 It should allow assert on input's 'SelectionMode' part of state using '#expectSelectionModePartOfStateIs()' - with 'isNot' option set", async () => {
+  const { knob, sut } = await getHelperFragments('selection-mode');
+
+  // -- Successful case
+
+  await knob.clickItem({ value: 'multi' });
+  await sut.hover();
+  await sut.expectSelectionModePartOfStateIs('single', { isNot: true });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectSelectionModePartOfStateIs('multi', { isNot: true });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.checkable-input.+must not have BEM modifier 'selectionMode,multi'.+but it does/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("120 It should allow get input's 'Value' part of state using '#getValuePartOfState()'", async () => {
+  const sut = await getSut();
+  await sut.hover();
+  expect(await sut.getValuePartOfState(), 'to equal', 'Checkable input label');
+});
+
+test("130 It should allow assert on input's 'Value' part of state using '#expectValuePartOfStateIs()'", async () => {
+  const sut = await getSut();
+
+  // -- Successful case
+
+  await sut.hover();
+  await sut.expectValuePartOfStateIs('Checkable input label');
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectValuePartOfStateIs('Non-existent');
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: expected 'Checkable input label' to deeply equal 'Non-existent'/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("140 It should allow assert on input's 'Value' part of state using '#expectValuePartOfStateIs()' - with 'isNot' option set", async () => {
+  const sut = await getSut();
+
+  // -- Successful case
+
+  await sut.hover();
+  await sut.expectValuePartOfStateIs('Non-existent', { isNot: true });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectValuePartOfStateIs('Checkable input label', { isNot: true });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: expected 'Checkable input label' to not deeply equal 'Checkable input label'/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});

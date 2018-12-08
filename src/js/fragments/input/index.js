@@ -7,7 +7,7 @@ const {
 } = testFragment;
 
 /**
- * Base class for input fragment.
+ * Base class for fragment.
  * 
  * @class
  * @extends {Fragment1}
@@ -20,13 +20,6 @@ const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
     ['widget', { isBoolean: false }]
   ]
 });
-
-/**
- * Display name of fragment.
- *
- * @type {String}
- */
-const fragmentDisplayName = 'nebula-widgets.widgets.input';
 
 /**
  * Fragment that represents input.
@@ -301,7 +294,7 @@ class Input extends BaseClass {
 
 Object.defineProperties(Input, {
   displayName: {
-    value: fragmentDisplayName
+    value: 'nebula-widgets.widgets.input'
   }
 });
 
