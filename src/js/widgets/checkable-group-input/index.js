@@ -2,14 +2,14 @@ import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 
 import CheckableInput from '../checkable-input';
-import GroupInput from '../group-input';
+import GroupInput from '../../fragments/group-input';
 
 const {
   Options
 } = testFragment;
 
 /**
- * Base class for checkable group input fragment.
+ * Base class for fragment.
  * 
  * @class
  * @extends {Input}
@@ -20,13 +20,6 @@ const BaseClass = GroupInput.makeFragmentClass(GroupInput, {
     ['selectionMode', { isBoolean: false }]
   ]
 });
-
-/**
- * Display name of fragment.
- *
- * @type {String}
- */
-const fragmentDisplayName = 'nebula-widgets.widgets.checkable-group-input';
 
 /**
  * Fragment that represents checkable group input.
@@ -109,7 +102,7 @@ Object.defineProperties(CheckableGroupInput, {
     value: 'nw-checkableGroupInput'
   },
   displayName: {
-    value: fragmentDisplayName
+    value: 'nebula-widgets.widgets.checkable-group-input'
   },
   ItemFragment: {
     value: CheckableInput

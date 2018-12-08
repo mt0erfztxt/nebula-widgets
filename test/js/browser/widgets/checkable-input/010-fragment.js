@@ -18,7 +18,7 @@ async function getKnob(cid, parent) {
 
 async function getSut(parent) {
   const sut = new CheckableInput({ idx: 0 }, {
-    parent: parent || await getInteractiveExample().viewElementSelector
+    parent: parent || (await getInteractiveExample()).viewElementSelector
   });
   await sut.expectIsExist();
   return sut;
@@ -28,7 +28,7 @@ async function getHelperFragments(knobCid) {
   const parent = await getInteractiveExample();
   return {
     knob: await getKnob(knobCid, parent),
-    parent: parent.viewElementSelector,
+    parent,
     sut: await getSut(parent.viewElementSelector)
   };
 }
@@ -37,7 +37,8 @@ fixture('Widgets :: Checkable Input :: 010 Fragment')
   .page('http://localhost:3449/widgets/checkable-input');
 
 test("010 It should allow obtain checkable input fragment - case of 'checked' selector tranformation", async () => {
-  const { knob, parent } = await getHelperFragments('checked');
+  const fragments = await getHelperFragments('checked');
+  const parent = fragments.parent.viewElementSelector;
 
   // -- Unchecked input case
 
@@ -47,7 +48,7 @@ test("010 It should allow obtain checkable input fragment - case of 'checked' se
 
   // -- Checked input case
 
-  await knob.clickItem({ value: 'true' });
+  await fragments.knob.clickItem({ value: 'true' });
 
   const checkedInput = new CheckableInput({ checked: true }, { parent });
   await checkedInput.expectIsExist();

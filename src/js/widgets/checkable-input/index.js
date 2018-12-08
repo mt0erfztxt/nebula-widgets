@@ -3,7 +3,7 @@ import testFragment from 'nebula-test-fragment';
 import typeOf from 'typeof--';
 import { t } from 'testcafe';
 
-import Input from '../../fragments/group-input';
+import Input from '../../fragments/input';
 
 const {
   bem: { BemBase },
@@ -66,7 +66,7 @@ class CheckableInput extends BaseClass {
         else if (k === 'value') {
           const value = transformations[k];
 
-          if (utils.isNonBlankString(value)) {
+          if (utils.isNonBlankString(value) || _.isRegExp(value)) {
             const labelElementBemBase = bemBase.setElt('label', { fresh: true });
             sel = selector
               .filterByText(sel.child(`.${labelElementBemBase}`), value)
@@ -76,7 +76,8 @@ class CheckableInput extends BaseClass {
           else {
             throw new TypeError(
               `${this.displayName}: value for 'value' transformation must ` +
-              `be a non-blank string but it is ${typeOf(checked)} (${checked})`
+              `be a non-blank string or a regular expression but it is ` +
+              `${typeOf(value)} (${value})`
             );
           }
         }
@@ -127,9 +128,12 @@ class CheckableInput extends BaseClass {
       }
     });
 
-    const writableParts = _.concat(super.getStateParts({ onlyWritable }), [
-      'checked'
-    ]);
+    // In checkable input 'Value' part of state is read-only but in input it's
+    // defined as writable.
+    const writableParts = super
+      .getStateParts({ onlyWritable })
+      .filter((v) => v !== 'value')
+      .concat(['checked']);
 
     if (onlyWritable) {
       return writableParts;
@@ -137,7 +141,8 @@ class CheckableInput extends BaseClass {
     else {
       return _.concat(writableParts, [
         'labelShrinked',
-        'selectionMode'
+        'selectionMode',
+        'value' // now it's read-only
       ]);
     }
   }

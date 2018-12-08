@@ -29,13 +29,6 @@ const BaseClass = Input.makeFragmentClass(Input, {
   ]
 });
 
-/**
- * Display name of fragment.
- *
- * @type {String}
- */
-const fragmentDisplayName = 'nebula-widgets.widgets.group-input';
-
 // TODO Add Error Fragment to allow expectations on error presence and etc.
 /**
  * Fragment that represents group input.
@@ -114,7 +107,7 @@ class GroupInput extends BaseClass {
         'inline',
         'noRowGap',
         'softColumns',
-        'stckedOnMobile'
+        'stackedOnMobile'
       ]);
     }
   }
@@ -265,24 +258,8 @@ class GroupInput extends BaseClass {
       );
     }
 
-    const itemsCount = await this.itemElementSelector.count;
-    const itemExpectStateIsPromises = [];
-
-    await t
-      .expect(itemsCount.length)
-      .eql(
-        value.length,
-        `Number of items in ${this.displayName} not equal that in 'value'`
-      );
-
-    if (itemsCount) {
-      for (let i = 0; i < itemsCount; i++) {
-        const item = this.getItem({ idx: i });
-        itemExpectStateIsPromises.push(item.expectStateIs(value[i], options));
-      }
-    }
-
-    await Promise.all(itemExpectStateIsPromises);
+    const itemsPartOfState = await this.getItemsPartOfState(options);
+    await t.expect(itemsPartOfState).eql(value); // TODO Add diff to error message.
   }
 
   // ---------------------------------------------------------------------------
@@ -547,7 +524,7 @@ Object.defineProperties(GroupInput, {
     value: 'nw-groupInput'
   },
   displayName: {
-    value: fragmentDisplayName
+    value: 'nebula-widgets.widgets.group-input'
   },
   ItemFragment: {
     value: null

@@ -1,17 +1,16 @@
 /**
  * Group input fragment doesn't represent concrete widget and used to aggregate
  * common functionality of fragments for concrete group input widgets, and
- * because of that it tested using radio group input fragment.
+ * because of that it tested using checkable group input fragment.
  */
 
-import lo from 'lodash';
 import sinon from 'sinon';
 import unexpected from 'unexpected';
 import unexpectedSinon from 'unexpected-sinon';
 
+import CheckableGroupInput from '../../../../../src/js/widgets/checkable-group-input';
+import CheckableInput from '../../../../../src/js/widgets/checkable-input';
 import InteractiveExample from '../../../../../src/js/kitchen-sink/widgets/man-page/interactive-example';
-import RadioGroupInput from '../../../../../src/js/widgets/radio-group-input'
-import RadioInput from '../../../../../src/js/widgets/radio-input'
 
 const expect = unexpected.clone();
 expect.use(unexpectedSinon);
@@ -23,35 +22,34 @@ async function getInteractiveExample() {
 }
 
 async function getKnob(cid, parent) {
-  const rgi = new RadioGroupInput({ cid }, { parent });
-  await rgi.expectIsExist();
-  return rgi;
+  const knob = new CheckableGroupInput({ cid }, { parent });
+  await knob.expectIsExist();
+  return knob;
 }
 
 async function getSut(parent) {
-  const ri = new RadioGroupInput({ idx: 0 }, {
-    parent: parent || await new InteractiveExample().viewElementSelector,
+  const sut = new CheckableGroupInput({ idx: 0 }, {
+    parent: parent || (await getInteractiveExample()).viewElementSelector
   });
-
-  await ri.expectIsExist();
-  return ri;
+  await sut.expectIsExist();
+  return sut;
 }
 
 async function getHelperFragments(knobCid) {
   const parent = await getInteractiveExample();
   return {
-    knob: await getKnob(knobCid, parent),
-    parent: parent.viewElementSelector,
-    sut: await getSut(parent)
+    knob: knobCid ? (await getKnob(knobCid, parent)) : undefined,
+    parent,
+    sut: await getSut(parent.viewElementSelector)
   };
 }
 
 fixture('Widgets :: Group Input :: 010 Fragment')
-  .page('http://localhost:3449/widgets/radio-group-input');
+  .page('http://localhost:3449/widgets/checkable-group-input');
 
 test("010 It should allow obtain group input", async () => {
-  const parent = await getInteractiveExample();
-  const sut = new RadioGroupInput({ idx: 0 }, { parent });
+  const parent = await getInteractiveExample().viewElementSelector;
+  const sut = new CheckableGroupInput({ idx: 0 }, { parent });
   await sut.expectIsExist();
 });
 
@@ -83,9 +81,9 @@ test("030 It should allow assert on group's 'Columns' part of state value using 
 
   // TODO Uncomment after https://github.com/mt0erfztxt/nebula-test-fragment/issues/8
   //      resolved.
-  // await rgi.clickItem({ value: 'nil' });
-  // await group.hover();
-  // await group.expectColumnsPartOfStateIs(void(0));
+  // await knob.clickItem({ value: 'nil' });
+  // await sut.hover();
+  // await sut.expectColumnsPartOfStateIs(void(0));
 
   await knob.clickItem({ value: '5' });
   await sut.hover();
@@ -102,7 +100,7 @@ test("030 It should allow assert on group's 'Columns' part of state value using 
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must have BEM modifier 'columns,3'.+but it doesn't/
+      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'columns,3'.+but it doesn't/
     );
 
     isThrown = true;
@@ -120,8 +118,8 @@ test("040 It should allow assert on group's 'Columns' part of state value using 
 
   // TODO Uncomment after https://github.com/mt0erfztxt/nebula-test-fragment/issues/8
   //      resolved.
-  // await group.hover();
-  // await group.expectColumnsPartOfStateIsNot(void(0));
+  // await sut.hover();
+  // await sut.expectColumnsPartOfStateIsNot(void(0));
 
   await sut.hover();
   await sut.expectColumnsPartOfStateIs('3', { isNot: true });
@@ -137,7 +135,7 @@ test("040 It should allow assert on group's 'Columns' part of state value using 
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must not have BEM modifier 'columns,5'.+but it does/
+      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'columns,5'.+but it does/
     );
 
     isThrown = true;
@@ -184,7 +182,7 @@ test("060 It should allow assert on whether group is equidistant using '#expectI
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must have BEM modifier 'equidistant,'.+but it doesn't/
+      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'equidistant,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -215,7 +213,7 @@ test("070 It should allow assert on whether group isn't equidistant using '#expe
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must not have BEM modifier 'equidistant,'.+but it does/
+      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'equidistant,'.+but it does/
     );
 
     isThrown = true;
@@ -262,7 +260,7 @@ test("090 It should allow assert on whether group is inline using '#expectIsInli
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must have BEM modifier 'inline,'.+but it doesn't/
+      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'inline,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -293,7 +291,7 @@ test("100 It should allow assert on whether group isn't inline using '#expectIsN
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must not have BEM modifier 'inline,'.+but it does/
+      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'inline,'.+but it does/
     );
 
     isThrown = true;
@@ -340,7 +338,7 @@ test("120 It should allow assert on whether group is noRowGap using '#expectIsNo
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must have BEM modifier 'noRowGap,'.+but it doesn't/
+      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'noRowGap,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -371,7 +369,7 @@ test("130 It should allow assert on whether group isn't noRowGap using '#expectI
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must not have BEM modifier 'noRowGap,'.+but it does/
+      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'noRowGap,'.+but it does/
     );
 
     isThrown = true;
@@ -418,7 +416,7 @@ test("150 It should allow assert on whether group is soft columns using '#expect
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must have BEM modifier 'softColumns,'.+but it doesn't/
+      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'softColumns,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -449,7 +447,7 @@ test("160 It should allow assert on whether group isn't soft columns using '#exp
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must not have BEM modifier 'softColumns,'.+but it does/
+      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'softColumns,'.+but it does/
     );
 
     isThrown = true;
@@ -496,7 +494,7 @@ test("180 It should allow assert on whether group is stacked on mobile using '#e
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must have BEM modifier 'stackedOnMobile,'.+but it doesn't/
+      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'stackedOnMobile,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -527,7 +525,7 @@ test("190 It should allow assert on whether group isn't stacked on mobile using 
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.radio-group-input.+must not have BEM modifier 'stackedOnMobile,'.+but it does/
+      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'stackedOnMobile,'.+but it does/
     );
 
     isThrown = true;
@@ -536,26 +534,35 @@ test("190 It should allow assert on whether group isn't stacked on mobile using 
   expect(isThrown, 'to be true');
 });
 
+test("195 It should allow obtain item using '#getItem()'", async () => {
+  const sut = await getSut();
+  const item = sut.getItem({ idx: 0 });
+  expect(item, 'to be a', CheckableInput);
+  await item.expectIsExist();
+  await item.hover();
+  await item.expectValuePartOfStateIs('option1');
+});
+
 test("200 It should allow assert on item existence using '#expectHasItem()'", async () => {
   const sut = await getSut();
 
   // -- Successful case
 
   await sut.hover();
-  await sut.expectHasItem({ value: 'choice3' });
+  await sut.expectHasItem({ value: 'option3' });
 
   // -- Failing case
 
   let isThrown = false;
 
   try {
-    await sut.expectHasItem({ value: 'non-existent choice' });
+    await sut.expectHasItem({ value: 'non-existent option' });
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError: .+\.radio-input.+DOM element.+: expected 0 to deeply equal 1/
+      /AssertionError: .+\.checkable-input.+DOM element.+: expected 0 to deeply equal 1/
     );
 
     isThrown = true;
@@ -570,20 +577,20 @@ test("210 It should allow assert on item existence using '#expectHasItem()' - ca
   // -- Successful case
 
   await sut.hover();
-  await sut.expectHasItem({ value: 'choice3' }, null, { idx: 2 });
+  await sut.expectHasItem({ value: 'option3' }, null, { idx: 2 });
 
   // -- Failing case
 
   let isThrown = false;
 
   try {
-    await sut.expectHasItem({ value: 'choice3' }, null, { idx: 0 });
+    await sut.expectHasItem({ value: 'option3' }, null, { idx: 0 });
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError: .+\.radio-input#expectIsEqual().+: expected 'choice3' to deeply equal 'choice1'/
+      /AssertionError: .+\.checkable-input#expectIsEqual().+: expected 'option3' to deeply equal 'option1'/
     );
 
     isThrown = true;
@@ -599,9 +606,9 @@ test("220 It should allow assert on items existence using '#expectHasItems()'", 
 
   await sut.hover();
   await sut.expectHasItems([
-    [{ value: 'choice6' }],
-    [{ value: 'choice1' }],
-    [{ value: 'choice4' }]
+    [{ value: 'option6' }],
+    [{ value: 'option1' }],
+    [{ value: 'option4' }]
   ]);
 
   // -- Failing case
@@ -610,17 +617,17 @@ test("220 It should allow assert on items existence using '#expectHasItems()'", 
 
   try {
     await sut.expectHasItems([
-      [{ value: 'choice2' }], // this item has different label
-      [{ value: 'choice1' }],
-      [{ value: 'choice4' }],
-      [{ value: 'choice3' }]
+      [{ value: 'option2' }], // this item has different label
+      [{ value: 'option1' }],
+      [{ value: 'option4' }],
+      [{ value: 'option3' }]
     ]);
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError: .+\.radio-input.+DOM element.+: expected 0 to deeply equal 1/
+      /AssertionError: .+\.checkable-input.+DOM element.+: expected 0 to deeply equal 1/
     );
 
     isThrown = true;
@@ -636,15 +643,15 @@ test("230 It should allow assert on items existence using '#expectHasItems()' - 
 
   await sut.hover();
   await sut.expectHasItems([
-    [{ value: 'choice2 (some long text here)' }],
-    [{ value: 'choice4' }],
-    [{ value: 'choice8' }],
-    [{ value: 'choice9' }],
-    [{ value: 'choice7' }],
-    [{ value: 'choice5' }],
-    [{ value: 'choice6' }],
-    [{ value: 'choice1' }],
-    [{ value: 'choice3' }]
+    [{ value: 'option2 (some long text here)' }],
+    [{ value: 'option4' }],
+    [{ value: 'option8' }],
+    [{ value: 'option9' }],
+    [{ value: 'option7' }],
+    [{ value: 'option5' }],
+    [{ value: 'option6' }],
+    [{ value: 'option1' }],
+    [{ value: 'option3' }]
   ], {
     only: true
   });
@@ -655,15 +662,15 @@ test("230 It should allow assert on items existence using '#expectHasItems()' - 
 
   try {
     await sut.expectHasItems([
-      // Omit 'choice2...' item for testing.
-      [{ value: 'choice4' }],
-      [{ value: 'choice8' }],
-      [{ value: 'choice9' }],
-      [{ value: 'choice7' }],
-      [{ value: 'choice5' }],
-      [{ value: 'choice6' }],
-      [{ value: 'choice1' }],
-      [{ value: 'choice3' }]
+      // Omit 'option2...' item for testing.
+      [{ value: 'option4' }],
+      [{ value: 'option8' }],
+      [{ value: 'option9' }],
+      [{ value: 'option7' }],
+      [{ value: 'option5' }],
+      [{ value: 'option6' }],
+      [{ value: 'option1' }],
+      [{ value: 'option3' }]
     ], {
       only: true
     });
@@ -688,15 +695,15 @@ test("240 It should allow assert on items existence using '#expectHasItems()' - 
 
   await sut.hover();
   await sut.expectHasItems([
-    [{ value: 'choice1' }],
-    [{ value: 'choice2 (some long text here)' }],
-    [{ value: 'choice3' }],
-    [{ value: 'choice4' }],
-    [{ value: 'choice5' }],
-    [{ value: 'choice6' }],
-    [{ value: 'choice7' }],
-    [{ value: 'choice8' }],
-    [{ value: 'choice9' }]
+    [{ value: 'option1' }],
+    [{ value: 'option2 (some long text here)' }],
+    [{ value: 'option3' }],
+    [{ value: 'option4' }],
+    [{ value: 'option5' }],
+    [{ value: 'option6' }],
+    [{ value: 'option7' }],
+    [{ value: 'option8' }],
+    [{ value: 'option9' }]
   ], {
     only: true,
     sameOrder: true
@@ -708,15 +715,15 @@ test("240 It should allow assert on items existence using '#expectHasItems()' - 
 
   try {
     await sut.expectHasItems([
-      [{ value: 'choice1' }],
-      [{ value: 'choice2 (some long text here)' }],
-      [{ value: 'choice3' }],
-      [{ value: 'choice5' }], // swap 'choice4' and 'choice5' items for testing
-      [{ value: 'choice4' }],
-      [{ value: 'choice6' }],
-      [{ value: 'choice7' }],
-      [{ value: 'choice8' }],
-      [{ value: 'choice9' }]
+      [{ value: 'option1' }],
+      [{ value: 'option2 (some long text here)' }],
+      [{ value: 'option3' }],
+      [{ value: 'option5' }], // swap 'option4' and 'option5' items for testing
+      [{ value: 'option4' }],
+      [{ value: 'option6' }],
+      [{ value: 'option7' }],
+      [{ value: 'option8' }],
+      [{ value: 'option9' }]
     ], {
       only: true,
       sameOrder: true
@@ -726,7 +733,7 @@ test("240 It should allow assert on items existence using '#expectHasItems()' - 
     expect(
       e.errMsg,
       'to match',
-      /AssertionError: .+\.radio-input#expectIsEqual().+: expected 'choice5' to deeply equal 'choice4'/
+      /AssertionError: .+\.checkable-input#expectIsEqual().+: expected 'option5' to deeply equal 'option4'/
     );
 
     isThrown = true;
@@ -741,20 +748,20 @@ test("250 It should allow assert on item's index using '#expectItemIndexIs()'", 
   // -- Successful case
 
   await sut.hover();
-  await sut.expectItemIndexIs({ value: 'choice3' }, null, 2);
+  await sut.expectItemIndexIs({ value: 'option3' }, null, 2);
 
   // -- Failing case
 
   let isThrown = false;
 
   try {
-    await sut.expectItemIndexIs({ value: 'choice3' }, null, 3);
+    await sut.expectItemIndexIs({ value: 'option3' }, null, 3);
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError: .+\.radio-input#expectIsEqual().+: expected 'choice3' to deeply equal 'choice4'/
+      /AssertionError: .+\.checkable-input#expectIsEqual().+: expected 'option3' to deeply equal 'option4'/
     );
 
     isThrown = true;
@@ -767,15 +774,15 @@ test("260 It should allow assert on items existence at specified indexes using '
   const sut = await getSut();
   const expectHasItemsSpy = sinon.spy(sut, 'expectHasItems');
   const items = [
-    [{ value: 'choice1' }],
-    [{ value: 'choice2 (some long text here)' }],
-    [{ value: 'choice3' }],
-    [{ value: 'choice4' }],
-    [{ value: 'choice5' }],
-    [{ value: 'choice6' }],
-    [{ value: 'choice7' }],
-    [{ value: 'choice8' }],
-    [{ value: 'choice9' }]
+    [{ value: 'option1' }],
+    [{ value: 'option2 (some long text here)' }],
+    [{ value: 'option3' }],
+    [{ value: 'option4' }],
+    [{ value: 'option5' }],
+    [{ value: 'option6' }],
+    [{ value: 'option7' }],
+    [{ value: 'option8' }],
+    [{ value: 'option9' }]
   ];
 
   await sut.hover();
@@ -908,61 +915,114 @@ test("300 It should allow assert on number of items using '#expectItemsCountIs()
   expect(isThrown, 'to be true');
 });
 
-test("310 It should allow obtain item using '#getItem()'", async () => {
-  const sut = await getSut();
-  expect(sut.getItem({ idx: 0 }), 'to be a', RadioInput);
-});
-
-// TODO Add tests for:
-//      1. 'Items' part of state
-//      2. 'Value' part of state
-
-test("320 It should allow get group's 'Items' part of state using '#getItemsPartOfState()'", async () => {
+test("310 It should allow get group's 'Items' part of state using '#getItemsPartOfState()'", async () => {
   const sut = await getSut();
   await sut.hover();
 
   const itemsState = await sut.getItemsPartOfState();
-  const expectedItemsState = lo
-    .range(1, 10)
-    .map((v) => {
+  const expectedItemsState = [...Array(9).keys()]
+    .map((value) => {
+      const v = ++value;
       return {
-        // From Input
+        checked: v === 2,
         disabled: false,
         invalid: false,
+        labelShrinked: false,
+        selectionMode: 'multi',
         size: 'normal',
-        value: `choice${v}` + (v === 2 ? ' (some long text here)' : ''),
-        widget: 'icon',
-
-        // From CheckableInput
-        checked: v === 2,
-        labelShrinked: false
-      };
+        value: `option${v}` + (v === 2 ? ' (some long text here)' : ''),
+        widget: 'icon'
+      }
     });
 
   expect(itemsState, 'to equal', expectedItemsState);
 });
 
-test("330 It should allow set group's 'Items' part of state using '#setItemsPartOfState()'", async () => {
+test("320 It should allow set group's 'Items' part of state using '#setItemsPartOfState()'", async () => {
   const sut = await getSut();
   await sut.hover();
 
-  const item2 = sut.getItem({ idx: 1 });
-  await item2.expectIsChecked()
+  const option2 = sut.getItem({ idx: 1 });
+  await option2.expectIsChecked()
 
-  const item5 = sut.getItem({ idx: 4 });
-  await item5.expectIsNotChecked()
+  const option5 = sut.getItem({ idx: 4 });
+  await option5.expectIsNotChecked()
 
-  const expectedItemsState = lo
-    .range(1, 10)
-    .map((v) => {
-      return {
-        checked: v === 5 // only writable field
+  const option6 = sut.getItem({ idx: 5 });
+  await option6.expectIsNotChecked()
+
+  const newItemsState = [...Array(9).keys()]
+    .map((idx) => {
+      return { // 'Checked' is only writable part of state of checkable input
+        checked: [4, 5].includes(idx)
       };
     });
 
-  const itemsState = await sut.setItemsPartOfState(expectedItemsState);
-  await item2.expectIsNotChecked()
-  await item5.expectIsChecked()
-
-  // expect(itemsState, 'to equal', expectedItemsState);
+  const result = await sut.setItemsPartOfState(newItemsState);
+  await option2.expectIsNotChecked()
+  await option5.expectIsChecked()
+  await option6.expectIsChecked()
+  expect(newItemsState, 'to equal', result);
 });
+
+test("330 It should allow assert on group's 'Items' part of state using '#expectItemsPartOfStateIs()'", async () => {
+  const sut = await getSut();
+  await sut.getItem({ value: /^option2.*/ }).expectIsChecked();
+  await sut.getItem({ value: 'option4' }).setCheckedPartOfState(true);
+
+  // -- Successful case
+
+  await sut.expectItemsPartOfStateIs(
+    [...Array(9).keys()]
+    .map((value) => {
+      const v = ++value;
+      return {
+        checked: [2, 4].includes(v),
+        disabled: false,
+        invalid: false,
+        labelShrinked: false,
+        selectionMode: 'multi',
+        size: 'normal',
+        value: `option${v}` + (v === 2 ? ' (some long text here)' : ''),
+        widget: 'icon'
+      }
+    })
+  );
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectItemsPartOfStateIs(
+      [...Array(9).keys()]
+      .map((value) => {
+        const v = ++value;
+        return {
+          checked: true, // that's not true and cause error to be thrown
+          disabled: false,
+          invalid: false,
+          labelShrinked: false,
+          selectionMode: 'multi',
+          size: 'normal',
+          value: `option${v}` + (v === 2 ? ' (some long text here)' : ''),
+          widget: 'icon'
+        }
+      })
+    );
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected [ Array(9) ] to deeply equal [ Array(9) ]'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+// TODO Add tests for:
+//      1. 'Value' part of state
