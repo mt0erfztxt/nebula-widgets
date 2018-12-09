@@ -30,8 +30,8 @@
   #{:button :icon})
 
 (defn- build-class
-  [{:keys [bem cid columns cns disabled equidistant inline invalid no-row-gap selection-mode size soft-columns
-           stacked-on-mobile widget]}]
+  [{:keys [bem cid columns cns disabled equidistant inline invalid label-shrinked no-row-gap selection-mode size
+           soft-columns stacked-on-mobile widget]}]
   (bem-utils/build-class
     (build-bem bem)
     [["cns" cns]
@@ -41,6 +41,7 @@
      ["equidistant" equidistant]
      ["inline" (or inline (pos? columns))]
      ["invalid" invalid]
+     ["labelShrinked" label-shrinked]
      ["noRowGap" no-row-gap]
      ["selectionMode" (-> selection-mode keyword selection-mode-prop-set (or :multi))]
      ["size" (-> size keyword size-prop-set (or :normal))]
@@ -101,7 +102,8 @@
 
   TODO:
   * add tests for `:no-row-gap` prop
-  * how to pass `:selection-mode` from checkable group input"
+  * how to pass `:label-shrinked` from checkable group input
+  * how to pass `:selection-mode` from checkable group input (then remove from docs)"
   [{:keys [bem errors invalid item-widget items widget] :as props}]
   (let [widget (-> widget keyword widget-prop-set (or :icon))]
     [:div {:class (build-class (assoc props :widget widget))}

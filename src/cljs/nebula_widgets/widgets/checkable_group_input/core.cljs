@@ -4,6 +4,13 @@
     [nebula-widgets.widgets.checkable-input.core :as checkable-input]
     [reagent.core :as r]))
 
+(defn- update-item-label-prop [label-shrinked {:keys [label] :as item-props}]
+  (if (nil? label-shrinked)
+    item-props
+    (if (map? label)
+      (assoc-in item-props [:label :shrinked] label-shrinked)
+      (assoc item-props :label {:shrinked label-shrinked, :text label}))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16,6 +23,7 @@
     - `:boolean` - logical true/false, no default. Only for group with `:selection-mode` set to :multi, when logical
       true, each map in `:items` must have `:path` key, otherwise it must have `:value` key.
     - `:items` - seq of maps, no default. Each map is a props for [checkable-input](/widgets/checkable-input) widget.
+    - `:label-shrinked` - logical true/false, no default. Whether items in group has their label shrinked or not.
     - `:on-change` - function, no default. Called with value of `:path` prop when `:boolean` is logical true or value of
       `:value` prop otherwise, and browser event as arguments when item checked or unchecked.
     - `:on-change` - function, no default. It called with value of `:path` prop when `:selection-mode` is :multi and
@@ -36,10 +44,11 @@
 
   TODO:
   * fix styles for case when `:widget` is :button and item's label is shrinked"
-  [{:keys [item-props items on-change selection-mode value] :as props}]
+  [{:keys [item-props items label-shrinked on-change selection-mode value] :as props}]
   (let [selection-mode (or selection-mode "multi")
         multi-selection? (= "multi" (name selection-mode))
-        use-path? (and multi-selection? (:boolean props))]
+        use-path? (and multi-selection? (:boolean props))
+        item-props-derived-from-group (select-keys props [:disabled])]
     [group-input/widget
      (-> props
          (assoc
@@ -47,14 +56,17 @@
            :item-widget checkable-input/widget
            :items
            (for [{:keys [path] v :value :as item} items]
-             (merge
-               item-props
-               item
-               {:checked
-                (cond
-                  use-path? (->> path (get-in value) boolean)
-                  multi-selection? (contains? value v)
-                  :else (= v value))
-                :on-change (r/partial on-change (if use-path? path v))
-                :selection-mode selection-mode})))
+             (update-item-label-prop
+               label-shrinked
+               (merge
+                 item-props
+                 item
+                 item-props-derived-from-group
+                 {:checked
+                  (cond
+                    use-path? (->> path (get-in value) boolean)
+                    multi-selection? (contains? value v)
+                    :else (= v value))
+                  :on-change (r/partial on-change (if use-path? path v))
+                  :selection-mode selection-mode}))))
          (dissoc :item-props))]))
