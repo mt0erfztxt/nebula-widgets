@@ -56,7 +56,6 @@
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.
     - `:disabled` - logical true/false, no default. Whether input is disabled or not.
-    - `:input-type` - string, no default. Type of input, e.g. 'checkbox'.
     - `:invalid` - logical true/false, no default. Whether input is in invalid state or not.
     - `:label` - string, renderable or map, no default. Input's label. Can be a map to provide more props for label:
       * `:shrinked` - logical true/false, no default. Whether label shrinked (using ellipsis) when too long or not.
