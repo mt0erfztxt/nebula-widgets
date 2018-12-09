@@ -2,8 +2,7 @@ import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 
 const {
-  Fragment,
-  Options
+  Fragment1
 } = testFragment;
 
 /**
@@ -16,28 +15,36 @@ const fragmentDisplayName = 'nebula-widgets.kitchen-sink.widgets.man-page.intera
 /**
  * Fragment that represents man page's interactive example.
  */
-class InteractiveExample extends Fragment {
+class InteractiveExample extends Fragment1 {
 
   /**
-   * Creates fragment.
+   * BEM base for fragment's 'view' element.
    *
-   * @param {InteractiveExample|Object} [spec] When it's already instance of `InteractiveExample` it would be returned as-is, otherwise it's same as extended fragment's constructor `spec` parameter
-   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
+   * @returns {BemBase}
    */
-  constructor(spec, opts) {
-    const {
-      initializedOpts,
-      initializedSpec,
-      isInstance
-    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
-
-    if (isInstance === true) {
-      return spec;
+  get viewElementBemBase() {
+    if (!this._viewElementBemBase) {
+      this._viewElementBemBase = this
+        .cloneBemBase()
+        .setElt('view');
     }
 
-    super(initializedSpec, initializedOpts);
+    return this._viewElementBemBase;
+  }
 
-    return this;
+  /**
+   * TestCafe selector for fragment's 'view' element.
+   *
+   * @returns {Selector}
+   */
+  get viewElementSelector() {
+    if (!this._viewElementSelector) {
+      this._viewElementSelector = this
+        .selector
+        .find(`.${this.viewElementBemBase}`);
+    }
+
+    return this._viewElementSelector;
   }
 }
 

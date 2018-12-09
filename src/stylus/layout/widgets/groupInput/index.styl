@@ -11,11 +11,8 @@ $group-input-height-small-bordered = $group-input-height-small - 2px;
 $group-input-height-tiny-bordered  = $group-input-height-tiny  - 2px;
 
 
-@require 'item'
-
-
-// Produces styles for widget. Can be called directly, see below, or used as
-// mixin, see `.nw-groupInput` bellow for example.
+// Produces styles for widget. Can be called directly or used as mixin, see
+// `.nw-groupInput` bellow for example.
 nw-groupInput(bem = 'nw-groupInput')
     color: $g_color_primary_text;
     font-size: 14px;
@@ -110,5 +107,6 @@ nw-groupInput(bem = 'nw-groupInput')
         background-color: $group-input-active-item-background-color;
 
 
+// TODO Does we need/use it?
 .nw-groupInput
     nw-groupInput: '';

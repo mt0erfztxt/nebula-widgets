@@ -11,13 +11,10 @@
      ["/widgets/button-group" :widgets/button-group]
      ["/widgets/button-group-set" :widgets/button-group-set]
      ["/widgets/card" :widgets/card]
-     ["/widgets/checkbox-group-input" :widgets/checkbox-group-input]
-     ["/widgets/checkbox-group-input-item" :widgets/checkbox-group-input-item]
+     ["/widgets/checkable-group-input" :widgets/checkable-group-input]
+     ["/widgets/checkable-input" :widgets/checkable-input]
      ["/widgets/form-field" :widgets/form-field]
      ["/widgets/group-input" :widgets/group-input]
-     ["/widgets/group-input-item" :widgets/group-input-item]
-     ["/widgets/radio-group-input" :widgets/radio-group-input]
-     ["/widgets/radio-group-input-item" :widgets/radio-group-input-item]
      ["/widgets/text-input" :widgets/text-input]]))
 
 (defn match [url]

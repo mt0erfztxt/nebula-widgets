@@ -8,14 +8,11 @@
    :widgets/button-group
    :widgets/button-group-set
    :widgets/card
-   :widgets/checkbox-group-input
-   :widgets/checkbox-group-input-item
-   :widgets/form-field
+   :widgets/checkable-input
    :widgets/group-input
-   :widgets/group-input-item
-   :widgets/radio-group-input
-   :widgets/radio-group-input-item
-   :widgets/text-input])
+   :widgets/checkable-group-input
+   :widgets/text-input
+   :widgets/form-field])
 
 (def ^:private pages-href-and-text
   (for [route widgets-routes]
