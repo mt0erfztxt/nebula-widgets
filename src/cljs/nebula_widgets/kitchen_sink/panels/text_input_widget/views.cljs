@@ -146,19 +146,19 @@
   (->> [:busy :disabled :errors :invalid :multi-line :size :text-alignment :value]
        (map
          (fn [prop]
-           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %2])]))
+           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
        (into {})))
 
 (defn- update-ie-value [event]
-  ((:value ie-setters) event (utils/event->value event)))
+  ((:value ie-setters) (utils/event->value event)))
 
 (defn- interactive-example-cmp []
-  (let [*ti-props (rf/subscribe [(interactive-example-path->keyword)])]
+  (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [ti-props @*ti-props]
+      (let [props @*props]
         (into
           [ie/widget
-           [text-input/widget (assoc ti-props :on-change update-ie-value)]]
+           [text-input/widget (assoc props :on-change update-ie-value)]]
           (for [[cid items]
                 [[:busy]
                  [:disabled]
@@ -173,8 +173,8 @@
              {:cid cid}
              (cond->
                {:cid cid
-                :item-props {:on-change (get ie-setters cid)}
-                :value (get ti-props cid)}
+                :on-change (get ie-setters cid)
+                :value (get props cid)}
                items (assoc :items items))]))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

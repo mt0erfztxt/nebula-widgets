@@ -1,10 +1,9 @@
-import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
+import { t } from 'testcafe';
 
-import Input from '../input';
+import Input from '../../fragments/input';
 
 const {
-  Fragment,
   Options,
   utils
 } = testFragment;
@@ -15,48 +14,18 @@ const {
  * @class
  * @extends {Input}
  */
-const BaseClass = Fragment.makeFragmentClass(Input, {
+const BaseClass = Input.makeFragmentClass(Input, {
   stateParts: [
     ['busy'],
     ['multiLine'],
-    ['size', { isBoolean: false }],
-    ['textAlign', { isBoolean: false }]
+    ['textAlignment', { isBoolean: false }]
   ]
 });
 
 /**
- * Display name of fragment.
- *
- * @type {String}
- */
-const fragmentDisplayName = 'nebula-widgets.widgets.text-input.item';
-
-/**
- * Fragment that represents text input item.
+ * Fragment that represents text input.
  */
 class TextInput extends BaseClass {
-
-  /**
-   * Creates fragment.
-   *
-   * @param {TextInput|Object} [spec] When it's already instance of `TextInput` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
-   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
-   */
-  constructor(spec, opts) {
-    const {
-      initializedOpts,
-      initializedSpec,
-      isInstance
-    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
-
-    if (isInstance === true) {
-      return spec;
-    }
-
-    super(initializedSpec, initializedOpts);
-
-    return this;
-  }
 
   /**
    * BEM base for fragment's 'input' element.
@@ -92,22 +61,72 @@ class TextInput extends BaseClass {
   // State
   // ---------------------------------------------------------------------------
 
-  getStateParts(onlyWritable = false) {
-    const parentParts = super.getStateParts(onlyWritable);
-    const parts = _.concat(parentParts, []);
+  getStateParts(options) {
+    const { onlyWritable } = new Options(options, {
+      defaults: {
+        onlyWritable: false
+      }
+    });
+
+    const writableParts = super.getStateParts({ onlyWritable });
 
     if (onlyWritable) {
-      return parts;
+      return writableParts;
     }
     else {
-      return _.concat(parts, [
+      return writableParts.concat([
         'busy',
         'multiLine',
-        'size',
-        'textAlign'
+        'textAlignment'
       ]);
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // State :: Busy (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name TextInput#getBusyPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name TextInput#expectIsBusy
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name TextInput#expectIsNotBusy
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: TextAlignment (read-only, not boolean)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name TextInput#getTextAlignmentPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name TextInput#expectTextAlignmentPartOfStateIs
+   * @method
+   * @param {*} value
+   * @param {Options|Object} options
+   * @returns {Promise<void>}
+   */
 
   // ---------------------------------------------------------------------------
   // State :: Value
@@ -120,14 +139,14 @@ class TextInput extends BaseClass {
    * @return {Promise<string>} 'Value' part of state.
    */
   async getValuePartOfState(options) {
-    return this.inputEltSelector.value;
+    return this.inputElementSelector.value;
   }
 
   /**
    * Sets 'Value' part of fragment's state.
    *
    * @param {*} value New value for 'Value' part of fragment's state. `undefined` means no change and `null` and empty string sets value of text input to an empty string
-   * @param {Options|Object} [options] Options, can contain any options for TestCafe `typeText` action, plus custom options
+   * @param {Options|Object} [options] Options, can contain any options for TestCafe `typeText` action
    * @param {Boolean} [options.paste=true] See TestCafe `typeText` action for details
    * @param {Boolean} [options.replace=true] See TestCafe `typeText` action for details
    * @param {String} [options.identity=''] Would be used to replace all instances of `options.identityTpl` to specified value
@@ -137,14 +156,14 @@ class TextInput extends BaseClass {
   async setValuePartOfState(value, options) {
 
     // `undefined` is noop.
-    if (_.isUndefined(value)) {
+    if (value === void 0) {
       return this.getValuePartOfState(options);
     }
 
     // `null` or empty string means clear input.
-    if (_.isNull(value) || utils.isEmptyString(value)) {
+    if (value === null || utils.isEmptyString(value)) {
       await t
-        .selectText(this.inputEltSelector)
+        .selectText(this.inputElementSelector)
         .pressKey('delete');
       return '';
     }
@@ -158,14 +177,15 @@ class TextInput extends BaseClass {
 
     let { identity, identityTpl } = opts;
 
-    identity = _.isNil(identity) ? '' : identity + '';
-    identityTpl = _.isNil(identityTpl) || utils.isEmptyString(identityTpl) ? '@@' : identityTpl + '';
+    identity = (identity == null) ? '' : identity + '';
+    identityTpl = (identityTpl == null) ||
+      utils.isEmptyString(identityTpl) ? '@@' : identityTpl + '';
 
     if (identityTpl) {
-      value = _.replace(value + '', identityTpl, identity);
+      value = value.toString().replace(identityTpl, identity);
     }
 
-    await t.typeText(this.inputEltSelector, value, opts);
+    await t.typeText(this.inputElementSelector, value, opts);
 
     return value;
   }
@@ -191,7 +211,7 @@ class TextInput extends BaseClass {
     let assertionName;
     let val;
 
-    if (_.isRegExp(value)) {
+    if (utils.isRegExp(value)) {
       assertionName = 'match';
       val = value;
     }
@@ -201,7 +221,7 @@ class TextInput extends BaseClass {
     }
 
     assertionName = utils.buildTestCafeAssertionName(assertionName, options);
-    await t.expect(this.inputEltSelector.value)[assertionName](val);
+    await t.expect(this.inputElementSelector.value)[assertionName](val);
   }
 
   // ---------------------------------------------------------------------------
@@ -271,7 +291,7 @@ Object.defineProperties(TextInput, {
     value: 'nw-textInput'
   },
   displayName: {
-    value: fragmentDisplayName
+    value: 'nebula-widgets.widgets.text-input.item'
   }
 });
 

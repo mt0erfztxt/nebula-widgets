@@ -1,7 +1,6 @@
 import expect from 'unexpected';
 
 import CheckableGroupInput from '../../../../../src/js/widgets/checkable-group-input';
-import CheckableInput from '../../../../../src/js/widgets/checkable-input';
 import InteractiveExample from '../../../../../src/js/kitchen-sink/widgets/man-page/interactive-example';
 
 async function getInteractiveExample() {

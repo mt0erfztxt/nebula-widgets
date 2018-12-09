@@ -17,8 +17,8 @@
 (def ^:private input-elt-bem
   (str bem "__input"))
 
-(def ^:private custom-props-set
-  #{:busy :cid :cns :errors :invalid :multi-line :size :text-alignment})
+(def ^:private text-alignment-prop-set
+  #{:center :left :right})
 
 (defn- build-class [{:keys [busy cid cns disabled invalid multi-line size text-alignment]}]
   (bem-utils/build-class
@@ -28,9 +28,12 @@
      ["busy" busy]
      ["disabled" disabled]
      ["invalid" invalid]
-     ["multi-line" multi-line]
+     ["multiLine" multi-line]
      ["size" (-> size keyword #{:large :normal :small} (or :normal))]
-     ["textAlignment" (-> text-alignment keyword #{:center :left :right} (or :left))]]))
+     ["textAlignment" (-> text-alignment keyword text-alignment-prop-set (or :left))]]))
+
+(def ^:private custom-props-set
+  #{:busy :cid :cns :errors :invalid :multi-line :size :text-alignment})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -40,17 +43,17 @@
   "Renders text input.
 
   Arguments:
-  * `props` - map, no default. Supported keys:
+  * `props` - map:
     - `:busy` - logical true/false, no default. Whether to show busy indicator or not.
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.
     - `:disabled` - logical true/false, no default. Whether widget disabled or not.
     - `:errors` - seq of strings, no default. Would be displayed only when not empty and `:invalid`.
-    - `:invalid` - logical true/false, no default. Whether `:value` is valid or not.
+    - `:invalid` - logical true/false, no default. Whether input's value is valid or not.
     - `:multi-line` - logical true/false, no default. Whether widget rendered using `TEXTAREA` or `INPUT` tag.
     - `:size` - one of :large, :normal (default), :small or their string/symbol equivalents. Widget size.
-    - `:text-alignment` - one of `:center`, `:left` (default), `:right` or their string/symbol equivalents. Allows to set
-      text alignment.
+    - `:text-alignment` - one of :center, :left (default), :right or their string/symbol equivalents. Allows to set text
+      alignment.
     - any other props that React supports on `INPUT` (or `TEXTAREA` when `:multi-line`) tag."
   [{:keys [disabled errors invalid multi-line] :as props}]
   [:div {:class (build-class props)}
