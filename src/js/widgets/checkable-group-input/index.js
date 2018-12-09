@@ -37,7 +37,11 @@ class CheckableGroupInput extends BaseClass {
       }
     });
 
-    const writableParts = super.getStateParts({ onlyWritable });
+    // In checkable group input 'Value' part of state is read-only but in input
+    // it's defined as writable.
+    const writableParts = super
+      .getStateParts({ onlyWritable })
+      .filter((v) => v !== 'value');
 
     if (onlyWritable) {
       return writableParts;
@@ -45,7 +49,8 @@ class CheckableGroupInput extends BaseClass {
     else {
       return _.concat(writableParts, [
         'labelShrinked',
-        'selectionMode'
+        'selectionMode',
+        'value' // now it's read-only
       ]);
     }
   }
@@ -95,6 +100,24 @@ class CheckableGroupInput extends BaseClass {
    * @param {Options|Object} options
    * @returns {Promise<void>}
    */
+
+  // ---------------------------------------------------------------------------
+  // State :: Value (read-only)
+  // ---------------------------------------------------------------------------
+  // Mostly inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Obtains 'Value' part of fragment's state and returns it because this part
+   * of state is read-only.
+   * 
+   * @param {*} value
+   * @param {Options|Object} [options]
+   * @return {Promise<String>}
+   */
+  async setValuePartOfState(value, options) {
+    return this.getValuePartOfState(options);
+  }
 }
 
 Object.defineProperties(CheckableGroupInput, {

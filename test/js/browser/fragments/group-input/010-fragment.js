@@ -44,6 +44,11 @@ async function getHelperFragments(knobCid) {
   };
 }
 
+const sutLabels = [...Array(9).keys()]
+  .map((value) =>
+    `option${++value}` + (value === 2 ? ' (some long text here)' : '')
+  );
+
 fixture('Widgets :: Group Input :: 010 Fragment')
   .page('http://localhost:3449/widgets/checkable-group-input');
 
@@ -1024,5 +1029,167 @@ test("330 It should allow assert on group's 'Items' part of state using '#expect
   expect(isThrown, 'to be true');
 });
 
-// TODO Add tests for:
-//      1. 'Value' part of state
+test("340 It should allow get group's 'Value' part of state using '#getValuePartOfState()'", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  const valueState = await sut.getValuePartOfState();
+  const expectedValueState = [...Array(9).keys()]
+    .map((value) =>
+      `option${++value}` + (value === 2 ? ' (some long text here)' : '')
+    );
+
+  expect(valueState, 'to equal', expectedValueState);
+});
+
+test("350 It should have setter for group's 'Value' part of state ('#setValuePartOfState()') that simply returns current value because part is read-only", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  const result = await sut.setValuePartOfState();
+  const expectedValueState = [...Array(9).keys()]
+    .map((value) =>
+      `option${++value}` + (value === 2 ? ' (some long text here)' : '')
+    );
+
+  expect(result, 'to equal', expectedValueState);
+});
+
+test("360 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()'", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  // -- Successful case
+
+  await sut.expectValuePartOfStateIs(sutLabels);
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectValuePartOfStateIs(Array.from(sutLabels).reverse());
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected [ Array(9) ] to deeply equal [ Array(9) ]'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("370 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()' - with 'sameOrder' option set to falsey", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  // -- Successful case
+
+  await sut.expectValuePartOfStateIs(Array.from(sutLabels).reverse(), {
+    sameOrder: false
+  });
+
+  // -- Failing case
+
+  const incorrectValue = Array.from(sutLabels);
+  incorrectValue[0] = 'foobar';
+
+  let isThrown = false;
+
+  try {
+    await sut.expectValuePartOfStateIs(incorrectValue, { sameOrder: false });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.*to have same set.*expected false to be truthy/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("380 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()' - with 'isNot' option set to truthy", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  const incorrectValue = Array.from(sutLabels);
+  incorrectValue[0] = 'foobar;'
+
+  // -- Successful case
+
+  await sut.expectValuePartOfStateIs(incorrectValue, { isNot: true });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectValuePartOfStateIs(incorrectValue, { isNot: false });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      'AssertionError: expected [ Array(9) ] to deeply equal [ Array(9) ]'
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("390 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()' - with 'sameOrder' option set to falsey", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  await sut.expectValuePartOfStateIs(sutLabels, { sameOrder: false });
+  await sut.expectValuePartOfStateIs(Array.from(sutLabels).reverse(), {
+    sameOrder: false
+  });
+});
+
+test("400 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()' - with 'sameOrder' option set to falsey and 'isNot' option set to truthy", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  // -- Successful case
+
+  const incorrectValue = Array.from(sutLabels).reverse();
+  incorrectValue[0] = 'foobar';
+
+  await sut.expectValuePartOfStateIs(incorrectValue, {
+    isNot: true,
+    sameOrder: false
+  });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectValuePartOfStateIs(Array.from(sutLabels).reverse(), {
+      isNot: true,
+      sameOrder: false
+    });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.*to not have same set.*expected true to be falsy/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});

@@ -340,10 +340,13 @@ class GroupInput extends BaseClass {
   // ---------------------------------------------------------------------------
   // State :: Value
   // ---------------------------------------------------------------------------
-  // TODO getter/setter can be implemented here because it's just a list of
-  //      items values.
 
-  // TODO Docs and tests
+  /**
+   * Obtains 'Value' part of fragment's state and returns it.
+   *
+   * @param {Options|Object} [options] Options
+   * @returns {Promise<Array>}
+   */
   async getValuePartOfState(options) {
     const itemsCount = await this.itemElementSelector.count;
     const statePromises = [];
@@ -357,7 +360,16 @@ class GroupInput extends BaseClass {
     return Promise.all(statePromises);
   }
 
-  // TODO Docs and tests
+  // TODO Must be tested using text group input, because it is read-only in
+  //      checkable group input.
+  /**
+   * Sets 'Value' part of state to new `value`.
+   *
+   * @param {Array} [value] New value for 'Value' part of fragment's state. Passing `undefined` means that state must stay intact
+   * @param {Options|Object} [options] Options
+   * @returns {Promise<Array>} Fragment's 'Value' part of state.
+   * @throws {TypeError} When provided arguments aren't valid.
+   */
   async setValuePartOfState(value, options) {
     if (_.isUndefined(value)) {
       return this.getValuePartOfState(options);
@@ -380,7 +392,15 @@ class GroupInput extends BaseClass {
     return this.getValuePartOfState(options);
   }
 
-  // TODO Docs and tests
+  /**
+   * Asserts that 'Value' part of fragment's state is equal to `value` which is
+   * an `Array` of group input items value states.
+   *
+   * @param {Array} value Group input items value states
+   * @param {Options|Object} [options] Options
+   * @returns {Promise<void>}
+   * @throws {TypeError} When provided arguments aren't valid.
+   */
   async expectValuePartOfStateIs(value, options) {
     const { isNot, sameOrder } = new Options(options, {
       defaults: {
