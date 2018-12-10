@@ -43,6 +43,7 @@
     (testing "020 It returns correct value"
       (is (= "foo" (sut "foo" nil)))
       (is (= "foo" (sut "foo" [])))
+      (is (= "foo foo--bar foo--fiz" (sut "foo" ["bar" "fiz"])))
       (is (= "foo" (sut "foo" [["bar" nil]])))
       (is (= "foo" (sut "foo" [["bar" false]])))
       (is (= "foo foo--bar" (sut "foo" ["bar"])))
