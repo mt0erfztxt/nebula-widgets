@@ -1,3 +1,4 @@
+import escapeStringRegexp from 'escape-string-regexp';
 import testFragment from 'nebula-test-fragment';
 import { t } from 'testcafe';
 
@@ -178,11 +179,16 @@ class TextInput extends BaseClass {
     let { identity, identityTpl } = opts;
 
     identity = (identity == null) ? '' : identity + '';
-    identityTpl = (identityTpl == null) ||
-      utils.isEmptyString(identityTpl) ? '@@' : identityTpl + '';
+    identityTpl = ((identityTpl == null) || utils.isEmptyString(identityTpl)) ?
+      '@@' : identityTpl + '';
 
     if (identityTpl) {
-      value = value.toString().replace(identityTpl, identity);
+      value = value
+        .toString()
+        .replace(
+          new RegExp(`${escapeStringRegexp(identityTpl)}`, 'g'),
+          identity
+        );
     }
 
     await t.typeText(this.inputElementSelector, value, opts);

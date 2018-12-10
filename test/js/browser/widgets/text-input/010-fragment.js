@@ -286,7 +286,6 @@ test("110 It should allow get input's 'Value' part of state using '#getValuePart
   expect(await sut.getValuePartOfState(), 'to equal', 'foobar');
 });
 
-// TODO Add test for supported options.
 test("120 It should allow set input's 'Value' part of state using '#setValuePartOfState()'", async () => {
   const sut = await getSut();
   expect(await sut.getValuePartOfState(), 'to equal', 'foobar');
@@ -295,7 +294,32 @@ test("120 It should allow set input's 'Value' part of state using '#setValuePart
   expect(await sut.getValuePartOfState(), 'to equal', '42');
 });
 
-test("130 It should allow assert on input's 'Value' part of state using '#expectValuePartOfStateIs()'", async () => {
+test("130 It should allow set input's 'Value' part of state using '#setValuePartOfState()' - 'identity' option", async () => {
+  const sut = await getSut();
+  expect(await sut.getValuePartOfState(), 'to equal', 'foobar');
+
+  await sut.setValuePartOfState('barfoo@@');
+  expect(await sut.getValuePartOfState(), 'to equal', 'barfoo');
+
+  await sut.setValuePartOfState('@@barfoo@@', { identity: '42' });
+  expect(await sut.getValuePartOfState(), 'to equal', '42barfoo42');
+});
+
+test("140 It should allow set input's 'Value' part of state using '#setValuePartOfState()' - 'identityTpl' option", async () => {
+  const sut = await getSut();
+  expect(await sut.getValuePartOfState(), 'to equal', 'foobar');
+
+  await sut.setValuePartOfState('__bar__foo__', { identityTpl: '__' });
+  expect(await sut.getValuePartOfState(), 'to equal', 'barfoo');
+
+  await sut.setValuePartOfState('__foo__bar__', {
+    identity: '42',
+    identityTpl: '__'
+  });
+  expect(await sut.getValuePartOfState(), 'to equal', '42foo42bar42');
+});
+
+test("150 It should allow assert on input's 'Value' part of state using '#expectValuePartOfStateIs()'", async () => {
   const sut = await getSut();
 
   // -- Successful case
@@ -323,7 +347,7 @@ test("130 It should allow assert on input's 'Value' part of state using '#expect
   expect(isThrown, 'to be true');
 });
 
-test("140 It should allow assert on input's 'Value' part of state using '#expectValuePartOfStateIs()' - with 'isNot' option set", async () => {
+test("160 It should allow assert on input's 'Value' part of state using '#expectValuePartOfStateIs()' - with 'isNot' option set", async () => {
   const sut = await getSut();
 
   // -- Successful case
