@@ -2,8 +2,19 @@ $nw_textInput_backgroundColor = darken($g_color_background, 8%);
 $nw_textInput_height          = $g_size--s;
 
 
+@require './action';
+
+
 .nw-textInput
+    background-color: $nw_textInput_backgroundColor;
+    border: 1px solid $g_color_secondary;
+    border-radius: 2px;
+    display: flex;
     position: relative;
+
+
+    &__actions
+        display: flex;
 
 
     &__busy
@@ -29,12 +40,11 @@ $nw_textInput_height          = $g_size--s;
             color: blend(alpha($g_color_primary_text, .15), $g_color_secondary);
 
         background-color: $nw_textInput_backgroundColor;
-        border: 1px solid $g_color_secondary;
-        border-radius: 2px;
+        border: none;
         color: $g_color_primary_text;
         line-height: 36px;
         max-width: 100%;
-        min-height: 40px;
+        min-height: $g_size--s;
         min-width: 100%;
         outline: none;
         padding: 1px 12px;
@@ -42,6 +52,10 @@ $nw_textInput_height          = $g_size--s;
 
         &:focus
             color: $g_color_primary_text--active;
+
+
+    &__inputContainer
+        flex: auto;
 
 
     &--busy &__busy

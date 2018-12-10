@@ -136,6 +136,29 @@
      ```"])
 
 ;;------------------------------------------------------------------------------
+;; Example 070
+;;------------------------------------------------------------------------------
+
+(defn- example070-cmp []
+  [example/widget
+   {:cid "070"
+    :title "widget with actions"}
+   [text-input/widget
+    {:actions
+     {:after [{:icon "plus"}, {:icon "trash"}]
+      :before [{:disabled true, :icon "search"}]}
+     :on-change identity
+     :value "Something"}]
+   "```clj
+     [text-input/widget
+      {:actions
+       {:after [{:icon \"plus\"}, {:icon \"trash\"}]
+        :before [{:disabled true, :icon \"search\"}]}
+       :on-change identity
+       :value \"Something\"}]]
+     ```"])
+
+;;------------------------------------------------------------------------------
 ;; Interactive example
 ;;------------------------------------------------------------------------------
 
@@ -193,5 +216,6 @@
     [example040-cmp]
     [example050-cmp]
     [example060-cmp]
+    [example070-cmp]
     "## Interactive example"
     [interactive-example-cmp]]])

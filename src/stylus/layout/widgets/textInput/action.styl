@@ -1,0 +1,51 @@
+$nw-textInput-action_border = 1px solid $g_color_secondary;
+
+
+.nw-textInput-action
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    flex: none;
+    justify-content: center;
+    min-width: $g_size--s - 2px;
+    position: relative;
+
+    &:hover
+        color: $g_color_primary_text--active;
+
+
+    &__content
+        //
+
+
+    &__icon
+        font-size: 19px; // TODO It depends on input size
+
+
+    &--disabled
+        color: $g_color_primary_text--disabled;
+        cursor: auto;
+
+        &:hover
+            color: @color;
+
+
+    &--placement_after
+        border-left: $nw-textInput-action_border;
+
+
+    &--placement_before
+        border-right: $nw-textInput-action_border;
+
+
+    &--size_large
+        //
+
+
+    &--size_normal
+        max-height: $g_size--s;
+        min-height: $g_size--s;
+
+
+    &--size_small
+        //
