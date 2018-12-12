@@ -8,6 +8,6 @@
 ;; Events
 ;;------------------------------------------------------------------------------
 
-(doseq [property [:busy :disabled :errors :invalid :multi-line :size :text-alignment :value]]
+(doseq [property [:actions :busy :disabled :errors :invalid :multi-line :size :text-alignment :value]]
   (let [event (common/panel-path->keyword :interactive-example "/" :set property)]
     (rf/reg-event-db event (rf-utils/make-setter-event-handler event))))

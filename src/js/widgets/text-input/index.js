@@ -4,6 +4,8 @@ import { t } from 'testcafe';
 
 import Input from '../../fragments/input';
 
+import Action from './action';
+
 const {
   Options,
   utils
@@ -58,6 +60,52 @@ class TextInput extends BaseClass {
     return this._inputElementSelector;
   }
 
+  /**
+   * Class of action fragment used in this fragment.
+   *
+   * @returns {class}
+   * @throws {TypeError} When action fragment class is not valid.
+   */
+  get ActionFragment() {
+    if (!this._ActionFragment) {
+      this._ActionFragment = this.getSomethingFragment('Action', TextInput);
+    }
+
+    return this._ActionFragment;
+  }
+
+  /**
+   * BEM base for action fragment.
+   * 
+   * NOTE: We use action fragment's class directly here because we not planing
+   *       derive fragments from text input, otherwise we can wrap each action
+   *       in container (e.g., nw-textInput__action) and use it for selections.
+   *
+   * @returns {BemBase}
+   */
+  get actionFragmentBemBase() {
+    if (!this._actionFragmentBemBase) {
+      this._actionFragmentBemBase = new BemBase(TextInput.ActionFragment);
+    }
+
+    return this._actionFragmentBemBase;
+  }
+
+  /**
+   * TestCafe selector for action fragment.
+   *
+   * @returns {Selector}
+   */
+  get actionFragmentSelector() {
+    if (!this._actionFragmentSelector) {
+      this._actionFragmentSelector = this
+        .selector
+        .find(`.${this.actionFragmentBemBase}`);
+    }
+
+    return this._actionFragmentSelector;
+  }
+
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
@@ -76,6 +124,7 @@ class TextInput extends BaseClass {
     }
     else {
       return writableParts.concat([
+        // 'actions' can be added later (if needed)
         'busy',
         'multiLine',
         'textAlignment'
@@ -233,6 +282,84 @@ class TextInput extends BaseClass {
   // ---------------------------------------------------------------------------
   // Assertions
   // ---------------------------------------------------------------------------
+  // TODO Update assertions docs
+
+  /**
+   * Asserts that group input fragment has item fragment. Optionally, asserts
+   * that specified item found in group input in position specified by `idx`.
+   * 
+   * @param {*} [actionLocator] See `locator` parameter of item fragment's class constructor
+   * @param {*} [actionOptions] See `options` parameter of item fragment's class constructor
+   * @param {Options|Object} [options]
+   * @param {Number} [options.idx] A position (integer gte 0) at which item must be found in group input to pass assertion
+   * @returns {Promise<Object>} Item fragment.
+   */
+  async expectHasAction(actionLocator, actionOptions, options) {
+    return this.expectHasSomething('Action', actionLocator, actionOptions, options);
+  }
+
+  /**
+   * Asserts that group input fragment has item fragments specified in
+   * `itemLocatorAndOptions`. Optionally, asserts that group input has only
+   * specified items, and, also optionally, asserts that items found in group
+   * input in same order as in `itemLocatorAndOptions`.
+   *
+   * @param {Array} actionLocatorAndOptions Each element is a tuple of item fragment's `locator` and `optiions`. See corresponding parameters of item fragment's class constructor
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.only=false] Group input must have only specified items to pass assertion
+   * @param {Boolean} [options.sameOrder=false] Items must be found in group input in same order as in `itemLocatorAndOptions E` to pass assertion. Work only in conjunction with 'only' option
+   * @returns {Promise<Array<Object>>} Item fragments.
+   */
+  async expectHasActions(actionLocatorAndOptions, options) {
+    return this.expectHasSomethings('Action', actionLocatorAndOptions, options);
+  }
+
+  /**
+   * Asserts that item fragment found in group input fragment at index
+   * specified by `idx`.
+   *
+   * @param {*} locator See `locator` parameter of item fragment's class constructor
+   * @param {Options|Object} options See `options` parameter of item fragment's class constructor
+   * @param {Number} idx Item must be found in group input at this position to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectActionIndexIs(locator, options, idx) {
+    await this
+      .getAction(locator, options)
+      .expectIndexInParentIs(this.selector, idx);
+  }
+
+  /**
+   * Asserts that group input fragment contains all and only all item fragments
+   * passed in `locatorAndOptionsList` list and they appears in same order as
+   * in `locatorAndOptionsList`.
+   *
+   * @param {Array} locatorAndOptionsList Each element is a tuple of item fragment's `locator` and `options`. See corresponding parameters of item fragment's class constructor
+   * @returns {Promise<void>}
+   */
+  async expectActionsAre(locatorAndOptionsList) {
+    await this.expectHasActions(locatorAndOptionsList, {
+      only: true,
+      sameOrder: true
+    });
+  }
+
+  /**
+   * Asserts that count of item fragments in group input fragment equal value
+   * specified in `count`.
+   *
+   * @param {Number|Array} count Group input fragment must have that number of item fragments to pass assertion. When you need more flexibility than just equality pass an `Array` with TestCafe assertion name (default to 'eql') as first element and expected value for assertion as second, for example, `['gte', 3]`
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.isNot=false] When truthy assertion would be negated
+   * @return {Promise<void>}
+   */
+  async expectActionsCountIs(count, options) {
+    await TextInput.expectSomethingsCountIs(
+      this.actionFragmentSelector,
+      count,
+      options
+    );
+  }
 
   /**
    * Asserts that fragment has value.
@@ -290,9 +417,40 @@ class TextInput extends BaseClass {
     await this.expectValuePartOfStateIs(value, { isNot: true });
   }
 
+  // ---------------------------------------------------------------------------
+  // Other Methods
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Returns text input action fragment.
+   *
+   * @param {*} [locator] See `locator` parameter of action fragment's class constructor
+   * @param {*} [options] See `options` parameter of action fragment's class constructor
+   * @returns {Action}
+   */
+  getAction(locator, options) {
+    return this.getSomething('Action', locator, options);
+  }
+
+  /**
+   * Clicks on action and returns it.
+   * 
+   * @param {*} [locator] See `locator` parameter of action fragment's class constructor
+   * @param {*} [options] See `options` parameter of action fragment's class constructor
+   * @returns {Promise<Action>}
+   */
+  async clickAction(locator, options) {
+    const action = this.getAction(locator, options);
+    await action.expectIsExist();
+    await action.click();
+    return action;
+  }
 }
 
 Object.defineProperties(TextInput, {
+  ActionFragment: {
+    value: Action
+  },
   bemBase: {
     value: 'nw-textInput'
   },

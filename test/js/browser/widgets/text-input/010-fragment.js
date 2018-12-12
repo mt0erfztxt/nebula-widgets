@@ -1,5 +1,6 @@
 import expect from 'unexpected';
 
+import Action from '../../../../../src/js/widgets/text-input/action';
 import CheckableGroupInput from '../../../../../src/js/widgets/checkable-group-input';
 import InteractiveExample from '../../../../../src/js/kitchen-sink/widgets/man-page/interactive-example';
 import TextInput from '../../../../../src/js/widgets/text-input';
@@ -373,4 +374,16 @@ test("160 It should allow assert on input's 'Value' part of state using '#expect
   }
 
   expect(isThrown, 'to be true');
+});
+
+test("170 It should allow obtain action using '#getAction()'", async () => {
+  const { knob, sut } = await getHelperFragments('actions');
+  await sut.expectCidPartOfStateIs('foobar');
+  await knob.clickItem({ value: 'yes' });
+
+  const action = sut.getAction({ idx: 0 });
+  expect(action, 'to be an', Action);
+  await action.expectIsExist();
+  await action.hover();
+  await action.expectCidPartOfStateIs('search');
 });
