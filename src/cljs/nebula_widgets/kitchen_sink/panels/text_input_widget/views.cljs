@@ -197,7 +197,7 @@
                  :on-click (r/partial update-ie-value-by-action "search")}]})]
         (into
           [ie/widget
-           [text-input/widget (assoc props :cid "foobar" :actions actions :on-change update-ie-value)]]
+           [text-input/widget (assoc props :actions actions :on-change update-ie-value)]]
           (for [[cid items]
                 [[:actions (ie-cgi-knob/gen-items "no" "yes" "yes+disabled")]
                  [:busy]

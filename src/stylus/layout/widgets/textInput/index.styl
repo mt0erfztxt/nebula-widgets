@@ -6,13 +6,14 @@ $nw_textInput_height          = $g_size--s;
 
 
 .nw-textInput
-    background-color: $nw_textInput_backgroundColor;
-    border: 1px solid $g_color_secondary;
-    border-radius: 2px;
-    display: flex;
-
-
     &__actions
+        display: flex;
+
+
+    &__body
+        background-color: $nw_textInput_backgroundColor;
+        border: 1px solid $g_color_secondary;
+        border-radius: 2px;
         display: flex;
 
 
@@ -67,7 +68,7 @@ $nw_textInput_height          = $g_size--s;
         opacity: 0.45;
 
 
-    &--invalid
+    &--invalid &__body
         border-color: $g_color_primary_text--error;
 
 

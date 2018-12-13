@@ -378,7 +378,6 @@ test("160 It should allow assert on input's 'Value' part of state using '#expect
 
 test("170 It should allow obtain action using '#getAction()'", async () => {
   const { knob, sut } = await getHelperFragments('actions');
-  await sut.expectCidPartOfStateIs('foobar');
   await knob.clickItem({ value: 'yes' });
 
   const action = sut.getAction({ idx: 0 });

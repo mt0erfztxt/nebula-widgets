@@ -13,6 +13,9 @@
 (def ^:private actions-elt-bem
   (str bem "__actions"))
 
+(def ^:private body-elt-bem
+  (str bem "__body"))
+
 (def ^:private busy-elt-bem
   (str bem "__busy"))
 
@@ -85,14 +88,15 @@
   * fix errors placement"
   [{:keys [disabled errors invalid multi-line] :as props}]
   [:div {:class (build-class props)}
-   [actions-elt-cmp props :before]
-   [:div {:class input-container-elt-bem}
-    [(if multi-line :textarea :input)
-     (cond-> (merge {:class input-elt-bem} (apply dissoc props :class custom-props-set))
-       disabled (assoc :disabled disabled))]
-    [:div {:class busy-elt-bem}
-     [:i.fa.fa-circle-o-notch.fa-spin]]]
-   [actions-elt-cmp props :after]
+   [:div {:class body-elt-bem}
+    [actions-elt-cmp props :before]
+    [:div {:class input-container-elt-bem}
+     [(if multi-line :textarea :input)
+      (cond-> (merge {:class input-elt-bem} (apply dissoc props :class custom-props-set))
+        disabled (assoc :disabled disabled))]
+     [:div {:class busy-elt-bem}
+      [:i.fa.fa-circle-o-notch.fa-spin]]]
+    [actions-elt-cmp props :after]]
    (when (and invalid (seq errors))
      (into
        [:ul {:class errors-elt-bem}]
