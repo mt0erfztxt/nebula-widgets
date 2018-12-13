@@ -1,8 +1,6 @@
-$nw-textInput-action_border = 1px solid $g_color_secondary;
-
-
 .nw-textInput-action
     align-items: center;
+    border: 0 solid $g_color_secondary;
     cursor: pointer;
     display: flex;
     flex: none;
@@ -30,12 +28,16 @@ $nw-textInput-action_border = 1px solid $g_color_secondary;
             color: @color;
 
 
+    &--invalid
+        border-color: $g_color_primary_text--error;
+
+
     &--placement_after
-        border-left: $nw-textInput-action_border;
+        border-left-width: 1px;
 
 
     &--placement_before
-        border-right: $nw-textInput-action_border;
+        border-right-width: 1px;
 
 
     &--size_large

@@ -4,7 +4,7 @@
     [nebula-widgets.widgets.text-input.common :as common]))
 
 (def ^:private custom-props-set
-  #{:cid :cns :content :icon :placement})
+  #{:cid :cns :content :icon :invalid :placement})
 
 (def ^:private bem
   "nw-textInput-action")
@@ -15,12 +15,13 @@
 (def ^:private icon-elt-bem
   (str bem "__icon"))
 
-(defn- build-class [{:keys [cid cns disabled icon placement size]}]
+(defn- build-class [{:keys [cid cns disabled icon invalid placement size]}]
   (bem-utils/build-class
     bem
     [["cns" cns]
      ["cid" (or icon cid)]
      ["disabled" disabled]
+     ["invalid" invalid]
      ["placement" placement]
      ["size" (common/get-size-prop size)]]))
 
