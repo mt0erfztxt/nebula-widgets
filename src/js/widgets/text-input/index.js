@@ -282,45 +282,44 @@ class TextInput extends BaseClass {
   // ---------------------------------------------------------------------------
   // Assertions
   // ---------------------------------------------------------------------------
-  // TODO Update assertions docs
 
   /**
-   * Asserts that group input fragment has item fragment. Optionally, asserts
-   * that specified item found in group input in position specified by `idx`.
+   * Asserts that text input fragment has action fragment. Optionally, asserts
+   * that specified action found in text input in position specified by `idx`.
    * 
-   * @param {*} [actionLocator] See `locator` parameter of item fragment's class constructor
-   * @param {*} [actionOptions] See `options` parameter of item fragment's class constructor
+   * @param {*} [actionLocator] See `locator` parameter of action fragment's class constructor
+   * @param {*} [actionOptions] See `options` parameter of action fragment's class constructor
    * @param {Options|Object} [options]
-   * @param {Number} [options.idx] A position (integer gte 0) at which item must be found in group input to pass assertion
-   * @returns {Promise<Object>} Item fragment.
+   * @param {Number} [options.idx] A position (integer gte 0) at which action must be found in text input to pass assertion
+   * @returns {Promise<Action>} Action fragment.
    */
   async expectHasAction(actionLocator, actionOptions, options) {
     return this.expectHasSomething('Action', actionLocator, actionOptions, options);
   }
 
   /**
-   * Asserts that group input fragment has item fragments specified in
-   * `itemLocatorAndOptions`. Optionally, asserts that group input has only
-   * specified items, and, also optionally, asserts that items found in group
-   * input in same order as in `itemLocatorAndOptions`.
+   * Asserts that text input fragment has action fragments specified in
+   * `actionLocatorAndOptions`. Optionally, asserts that text input has only
+   * specified actions, and, also optionally, asserts that actions found in text
+   * input in same order as in `actionLocatorAndOptions`.
    *
-   * @param {Array} actionLocatorAndOptions Each element is a tuple of item fragment's `locator` and `optiions`. See corresponding parameters of item fragment's class constructor
+   * @param {Array} actionLocatorAndOptions Each element is a tuple of action fragment's `locator` and `optiions`. See corresponding parameters of action fragment's class constructor
    * @param {Options|Object} [options] Options
-   * @param {Boolean} [options.only=false] Group input must have only specified items to pass assertion
-   * @param {Boolean} [options.sameOrder=false] Items must be found in group input in same order as in `itemLocatorAndOptions E` to pass assertion. Work only in conjunction with 'only' option
-   * @returns {Promise<Array<Object>>} Item fragments.
+   * @param {Boolean} [options.only=false] Text input must have only specified actions to pass assertion
+   * @param {Boolean} [options.sameOrder=false] Actions must be found in text input in same order as in `actionLocatorAndOptions` to pass assertion. Work only in conjunction with 'only' option
+   * @returns {Promise<Array<Action>>} Action fragments.
    */
   async expectHasActions(actionLocatorAndOptions, options) {
     return this.expectHasSomethings('Action', actionLocatorAndOptions, options);
   }
 
   /**
-   * Asserts that item fragment found in group input fragment at index
+   * Asserts that action fragment found in text input fragment at index
    * specified by `idx`.
    *
-   * @param {*} locator See `locator` parameter of item fragment's class constructor
-   * @param {Options|Object} options See `options` parameter of item fragment's class constructor
-   * @param {Number} idx Item must be found in group input at this position to pass assertion
+   * @param {*} locator See `locator` parameter of action fragment's class constructor
+   * @param {*} options See `options` parameter of action fragment's class constructor
+   * @param {Number} idx Action must be found in text input at this position to pass assertion
    * @returns {Promise<void>}
    */
   async expectActionIndexIs(locator, options, idx) {
@@ -330,11 +329,11 @@ class TextInput extends BaseClass {
   }
 
   /**
-   * Asserts that group input fragment contains all and only all item fragments
+   * Asserts that text input fragment contains all and only all action fragments
    * passed in `locatorAndOptionsList` list and they appears in same order as
    * in `locatorAndOptionsList`.
    *
-   * @param {Array} locatorAndOptionsList Each element is a tuple of item fragment's `locator` and `options`. See corresponding parameters of item fragment's class constructor
+   * @param {Array} locatorAndOptionsList Each element is a tuple of action fragment's `locator` and `options`. See corresponding parameters of action fragment's class constructor
    * @returns {Promise<void>}
    */
   async expectActionsAre(locatorAndOptionsList) {
@@ -345,10 +344,10 @@ class TextInput extends BaseClass {
   }
 
   /**
-   * Asserts that count of item fragments in group input fragment equal value
+   * Asserts that count of action fragments in text input fragment equal value
    * specified in `count`.
    *
-   * @param {Number|Array} count Group input fragment must have that number of item fragments to pass assertion. When you need more flexibility than just equality pass an `Array` with TestCafe assertion name (default to 'eql') as first element and expected value for assertion as second, for example, `['gte', 3]`
+   * @param {Number|Array} count Text input fragment must have that number of action fragments to pass assertion. When you need more flexibility than just equality pass an `Array` with TestCafe assertion name (default to 'eql') as first element and expected value for assertion as second, for example, `['gte', 3]`
    * @param {Options|Object} [options] Options
    * @param {Boolean} [options.isNot=false] When truthy assertion would be negated
    * @return {Promise<void>}
@@ -455,7 +454,7 @@ Object.defineProperties(TextInput, {
     value: 'nw-textInput'
   },
   displayName: {
-    value: 'nebula-widgets.widgets.text-input.item'
+    value: 'nebula-widgets.widgets.text-input'
   }
 });
 

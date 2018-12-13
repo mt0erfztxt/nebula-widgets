@@ -386,3 +386,32 @@ test("170 It should allow obtain action using '#getAction()'", async () => {
   await action.hover();
   await action.expectCidPartOfStateIs('search');
 });
+
+test("180 It should allow assert on action existence using '#expectHasAction()'", async () => {
+  const { knob, sut } = await getHelperFragments('actions');
+  await knob.clickItem({ value: 'yes' });
+
+  // -- Successful case
+
+  await sut.hover();
+  await sut.expectHasAction({ cid: 'plus' });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectHasAction({ cid: 'minus' });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: .+\.action.+DOM element.+: expected 0 to deeply equal 1/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
