@@ -1,4 +1,5 @@
 $nw_textInput_backgroundColor = darken($g_color_background, 8%);
+$nw_textInput_border          = 1px solid $g_color_secondary;
 $nw_textInput_height          = $g_size--s;
 
 
@@ -9,10 +10,16 @@ $nw_textInput_height          = $g_size--s;
     &__actions
         display: flex;
 
+        &--placement_after
+            border-left: $nw_textInput_border;
+
+        &--placement_before
+            border-right: $nw_textInput_border;
+
 
     &__body
         background-color: $nw_textInput_backgroundColor;
-        border: 1px solid $g_color_secondary;
+        border: $nw_textInput_border;
         border-radius: 2px;
         display: flex;
 
@@ -48,6 +55,7 @@ $nw_textInput_height          = $g_size--s;
         min-width: 100%;
         outline: none;
         padding: 1px 12px;
+        resize: vertical;
         width: 100%;
 
         &:focus
@@ -68,8 +76,13 @@ $nw_textInput_height          = $g_size--s;
         opacity: 0.45;
 
 
+    &--invalid &__actions
     &--invalid &__body
         border-color: $g_color_primary_text--error;
+
+
+    &--multiLine &__actions
+        flex-flow: column;
 
 
     &--multiLine &__input

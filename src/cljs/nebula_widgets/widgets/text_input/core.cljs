@@ -46,15 +46,15 @@
      ["size" (common/get-size-prop size)]
      ["textAlignment" (-> text-alignment keyword text-alignment-prop-set (or :left))]]))
 
-(defn- actions-elt-cmp [{:keys [actions disabled invalid]} placement]
+(defn- actions-elt-cmp [{:keys [actions disabled invalid multi-line]} placement]
   (let [placement (common/get-placement-prop placement)
         actions (get actions placement)]
     (when actions
-      [:div {:class actions-elt-bem}
+      [:div {:class (bem-utils/build-class actions-elt-bem [["placement" placement]])}
        (for [{:keys [cid icon] :as action-props} actions]
          ^{:key (or icon cid)}
          [action/widget
-          (cond-> (assoc action-props :placement placement)
+          (cond-> (assoc action-props :direction (if multi-line :vertical :horizontal))
             (true? disabled) (assoc :disabled disabled)
             (true? invalid) (assoc :invalid invalid))])])))
 
@@ -82,10 +82,7 @@
     - `:size` - one of :large, :normal (default), :small or their string/symbol equivalents. Widget size.
     - `:text-alignment` - one of :center, :left (default), :right or their string/symbol equivalents. Allows to set text
       alignment.
-    - any other props that React supports on `INPUT` (or `TEXTAREA` when `:multi-line`) tag.
-
-  TODO:
-  * fix errors placement"
+    - any other props that React supports on `INPUT` (or `TEXTAREA` when `:multi-line`) tag"
   [{:keys [disabled errors invalid multi-line] :as props}]
   [:div {:class (build-class props)}
    [:div {:class body-elt-bem}

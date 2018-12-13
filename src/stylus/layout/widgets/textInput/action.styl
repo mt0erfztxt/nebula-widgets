@@ -1,6 +1,7 @@
 .nw-textInput-action
     align-items: center;
-    border: 0 solid $g_color_secondary;
+    border: solid $g_color_secondary;
+    border-width: 0 1px 0 0;
     cursor: pointer;
     display: flex;
     flex: none;
@@ -11,6 +12,9 @@
     &:hover
         color: $g_color_primary_text--active;
 
+    &:last-child
+        border-width: 0;
+
 
     &__content
         //
@@ -18,6 +22,14 @@
 
     &__icon
         font-size: 19px; // TODO It depends on input size
+
+
+    &--direction_horizontal
+        //
+
+
+    &--direction_vertical
+        border-width: 0 0 1px 0;
 
 
     &--disabled
@@ -30,14 +42,6 @@
 
     &--invalid
         border-color: $g_color_primary_text--error;
-
-
-    &--placement_after
-        border-left-width: 1px;
-
-
-    &--placement_before
-        border-right-width: 1px;
 
 
     &--size_large
