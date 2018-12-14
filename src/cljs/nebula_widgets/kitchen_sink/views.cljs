@@ -10,6 +10,7 @@
     [nebula-widgets.kitchen-sink.panels.checkable-input-widget.views :as checkable-input-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.form-field-widget.views :as form-field-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.group-input-widget.views :as group-input-widget-panel-views]
+    [nebula-widgets.kitchen-sink.panels.text-group-input-widget.views :as text-group-input-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.views :as text-input-widget-panel-views]
     [oops.core :as oops]
     [re-frame.core :as rf]
@@ -29,6 +30,7 @@
         :widgets/checkable-input [checkable-input-widget-panel-views/widget]
         :widgets/form-field [form-field-widget-panel-views/widget]
         :widgets/group-input [group-input-widget-panel-views/widget]
+        :widgets/text-group-input [text-group-input-widget-panel-views/widget]
         :widgets/text-input [text-input-widget-panel-views/widget]))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

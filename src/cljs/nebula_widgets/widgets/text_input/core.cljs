@@ -82,7 +82,10 @@
     - `:size` - one of :large, :normal (default), :small or their string/symbol equivalents. Widget size.
     - `:text-alignment` - one of :center, :left (default), :right or their string/symbol equivalents. Allows to set text
       alignment.
-    - any other props that React supports on `INPUT` (or `TEXTAREA` when `:multi-line`) tag"
+    - any other props that React supports on `INPUT` (or `TEXTAREA` when `:multi-line`) tag
+
+  TODO:
+  * replace `:multi-line` prop by widget prop (:text, :textarea)"
   [{:keys [disabled errors invalid multi-line] :as props}]
   [:div {:class (build-class props)}
    [:div {:class body-elt-bem}
