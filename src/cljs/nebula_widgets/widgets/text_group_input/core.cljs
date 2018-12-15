@@ -60,11 +60,13 @@
 (defn widget
   "Renders group of text inputs.
 
-  FIX:
-  * `:disabled` disables only actions, but not input
+  * `:items`:
+    - `:insert-allowed` - must be boolean false for insertion of new item to be disabled
+    - `:remove-allowed` - must be boolean false for removal of item to be disabled
 
   TODO:
-  * handle Ctrl+Del/Ins in text input to remove/insert items from keyboard"
+  * docs
+  * handle Ctrl+Del/Ins in text input to remove/insert items using keyboard"
   [{:keys [disabled item-props items on-change] :as props}]
   (let [value (->> items (map :value) vec)]
     [group-input/widget
@@ -77,7 +79,7 @@
              (fn [idx item]
                (let [disabled? (if disabled disabled (:disabled item))]
                  (-> item-props
-                     (merge item)
+                     (merge item {:disabled disabled?})
                      (add-actions idx value (assoc props :disabled disabled?))
                      (assoc :on-change (r/partial handle-item-on-change idx on-change value))
                      (dissoc :insert-allowed :remove-allowed))))

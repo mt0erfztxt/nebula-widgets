@@ -22,8 +22,9 @@
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
        (into {})))
 
-(defn- handle-on-change [payload _]
-  ((:value ie-setters) (:value payload)))
+(let [{value-setter :value} ie-setters]
+  (defn- handle-on-change [{:keys [value]} _]
+    (value-setter value)))
 
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]

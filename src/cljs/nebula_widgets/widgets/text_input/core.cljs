@@ -85,7 +85,7 @@
     - any other props that React supports on `INPUT` (or `TEXTAREA` when `:multi-line`) tag
 
   TODO:
-  * replace `:multi-line` prop by widget prop (:text, :textarea)"
+  * change styling of disabled widget because now it visually indistinguishable of enabled one"
   [{:keys [disabled errors invalid multi-line] :as props}]
   [:div {:class (build-class props)}
    [:div {:class body-elt-bem}

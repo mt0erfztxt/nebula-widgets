@@ -175,10 +175,10 @@
        (into {})))
 
 (let [{value-setter :value} ie-setters]
-  (defn- update-ie-value [event]
+  (defn- handle-on-change [event]
     (value-setter (utils/event->value event)))
 
-  (defn- update-ie-value-by-action [v _]
+  (defn- handle-action-on-click [v _]
     (value-setter v)))
 
 (defn- interactive-example-cmp []
@@ -190,21 +190,19 @@
               {:after
                (for [icon ["plus" "trash"]]
                  {:icon icon
-                  :on-click (r/partial update-ie-value-by-action icon)})
+                  :on-click (r/partial handle-action-on-click icon)})
                :before
                [{:disabled (= "yes+disabled" actions)
                  :icon "search"
-                 :on-click (r/partial update-ie-value-by-action "search")}]})]
+                 :on-click (r/partial handle-action-on-click "search")}]})]
         (into
           [ie/widget
-           [text-input/widget (assoc props :actions actions :on-change update-ie-value)]]
+           [text-input/widget (assoc props :actions actions :on-change handle-on-change)]]
           (for [[cid items]
                 [[:actions (ie-cgi-knob/gen-items "no" "yes" "yes+disabled")]
                  [:busy]
                  [:disabled]
-                 [:errors
-                  [{:label "no"}
-                   {:label "yes", :value #{"error 1" "error 2"}}]]
+                 [:errors (ie-cgi-knob/gen-items "no" ["yes" #{"error 1" "error 2"}])]
                  [:invalid]
                  [:multi-line]
                  [:size (ie-cgi-knob/gen-items "small" "normal" "large")]
