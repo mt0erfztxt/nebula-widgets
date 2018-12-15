@@ -9,7 +9,7 @@
 ;;------------------------------------------------------------------------------
 
 (doseq [property
-        [:columns :disabled :equidistant :errors :inline :invalid :label-shrinked :no-row-gap :selection-mode :size
+        [:columns :disabled :equidistant :errors :inline :invalid :label-shrinked :multi-checkable :no-row-gap :size
          :soft-columns :stacked-on-mobile :value :widget]]
   (let [event (common/panel-path->keyword :interactive-example "/" :set property)]
     (rf/reg-event-db event (rf-utils/make-setter-event-handler event))))

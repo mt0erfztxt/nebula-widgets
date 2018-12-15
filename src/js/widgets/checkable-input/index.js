@@ -21,8 +21,7 @@ const {
 const BaseClass = Input.makeFragmentClass(Input, {
   stateParts: [
     'checked',
-    'labelShrinked',
-    ['selectionMode', { isBoolean: false }]
+    'labelShrinked'
   ]
 });
 
@@ -141,7 +140,6 @@ class CheckableInput extends BaseClass {
     else {
       return _.concat(writableParts, [
         'labelShrinked',
-        'selectionMode',
         'value' // now it's read-only
       ]);
     }
@@ -218,27 +216,6 @@ class CheckableInput extends BaseClass {
   /**
    * @name CheckableInput#expectIsNotLabelShrinked
    * @method
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
-  // State :: SelectionMode (read-only, not boolean)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name CheckableInput#getSelectionModePartOfState
-   * @method
-   * @param {Options|Object} options
-   * @returns {Promise<*>}
-   */
-
-  /**
-   * @name CheckableInput#expectSelectionModePartOfStateIs
-   * @method
-   * @param {*} value
-   * @param {Options|Object} options
    * @returns {Promise<void>}
    */
 

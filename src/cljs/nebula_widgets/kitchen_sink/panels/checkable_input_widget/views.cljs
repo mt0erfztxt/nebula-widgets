@@ -16,14 +16,15 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:checked :disabled :invalid :label-shrinked :selection-mode :size :widget]
+  (->> [:checked :disabled :invalid :label-shrinked :size :widget]
        (map
          (fn [prop]
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
        (into {})))
 
-(defn- on-change-handler [event]
-  ((:checked ie-setters) (utils/event->checked event)))
+(let [{checked-setter :checked} ie-setters]
+  (defn- handle-on-change [event]
+    (checked-setter (utils/event->checked event))))
 
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
@@ -31,21 +32,20 @@
       (let [{:keys [label-shrinked] :as props} @*props]
         (into
           [ie/widget
-           [:div {:style {:width (if label-shrinked 100 "100%")}}
+           [:div {:style {:width (str "100" (if label-shrinked "px" "%"))}}
             [checkable-input/widget
              (merge
                props
                {:checked (get props :checked)
                 :label {:shrinked label-shrinked, :text "Checkable input label"}
-                :on-change on-change-handler})]]]
+                :on-change handle-on-change})]]]
           (for [[cid items]
                 [[:checked]
                  [:disabled]
                  [:invalid]
                  [:label-shrinked]
-                 [:selection-mode (for [s ["single" "multi"]] {:label s, :value s})]
-                 [:size (for [s ["small" "normal" "large"]] {:label s, :value s})]
-                 [:widget (for [s ["button" "icon"]] {:label s, :value s})]]]
+                 [:size (ie-cgi-knob/gen-items "small" "normal" "large")]
+                 [:widget (ie-cgi-knob/gen-items "button" "checkbox" "radio")]]]
             [ie-cgi-knob/widget
              {:cid cid}
              (cond->

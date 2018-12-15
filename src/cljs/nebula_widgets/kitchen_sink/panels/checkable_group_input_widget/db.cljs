@@ -10,10 +10,10 @@
      :inline false
      :invalid false
      :label-shrinked false
+     :multi-checkable true
      :no-row-gap false
-     :selection-mode "multi"
      :size "normal"
      :soft-columns false
      :stacked-on-mobile false
      :value #{:option2}
-     :widget "icon"}}})
+     :widget "checkbox"}}})

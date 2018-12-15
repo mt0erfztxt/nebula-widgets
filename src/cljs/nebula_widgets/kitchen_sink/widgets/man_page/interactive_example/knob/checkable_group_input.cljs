@@ -7,8 +7,9 @@
   {:columns 5
    :inline true
    :items (for [v [false true]] {:label (str v), :value v})
+   :multi-checkable false
    :no-row-gap true
-   :selection-mode "single"})
+   :widget "radio"})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -23,11 +24,12 @@
     - `:columns` - 5
     - `:inline` - true
     - `:items` - two items to create boolean switch (false and true)
+    - `:multi-checkable` - false
     - `:no-row-gap` - true
-    - `:selection-mode` - single"
+    - `:widget` - radio"
   [knob-props input-props]
   [knob/widget knob-props checkable-group-input/widget (merge default-cgi-props input-props)])
 
-(defn- gen-items [& labels]
+(defn gen-items [& labels]
   (for [item labels :let [[label value] (if (string? item) [item] item)]]
     {:label label, :value (or value label)}))

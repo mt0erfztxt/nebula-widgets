@@ -47,11 +47,13 @@
             display: none;
 
 
-    &--widget_icon
+    &--widget_checkbox
+    &--widget_radio
         margin-bottom: 0;
 
 
-    &--widget_icon &__label
+    &--widget_checkbox &__label
+    &--widget_radio &__label
         display: inline-block;
         line-height: 20px;
         padding-left: 26px;
@@ -68,14 +70,14 @@
             top: 50%;
             transform: translateY(-50%);
 
-    &--widget_icon&--selectionMode_multi &__label:before
+    &--widget_checkbox &__label:before
         sprite($icon_checkbox);
 
-    &--widget_icon&--selectionMode_multi&--checked &__label:before
+    &--widget_checkbox&--checked &__label:before
         sprite($icon_checkbox_checked);
 
-    &--widget_icon&--selectionMode_single &__label:before
+    &--widget_radio &__label:before
         sprite($icon_radio);
 
-    &--widget_icon&--selectionMode_single&--checked &__label:before
+    &--widget_radio&--checked &__label:before
         sprite($icon_radio_checked);

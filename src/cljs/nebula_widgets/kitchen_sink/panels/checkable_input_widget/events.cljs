@@ -8,6 +8,6 @@
 ;; Events
 ;;------------------------------------------------------------------------------
 
-(doseq [property [:checked :disabled :invalid :label-shrinked :selection-mode :size :widget]]
+(doseq [property [:checked :disabled :invalid :label-shrinked :size :widget]]
   (let [event (common/panel-path->keyword :interactive-example "/" :set property)]
     (rf/reg-event-db event (rf-utils/make-setter-event-handler event))))

@@ -7,6 +7,5 @@
      :disabled false
      :invalid false
      :label-shrinked false
-     :selection-mode "multi"
      :size "normal"
-     :widget "icon"}}})
+     :widget "checkbox"}}})

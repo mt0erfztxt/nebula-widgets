@@ -94,37 +94,7 @@ test("020 It should propagate 'label-shrinked' prop to items", async () => {
   }
 });
 
-test("030 It should propagate 'selectionMode' prop to items", async () => {
-  const { knob, sut } = await getHelperFragments('selection-mode');
-
-  // -- Check when 'multi'
-
-  await knob.clickItem({ value: 'multi' });
-  await sut.hover();
-  await sut.expectItemsCountIs(9);
-
-  for (let i = 0; i < 9; i++) {
-    const item = sut.getItem({ idx: i });
-    await item.expectIsExist();
-    await item.hover();
-    await item.expectSelectionModePartOfStateIs('multi');
-  }
-
-  // -- Check when not 'multi'
-
-  await knob.clickItem({ value: 'single' });
-  await sut.hover();
-  await sut.expectItemsCountIs(9);
-
-  for (let i = 0; i < 9; i++) {
-    const item = sut.getItem({ idx: i });
-    await item.expectIsExist();
-    await item.hover();
-    await item.expectSelectionModePartOfStateIs('multi', { isNot: true });
-  }
-});
-
-test("040 It should propagate 'widget' prop to items", async () => {
+test("030 It should propagate 'widget' prop to items", async () => {
   const { knob, sut } = await getHelperFragments('widget');
 
   // -- Check when 'button'
@@ -142,7 +112,7 @@ test("040 It should propagate 'widget' prop to items", async () => {
 
   // -- Check when not 'button'
 
-  await knob.clickItem({ value: 'icon' });
+  await knob.clickItem({ value: 'checkbox' });
   await sut.hover();
   await sut.expectItemsCountIs(9);
 
