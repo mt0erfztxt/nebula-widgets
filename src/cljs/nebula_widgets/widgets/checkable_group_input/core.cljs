@@ -50,20 +50,21 @@
      (-> props
          (assoc
            :bem "nw-checkableGroupInput"
+           :group-custom-props [["labelShrinked" label-shrinked] ["multiCheckable" multi-checkable]]
            :item-widget checkable-input/widget
            :items
-           (for [{:keys [path] v :value :as item} items]
-             (update-item-label-prop
-               label-shrinked
-               (merge
-                 {:widget item-widget}
-                 item-props
-                 item
-                 {:checked
-                  (cond
-                    use-path (->> path (get-in value) boolean)
-                    multi-checkable (contains? value v)
-                    :else (= v value))
-                  :disabled (boolean (if disabled disabled (:disabled item)))
-                  :on-change (r/partial on-change (if use-path path v))}))))
+           (for [{:keys [path] v :value :as item} items
+                 :let [checked
+                       (cond
+                         use-path (->> path (get-in value) boolean)
+                         multi-checkable (contains? value v)
+                         :else (= v value))]]
+             (merge
+               {:widget item-widget}
+               (update-item-label-prop label-shrinked item-props)
+               item
+               {:checked checked
+                :disabled (boolean (if disabled disabled (:disabled item)))
+                :group-item-custom-props [["checked" checked]]
+                :on-change (r/partial on-change (if use-path path v))})))
          (dissoc :item-props))]))
