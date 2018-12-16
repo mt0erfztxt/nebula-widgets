@@ -41,18 +41,6 @@
        :item {:action :change, :idx idx, :value v}
        :value (assoc value idx v)})))
 
-;; Text group input's `:on-change` called with following map:
-;; * `:item` - item that cause on-change to trigger, map:
-;;   - `:action` - one of :change, insert or :remove
-;;   - `:idx` - item's index
-;;   - `:value` - item's value
-;; * `:value` - new composite (from all items) value
-;;
-;; Example:
-;; [{:item {:action :remove, :idx 0, :value "a"}
-;;   :value ["b" "c"]}
-;;  "browser-event"]
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -60,12 +48,24 @@
 (defn widget
   "Renders group of text inputs.
 
-  * `:items`:
-    - `:insert-allowed` - must be boolean false for insertion of new item to be disabled
-    - `:remove-allowed` - must be boolean false for removal of item to be disabled
+  Arguments:
+  * `props` - map. Same as in [group-input](/widgets/group-input) widget, plus:
+  * `:items` - seq of maps. Same as in [group-input](/widgets/group-input) widget, plus:
+    - `:actions` - overridden so text input have two actions - insert and remove
+    - `:insert-allowed` - logical true/false, true by default. Insert action is disabled when boolean false
+    - `:remove-allowed` - logical true/false, true by default. Remove action is disabled when boolean false
+  * `:on-change` - function, no default. When value of any text input in group is changed or new item inserted/removed
+    it would be called with two arguments:
+    1. a map:
+      * `:item` - describes item that cause `:on-change` to trigger, map:
+        - `:action` - one of :change, :insert or :remove
+        - `:idx` - item index
+        - `:value` - item value
+      * `:value` - new composite (composed from all items) value
+    2. a browser event object - in case when `:action` in first argument is :change it's an event object from field
+       on-change, otherwise it's an event object from on-click of insert or remove action
 
   TODO:
-  * docs
   * handle Ctrl+Del/Ins in text input to remove/insert items using keyboard"
   [{:keys [disabled item-props items on-change] :as props}]
   (let [value (->> items (map :value) vec)]

@@ -95,10 +95,7 @@
     - `:widget` - any, no default. Specifies how widget looks. Default value must be determined by concrete group input.
 
   Notes:
-  * `:soft-columns` prop can be convenient in case of small containers, e.g. with just 2-3 columns
-
-  TODO:
-  * add tests for `:no-row-gap` prop"
+  * `:soft-columns` prop can be convenient in case of small containers, e.g. with just 2-3 columns"
   [{:keys [bem errors invalid item-widget items] :as props}]
   [:div {:class (build-class props)}
    (into
