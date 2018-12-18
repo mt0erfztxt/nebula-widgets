@@ -2,6 +2,7 @@
   (:require
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.subs]
     [nebula-widgets.kitchen-sink.panels.card-widget.subs]
+    [nebula-widgets.kitchen-sink.panels.checkable-group-input-form-field-widget.subs]
     [nebula-widgets.kitchen-sink.panels.checkable-group-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.checkable-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.form-field-widget.subs]
