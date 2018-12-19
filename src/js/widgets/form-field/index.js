@@ -3,58 +3,59 @@ import testFragment from 'nebula-test-fragment';
 import { t } from 'testcafe';
 
 const {
-  Fragment,
-  Options,
-  selector
+  Fragment1,
+  Options
 } = testFragment;
 
 /**
  * Base class for fragment.
  * 
  * @class
- * @extends {Fragment}
+ * @extends {Fragment1}
  */
-const BaseClass = Fragment.makeFragmentClass(Fragment, {
+const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
   stateParts: [
-    ['inline'],
-    ['required']
+    'disabled',
+    'inline',
+    'required'
   ]
 });
 
 /**
- * Display name of fragment.
- *
- * @type {String}
- */
-const fragmentDisplayName = 'nebula-widgets.widgets.form-field';
-
-/**
  * Fragment that represents form field.
  * 
- * @extends {Fragment}
+ * @extends {Fragment1}
  */
 class FormField extends BaseClass {
 
   /**
-   * Creates fragment.
-   * 
-   * @param {FormField|Object} [spec] When it's already instance of `FormField` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
-   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
+   * BEM base for fragment's 'input' element.
+   *
+   * @returns {BemBase}
    */
-  constructor(spec, opts) {
-    const {
-      initializedOpts,
-      initializedSpec,
-      isInstance
-    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
-
-    if (isInstance === true) {
-      return spec;
+  get inputElementBemBase() {
+    if (!this._inputElementBemBase) {
+      this._inputElementBemBase = this
+        .cloneBemBase()
+        .setElt('input');
     }
 
-    super(initializedSpec, initializedOpts);
+    return this._inputElementBemBase;
+  }
 
-    return this;
+  /**
+   * TestCafe selector for fragment's 'input' element.
+   *
+   * @returns {Selector}
+   */
+  get inputElementSelector() {
+    if (!this._inputElementSelector) {
+      this._inputElementSelector = this
+        .selector
+        .find(`.${this.inputElementBemBase}`);
+    }
+
+    return this._inputElementSelector;
   }
 
   /**
@@ -64,7 +65,9 @@ class FormField extends BaseClass {
    */
   get labelElementBemBase() {
     if (!this._labelElementBemBase) {
-      this._labelElementBemBase = this.cloneBemBase().setElt('label');
+      this._labelElementBemBase = this
+        .cloneBemBase()
+        .setElt('label');
     }
 
     return this._labelElementBemBase;
@@ -77,30 +80,104 @@ class FormField extends BaseClass {
    */
   get labelElementSelector() {
     if (!this._labelElementSelector) {
-      this._labelElementSelector = this.selector.find(`.${this.labelElementBemBase}`);
+      this._labelElementSelector = this
+        .selector
+        .find(`.${this.labelElementBemBase}`);
     }
 
     return this._labelElementSelector;
+  }
+
+  /**
+   * Class of input fragment used in this fragment.
+   *
+   * @returns {class}
+   * @throws {TypeError} When input fragment class is not valid.
+   */
+  get InputFragment() {
+    if (!this._InputFragment) {
+      this._InputFragment = this.getSomethingFragment('Input', FormField);
+    }
+
+    return this._InputFragment;
+  }
+
+  /**
+   * Input fragment used in this fragment.
+   *
+   * @returns {Fragment1}
+   */
+  get input() {
+    if (!this._input) {
+      this._input = new this.InputFragment(null, { parent: this.selector });
+    }
+
+    return this._input;
   }
 
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
 
-  getStateParts(onlyWritable = false) {
-    const parentParts = super.getStateParts(onlyWritable);
-    const parts = _.concat(parentParts, []);
+  getStateParts(options) {
+    const { onlyWritable } = new Options(options, {
+      defaults: {
+        onlyWritable: false
+      }
+    });
+
+    const writableParts = super
+      .getStateParts({ onlyWritable })
+      .concat(['input']);
 
     if (onlyWritable) {
-      return parts;
+      return writableParts;
     }
     else {
-      return _.concat(parts, [
+      return writableParts.concat([
+        'disabled',
         'inline',
         'required'
       ]);
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // State :: Disabled (read-only, antonym: Enabled)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name FormField#getDisabledPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name FormField#expectIsDisabled
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name FormField#expectIsNotDisabled
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name FormField#expectIsEnabled
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name FormField#expectIsNotEnabled
+   * @method
+   * @returns {Promise<void>}
+   */
 
   // ---------------------------------------------------------------------------
   // State :: Inline (read-only)
@@ -126,6 +203,60 @@ class FormField extends BaseClass {
    * @method
    * @returns {Promise<void>}
    */
+
+  // ---------------------------------------------------------------------------
+  // State :: Input
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Obtains 'Input' part of fragment's state and returns it.
+   *
+   * @param {Options|Object} [options] Options
+   * @returns {Promise<Object>}
+   */
+  async getInputPartOfState(options) {
+    if (this.input) {
+      return this.input.getState(options);
+    }
+    else {
+      return void 0;
+    }
+  }
+
+  /**
+   * Sets 'Input' part of state to new `value`.
+   *
+   * @param {Object} value New value for 'Input' part of fragment's state
+   * @param {Options|Object} [options] Options
+   * @returns {Promise<Object>} Fragment's new 'Input' part of state.
+   */
+  async setInputPartOfState(value, options) {
+    if (this.input) {
+      return this.input.setState(value, options);
+    }
+    else {
+      return this.getState(options);
+    }
+  }
+
+  /**
+   * Asserts that 'Input' part of fragment's state equal specified 'value'.
+   *
+   * @param {Object} value 'Input' part of fragment's state must be equal that value to pass assertion
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.isNot=false] When truthy when truthy 'Input' part of fragment's state must be not equal that value to pass assertion
+   * @return {Promise<void>}
+   */
+  async expectInputPartOfStateIs(value, options) {
+    const { isNot } = new Options(options, {
+      defaults: {
+        isNot: false
+      }
+    });
+
+    const assertionName = utils.buildTestCafeAssertionName('eql', { isNot });
+    await t.expect(this.input)[assertionName](value);
+  }
 
   // ---------------------------------------------------------------------------
   // State :: Required (read-only)
@@ -158,15 +289,37 @@ class FormField extends BaseClass {
 
   /**
    * Asserts that form field's label equal or matches specified value. Accepts
-   * same arguments as {@link Fragment#expectTextIs} except that 'selector'
+   * same arguments as {@link Fragment1#expectTextIs} except that 'selector'
    * option forcibly set to fragment's label element selector.
    * 
    * @returns {Promise<void>}
    */
   async expectLabelIs(text, options) {
-    const opts = new Options(options);
-    opts.selector = this.labelElementSelector;
+    const opts = _
+      .chain(new Options(options))
+      .set('selector', this.labelElementSelector)
+      .value();
     await this.expectTextIs(text, opts);
+  }
+
+  /**
+   * Asserts that fragment's value is equal specified one.
+   * 
+   * @param {*} value Fragment's value must be equal specified one to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectValueIs(value) {
+    await this.input.expectValueIs(value);
+  }
+
+  /**
+   * Asserts that fragment's value is not equal specified one.
+   * 
+   * @param {*} value Fragment's value must be not equal specified one to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectValueIsNot(value) {
+    await this.input.expectValueIsNot(value);
   }
 
   // ---------------------------------------------------------------------------
@@ -188,7 +341,10 @@ Object.defineProperties(FormField, {
     value: 'nw-formField'
   },
   displayName: {
-    value: fragmentDisplayName
+    value: 'nebula-widgets.widgets.form-field'
+  },
+  InputFragment: {
+    value: null
   }
 });
 

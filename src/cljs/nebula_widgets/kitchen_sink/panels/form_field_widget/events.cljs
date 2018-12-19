@@ -8,6 +8,6 @@
 ;; Events
 ;;------------------------------------------------------------------------------
 
-(doseq [property [:inline :label :required]]
+(doseq [property [:disabled :inline :label :required :value]]
   (let [event (common/panel-path->keyword :interactive-example "/" :set property)]
     (rf/reg-event-db event (rf-utils/make-setter-event-handler event))))

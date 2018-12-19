@@ -2,27 +2,12 @@
   (:require
     [nebula-widgets.kitchen-sink.panels.form-field-widget.common :as common]
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
-    [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.checkable-group-input :as ie-cgi-knob]
+    [nebula-widgets.utils :as utils]
     [nebula-widgets.widgets.form-field.core :as form-field]
-    [nebula-widgets.widgets.checkable-group-input.core :as checkable-group-input]
+    [nebula-widgets.widgets.text-input.core :as text-input]
     [re-frame.core :as rf]))
-
-(defn- base-form-field [ff-props rgi-props n]
-  (let [n (some #(when (number? %) %) [ff-props rgi-props n])
-        ff-props (if (number? ff-props) {} ff-props)
-        cgi-props (if (number? rgi-props) {} rgi-props)]
-    [form-field/widget (merge {:label "Field"} ff-props)
-     [checkable-group-input/widget
-      (merge
-        {:columns 5
-         :inline true
-         :items
-         (for [n (range 1 (or n 10)) :let [label (str "choice" n)]]
-           {:label label, :value n})
-         :value 2}
-        cgi-props)]]))
 
 ;;------------------------------------------------------------------------------
 ;; Interactive example
@@ -32,36 +17,30 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:inline :label :required]
+  (->> [:disabled :inline :label :required :value]
        (map
          (fn [prop]
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
        (into {})))
 
+(let [{value-setter :value} ie-setters]
+  (defn- handle-input-on-change [event]
+    (value-setter (utils/event->value event))))
+
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [props @*props]
+      (let [{:keys [disabled value] :as props} @*props]
         (into
           [ie/widget
-           [:<>
-            [form-field/widget props
-             [checkable-group-input/widget
-              {:columns 5
-               :inline true
-               :items (for [n (range 1 10) :let [label (str "choice" n)]] {:label label, :value n})
-               :value 1}]]
-            [form-field/widget
-             {:inline (:inline props)
-              :label "Other field"}
-             [checkable-group-input/widget
-              {:columns 5
-               :disabled true
-               :inline true
-               :items (for [n (range 1 10) :let [label (str "choice" n)]] {:label label, :value n})
-               :value 2}]]]]
+           [form-field/widget (dissoc props :value)
+            [text-input/widget
+             {:disabled disabled
+              :on-change handle-input-on-change
+              :value value}]]]
           (for [[cid items]
-                [[:inline]
+                [[:disabled]
+                 [:inline]
                  [:label
                   [{:label "string", :value "Field"}
                    {:label "tuple", :value ["Field" "auxiliary text"]}]]
@@ -83,38 +62,5 @@
    [man-page/widget
     "# Form field widget"
     (-> #'form-field/widget meta :doc)
-    "## Examples"
-    [example/widget
-     {:cid "010"
-      :title "toggling placement of label and input using :inline prop"}
-     [:<>
-      [base-form-field {:label "Stacked"} 11]
-      [base-form-field {:label "Stacked (more text)"} 11]]
-     [:hr.formFieldWidgetPanel-inExampleDivider]
-     [:<>
-      [base-form-field {:inline true, :label "Inline"} 3]
-      [base-form-field {:inline true, :label "Inline (more text)"} 12]]
-     "```clj
-       [form-field/widget {:inline true, ...}
-        [radio-group-input/widget ...]]
-       ```"]
-    [example/widget
-     {:cid "020"
-      :title "setting form field's label using :label prop"}
-     [:<>
-      [base-form-field {:label "Field"}]
-      [base-form-field {:label ["Field" "auxiliary text"]}]]
-     "```clj
-       [form-field/widget
-        {:label \"Field\"}   ; [\"Field\" \"auxiliary text\"]
-        [radio-group-input/widget ...]]
-       ```"]
-    [example/widget
-     {:cid "030"
-      :title "marking form field as required using :required prop"}
-     [base-form-field {:required true}]
-     "```clj
-       [form-field/widget {:label \"Field\", :required true} ...]
-       ```"]
     "## Interactive example"
     [interactive-example-cmp]]])

@@ -41,6 +41,9 @@
 (defn widget
   "Renders form field.
 
+  Because of styling, it's not intended to be used directly but rather as a base for more specific form field widgets:
+  * [checkable-group-input-form-field](/widgets/checkable-group-input-form-field)
+
   Arguments:
   * `props` - optional, map, no default. Supported keys:
     - `:bem` - string, 'nw-formField' by default. Would be used as widget's BEM. Provided by concrete form field widget
@@ -55,8 +58,7 @@
   * `& children` - optional, any number of child components
 
   Notes:
-  * form field widget is a base for concrete input targeted widgets and so accurate label and input positioning must be
-    done in such concrete widgets"
+  * accurate label and input positioning can be done in concrete form field widgets"
   [& _args]
   (let [[{:keys [bem label] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}
