@@ -28,12 +28,11 @@
      :value nil}]
    "```clj
      [checkable-group-input/widget
-      {:item-props {:on-change (fn [event value] ...)}
-       :items
+      {:items
        [{:label \"Option 1\", :value :option1}
         {:label \"Option 2\", :value :option2}
         {:label \"Option 3\", :value :option3}]
-       :on-change identity
+       :on-change (fn [value event] ...)
        :value nil}]
      ```"])
 
@@ -55,12 +54,11 @@
      :value :option2}]
    "```clj
      [checkable-group-input/widget
-      {:item-props {:on-change (fn [event value] ...)}
-       :items
+      {:items
        [{:label \"Option 1\", :value :option1}
         {:label \"Option 2\", :value :option2}
         {:label \"Option 3\", :value :option3}]
-       :on-change identity
+       :on-change (fn [value event] ...)
        :value :option2}]
      ```"])
 
@@ -85,13 +83,12 @@
       [checkable-group-input/widget
        {:columns 5
         :inline true
-        :item-props {:on-change (fn [event value] ...)}
         :items
         [{:label \"Option 1\", :value :option1}
          {:label \"Option 2\", :value :option2}
          {:label \"Option 3\", :value :option3}
          ...]
-        :on-change identity
+        :on-change (fn [value event] ...)
         :value :option2]
       ```"]
    [example/widget
@@ -109,13 +106,12 @@
       [checkable-group-input/widget
        {:columns 5
         :inline true
-        :item-props {:on-change (fn [event value] ...)}
         :items
         [{:label \"Option 1\", :value :option1}
          {:label \"Option 2\", :value :option2}
          {:label \"Option 3\", :value :option3}
          ...]
-        :on-change identity
+        :on-change (fn [value event] ...)
         :value :option2}]
       ```"]
    [example/widget
@@ -133,13 +129,12 @@
       [checkable-group-input/widget
        {:columns 5
         :inline true
-        :item-props {:on-change (fn [event value] ...)}
         :items
         [{:label {:shrinked true, :text \"Option 1\"}, :value :option1}
          {:label {:shrinked true, :text \"Option 2\"}, :value :option2}
          {:label {:shrinked true, :text \"Option 3\"}, :value :option3}
          ...]
-        :on-change identity
+        :on-change (fn [value event] ...)
         :value :option2}]
       ```"]
    [example/widget
@@ -158,13 +153,12 @@
       [checkable-group-input/widget
        {:columns 5
         :inline true
-        :item-props {:on-change (fn [event value] ...)}
         :items
         [{:label \"Option 1\", :value :option1}
          {:label \"Option 2\", :value :option2}
          {:label \"Option 3\", :value :option3}
          ...]
-        :on-change identity
+        :on-change (fn [value event] ...)
         :soft-columns true
         :value :option2}]
       ```"]])
@@ -194,9 +188,8 @@
        [checkable-group-input/widget
         {:equidistant true
          :inline true
-         :item-props {:on-change (fn [event value] ...)}
          :items [{:label \"Label\", :value :option1}, ...]
-         :on-change identity
+         :on-change (fn [value event] ...)
          :size \"large\"   ; \"normal\", \"small\"
          :value :option2
          :widget \"button\"}]
@@ -221,12 +214,11 @@
      :value nil}]
    "```clj
      [checkable-group-input/widget
-      {:item-props {:on-change (fn [event value] ...)}
-       :items
+      {:items
        [{:label \"Choice 1\", :value :choice1}
         {:label \"Choice 2\", :value :choice2}
         {:label \"Choice 3\", :value :choice3}]
-       :on-change identity
+       :on-change (fn [value event] ...)
        :selection-mode \"single\"
        :value nil}]
      ```"])
@@ -239,62 +231,59 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:columns :disabled :equidistant :errors :inline :invalid :label-shrinked :no-row-gap :selection-mode :size
+  (->> [:columns :disabled :equidistant :errors :inline :invalid :label-shrinked :multi-checkable :no-row-gap :size
         :soft-columns :stacked-on-mobile :value :widget]
        (map
          (fn [prop]
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
        (into {})))
 
-(defn- on-change-handler [selection-mode value event]
-  (let [checked (utils/event->checked event)]
-    ((:value ie-setters)
-      (if (= "multi" selection-mode)
-        #((if checked conj disj) % value)
-        #(when checked value)))))
+(let [{value-setter :value multi-checkable-setter :multi-checkable} ie-setters]
+  (defn- handle-on-change [multi-checkable value event]
+    (let [checked (utils/event->checked event)]
+      (value-setter
+        (if multi-checkable
+          #((if checked conj disj) % value)
+          #(when checked value)))))
 
-(defn- on-selection-mode-change-handler [value _]
-  ((:selection-mode ie-setters) value)
-  ((:value ie-setters)
-    (if (= "multi" value) #{:option2} :choice2)))
+  (defn- handle-multi-checkable-prop-on-change [value _]
+    (multi-checkable-setter value)
+    (value-setter (if value #{:option2} :choice2))))
 
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [selection-mode] :as props} @*props
-            multi-selection? (= "multi" selection-mode)]
+      (let [{:keys [multi-checkable] :as props} @*props]
         (into
           [ie/widget
            [checkable-group-input/widget
             (assoc props
               :items
-              (for [n (range 1 10) :let [label (str (if multi-selection? "option" "choice") n)]]
+              (for [n (range 1 10) :let [label (str (if multi-checkable "option" "choice") n)]]
                 {:label
                  {:shrinked (get props :label-shrinked)
                   :text (str label (when (= 2 n) " (some long text here)"))}
                  :value (keyword label)})
-              :on-change (r/partial on-change-handler selection-mode))]]
+              :on-change (r/partial handle-on-change multi-checkable))]]
           (for [[cid items]
                 [[:columns (for [v [nil 3 5]] {:label (if (nil? v) "nil" v), :value v})]
                  [:disabled]
                  [:equidistant]
-                 [:errors
-                  [{:label "no"}
-                   {:label "yes", :value #{"error 1" "error 2"}}]]
+                 [:errors (ie-cgi-knob/gen-items "no" ["yes" #{"error 1" "error 2"}])]
                  [:inline]
                  [:invalid]
                  [:label-shrinked]
+                 [:multi-checkable]
                  [:no-row-gap]
-                 [:selection-mode (for [s ["multi" "single"]] {:label s, :value s})]
-                 [:size (for [s ["small" "normal" "large"]] {:label s, :value s})]
+                 [:size (ie-cgi-knob/gen-items "small" "normal" "large")]
                  [:soft-columns]
                  [:stacked-on-mobile]
-                 [:widget (for [s ["button" "icon"]] {:label s, :value s})]]]
+                 [:widget (ie-cgi-knob/gen-items "button" "checkbox" "radio")]]]
             [ie-cgi-knob/widget
              {:cid cid}
              (cond->
                {:cid cid
-                :on-change (if (= :selection-mode cid) on-selection-mode-change-handler (get ie-setters cid))
+                :on-change (if (= :multi-checkable cid) handle-multi-checkable-prop-on-change (get ie-setters cid))
                 :value (get props cid)}
                items (assoc :items items))]))))))
 

@@ -22,7 +22,7 @@
 (defn build-class [base modifiers]
   "Returns string, as for class attribute of DOM element, constructed from BEM base and seq of modifiers, where each
   modifier can be anything that `modifier->string` supports.
-  Example, (build-class 'foo' ['bar' 42]) => 'foo foo--bar_42'."
+  Example, (build-class 'foo' [['bar' 42]]) => 'foo foo--bar_42'."
   (let [base (name base)]
     (->> modifiers
          (map #(->> (if (sequential? %) % [%]) (apply modifier->string)))

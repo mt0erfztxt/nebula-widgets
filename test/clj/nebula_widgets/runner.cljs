@@ -7,7 +7,6 @@
     [nebula-widgets.test.utils.bem-test]))
 
 (doo-tests
-  'nebula-widgets.test.kitchen-sink.widgets.markdown.core-test
   'nebula-widgets.test.scratch
   'nebula-widgets.test.utils-test
   'nebula-widgets.test.utils.bem-test

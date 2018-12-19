@@ -15,6 +15,7 @@
      ["/widgets/checkable-input" :widgets/checkable-input]
      ["/widgets/form-field" :widgets/form-field]
      ["/widgets/group-input" :widgets/group-input]
+     ["/widgets/text-group-input" :widgets/text-group-input]
      ["/widgets/text-input" :widgets/text-input]]))
 
 (defn match [url]

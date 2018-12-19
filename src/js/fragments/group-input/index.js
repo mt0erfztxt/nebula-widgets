@@ -525,6 +525,15 @@ class GroupInput extends BaseClass {
   }
 
   /**
+   * Retuns number of items in group.
+   * 
+   * @returns {Promise<Number>}
+   */
+  async getItemsCount() {
+    return ((await this.itemElementSelector.count) - 1);
+  }
+
+  /**
    * Clicks on item and returns it.
    * 
    * @param {*} [locator] See `locator` parameter of item fragment's class constructor

@@ -1,10 +1,12 @@
-import _ from 'lodash';
+import escapeStringRegexp from 'escape-string-regexp';
 import testFragment from 'nebula-test-fragment';
+import { t } from 'testcafe';
 
-import Input from '../input';
+import Input from '../../fragments/input';
+
+import Action from './action';
 
 const {
-  Fragment,
   Options,
   utils
 } = testFragment;
@@ -15,48 +17,18 @@ const {
  * @class
  * @extends {Input}
  */
-const BaseClass = Fragment.makeFragmentClass(Input, {
+const BaseClass = Input.makeFragmentClass(Input, {
   stateParts: [
     ['busy'],
     ['multiLine'],
-    ['size', { isBoolean: false }],
-    ['textAlign', { isBoolean: false }]
+    ['textAlignment', { isBoolean: false }]
   ]
 });
 
 /**
- * Display name of fragment.
- *
- * @type {String}
- */
-const fragmentDisplayName = 'nebula-widgets.widgets.text-input.item';
-
-/**
- * Fragment that represents text input item.
+ * Fragment that represents text input.
  */
 class TextInput extends BaseClass {
-
-  /**
-   * Creates fragment.
-   *
-   * @param {TextInput|Object} [spec] When it's already instance of `TextInput` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
-   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
-   */
-  constructor(spec, opts) {
-    const {
-      initializedOpts,
-      initializedSpec,
-      isInstance
-    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
-
-    if (isInstance === true) {
-      return spec;
-    }
-
-    super(initializedSpec, initializedOpts);
-
-    return this;
-  }
 
   /**
    * BEM base for fragment's 'input' element.
@@ -88,26 +60,123 @@ class TextInput extends BaseClass {
     return this._inputElementSelector;
   }
 
+  /**
+   * Class of action fragment used in this fragment.
+   *
+   * @returns {class}
+   * @throws {TypeError} When action fragment class is not valid.
+   */
+  get ActionFragment() {
+    if (!this._ActionFragment) {
+      this._ActionFragment = this.getSomethingFragment('Action', TextInput);
+    }
+
+    return this._ActionFragment;
+  }
+
+  /**
+   * BEM base for action fragment.
+   * 
+   * NOTE: We use action fragment's class directly here because we not planing
+   *       derive fragments from text input, otherwise we can wrap each action
+   *       in container (e.g., nw-textInput__action) and use it for selections.
+   *
+   * @returns {BemBase}
+   */
+  get actionFragmentBemBase() {
+    if (!this._actionFragmentBemBase) {
+      this._actionFragmentBemBase = new BemBase(TextInput.ActionFragment);
+    }
+
+    return this._actionFragmentBemBase;
+  }
+
+  /**
+   * TestCafe selector for action fragment.
+   *
+   * @returns {Selector}
+   */
+  get actionFragmentSelector() {
+    if (!this._actionFragmentSelector) {
+      this._actionFragmentSelector = this
+        .selector
+        .find(`.${this.actionFragmentBemBase}`);
+    }
+
+    return this._actionFragmentSelector;
+  }
+
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
 
-  getStateParts(onlyWritable = false) {
-    const parentParts = super.getStateParts(onlyWritable);
-    const parts = _.concat(parentParts, []);
+  getStateParts(options) {
+    const { onlyWritable } = new Options(options, {
+      defaults: {
+        onlyWritable: false
+      }
+    });
+
+    const writableParts = super.getStateParts({ onlyWritable });
 
     if (onlyWritable) {
-      return parts;
+      return writableParts;
     }
     else {
-      return _.concat(parts, [
+      return writableParts.concat([
+        // 'actions' can be added later (if needed)
         'busy',
         'multiLine',
-        'size',
-        'textAlign'
+        'textAlignment'
       ]);
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // State :: Busy (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name TextInput#getBusyPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name TextInput#expectIsBusy
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name TextInput#expectIsNotBusy
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
+  // State :: TextAlignment (read-only, not boolean)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name TextInput#getTextAlignmentPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name TextInput#expectTextAlignmentPartOfStateIs
+   * @method
+   * @param {*} value
+   * @param {Options|Object} options
+   * @returns {Promise<void>}
+   */
 
   // ---------------------------------------------------------------------------
   // State :: Value
@@ -120,14 +189,14 @@ class TextInput extends BaseClass {
    * @return {Promise<string>} 'Value' part of state.
    */
   async getValuePartOfState(options) {
-    return this.inputEltSelector.value;
+    return this.inputElementSelector.value;
   }
 
   /**
    * Sets 'Value' part of fragment's state.
    *
    * @param {*} value New value for 'Value' part of fragment's state. `undefined` means no change and `null` and empty string sets value of text input to an empty string
-   * @param {Options|Object} [options] Options, can contain any options for TestCafe `typeText` action, plus custom options
+   * @param {Options|Object} [options] Options, can contain any options for TestCafe `typeText` action
    * @param {Boolean} [options.paste=true] See TestCafe `typeText` action for details
    * @param {Boolean} [options.replace=true] See TestCafe `typeText` action for details
    * @param {String} [options.identity=''] Would be used to replace all instances of `options.identityTpl` to specified value
@@ -137,14 +206,14 @@ class TextInput extends BaseClass {
   async setValuePartOfState(value, options) {
 
     // `undefined` is noop.
-    if (_.isUndefined(value)) {
+    if (value === void 0) {
       return this.getValuePartOfState(options);
     }
 
     // `null` or empty string means clear input.
-    if (_.isNull(value) || utils.isEmptyString(value)) {
+    if (value === null || utils.isEmptyString(value)) {
       await t
-        .selectText(this.inputEltSelector)
+        .selectText(this.inputElementSelector)
         .pressKey('delete');
       return '';
     }
@@ -158,14 +227,20 @@ class TextInput extends BaseClass {
 
     let { identity, identityTpl } = opts;
 
-    identity = _.isNil(identity) ? '' : identity + '';
-    identityTpl = _.isNil(identityTpl) || utils.isEmptyString(identityTpl) ? '@@' : identityTpl + '';
+    identity = (identity == null) ? '' : identity + '';
+    identityTpl = ((identityTpl == null) || utils.isEmptyString(identityTpl)) ?
+      '@@' : identityTpl + '';
 
     if (identityTpl) {
-      value = _.replace(value + '', identityTpl, identity);
+      value = value
+        .toString()
+        .replace(
+          new RegExp(`${escapeStringRegexp(identityTpl)}`, 'g'),
+          identity
+        );
     }
 
-    await t.typeText(this.inputEltSelector, value, opts);
+    await t.typeText(this.inputElementSelector, value, opts);
 
     return value;
   }
@@ -191,7 +266,7 @@ class TextInput extends BaseClass {
     let assertionName;
     let val;
 
-    if (_.isRegExp(value)) {
+    if (utils.isRegExp(value)) {
       assertionName = 'match';
       val = value;
     }
@@ -201,12 +276,89 @@ class TextInput extends BaseClass {
     }
 
     assertionName = utils.buildTestCafeAssertionName(assertionName, options);
-    await t.expect(this.inputEltSelector.value)[assertionName](val);
+    await t.expect(this.inputElementSelector.value)[assertionName](val);
   }
 
   // ---------------------------------------------------------------------------
   // Assertions
   // ---------------------------------------------------------------------------
+
+  /**
+   * Asserts that text input fragment has action fragment. Optionally, asserts
+   * that specified action found in text input in position specified by `idx`.
+   * 
+   * @param {*} [actionLocator] See `locator` parameter of action fragment's class constructor
+   * @param {*} [actionOptions] See `options` parameter of action fragment's class constructor
+   * @param {Options|Object} [options]
+   * @param {Number} [options.idx] A position (integer gte 0) at which action must be found in text input to pass assertion
+   * @returns {Promise<Action>} Action fragment.
+   */
+  async expectHasAction(actionLocator, actionOptions, options) {
+    return this.expectHasSomething('Action', actionLocator, actionOptions, options);
+  }
+
+  /**
+   * Asserts that text input fragment has action fragments specified in
+   * `actionLocatorAndOptions`. Optionally, asserts that text input has only
+   * specified actions, and, also optionally, asserts that actions found in text
+   * input in same order as in `actionLocatorAndOptions`.
+   *
+   * @param {Array} actionLocatorAndOptions Each element is a tuple of action fragment's `locator` and `optiions`. See corresponding parameters of action fragment's class constructor
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.only=false] Text input must have only specified actions to pass assertion
+   * @param {Boolean} [options.sameOrder=false] Actions must be found in text input in same order as in `actionLocatorAndOptions` to pass assertion. Work only in conjunction with 'only' option
+   * @returns {Promise<Array<Action>>} Action fragments.
+   */
+  async expectHasActions(actionLocatorAndOptions, options) {
+    return this.expectHasSomethings('Action', actionLocatorAndOptions, options);
+  }
+
+  /**
+   * Asserts that action fragment found in text input fragment at index
+   * specified by `idx`.
+   *
+   * @param {*} locator See `locator` parameter of action fragment's class constructor
+   * @param {*} options See `options` parameter of action fragment's class constructor
+   * @param {Number} idx Action must be found in text input at this position to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectActionIndexIs(locator, options, idx) {
+    await this
+      .getAction(locator, options)
+      .expectIndexInParentIs(this.selector, idx);
+  }
+
+  /**
+   * Asserts that text input fragment contains all and only all action fragments
+   * passed in `locatorAndOptionsList` list and they appears in same order as
+   * in `locatorAndOptionsList`.
+   *
+   * @param {Array} locatorAndOptionsList Each element is a tuple of action fragment's `locator` and `options`. See corresponding parameters of action fragment's class constructor
+   * @returns {Promise<void>}
+   */
+  async expectActionsAre(locatorAndOptionsList) {
+    await this.expectHasActions(locatorAndOptionsList, {
+      only: true,
+      sameOrder: true
+    });
+  }
+
+  /**
+   * Asserts that count of action fragments in text input fragment equal value
+   * specified in `count`.
+   *
+   * @param {Number|Array} count Text input fragment must have that number of action fragments to pass assertion. When you need more flexibility than just equality pass an `Array` with TestCafe assertion name (default to 'eql') as first element and expected value for assertion as second, for example, `['gte', 3]`
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.isNot=false] When truthy assertion would be negated
+   * @return {Promise<void>}
+   */
+  async expectActionsCountIs(count, options) {
+    await TextInput.expectSomethingsCountIs(
+      this.actionFragmentSelector,
+      count,
+      options
+    );
+  }
 
   /**
    * Asserts that fragment has value.
@@ -264,14 +416,45 @@ class TextInput extends BaseClass {
     await this.expectValuePartOfStateIs(value, { isNot: true });
   }
 
+  // ---------------------------------------------------------------------------
+  // Other Methods
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Returns text input action fragment.
+   *
+   * @param {*} [locator] See `locator` parameter of action fragment's class constructor
+   * @param {*} [options] See `options` parameter of action fragment's class constructor
+   * @returns {Action}
+   */
+  getAction(locator, options) {
+    return this.getSomething('Action', locator, options);
+  }
+
+  /**
+   * Clicks on action and returns it.
+   * 
+   * @param {*} [locator] See `locator` parameter of action fragment's class constructor
+   * @param {*} [options] See `options` parameter of action fragment's class constructor
+   * @returns {Promise<Action>}
+   */
+  async clickAction(locator, options) {
+    const action = this.getAction(locator, options);
+    await action.expectIsExist();
+    await action.click();
+    return action;
+  }
 }
 
 Object.defineProperties(TextInput, {
+  ActionFragment: {
+    value: Action
+  },
   bemBase: {
     value: 'nw-textInput'
   },
   displayName: {
-    value: fragmentDisplayName
+    value: 'nebula-widgets.widgets.text-input'
   }
 });
 

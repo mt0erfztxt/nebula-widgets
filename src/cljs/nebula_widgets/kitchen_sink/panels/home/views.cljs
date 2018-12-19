@@ -12,6 +12,7 @@
    :widgets/group-input
    :widgets/checkable-group-input
    :widgets/text-input
+   :widgets/text-group-input
    :widgets/form-field])
 
 (def ^:private pages-href-and-text

@@ -21,16 +21,13 @@
   (when (map? label)
     label))
 
-(def ^:private selection-mode-prop-set
-  #{:multi :single})
-
 (def ^:private size-prop-set
   #{:large :normal :small})
 
 (def ^:private widget-prop-set
-  #{:button :icon})
+  #{:button :checkbox :radio})
 
-(defn- build-class [{:keys [checked cid cns disabled invalid selection-mode size widget] :as props}]
+(defn- build-class [{:keys [checked cid cns disabled invalid size widget] :as props}]
   (bem-utils/build-class
     bem
     [["cns" cns]
@@ -39,9 +36,8 @@
      ["disabled" disabled]
      ["invalid" invalid]
      ["labelShrinked" (-> props extract-label-props :shrinked)]
-     ["selectionMode" (-> selection-mode keyword selection-mode-prop-set (or :multi))]
      ["size" (-> size keyword size-prop-set (or :normal))]
-     ["widget" (-> widget keyword widget-prop-set (or :icon))]]))
+     ["widget" (-> widget keyword widget-prop-set (or :checkbox))]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -61,13 +57,9 @@
       * `:shrinked` - logical true/false, no default. Whether label shrinked (using ellipsis) when too long or not.
       * `:text` - renderable, no default. Label's text. Same value (not map) that can be passed directly to `:label`.
     - `:on-change` - function, no default. Called with browser event as argument when input changes to checked.
-    - `:selection-mode` - one of :multi (default), :single or their string/symbol equivalents. The difference is like
-      between radio button and checkbox inputs, but here radio button can be unchecked.
     - `:size` - one of :large, :normal (default), :small or their string/symbol equivalents. Widget size.
-    - `:widget` - one of :button, :icon (default) or their string/symbol equivalents. Specifies how widget looks.
-
-  Notes:
-  * input in any `:selection-mode` can be checked and then unchecked"
+    - `:widget` - one of :button, :checkbox (default), :radio or their string/symbol equivalents. Specifies how widget
+      looks."
   [{:keys [checked disabled on-change] :as props}]
   [:div {:class (build-class props)}
    [:label {:class label-bem}

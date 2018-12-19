@@ -3,11 +3,12 @@
 (def default-db
   {:text-input-widget
    {:interactive-example
-    {:busy false
+    {:actions "no"
+     :busy false
      :disabled false
      :errors nil
      :invalid false
      :multi-line false
      :size "normal"
      :text-alignment "left"
-     :value nil}}})
+     :value "foobar"}}})

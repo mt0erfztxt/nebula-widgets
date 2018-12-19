@@ -1,7 +1,6 @@
 import expect from 'unexpected';
 
 import CheckableGroupInput from '../../../../../src/js/widgets/checkable-group-input';
-import CheckableInput from '../../../../../src/js/widgets/checkable-input';
 import InteractiveExample from '../../../../../src/js/kitchen-sink/widgets/man-page/interactive-example';
 
 async function getInteractiveExample() {
@@ -125,46 +124,46 @@ test("040 It should allow assert on whether group's label isn't shrinked using '
   expect(isThrown, 'to be true');
 });
 
-test("050 It should allow get group's 'SelectionMode' part of state using '#getSelectionModePartOfState()'", async () => {
-  const { knob, sut } = await getHelperFragments('selection-mode');
+test("050 It should allow get group's 'MultiCheckable' part of state using '#getMultiCheckablePartOfState()'", async () => {
+  const { knob, sut } = await getHelperFragments('multi-checkable');
 
-  // -- Check when 'multi'
+  // -- Check when multi checkable
 
-  await knob.clickItem({ value: 'multi' });
+  await knob.clickItem({ value: 'true' });
   await sut.hover();
-  expect(await sut.getSelectionModePartOfState(), 'to equal', 'multi');
+  expect(await sut.getMultiCheckablePartOfState(), 'to be true');
 
-  // -- Check when 'single'
+  // -- Check when not multi checkable
 
-  await knob.clickItem({ value: 'single' });
+  await knob.clickItem({ value: 'false' });
   await sut.hover();
-  expect(await sut.getSelectionModePartOfState(), 'to equal', 'single');
+  expect(await sut.getMultiCheckablePartOfState(), 'to be false');
 });
 
-test("060 It should allow assert on group's 'SelectionMode' part of state using '#expectSelectionModePartOfStateIs()'", async () => {
-  const { knob, sut } = await getHelperFragments('selection-mode');
+test("060 It should allow assert on whether group is multi checkable using '#expectIsMultiCheckable()'", async () => {
+  const { knob, sut } = await getHelperFragments('multi-checkable');
 
   // -- Successful case
 
-  await knob.clickItem({ value: 'multi' });
+  await knob.clickItem({ value: 'true' });
   await sut.hover();
-  await sut.expectSelectionModePartOfStateIs('multi');
+  await sut.expectIsMultiCheckable();
 
   // -- Failing case
 
-  await knob.clickItem({ value: 'single' });
+  await knob.clickItem({ value: 'false' });
   await sut.hover();
 
   let isThrown = false;
 
   try {
-    await sut.expectSelectionModePartOfStateIs('multi');
+    await sut.expectIsMultiCheckable();
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'selectionMode,multi'.+but it doesn't/
+      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'multiCheckable,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -173,27 +172,30 @@ test("060 It should allow assert on group's 'SelectionMode' part of state using 
   expect(isThrown, 'to be true');
 });
 
-test("070 It should allow assert on group's 'SelectionMode' part of state using '#expectSelectionModePartOfStateIs()' - with 'isNot' option set", async () => {
-  const { knob, sut } = await getHelperFragments('selection-mode');
+test("070 It should allow assert on whether group isn't multi checkable using '#expectIsNotMultiCheckable()'", async () => {
+  const { knob, sut } = await getHelperFragments('multi-checkable');
 
   // -- Successful case
 
-  await knob.clickItem({ value: 'multi' });
+  await knob.clickItem({ value: 'false' });
   await sut.hover();
-  await sut.expectSelectionModePartOfStateIs('single', { isNot: true });
+  await sut.expectIsNotMultiCheckable();
 
   // -- Failing case
+
+  await knob.clickItem({ value: 'true' });
+  await sut.hover();
 
   let isThrown = false;
 
   try {
-    await sut.expectSelectionModePartOfStateIs('multi', { isNot: true });
+    await sut.expectIsNotMultiCheckable();
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'selectionMode,multi'.+but it does/
+      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'multiCheckable,'.+but it does/
     );
 
     isThrown = true;

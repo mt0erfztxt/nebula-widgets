@@ -1,5 +1,6 @@
 (ns nebula-widgets.kitchen-sink.panels.text-input-widget.views
   (:require
+    [clojure.string :as str]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.common :as common]
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.example.core :as example]
@@ -7,7 +8,8 @@
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.checkable-group-input :as ie-cgi-knob]
     [nebula-widgets.utils :as utils]
     [nebula-widgets.widgets.text-input.core :as text-input]
-    [re-frame.core :as rf]))
+    [re-frame.core :as rf]
+    [reagent.core :as r]))
 
 ;;------------------------------------------------------------------------------
 ;; Example 010
@@ -136,6 +138,29 @@
      ```"])
 
 ;;------------------------------------------------------------------------------
+;; Example 070
+;;------------------------------------------------------------------------------
+
+(defn- example070-cmp []
+  [example/widget
+   {:cid "070"
+    :title "widget with actions"}
+   [text-input/widget
+    {:actions
+     {:after [{:icon "plus"}, {:icon "trash"}]
+      :before [{:disabled true, :icon "search"}]}
+     :on-change identity
+     :value "Something"}]
+   "```clj
+     [text-input/widget
+      {:actions
+       {:after [{:icon \"plus\"}, {:icon \"trash\"}]
+        :before [{:disabled true, :icon \"search\"}]}
+       :on-change identity
+       :value \"Something\"}]]
+     ```"])
+
+;;------------------------------------------------------------------------------
 ;; Interactive example
 ;;------------------------------------------------------------------------------
 
@@ -143,38 +168,51 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:busy :disabled :errors :invalid :multi-line :size :text-alignment :value]
+  (->> [:actions :busy :disabled :errors :invalid :multi-line :size :text-alignment :value]
        (map
          (fn [prop]
-           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %2])]))
+           [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
        (into {})))
 
-(defn- update-ie-value [event]
-  ((:value ie-setters) event (utils/event->value event)))
+(let [{value-setter :value} ie-setters]
+  (defn- handle-on-change [event]
+    (value-setter (utils/event->value event)))
+
+  (defn- handle-action-on-click [v _]
+    (value-setter v)))
 
 (defn- interactive-example-cmp []
-  (let [*ti-props (rf/subscribe [(interactive-example-path->keyword)])]
+  (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [ti-props @*ti-props]
+      (let [{:keys [actions] :as props} @*props
+            actions
+            (when (str/starts-with? actions "yes")
+              {:after
+               (for [icon ["plus" "trash"]]
+                 {:icon icon
+                  :on-click (r/partial handle-action-on-click icon)})
+               :before
+               [{:disabled (= "yes+disabled" actions)
+                 :icon "search"
+                 :on-click (r/partial handle-action-on-click "search")}]})]
         (into
           [ie/widget
-           [text-input/widget (assoc ti-props :on-change update-ie-value)]]
+           [text-input/widget (assoc props :actions actions :on-change handle-on-change)]]
           (for [[cid items]
-                [[:busy]
+                [[:actions (ie-cgi-knob/gen-items "no" "yes" "yes+disabled")]
+                 [:busy]
                  [:disabled]
-                 [:errors
-                  [{:label "no"}
-                   {:label "yes", :value #{"error 1" "error 2"}}]]
+                 [:errors (ie-cgi-knob/gen-items "no" ["yes" #{"error 1" "error 2"}])]
                  [:invalid]
                  [:multi-line]
-                 [:size (for [s ["small" "normal" "large"]] {:label s, :value s})]
-                 [:text-alignment (for [s ["left" "center" "right"]] {:label s, :value s})]]]
+                 [:size (ie-cgi-knob/gen-items "small" "normal" "large")]
+                 [:text-alignment (ie-cgi-knob/gen-items "left" "center" "right")]]]
             [ie-cgi-knob/widget
              {:cid cid}
              (cond->
                {:cid cid
-                :item-props {:on-change (get ie-setters cid)}
-                :value (get ti-props cid)}
+                :on-change (get ie-setters cid)
+                :value (get props cid)}
                items (assoc :items items))]))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -193,5 +231,6 @@
     [example040-cmp]
     [example050-cmp]
     [example060-cmp]
+    [example070-cmp]
     "## Interactive example"
     [interactive-example-cmp]]])

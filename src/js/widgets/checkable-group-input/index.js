@@ -17,7 +17,7 @@ const {
 const BaseClass = GroupInput.makeFragmentClass(GroupInput, {
   stateParts: [
     'labelShrinked',
-    ['selectionMode', { isBoolean: false }]
+    'multiCheckable'
   ]
 });
 
@@ -49,7 +49,7 @@ class CheckableGroupInput extends BaseClass {
     else {
       return _.concat(writableParts, [
         'labelShrinked',
-        'selectionMode',
+        'multiCheckable',
         'value' // now it's read-only
       ]);
     }
@@ -81,23 +81,27 @@ class CheckableGroupInput extends BaseClass {
    */
 
   // ---------------------------------------------------------------------------
-  // State :: SelectionMode (read-only, not boolean)
+  // State :: MultiCheckable (read-only)
   // ---------------------------------------------------------------------------
   // Inherited from `BaseClass`
   // ---------------------------------------------------------------------------
 
   /**
-   * @name Input#getSelectionModePartOfState
+   * @name CheckableGroupInput#getMultiCheckablePartOfState
    * @method
    * @param {Options|Object} options
-   * @returns {Promise<*>}
+   * @returns {Promise<Boolean>}
    */
 
   /**
-   * @name Input#expectSelectionModePartOfStateIs
+   * @name CheckableGroupInput#expectIsMultiCheckable
    * @method
-   * @param {*} value
-   * @param {Options|Object} options
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name CheckableGroupInput#expectIsNotMultiCheckable
+   * @method
    * @returns {Promise<void>}
    */
 

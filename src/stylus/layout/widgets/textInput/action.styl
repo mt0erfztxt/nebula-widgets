@@ -1,0 +1,57 @@
+.nw-textInput-action
+    align-items: center;
+    border: solid $g_color_secondary;
+    border-width: 0 1px 0 0;
+    cursor: pointer;
+    display: flex;
+    flex: none;
+    justify-content: center;
+    min-width: $g_size--s - 2px;
+    position: relative;
+
+    &:hover
+        color: $g_color_primary_text--active;
+
+    &:last-child
+        border-width: 0;
+
+
+    &__content
+        //
+
+
+    &__icon
+        font-size: 19px; // TODO It depends on input size
+
+
+    &--direction_horizontal
+        //
+
+
+    &--direction_vertical
+        border-width: 0 0 1px 0;
+
+
+    &--disabled
+        color: $g_color_primary_text--disabled;
+        cursor: auto;
+
+        &:hover
+            color: @color;
+
+
+    &--invalid
+        border-color: $g_color_primary_text--error;
+
+
+    &--size_large
+        //
+
+
+    &--size_normal
+        max-height: $g_size--s;
+        min-height: $g_size--s;
+
+
+    &--size_small
+        //
