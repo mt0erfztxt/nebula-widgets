@@ -32,6 +32,22 @@ const BaseClass = Input.makeFragmentClass(Input, {
 // TODO Add Error Fragment to allow expectations on error presence and etc.
 /**
  * Fragment that represents group input.
+ * 
+ * State parts:
+ * * derived from Input:
+ *   - disabled (antonym: enabled)
+ *   - invalid
+ *   - size
+ *   - value (writable)
+ *   - widget
+ * * own:
+ *   - columns
+ *   - equidistant
+ *   - inline
+ *   - items (writable)
+ *   - noRowGap
+ *   - softColumns
+ *   - stackedOnMobile
  */
 class GroupInput extends BaseClass {
 
@@ -360,8 +376,6 @@ class GroupInput extends BaseClass {
     return Promise.all(statePromises);
   }
 
-  // TODO Must be tested using text group input, because it is read-only in
-  //      checkable group input.
   /**
    * Sets 'Value' part of state to new `value`.
    *

@@ -89,13 +89,8 @@
     [example/widget
      {:cid "010"
       :title "label placement using :inline prop"}
-     [:<>
-      [cgiff-cmp {:label "Stacked"} 11]
-      [cgiff-cmp {:label "Stacked (more text)"} 11]]
-     [:hr.formFieldWidgetPanel-inExampleDivider]
-     [:<>
-      [cgiff-cmp {:inline true, :label "Inline"} 3]
-      [cgiff-cmp {:inline true, :label "Inline (more text)"} 12]]
+     [cgiff-cmp {:label "Stacked"} 11]
+     [cgiff-cmp {:inline true, :label "Inline"} 11]
      "```clj
        [checkable-group-input-form-field/widget
         {:inline true, ...}
@@ -103,14 +98,11 @@
        ```"]
     [example/widget
      {:cid "020"
-      :title "setting form field's label using :label prop"}
-     [:<>
-      [cgiff-cmp {:label "Field"}]
-      [cgiff-cmp {:label ["Field" "auxiliary text"]}]]
+      :title "composite label using :label prop"}
+     [cgiff-cmp {:label ["Field" "auxiliary text"]}]
      "```clj
        [checkable-group-input-form-field/widget
-        {:label \"Field\"   ; [\"Field\" \"auxiliary text\"]
-         ...}
+        {:label [\"Field\" \"auxiliary text\"], ...}
         ...]
        ```"]
     [example/widget

@@ -7,6 +7,7 @@
     [nebula-widgets.kitchen-sink.panels.checkable-group-input-widget.events]
     [nebula-widgets.kitchen-sink.panels.checkable-input-widget.events]
     [nebula-widgets.kitchen-sink.panels.form-field-widget.events]
+    [nebula-widgets.kitchen-sink.panels.group-input-widget.events]
     [nebula-widgets.kitchen-sink.panels.text-group-input-widget.events]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.events]
     [re-frame.core :as rf]))

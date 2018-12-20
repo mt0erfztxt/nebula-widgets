@@ -43,7 +43,7 @@
   TODO:
   * fix styles for case when `:widget` is :button and item's label is shrinked"
   [{:keys [disabled item-props items label-shrinked multi-checkable on-change value] :as props}]
-  (let [item-widget (-> props :widget (#(if (nil? %) "checkbox" %)))
+  (let [widget (-> props :widget (#(if (nil? %) "checkbox" %)))
         multi-checkable (if (nil? multi-checkable) true multi-checkable)
         use-path (and multi-checkable (:boolean props))]
     [group-input/widget
@@ -60,11 +60,12 @@
                          multi-checkable (contains? value v)
                          :else (= v value))]]
              (merge
-               {:widget item-widget}
+               {:widget widget}
                (update-item-label-prop label-shrinked item-props)
                item
                {:checked checked
                 :disabled (boolean (if disabled disabled (:disabled item)))
                 :group-item-custom-props [["checked" checked]]
-                :on-change (r/partial on-change (if use-path path v))})))
+                :on-change (r/partial on-change (if use-path path v))}))
+           :widget widget)
          (dissoc :item-props))]))

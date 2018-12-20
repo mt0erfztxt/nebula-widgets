@@ -6,6 +6,7 @@
     [nebula-widgets.kitchen-sink.panels.checkable-group-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.checkable-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.form-field-widget.subs]
+    [nebula-widgets.kitchen-sink.panels.group-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.text-group-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.subs]
     [re-frame.core :as rf]))

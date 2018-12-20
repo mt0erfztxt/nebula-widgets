@@ -62,7 +62,7 @@
   * [text-group-input](/widgets/text-group-input)
 
   Arguments:
-  * `props` - optional, map, no default. Supported keys:
+  * `props` - required, map. Supported keys:
     - `:bem` - string, 'nw-groupInput' by default. Would be used as widget's BEM. Provided by concrete group input
       widget to augment styling.
     - `:cid` - any, no default. Component id.
@@ -79,6 +79,7 @@
       marked invalid just set `:invalid` to logical true in `:item-props` of concrete group input widget.
     - `:item-props` - map, no default. Common props for all items in group, but we don't guarantee that they wouldn't
       overridden, for example, on-change event handler would be overridden in most cases.
+    - `:item-widget` - required, component. Used to render items, must accept props map (see `:items`) as argument.
     - `:items` - seq of maps, no default. Used to render group items, see concrete group input widget implementation for
       details. Optionally, it can have:
       * `:group-item-custom-props` - seq of BEM modifiers, no default. Used to add custom BEM modifiers to widget item's
@@ -95,7 +96,10 @@
     - `:widget` - any, no default. Specifies how widget looks. Default value must be determined by concrete group input.
 
   Notes:
-  * `:soft-columns` prop can be convenient in case of small containers, e.g. with just 2-3 columns"
+  * `:soft-columns` prop can be convenient in case of small containers, e.g. with just 2-3 columns
+
+  TODO:
+  * make `:group-custom-props` a function and use it to remove `:columns` when `:widget` is :button"
   [{:keys [bem errors invalid item-widget items] :as props}]
   [:div {:class (build-class props)}
    (into
