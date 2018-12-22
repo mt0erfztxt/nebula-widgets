@@ -4,7 +4,7 @@ import testFragment from 'nebula-test-fragment';
 import { Selector, t } from 'testcafe';
 import typeOf from 'typeof--';
 
-import Input from '../input';
+import Input from '../../fragments/input';
 
 const {
   bem: { BemBase },

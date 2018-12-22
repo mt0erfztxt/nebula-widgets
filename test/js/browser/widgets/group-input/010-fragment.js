@@ -4,8 +4,7 @@ import unexpected from 'unexpected';
 import unexpectedSinon from 'unexpected-sinon';
 
 import CheckableGroupInput from '../../../../../src/js/widgets/checkable-group-input';
-import CheckableInput from '../../../../../src/js/widgets/checkable-input';
-import GroupInputFragment from '../../../../../src/js/fragments/group-input';
+import GroupInputFragment from '../../../../../src/js/widgets/group-input';
 import InteractiveExample from '../../../../../src/js/kitchen-sink/widgets/man-page/interactive-example';
 
 const expect = unexpected.clone();
@@ -62,9 +61,14 @@ class GroupInputItem extends Fragment1 {
       }
     });
 
-    return super
-      .getStateParts({ onlyWritable })
-      .concat(['value']);
+    const writableParts = super.getStateParts({ onlyWritable });
+
+    if (onlyWritable) {
+      return writableParts;
+    }
+    else {
+      return writableParts.concat(['value']);
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -176,7 +180,7 @@ async function getHelperFragments(...knobCids) {
   return result;
 }
 
-const sutLabels = [...Array(9).keys()].map((value) => `option${++value}`);
+const sutLabels = [...Array(9).keys()].map((v) => `item${++v}`);
 
 fixture('Fragments :: Group Input :: 010 Fragment')
   .page('http://localhost:3449/widgets/group-input');
@@ -1086,12 +1090,9 @@ test("310 It should allow get group's 'Items' part of state using '#getItemsPart
   await sut.hover();
 
   const itemsState = await sut.getItemsPartOfState();
-  const expectedItemsState = [...Array(9).keys()]
-    .map((v) => ({ value: `item${++v}` }));
-
+  const expectedItemsState = sutLabels.map((value) => ({ value }));
   expect(itemsState, 'to equal', expectedItemsState);
 });
-
 
 test("330 It should allow assert on group's 'Items' part of state using '#expectItemsPartOfStateIs()'", async () => {
   const sut = await getSut();
@@ -1099,9 +1100,7 @@ test("330 It should allow assert on group's 'Items' part of state using '#expect
 
   // -- Successful case
 
-  await sut.expectItemsPartOfStateIs(
-    [...Array(9).keys()].map((v) => ({ value: `item${++v}` }))
-  );
+  await sut.expectItemsPartOfStateIs(sutLabels.map((value) => ({ value })));
 
   // -- Failing case
 
@@ -1128,19 +1127,12 @@ test("330 It should allow assert on group's 'Items' part of state using '#expect
   expect(isThrown, 'to be true');
 });
 
-// TODO: Start here
-
 test("340 It should allow get group's 'Value' part of state using '#getValuePartOfState()'", async () => {
   const sut = await getSut();
   await sut.hover();
 
   const valueState = await sut.getValuePartOfState();
-  const expectedValueState = [...Array(9).keys()]
-    .map((value) =>
-      `option${++value}` + (value === 2 ? '' : '')
-    );
-
-  expect(valueState, 'to equal', expectedValueState);
+  expect(valueState, 'to equal', sutLabels);
 });
 
 test("350 It should have setter for group's 'Value' part of state ('#setValuePartOfState()') that simply returns current value because part is read-only", async () => {
@@ -1148,12 +1140,7 @@ test("350 It should have setter for group's 'Value' part of state ('#setValuePar
   await sut.hover();
 
   const result = await sut.setValuePartOfState();
-  const expectedValueState = [...Array(9).keys()]
-    .map((value) =>
-      `option${++value}` + (value === 2 ? '' : '')
-    );
-
-  expect(result, 'to equal', expectedValueState);
+  expect(result, 'to equal', sutLabels);
 });
 
 test("360 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()'", async () => {
