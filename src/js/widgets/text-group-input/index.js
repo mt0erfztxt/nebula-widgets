@@ -1,6 +1,6 @@
 import typeOf from 'typeof--';
 
-import GroupInput from '../../fragments/group-input';
+import GroupInput from '../group-input';
 
 import Item from './item';
 

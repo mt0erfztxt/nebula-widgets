@@ -2,6 +2,7 @@ import sinon from 'sinon';
 import testFragment from 'nebula-test-fragment';
 import unexpected from 'unexpected';
 import unexpectedSinon from 'unexpected-sinon';
+import { camelCase } from 'change-case';
 
 import CheckableGroupInput from '../../../../../src/js/widgets/checkable-group-input';
 import GroupInputFragment from '../../../../../src/js/widgets/group-input';
@@ -167,15 +168,15 @@ async function getSut(parent) {
  * @returns {Promise<Object>}
  */
 async function getHelperFragments(...knobCids) {
-  const parent = await getInteractiveExample();
-  const result = {};
+  const ie = await getInteractiveExample();
+  const result = { ie };
 
   for (const knobCid of knobCids) {
-    result[`${knobCid}Knob`] = await getKnob(knobCid, parent);
+    result[`${camelCase(knobCid)}Knob`] = await getKnob(knobCid, ie);
   }
 
   result.knob = result[`${knobCids[0]}Knob`];
-  result.sut = await getSut(parent.viewElementSelector);
+  result.sut = await getSut(ie.viewElementSelector);
 
   return result;
 }

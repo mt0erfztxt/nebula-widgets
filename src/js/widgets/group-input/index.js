@@ -36,7 +36,7 @@ const BaseClass = Input.makeFragmentClass(Input, {
  * State parts:
  * * derived from Input:
  *   - disabled (antonym: enabled)
- *   - invalid
+ *   - invalid (antonym: valid)
  *   - size
  *   - value (writable)
  *   - widget

@@ -6,10 +6,11 @@
     {:columns nil
      :disabled false
      :equidistant false
-     :errors nil
+     :errors "no"
      :inline false
      :invalid false
      :label-shrinked false
+     :long-option2 false
      :multi-checkable true
      :no-row-gap false
      :size "normal"
