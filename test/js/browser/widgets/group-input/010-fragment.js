@@ -1281,3 +1281,11 @@ test("400 It should allow assert on group's 'Value' part of state using '#expect
 
   expect(isThrown, 'to be true');
 });
+
+test("410 It should allow to obtain number of items in group using '#getItemsCount()'", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  const itemsCount = await sut.getItemsCount();
+  expect(itemsCount, 'to equal', 9);
+});

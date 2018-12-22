@@ -544,7 +544,7 @@ class GroupInput extends BaseClass {
    * @returns {Promise<Number>}
    */
   async getItemsCount() {
-    return ((await this.itemElementSelector.count) - 1);
+    return this.itemElementSelector.count;
   }
 
   /**
