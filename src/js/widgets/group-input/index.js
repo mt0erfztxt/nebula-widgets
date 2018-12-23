@@ -14,7 +14,7 @@ const {
 
 /**
  * Base class for group input fragment.
- * 
+ *
  * @class
  * @extends {Input}
  */
@@ -32,7 +32,7 @@ const BaseClass = Input.makeFragmentClass(Input, {
 // TODO Add Error Fragment to allow expectations on error presence and etc.
 /**
  * Fragment that represents group input.
- * 
+ *
  * State parts:
  * * derived from Input:
  *   - disabled (antonym: enabled)
@@ -377,7 +377,7 @@ class GroupInput extends BaseClass {
   }
 
   /**
-   * Sets 'Value' part of state to new `value`.
+   * Sets 'Value' part of fragment's state to specified value.
    *
    * @param {Array} [value] New value for 'Value' part of fragment's state. Passing `undefined` means that state must stay intact
    * @param {Options|Object} [options] Options
@@ -410,10 +410,11 @@ class GroupInput extends BaseClass {
    * Asserts that 'Value' part of fragment's state is equal to `value` which is
    * an `Array` of group input items value states.
    *
-   * @param {Array} value Group input items value states
+   * @param {Array} value Group input items' 'Value' part of state
    * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.isNot=false] When truthy, 'Value' part of state must not be equal specified value to pass assertion
+   * @param {Boolean} [options.sameOrder=true] When truthy, items in 'Value' part of state must be in same order as in specified value to pass assertion
    * @returns {Promise<void>}
-   * @throws {TypeError} When provided arguments aren't valid.
    */
   async expectValuePartOfStateIs(value, options) {
     const { isNot, sameOrder } = new Options(options, {
@@ -449,7 +450,7 @@ class GroupInput extends BaseClass {
   /**
    * Asserts that group input fragment has item fragment. Optionally, asserts
    * that specified item found in group input in position specified by `idx`.
-   * 
+   *
    * @param {*} [itemLocator] See `locator` parameter of item fragment's class constructor
    * @param {*} [itemOptions] See `options` parameter of item fragment's class constructor
    * @param {Options|Object} [options]
@@ -540,7 +541,7 @@ class GroupInput extends BaseClass {
 
   /**
    * Retuns number of items in group.
-   * 
+   *
    * @returns {Promise<Number>}
    */
   async getItemsCount() {
@@ -549,7 +550,7 @@ class GroupInput extends BaseClass {
 
   /**
    * Clicks on item and returns it.
-   * 
+   *
    * @param {*} [locator] See `locator` parameter of item fragment's class constructor
    * @param {*} [options] See `options` parameter of item fragment's class constructor
    * @returns {Promise<Fragment>}
