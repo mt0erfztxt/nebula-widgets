@@ -175,7 +175,7 @@ async function getHelperFragments(...knobCids) {
     result[`${camelCase(knobCid)}Knob`] = await getKnob(knobCid, ie);
   }
 
-  result.knob = result[`${knobCids[0]}Knob`];
+  result.knob = result[`${camelCase(knobCids[0])}Knob`];
   result.sut = await getSut(ie.viewElementSelector);
 
   return result;

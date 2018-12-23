@@ -1,12 +1,14 @@
 import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 import typeOf from 'typeof--';
+import { t } from 'testcafe';
 
 import CheckableInput from '../checkable-input';
 import GroupInput from '../group-input';
 
 const {
-  Options
+  Options,
+  utils
 } = testFragment;
 
 /**
@@ -197,6 +199,38 @@ class CheckableGroupInput extends BaseClass {
     }
 
     return this.getValuePartOfState(options);
+  }
+
+  /**
+   * Asserts that 'Value' part of fragment's state is equal specified value.
+   *
+   * @param {Array<String>} value List of labels of group's checked items
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.isNot=false] When truthy, 'Value' part of state must not be equal specified value to pass assertion
+   * @param {Boolean} [options.sameOrder=true] Meaningless for not multi checkable groups. When truthy, items in 'Value' part of state must be in same order as in specified value to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectValuePartOfStateIs(value, options) {
+    const { isNot } = new Options(options, {
+      defaults: {
+        isNot: false
+      }
+    });
+
+    const multiCheckable = await this.getMultiCheckablePartOfState();
+
+    if (multiCheckable) {
+      await GroupInput.prototype.expectValuePartOfStateIs.call(
+        this,
+        value,
+        options
+      );
+    }
+    else {
+      const val = await this.getValuePartOfState(options);
+      const assertionName = utils.buildTestCafeAssertionName('eql', { isNot });
+      await t.expect(val)[assertionName](value);
+    }
   }
 }
 

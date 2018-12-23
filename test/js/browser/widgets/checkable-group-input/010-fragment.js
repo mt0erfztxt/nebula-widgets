@@ -44,7 +44,7 @@ async function getHelperFragments(...knobCids) {
     result[`${camelCase(knobCid)}Knob`] = await getKnob(knobCid, ie);
   }
 
-  result.knob = result[`${knobCids[0]}Knob`];
+  result.knob = result[`${camelCase(knobCids[0])}Knob`];
   result.sut = await getSut(ie.viewElementSelector);
 
   return result;
@@ -555,4 +555,184 @@ test("160 It should allow set group's 'Value' part of state using '#setValuePart
   );
 });
 
-// TODO: Tests for expectValuePartOfStateIs()
+test("170 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()' - case of multi checkable group", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  const newValue = ['option1', 'option6'];
+  await sut.setValuePartOfState(newValue);
+
+  // -- Successful case
+
+  await sut.expectValuePartOfStateIs(newValue);
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectValuePartOfStateIs(Array.from(newValue).reverse());
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      "AssertionError: expected [ 'option1', 'option6' ] to deeply equal [ 'option6', 'option1' ]"
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("180 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()' - case of multi checkable group and 'sameOrder' option set to falsey", async () => {
+  const sut = await getSut();
+  await sut.hover();
+  const newValue = ['option1', 'option6'];
+  await sut.setValuePartOfState(newValue);
+  await sut.expectValuePartOfStateIs(newValue);
+  await sut.expectValuePartOfStateIs(Array.from(newValue).reverse(), {
+    sameOrder: false
+  });
+});
+
+test("190 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()' - case of multi checkable group and with 'isNot' option set to truthy", async () => {
+  const sut = await getSut();
+  await sut.hover();
+  await sut.setValuePartOfState(['option1']);
+
+  // -- Successful case
+
+  await sut.expectValuePartOfStateIs(['option1', 'option3'], { isNot: true });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectValuePartOfStateIs(['option1'], { isNot: true });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      "AssertionError: expected [ 'option1' ] to not deeply equal [ 'option1' ]"
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("200 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()' - case of multi checkable group and with 'sameOrder' option set to falsey and 'isNot' option set to truthy", async () => {
+  const sut = await getSut();
+  await sut.hover();
+  await sut.setValuePartOfState(['option3', 'option4']);
+
+  // -- Successful case
+
+  await sut.expectValuePartOfStateIs(['option5', 'option3'], {
+    isNot: true,
+    sameOrder: false
+  });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectValuePartOfStateIs(['option4', 'option3'], {
+      isNot: true,
+      sameOrder: false
+    });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.*to not have same set.*expected true to be falsy/
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("210 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()' - case of not multi checkable group", async () => {
+  const {
+    multiCheckableKnob,
+    sut,
+    widgetKnob
+  } = await getHelperFragments('multi-checkable', 'widget');
+
+  await multiCheckableKnob.clickItem({ value: 'false' });
+  await widgetKnob.clickItem({ value: 'radio' });
+  await sut.hover();
+
+  const newValue = 'choice6';
+  await sut.setValuePartOfState(newValue);
+
+  // -- Successful case
+
+  await sut.expectValuePartOfStateIs(newValue);
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectValuePartOfStateIs('choice9');
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      "AssertionError: expected 'choice6' to deeply equal 'choice9'"
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
+
+test("220 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()' - case of not multi checkable group and with 'isNot' option set to truthy", async () => {
+  const {
+    multiCheckableKnob,
+    sut,
+    widgetKnob
+  } = await getHelperFragments('multi-checkable', 'widget');
+
+  await multiCheckableKnob.clickItem({ value: 'false' });
+  await widgetKnob.clickItem({ value: 'radio' });
+  await sut.hover();
+
+  const newValue = 'choice8';
+  await sut.setValuePartOfState(newValue);
+
+  // -- Successful case
+
+  await sut.expectValuePartOfStateIs('choice5', { isNot: true });
+
+  // -- Failing case
+
+  let isThrown = false;
+
+  try {
+    await sut.expectValuePartOfStateIs(newValue, { isNot: true });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to equal',
+      "AssertionError: expected 'choice8' to not deeply equal 'choice8'"
+    );
+
+    isThrown = true;
+  }
+
+  expect(isThrown, 'to be true');
+});
