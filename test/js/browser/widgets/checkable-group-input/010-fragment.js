@@ -484,7 +484,75 @@ test("140 It should allow get group's 'Value' part of state using '#getValuePart
   expect(isThrown, 'to be true');
 });
 
-// TODO: Tests for setValuePartOfState() and expectValuePartOfStateIs()
+test("150 It should allow set group's 'Value' part of state using '#setValuePartOfState()' - case of multi checkable group", async (t) => {
+  const sut = await getSut();
+  await sut.hover();
 
-test("150 It should allow set group's 'Value' part of state using '#setValuePartOfState()'", async (t) => {
+  // -- Check `undefined` value is noop
+
+  const currentValue = await sut.getValuePartOfState();
+  expect(
+    await sut.setValuePartOfState(void 0),
+    'to equal',
+    currentValue
+  );
+
+  // -- Check appropriate changes done when value is not `undefined`
+
+  for (const idx of [...Array(9).keys()]) {
+    await (sut.getItem({ idx })).setCheckedPartOfState(0 === idx % 2);
+  }
+
+  const expectedValue = ['option2', 'option8'];
+
+  expect(
+    await sut.setValuePartOfState(expectedValue),
+    'to equal',
+    expectedValue
+  );
+
+  expect(
+    await sut.getValuePartOfState(),
+    'to equal',
+    expectedValue
+  );
 });
+
+test("160 It should allow set group's 'Value' part of state using '#setValuePartOfState()' - case of not multi checkable group", async (t) => {
+  const {
+    multiCheckableKnob,
+    sut,
+    widgetKnob
+  } = await getHelperFragments('multi-checkable', 'widget');
+
+  await multiCheckableKnob.clickItem({ value: 'false' });
+  await widgetKnob.clickItem({ value: 'radio' });
+  await sut.getItem({ value: 'choice4' }).click();
+
+  // -- Check `undefined` value is noop
+
+  const currentValue = await sut.getValuePartOfState();
+  expect(
+    await sut.setValuePartOfState(void 0),
+    'to equal',
+    currentValue
+  );
+
+  // -- Check appropriate changes done when value is not `undefined`
+
+  const expectedValue = 'choice7';
+
+  expect(
+    await sut.setValuePartOfState(expectedValue),
+    'to equal',
+    expectedValue
+  );
+
+  expect(
+    await sut.getValuePartOfState(),
+    'to equal',
+    expectedValue
+  );
+});
+
+// TODO: Tests for expectValuePartOfStateIs()

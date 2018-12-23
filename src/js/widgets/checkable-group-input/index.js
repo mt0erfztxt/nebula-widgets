@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
+import typeOf from 'typeof--';
 
 import CheckableInput from '../checkable-input';
 import GroupInput from '../group-input';
@@ -10,7 +11,7 @@ const {
 
 /**
  * Base class for fragment.
- * 
+ *
  * @class
  * @extends {GroupInput}
  */
@@ -23,7 +24,7 @@ const BaseClass = GroupInput.makeFragmentClass(GroupInput, {
 
 /**
  * Fragment that represents checkable group input.
- * 
+ *
  * State parts:
  * * derived from Input:
  *   - disabled (antonym: enabled)
@@ -42,7 +43,7 @@ const BaseClass = GroupInput.makeFragmentClass(GroupInput, {
  * * own:
  *   - labelShrinked
  *   - multiCheckable
- * 
+ *
  * @extends {GroupInput}
  */
 class CheckableGroupInput extends BaseClass {
@@ -132,9 +133,9 @@ class CheckableGroupInput extends BaseClass {
 
   /**
    * Obtains 'Value' part of fragment's state and returns it. In case of multi
-   * checkable group it returns list of strings - labels of checked items,
-   * otherwise it returns label of checked item or `null` when no checked
-   * item in group.
+   * checkable group it returns list of strings - labels of checked items. In
+   * case of not multi checkable group it returns label of checked item or
+   * `null` when no checked item in group.
    *
    * @returns {Promise<Array<String>|null>}
    */
@@ -161,14 +162,40 @@ class CheckableGroupInput extends BaseClass {
   }
 
   /**
-   * Obtains 'Value' part of fragment's state and returns it because this part
-   * of state is read-only.
-   * 
+   * Sets 'Value' part of fragment's state to specified value.
+   *
    * @param {Array<String>|String} [value] In case of multi checkable group it must be a list of labels of items that must be checked or empty list to uncheck all items. In case of not multi checkable group it must be a label for item to check or `null` to uncheck checked item (if any). Passing `undefined` means that state must stay intact
    * @param {Options|Object} [options]
    * @returns {Promise<Array<String>|String|null>}
    */
   async setValuePartOfState(value, options) {
+    if (_.isUndefined(value)) {
+      return this.getValuePartOfState(options);
+    }
+
+    const multiCheckable = await this.getMultiCheckablePartOfState();
+
+    if (multiCheckable) {
+      if (!_.isArray(value)) {
+        throw new TypeError(
+          `${this.displayName}#setValuePartOfState(): 'value' argument must ` +
+          `be an array but it is ${typeOf(value)} (${value})`
+        );
+      }
+
+      const itemsCount = await this.getItemsCount();
+
+      for (let i = 0; i < itemsCount; i++) {
+        const item = this.getItem({ idx: i });
+        const itemValue = await item.getValuePartOfState();
+        await item.setCheckedPartOfState(value.includes(itemValue), options);
+      }
+    }
+    else {
+      const item = this.getItem({ value });
+      await item.setCheckedPartOfState(true, options);
+    }
+
     return this.getValuePartOfState(options);
   }
 }
