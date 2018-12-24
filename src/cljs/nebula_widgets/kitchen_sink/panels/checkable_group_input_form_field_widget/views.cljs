@@ -7,7 +7,8 @@
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.checkable-group-input :as ie-cgi-knob]
     [nebula-widgets.utils :as utils]
     [nebula-widgets.widgets.checkable-group-input-form-field.core :as checkable-group-input-form-field]
-    [re-frame.core :as rf]))
+    [re-frame.core :as rf]
+    [reagent.core :as r]))
 
 (defn- base-props
   ([] (base-props nil nil nil))
@@ -36,45 +37,64 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:disabled :inline :label :required :value]
+  (->> [:disabled :inline :label :multi-checkable :required :value :widget]
        (map
          (fn [prop]
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
        (into {})))
 
-(let [{value-setter :value} ie-setters]
-  (defn- handle-on-change [value event]
+(let [{value-setter :value multi-checkable-setter :multi-checkable} ie-setters]
+  (defn- handle-on-change [multi-checkable value event]
     (let [checked (utils/event->checked event)]
-      (value-setter #((if checked conj disj) % value)))))
+      (value-setter
+        (if multi-checkable
+          #((if checked conj disj) % value)
+          #(when checked value)))))
+
+  (defn- handle-multi-checkable-prop-on-change [value _]
+    (multi-checkable-setter value)
+    (value-setter (if value #{1 4} 2))))
 
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [value] :as props} @*props]
+      (let [{:keys [multi-checkable value] :as props} @*props]
         (into
           [ie/widget
            [:<>
             [checkable-group-input-form-field/widget
-             (dissoc props :value)
-             {:columns 5
-              :inline true
-              :items (for [n (range 1 10) :let [label (str "option" n)]] {:label label, :value n})
-              :on-change handle-on-change
-              :value value}]]]
-          (for [[cid items]
-                [[:disabled]
-                 [:inline]
+             (select-keys props [:disabled :inline :label :required])
+             (-> props
+                 (select-keys [:disabled :multi-checkable :value :widget])
+                 (merge
+                   {:columns 5
+                    :inline true
+                    :items
+                    (for [n (range 1 10)]
+                      {:label (str (if multi-checkable "option" "choice") n)
+                       :value n})
+                    :on-change (r/partial handle-on-change multi-checkable)
+                    :value value}))]]]
+          (for [params
+                [[:- "form field props"]
+                 :disabled
+                 :inline
                  [:label
                   [{:label "string", :value "Field"}
                    {:label "tuple", :value ["Field" "auxiliary text"]}]]
-                 [:required]]]
+                 :required
+                 [:- "checkable group input props"]
+                 :multi-checkable
+                 [:widget (ie-cgi-knob/gen-items "button" "checkbox" "radio")]]
+                :let [[cid label-or-items] (if (sequential? params) params [params])
+                      label? (= :- cid)]]
             [ie-cgi-knob/widget
-             {:cid cid}
+             {:cid cid, :label (when label? label-or-items)}
              (cond->
                {:cid cid
-                :on-change (get ie-setters cid)
+                :on-change (if (= :multi-checkable cid) handle-multi-checkable-prop-on-change (get ie-setters cid))
                 :value (get props cid)}
-               items (assoc :items items))]))))))
+               (and (not label?) label-or-items) (assoc :items label-or-items))]))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC

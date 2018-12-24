@@ -9,7 +9,7 @@ const {
 
 /**
  * Base class for fragment.
- * 
+ *
  * @class
  * @extends {Fragment1}
  */
@@ -23,7 +23,14 @@ const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
 
 /**
  * Fragment that represents form field.
- * 
+ *
+ * State parts:
+ * * own:
+ *   - disabled (antonym: enabled)
+ *   - inline
+ *   - input (writable)
+ *   - required
+ *
  * @extends {Fragment1}
  */
 class FormField extends BaseClass {
@@ -212,26 +219,29 @@ class FormField extends BaseClass {
    * Obtains 'Input' part of fragment's state and returns it.
    *
    * @param {Options|Object} [options] Options
-   * @returns {Promise<Object>}
+   * @returns {Promise<Object|null>} Returns `null` when field has no input.
    */
   async getInputPartOfState(options) {
     if (this.input) {
       return this.input.getState(options);
     }
     else {
-      return void 0;
+      return null;
     }
   }
 
   /**
-   * Sets 'Input' part of state to new `value`.
+   * Sets 'Input' part of fragment's state to new `value`.
    *
-   * @param {Object} value New value for 'Input' part of fragment's state
+   * @param {Object} value New value for 'Input' part of fragment's state. Passing `undefined` is noop
    * @param {Options|Object} [options] Options
-   * @returns {Promise<Object>} Fragment's new 'Input' part of state.
+   * @returns {Promise<Object>} Fragment's 'Input' part of state.
    */
   async setInputPartOfState(value, options) {
-    if (this.input) {
+    if (value === void 0) {
+      return this.getInputPartOfState(options);
+    }
+    else if (this.input) {
       return this.input.setState(value, options);
     }
     else {
@@ -291,7 +301,7 @@ class FormField extends BaseClass {
    * Asserts that form field's label equal or matches specified value. Accepts
    * same arguments as {@link Fragment1#expectTextIs} except that 'selector'
    * option forcibly set to fragment's label element selector.
-   * 
+   *
    * @returns {Promise<void>}
    */
   async expectLabelIs(text, options) {
@@ -304,7 +314,7 @@ class FormField extends BaseClass {
 
   /**
    * Asserts that fragment's value is equal specified one.
-   * 
+   *
    * @param {*} value Fragment's value must be equal specified one to pass assertion
    * @returns {Promise<void>}
    */
@@ -314,7 +324,7 @@ class FormField extends BaseClass {
 
   /**
    * Asserts that fragment's value is not equal specified one.
-   * 
+   *
    * @param {*} value Fragment's value must be not equal specified one to pass assertion
    * @returns {Promise<void>}
    */
@@ -328,7 +338,7 @@ class FormField extends BaseClass {
 
   /**
    * Hovers on form field.
-   * 
+   *
    * @returns {Promise<void>}
    */
   async hover() {
