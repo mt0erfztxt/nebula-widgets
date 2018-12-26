@@ -253,19 +253,11 @@ class FormField extends BaseClass {
    * Asserts that 'Input' part of fragment's state equal specified 'value'.
    *
    * @param {Object} value 'Input' part of fragment's state must be equal that value to pass assertion
-   * @param {Options|Object} [options] Options
-   * @param {Boolean} [options.isNot=false] When truthy when truthy 'Input' part of fragment's state must be not equal that value to pass assertion
+   * @param {Options|Object} [options] Same as in {@link Fragment1#expectStateIs}
    * @return {Promise<void>}
    */
   async expectInputPartOfStateIs(value, options) {
-    const { isNot } = new Options(options, {
-      defaults: {
-        isNot: false
-      }
-    });
-
-    const assertionName = utils.buildTestCafeAssertionName('eql', { isNot });
-    await t.expect(this.input)[assertionName](value);
+    await this.input.expectStateIs(value, options);
   }
 
   // ---------------------------------------------------------------------------

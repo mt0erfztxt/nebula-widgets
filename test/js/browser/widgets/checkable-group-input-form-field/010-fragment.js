@@ -54,6 +54,16 @@ async function getHelperFragments(...knobCids) {
 fixture('Widgets :: Checkable Group Input Form Field :: 010 Fragment')
   .page('http://localhost:3449/widgets/checkable-group-input-form-field');
 
+test("005 It should have checkable group input available as '#input'", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  const cgi = sut.input;
+  await cgi.expectIsExist();
+  await cgi.hover();
+  expect(cgi, 'to be a', CheckableGroupInput);
+});
+
 test("010 It should allow get field's 'Input' part of state using '#getInputPartOfState()'", async () => {
   const { knob, sut } = await getHelperFragments('disabled');
   await sut.hover();
@@ -94,55 +104,83 @@ test("010 It should allow get field's 'Input' part of state using '#getInputPart
   });
 });
 
-// test("035 It should allow set input's 'Checked' part of state using '#setCheckedPartOfState()'", async () => {
-//   const { knob, sut } = await getHelperFragments('checked');
-//   await knob.clickItem({ value: 'true' });
+test("020 It should allow set field's 'Input' part of state using '#setInputPartOfState()'", async () => {
+  const sut = await getSut();
+  await sut.hover();
 
-//   // -- Check when checked
+  for (const idx of [0, 3, 4]) {
+    await (sut.input.getItem({ idx })).setCheckedPartOfState(true);
+  }
 
-//   await sut.setCheckedPartOfState(true);
-//   expect(await sut.getCheckedPartOfState(), 'to be true');
+  await sut.input.expectValuePartOfStateIs(['option1', 'option4', 'option5']);
 
-//   await sut.setCheckedPartOfState(false);
-//   expect(await sut.getCheckedPartOfState(), 'to be false');
+  const newInputPartOfState = ['option7', 'option8'];
+  const result = await sut.setInputPartOfState({ value: newInputPartOfState });
+  await sut.input.expectValuePartOfStateIs(newInputPartOfState);
+  expect(result, 'to equal', { value: newInputPartOfState });
+});
 
-//   // -- Check when not checked
+test("030 It should allow assert on value of field's 'Input' part of state using '#expectInputPartOfStateIs()'", async () => {
+  const sut = await getSut();
+  await sut.hover();
 
-//   await sut.setCheckedPartOfState(false);
-//   expect(await sut.getCheckedPartOfState(), 'to be false');
+  for (const idx of [0, 3, 4]) {
+    await (sut.input.getItem({ idx })).setCheckedPartOfState(true);
+  }
 
-//   await sut.setCheckedPartOfState(true);
-//   expect(await sut.getCheckedPartOfState(), 'to be true');
-// });
+  await sut.input.expectValuePartOfStateIs(['option1', 'option4', 'option5']);
 
-// test("040 It should allow assert on whether input is checked using '#expectIsChecked()'", async () => {
-//   const { knob, sut } = await getHelperFragments('checked');
+  // -- Successful case
 
-//   // -- Successful case
+  await sut.expectInputPartOfStateIs({
+    // Input
+    disabled: false,
+    invalid: false,
+    size: 'normal',
+    value: ['option1', 'option4', 'option5'],
+    widget: 'checkbox',
+    // GroupInput
+    columns: '5',
+    equidistant: false,
+    inline: true, // because of columns
+    items: [...Array(9).keys()].map(value => {
+      const v = ++value;
+      return {
+        // Input
+        disabled: false,
+        invalid: false,
+        size: 'normal',
+        value: `option${v}`,
+        widget: 'checkbox',
+        // CheckableInput
+        checked: [1, 4, 5].includes(v),
+        labelShrinked: false
+      }
+    }),
+    noRowGap: false,
+    softColumns: false,
+    stackedOnMobile: false,
+    // CheckableGroupInput
+    labelShrinked: false,
+    multiCheckable: true
+  });
 
-//   await knob.clickItem({ value: 'true' });
-//   await sut.hover();
-//   await sut.expectIsChecked();
+  // -- Failing case
 
-//   // -- Failing case
+  let isThrown = false;
 
-//   await knob.clickItem({ value: 'false' });
-//   await sut.hover();
+  try {
+    await sut.expectInputPartOfStateIs({ value: ['option1'] });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError: 'nebula-widgets.widgets.checkable-group-input' fragment's current state doesn't match expected.*/
+    );
 
-//   let isThrown = false;
+    isThrown = true;
+  }
 
-//   try {
-//     await sut.expectIsChecked();
-//   }
-//   catch (e) {
-//     expect(
-//       e.errMsg,
-//       'to match',
-//       /AssertionError:.+\.checkable-input.+must have BEM modifier 'checked,'.+but it doesn't/
-//     );
-
-//     isThrown = true;
-//   }
-
-//   expect(isThrown, 'to be true');
-// });
+  expect(isThrown, 'to be true');
+});
