@@ -13,7 +13,19 @@ const {
 
 /**
  * Base class for fragment.
- * 
+ *
+ * State parts:
+ * * derived from Input:
+ *   - disabled (antonym: enabled)
+ *   - invalid (antonym: valid)
+ *   - size
+ *   - value (writable)
+ *   - widget
+ * * own:
+ *   - busy
+ *   - multiLine
+ *   - textAlignment
+ *
  * @class
  * @extends {Input}
  */
@@ -76,7 +88,7 @@ class TextInput extends BaseClass {
 
   /**
    * BEM base for action fragment.
-   * 
+   *
    * NOTE: We use action fragment's class directly here because we not planing
    *       derive fragments from text input, otherwise we can wrap each action
    *       in container (e.g., nw-textInput__action) and use it for selections.
@@ -286,7 +298,7 @@ class TextInput extends BaseClass {
   /**
    * Asserts that text input fragment has action fragment. Optionally, asserts
    * that specified action found in text input in position specified by `idx`.
-   * 
+   *
    * @param {*} [actionLocator] See `locator` parameter of action fragment's class constructor
    * @param {*} [actionOptions] See `options` parameter of action fragment's class constructor
    * @param {Options|Object} [options]
@@ -361,8 +373,8 @@ class TextInput extends BaseClass {
   }
 
   /**
-   * Asserts that fragment has value.
-   * 
+   * Asserts that input has value.
+   *
    * @returns {Promise<void>}
    */
   async expectHasValue() {
@@ -370,8 +382,8 @@ class TextInput extends BaseClass {
   }
 
   /**
-   * Asserts that fragment has no value.
-   * 
+   * Asserts that input has no value.
+   *
    * @returns {Promise<void>}
    */
   async expectHasNoValue() {
@@ -379,8 +391,8 @@ class TextInput extends BaseClass {
   }
 
   /**
-   * Asserts thst fragment is empty - its value is an empty string.
-   * 
+   * Asserts that input is empty - its value is an empty string.
+   *
    * @returns {Promise<void>}
    */
   async expectIsEmpty() {
@@ -388,8 +400,8 @@ class TextInput extends BaseClass {
   }
 
   /**
-   * Asserts thst fragment is not empty - its value is a non-empty string.
-   * 
+   * Asserts that input is not empty - its value is a non-empty string.
+   *
    * @returns {Promise<void>}
    */
   async expectIsNotEmpty() {
@@ -397,9 +409,9 @@ class TextInput extends BaseClass {
   }
 
   /**
-   * Asserts that fragment's value is equal specified one.
-   * 
-   * @param {*} value Same as in {@link TextInput#expectValuePartOfStateIs}
+   * Shortcut for {@link TextInput#expectValuePartOfStateIs}.
+   *
+   * @param {*} value
    * @returns {Promise<void>}
    */
   async expectValueIs(value) {
@@ -407,9 +419,10 @@ class TextInput extends BaseClass {
   }
 
   /**
-   * Asserts that fragment's value is not equal specified one.
-   * 
-   * @param {*} value Same as in {@link TextInput#expectValuePartOfStateIs} plus 'isNot' option set to true
+   * Shortcut for {@link TextInput#expectValuePartOfStateIs} with 'isNot'
+   * option set to `true`.
+   *
+   * @param {*} value
    * @returns {Promise<void>}
    */
   async expectValueIsNot(value) {
@@ -433,7 +446,7 @@ class TextInput extends BaseClass {
 
   /**
    * Clicks on action and returns it.
-   * 
+   *
    * @param {*} [locator] See `locator` parameter of action fragment's class constructor
    * @param {*} [options] See `options` parameter of action fragment's class constructor
    * @returns {Promise<Action>}

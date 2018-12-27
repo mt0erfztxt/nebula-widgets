@@ -9,7 +9,7 @@ class TextGroupInputItem extends TextInput {
 
   /**
    * Clicks on 'Insert' action.
-   * 
+   *
    * @returns {Promise<TextInputAction>} Clicked action fragment.
    */
   async clickInsertAction() {
@@ -18,7 +18,7 @@ class TextGroupInputItem extends TextInput {
 
   /**
    * Clicks on 'Remove' action.
-   * 
+   *
    * @returns {Promise<TextInputAction>} Clicked action fragment.
    */
   async clickRemoveAction() {
