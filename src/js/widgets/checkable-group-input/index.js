@@ -232,6 +232,63 @@ class CheckableGroupInput extends BaseClass {
       await t.expect(val)[assertionName](value);
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // Assertions
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Asserts that input has value.
+   *
+   * @returns {Promise<void>}
+   */
+  async expectHasValue() {
+    const multiCheckable = await this.getMultiCheckablePartOfState();
+
+    if (multiCheckable) {
+      await this.expectValueIsNot([]);
+    }
+    else {
+      await this.expectValueIsNot(null);
+    }
+  }
+
+  /**
+   * Asserts that input has no value.
+   *
+   * @returns {Promise<void>}
+   */
+  async expectHasNoValue() {
+    const multiCheckable = await this.getMultiCheckablePartOfState();
+
+    if (multiCheckable) {
+      await this.expectValueIs([]);
+    }
+    else {
+      await this.expectValueIs(null);
+    }
+  }
+
+  /**
+   * Shortcut for {@link CheckableGroupInput#expectValuePartOfStateIs}.
+   *
+   * @param {*} value Fragment's value must be equal specified one to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectValueIs(value) {
+    await this.expectValuePartOfStateIs(value);
+  }
+
+  /**
+   * Shortcut for {@link CheckableGroupInput#expectValuePartOfStateIs} with
+   * 'isNot' option set to `true`.
+   *
+   * @param {*} value Fragment's value must be not equal specified one to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectValueIsNot(value) {
+    await this.expectValuePartOfStateIs(value, { isNot: true });
+  }
 }
 
 Object.defineProperties(CheckableGroupInput, {
