@@ -336,6 +336,27 @@ class FormField extends BaseClass {
   async hover() {
     await t.hover(this.selector);
   }
+
+  /**
+   * Shortcut for input's `#getValuePartOfState()``.
+   *
+   * @param {Options|Object} options See input fragment for details
+   * @returns {Promise<*>}
+   */
+  getValue(options) {
+    return this.input.getValuePartOfState(options);
+  }
+
+  /**
+   * Shortcut for input's `#setValuePartOfState()``.
+   *
+   * @param {*} value See input fragment for details
+   * @param {Options|Object} options See input fragment for details
+   * @returns {Promise<*>}
+   */
+  setValue(value, options) {
+    return this.input.setValuePartOfState(value, options);
+  }
 }
 
 Object.defineProperties(FormField, {
