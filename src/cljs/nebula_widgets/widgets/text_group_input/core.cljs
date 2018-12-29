@@ -54,6 +54,8 @@
     - `:actions` - overridden so text input have two actions - insert and remove
     - `:insert-allowed` - logical true/false, true by default. Insert action is disabled when boolean false
     - `:remove-allowed` - logical true/false, true by default. Remove action is disabled when boolean false
+  * `:multi-line` - logical true/false, no default. Used to choose whether text or textarea input would be used.
+    Overrides same prop passed to any item in `:items`.
   * `:on-change` - function, no default. When value of any text input in group is changed or new item inserted/removed
     it would be called with two arguments:
     1. a map:
@@ -67,19 +69,21 @@
 
   TODO:
   * handle Ctrl+Del/Ins in text input to remove/insert items using keyboard"
-  [{:keys [disabled item-props items on-change] :as props}]
-  (let [value (->> items (map :value) vec)]
+  [{:keys [disabled item-props items multi-line on-change] :as props}]
+  (let [multi-line? (boolean multi-line)
+        value (->> items (map :value) vec)]
     [group-input/widget
      (-> props
          (assoc
            :bem "nw-textGroupInput"
+           :group-custom-props {"widget" (if multi-line? "textarea" "text")}
            :item-widget text-input/widget
            :items
            (map-indexed
              (fn [idx item]
                (let [disabled? (if disabled disabled (:disabled item))]
                  (-> item-props
-                     (merge item {:disabled disabled?})
+                     (merge item {:disabled disabled?, :multi-line multi-line?})
                      (add-actions idx value (assoc props :disabled disabled?))
                      (assoc :on-change (r/partial handle-item-on-change idx on-change value))
                      (dissoc :insert-allowed :remove-allowed))))

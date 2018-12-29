@@ -44,7 +44,8 @@
      ["invalid" invalid]
      ["multiLine" multi-line]
      ["size" (common/get-size-prop size)]
-     ["textAlignment" (-> text-alignment keyword text-alignment-prop-set (or :left))]]))
+     ["textAlignment" (-> text-alignment keyword text-alignment-prop-set (or :left))]
+     ["widget" (if multi-line "textarea" "text")]]))
 
 (defn- actions-elt-cmp [{:keys [actions disabled invalid multi-line]} placement]
   (let [placement (common/get-placement-prop placement)
