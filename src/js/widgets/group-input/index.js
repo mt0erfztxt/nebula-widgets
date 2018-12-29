@@ -524,6 +524,45 @@ class GroupInput extends BaseClass {
     );
   }
 
+  /**
+   * Asserts that input has value.
+   *
+   * @returns {Promise<void>}
+   */
+  async expectHasValue() {
+    await this.expectValueIsNot([]);
+  }
+
+  /**
+   * Asserts that input has no value.
+   *
+   * @returns {Promise<void>}
+   */
+  async expectHasNoValue() {
+    await this.expectValueIs([]);
+  }
+
+  /**
+   * Shortcut for {@link GroupInput#expectValuePartOfStateIs}.
+   *
+   * @param {*} value Input's value must be equal specified one to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectValueIs(value) {
+    await this.expectValuePartOfStateIs(value);
+  }
+
+  /**
+   * Shortcut for {@link GroupInput#expectValuePartOfStateIs} with 'isNot'
+   * option set to `true`.
+   *
+   * @param {*} value Input's value must be not equal specified one to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectValueIsNot(value) {
+    await this.expectValuePartOfStateIs(value, { isNot: true });
+  }
+
   // ---------------------------------------------------------------------------
   // Other Methods
   // ---------------------------------------------------------------------------
