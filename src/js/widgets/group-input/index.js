@@ -4,7 +4,7 @@ import testFragment from 'nebula-test-fragment';
 import { Selector, t } from 'testcafe';
 import typeOf from 'typeof--';
 
-import Input from '../input';
+import Input from '../../fragments/input';
 
 const {
   bem: { BemBase },
@@ -14,7 +14,7 @@ const {
 
 /**
  * Base class for group input fragment.
- * 
+ *
  * @class
  * @extends {Input}
  */
@@ -32,6 +32,22 @@ const BaseClass = Input.makeFragmentClass(Input, {
 // TODO Add Error Fragment to allow expectations on error presence and etc.
 /**
  * Fragment that represents group input.
+ *
+ * State parts:
+ * * derived from Input:
+ *   - disabled (antonym: enabled)
+ *   - invalid (antonym: valid)
+ *   - size
+ *   - value (writable)
+ *   - widget
+ * * own:
+ *   - columns
+ *   - equidistant
+ *   - inline
+ *   - items (writable)
+ *   - noRowGap
+ *   - softColumns
+ *   - stackedOnMobile
  */
 class GroupInput extends BaseClass {
 
@@ -360,10 +376,8 @@ class GroupInput extends BaseClass {
     return Promise.all(statePromises);
   }
 
-  // TODO Must be tested using text group input, because it is read-only in
-  //      checkable group input.
   /**
-   * Sets 'Value' part of state to new `value`.
+   * Sets 'Value' part of fragment's state to specified value.
    *
    * @param {Array} [value] New value for 'Value' part of fragment's state. Passing `undefined` means that state must stay intact
    * @param {Options|Object} [options] Options
@@ -396,10 +410,11 @@ class GroupInput extends BaseClass {
    * Asserts that 'Value' part of fragment's state is equal to `value` which is
    * an `Array` of group input items value states.
    *
-   * @param {Array} value Group input items value states
+   * @param {Array} value Group input items' 'Value' part of state
    * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.isNot=false] When truthy, 'Value' part of state must not be equal specified value to pass assertion
+   * @param {Boolean} [options.sameOrder=true] When truthy, items in 'Value' part of state must be in same order as in specified value to pass assertion
    * @returns {Promise<void>}
-   * @throws {TypeError} When provided arguments aren't valid.
    */
   async expectValuePartOfStateIs(value, options) {
     const { isNot, sameOrder } = new Options(options, {
@@ -435,7 +450,7 @@ class GroupInput extends BaseClass {
   /**
    * Asserts that group input fragment has item fragment. Optionally, asserts
    * that specified item found in group input in position specified by `idx`.
-   * 
+   *
    * @param {*} [itemLocator] See `locator` parameter of item fragment's class constructor
    * @param {*} [itemOptions] See `options` parameter of item fragment's class constructor
    * @param {Options|Object} [options]
@@ -509,6 +524,45 @@ class GroupInput extends BaseClass {
     );
   }
 
+  /**
+   * Asserts that input has value.
+   *
+   * @returns {Promise<void>}
+   */
+  async expectHasValue() {
+    await this.expectValueIsNot([]);
+  }
+
+  /**
+   * Asserts that input has no value.
+   *
+   * @returns {Promise<void>}
+   */
+  async expectHasNoValue() {
+    await this.expectValueIs([]);
+  }
+
+  /**
+   * Shortcut for {@link GroupInput#expectValuePartOfStateIs}.
+   *
+   * @param {*} value Input's value must be equal specified one to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectValueIs(value) {
+    await this.expectValuePartOfStateIs(value);
+  }
+
+  /**
+   * Shortcut for {@link GroupInput#expectValuePartOfStateIs} with 'isNot'
+   * option set to `true`.
+   *
+   * @param {*} value Input's value must be not equal specified one to pass assertion
+   * @returns {Promise<void>}
+   */
+  async expectValueIsNot(value) {
+    await this.expectValuePartOfStateIs(value, { isNot: true });
+  }
+
   // ---------------------------------------------------------------------------
   // Other Methods
   // ---------------------------------------------------------------------------
@@ -526,16 +580,16 @@ class GroupInput extends BaseClass {
 
   /**
    * Retuns number of items in group.
-   * 
+   *
    * @returns {Promise<Number>}
    */
   async getItemsCount() {
-    return ((await this.itemElementSelector.count) - 1);
+    return this.itemElementSelector.count;
   }
 
   /**
    * Clicks on item and returns it.
-   * 
+   *
    * @param {*} [locator] See `locator` parameter of item fragment's class constructor
    * @param {*} [options] See `options` parameter of item fragment's class constructor
    * @returns {Promise<Fragment>}

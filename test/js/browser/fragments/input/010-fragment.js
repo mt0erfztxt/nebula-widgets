@@ -392,8 +392,9 @@ test("140 It should allow get input's 'Widget' part of state using '#getWidgetPa
 
   // -- Check when icon
 
+  await knob.clickItem({ value: 'checkbox' });
   await sut.hover();
-  expect(await sut.getWidgetPartOfState(), 'to equal', 'icon');
+  expect(await sut.getWidgetPartOfState(), 'to equal', 'checkbox');
 
   // -- Check when button
 
@@ -407,9 +408,9 @@ test("150 It should allow assert on input's 'Widget' part of state using '#expec
 
   // -- Successful case
 
-  await knob.clickItem({ value: 'icon' });
+  await knob.clickItem({ value: 'radio' });
   await sut.hover();
-  await sut.expectWidgetPartOfStateIs('icon');
+  await sut.expectWidgetPartOfStateIs('radio');
 
   // -- Failing case
 
@@ -419,13 +420,13 @@ test("150 It should allow assert on input's 'Widget' part of state using '#expec
   let isThrown = false;
 
   try {
-    await sut.expectWidgetPartOfStateIs('icon');
+    await sut.expectWidgetPartOfStateIs('radio');
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-input.+must have BEM modifier 'widget,icon'.+but it doesn't/
+      /AssertionError:.+\.checkable-input.+must have BEM modifier 'widget,radio'.+but it doesn't/
     );
 
     isThrown = true;
@@ -439,7 +440,7 @@ test("160 It should allow assert on input's 'Widget' part of state using '#expec
 
   // -- Successful case
 
-  await knob.clickItem({ value: 'icon' });
+  await knob.clickItem({ value: 'checkbox' });
   await sut.hover();
   await sut.expectWidgetPartOfStateIs('button', { isNot: true });
 
@@ -448,13 +449,13 @@ test("160 It should allow assert on input's 'Widget' part of state using '#expec
   let isThrown = false;
 
   try {
-    await sut.expectWidgetPartOfStateIs('icon', { isNot: true });
+    await sut.expectWidgetPartOfStateIs('checkbox', { isNot: true });
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-input.+must not have BEM modifier 'widget,icon'.+but it does/
+      /AssertionError:.+\.checkable-input.+must not have BEM modifier 'widget,checkbox'.+but it does/
     );
 
     isThrown = true;

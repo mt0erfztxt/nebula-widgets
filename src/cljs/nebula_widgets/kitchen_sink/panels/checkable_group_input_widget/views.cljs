@@ -231,8 +231,8 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:columns :disabled :equidistant :errors :inline :invalid :label-shrinked :multi-checkable :no-row-gap :size
-        :soft-columns :stacked-on-mobile :value :widget]
+  (->> [:columns :disabled :equidistant :errors :inline :invalid :label-shrinked :long-option2 :multi-checkable
+        :no-row-gap :size :soft-columns :stacked-on-mobile :value :widget]
        (map
          (fn [prop]
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
@@ -253,16 +253,17 @@
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [multi-checkable] :as props} @*props]
+      (let [{:keys [errors long-option2 multi-checkable] :as props} @*props]
         (into
           [ie/widget
            [checkable-group-input/widget
             (assoc props
+              :errors (when (not= "no" errors) errors)
               :items
               (for [n (range 1 10) :let [label (str (if multi-checkable "option" "choice") n)]]
                 {:label
                  {:shrinked (get props :label-shrinked)
-                  :text (str label (when (= 2 n) " (some long text here)"))}
+                  :text (str label (when (and long-option2 (= 2 n)) " (some long text here)"))}
                  :value (keyword label)})
               :on-change (r/partial handle-on-change multi-checkable))]]
           (for [[cid items]
@@ -278,9 +279,10 @@
                  [:size (ie-cgi-knob/gen-items "small" "normal" "large")]
                  [:soft-columns]
                  [:stacked-on-mobile]
-                 [:widget (ie-cgi-knob/gen-items "button" "checkbox" "radio")]]]
-            [ie-cgi-knob/widget
-             {:cid cid}
+                 [:widget (ie-cgi-knob/gen-items "button" "checkbox" "radio")]
+                 [[:long-option2 "Long option2"]]]
+                :let [[cid label] (if (sequential? cid) cid [cid])]]
+            [ie-cgi-knob/widget {:cid cid, :label label}
              (cond->
                {:cid cid
                 :on-change (if (= :multi-checkable cid) handle-multi-checkable-prop-on-change (get ie-setters cid))

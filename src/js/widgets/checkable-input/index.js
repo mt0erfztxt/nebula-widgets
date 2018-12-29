@@ -27,6 +27,17 @@ const BaseClass = Input.makeFragmentClass(Input, {
 
 /**
  * Fragment that represents checkable input.
+ * 
+ * State parts:
+ * * derived from Input:
+ *   - disabled (antonym: enabled)
+ *   - invalid (antonym: valid)
+ *   - size
+ *   - value (item label - read-only in this fragment)
+ *   - widget
+ * * own:
+ *   - checked (writable)
+ *   - labelShrinked
  */
 class CheckableInput extends BaseClass {
 
@@ -127,8 +138,8 @@ class CheckableInput extends BaseClass {
       }
     });
 
-    // In checkable input 'Value' part of state is read-only but in input it's
-    // defined as writable.
+    // In checkable input 'Value' part of state is label text and so it 'Value'
+    // part of state is read-only.
     const writableParts = super
       .getStateParts({ onlyWritable })
       .filter((v) => v !== 'value')
@@ -140,7 +151,7 @@ class CheckableInput extends BaseClass {
     else {
       return _.concat(writableParts, [
         'labelShrinked',
-        'value' // now it's read-only
+        'value' // made read-only
       ]);
     }
   }

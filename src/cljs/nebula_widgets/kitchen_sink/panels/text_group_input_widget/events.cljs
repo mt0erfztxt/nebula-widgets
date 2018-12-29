@@ -9,6 +9,6 @@
 ;;------------------------------------------------------------------------------
 
 (doseq [property
-        [:disabled :errors :invalid :no-row-gap :size :value]]
+        [:disabled :errors :invalid :multi-line :no-row-gap :size :value]]
   (let [event (common/panel-path->keyword :interactive-example "/" :set property)]
     (rf/reg-event-db event (rf-utils/make-setter-event-handler event))))

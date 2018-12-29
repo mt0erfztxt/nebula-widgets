@@ -1,13 +1,94 @@
+import testFragment from 'nebula-test-fragment';
 import typeOf from 'typeof--';
 
-import GroupInput from '../../fragments/group-input';
+import GroupInput from '../group-input';
 
 import Item from './item';
 
+const {
+  Options
+} = testFragment;
+
+/**
+ * Base class for fragment.
+ *
+ * @class
+ * @extends {GroupInput}
+ */
+const BaseClass = GroupInput.makeFragmentClass(GroupInput, {
+  stateParts: ['multiLine']
+});
+
 /**
  * Fragment that represents text group input.
+ *
+ * State parts:
+ * * derived from Input:
+ *   - disabled (antonym: enabled)
+ *   - invalid (antonym: valid)
+ *   - size
+ *   - value (writable, built from inputs values)
+ *   - widget
+ * * derived from GroupInput:
+ *   - columns
+ *   - equidistant
+ *   - inline
+ *   - items (read-only)
+ *   - noRowGap
+ *   - softColumns
+ *   - stackedOnMobile
+ * * own:
+ *   - multiLine
+ *
+ * @extends {GroupInput}
  */
-class TextGroupInput extends GroupInput {
+class TextGroupInput extends BaseClass {
+
+  // ---------------------------------------------------------------------------
+  // State
+  // ---------------------------------------------------------------------------
+
+  getStateParts(options) {
+    const { onlyWritable } = new Options(options, {
+      defaults: {
+        onlyWritable: false
+      }
+    });
+
+    const writableParts = super.getStateParts({ onlyWritable });
+
+    if (onlyWritable) {
+      return writableParts;
+    }
+    else {
+      return writableParts.concat(['multiLine']);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // State :: MultiLine (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name TextGroupInput#getMultiLinePartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name TextGroupInput#expectIsMultiLine
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name TextGroupInput#expectIsNotMultiLine
+   * @method
+   * @returns {Promise<void>}
+   */
 
   // ---------------------------------------------------------------------------
   // State :: Value

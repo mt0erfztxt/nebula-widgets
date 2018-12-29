@@ -29,17 +29,19 @@
 (defn- build-class
   [{:keys [bem cid columns cns disabled equidistant group-custom-props inline invalid no-row-gap size soft-columns
            stacked-on-mobile widget]}]
-  (->> [["columns" columns]
-        ["disabled" disabled]
-        ["equidistant" equidistant]
-        ["inline" (or inline (pos? columns))]
-        ["invalid" invalid]
-        ["noRowGap" no-row-gap]
-        ["size" (-> size keyword size-prop-set (or :normal))]
-        ["softColumns" soft-columns]
-        ["stackedOnMobile" stacked-on-mobile]
-        ["widget" widget]]
-       (concat (or group-custom-props []))
+  (->> group-custom-props
+       (map vec)
+       (merge
+         {"columns" columns
+          "disabled" disabled
+          "equidistant" equidistant
+          "inline" (or inline (pos? columns))
+          "invalid" invalid
+          "noRowGap" no-row-gap
+          "size" (-> size keyword size-prop-set (or :normal))
+          "softColumns" soft-columns
+          "stackedOnMobile" stacked-on-mobile
+          "widget" widget})
        (sort-by first)
        (concat [["cns" cns] ["cid" cid]])
        (bem-utils/build-class (build-bem bem))))
@@ -62,7 +64,7 @@
   * [text-group-input](/widgets/text-group-input)
 
   Arguments:
-  * `props` - optional, map, no default. Supported keys:
+  * `props` - required, map. Supported keys:
     - `:bem` - string, 'nw-groupInput' by default. Would be used as widget's BEM. Provided by concrete group input
       widget to augment styling.
     - `:cid` - any, no default. Component id.
@@ -73,12 +75,13 @@
     - `:equidistant` - logical true/false, no default. Whether items have same width.
     - `:errors` - seq of strings, no default. Would be displayed only when not empty and :invalid.
     - `:group-custom-props` - seq of BEM modifiers, no default. Used to add custom BEM modifiers to widget's element.
-      Each BEM modifier is a seq of two elements - name and value.
+      Each BEM modifier is a seq of two elements - name and value (in case of map key used as a name).
     - `:inline` - logical true/false, no default. Whether items grouped stacked or inline.
     - `:invalid` - logical true/false, no default. Whether widget is in invalid state or not. When all items must be
       marked invalid just set `:invalid` to logical true in `:item-props` of concrete group input widget.
     - `:item-props` - map, no default. Common props for all items in group, but we don't guarantee that they wouldn't
       overridden, for example, on-change event handler would be overridden in most cases.
+    - `:item-widget` - required, component. Used to render items, must accept props map (see `:items`) as argument.
     - `:items` - seq of maps, no default. Used to render group items, see concrete group input widget implementation for
       details. Optionally, it can have:
       * `:group-item-custom-props` - seq of BEM modifiers, no default. Used to add custom BEM modifiers to widget item's
@@ -95,7 +98,10 @@
     - `:widget` - any, no default. Specifies how widget looks. Default value must be determined by concrete group input.
 
   Notes:
-  * `:soft-columns` prop can be convenient in case of small containers, e.g. with just 2-3 columns"
+  * `:soft-columns` prop can be convenient in case of small containers, e.g. with just 2-3 columns
+
+  TODO:
+  * make `:group-custom-props` a function and use it to remove `:columns` when `:widget` is :button"
   [{:keys [bem errors invalid item-widget items] :as props}]
   [:div {:class (build-class props)}
    (into

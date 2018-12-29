@@ -11,10 +11,12 @@
      ["/widgets/button-group" :widgets/button-group]
      ["/widgets/button-group-set" :widgets/button-group-set]
      ["/widgets/card" :widgets/card]
+     ["/widgets/checkable-group-input-form-field" :widgets/checkable-group-input-form-field]
      ["/widgets/checkable-group-input" :widgets/checkable-group-input]
      ["/widgets/checkable-input" :widgets/checkable-input]
      ["/widgets/form-field" :widgets/form-field]
      ["/widgets/group-input" :widgets/group-input]
+     ["/widgets/text-group-input-form-field" :widgets/text-group-input-form-field]
      ["/widgets/text-group-input" :widgets/text-group-input]
      ["/widgets/text-input" :widgets/text-input]]))
 

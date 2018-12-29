@@ -3,31 +3,35 @@
     [nebula-widgets.utils.bem :as bem-utils]
     [reagent.core :as r]))
 
-(def ^:private bem
+(def ^:private default-bem
   "nw-formField")
 
-(def ^:private input-elt-bem
-  (str bem "__input"))
+(defn- build-bem [bem]
+  (or bem default-bem))
 
-(def ^:private label-elt-bem
-  (str bem "__label"))
+(defn- build-input-elt-bem [bem]
+  (str (build-bem bem) "__input"))
 
-(def ^:private label-aux-elt-bem
-  (str label-elt-bem "-aux"))
+(defn- build-label-elt-bem [bem]
+  (str (build-bem bem) "__label"))
 
-(defn- build-class [{:keys [cid cns inline required]}]
+(defn- build-label-aux-elt-bem [bem]
+  (str (build-label-elt-bem bem) "-aux"))
+
+(defn- build-class [{:keys [bem cid cns disabled inline required]}]
   (bem-utils/build-class
-    bem
+    (build-bem bem)
     [["cns" cns]
      ["cid" cid]
+     ["disabled" disabled]
      ["inline" inline]
      ["required" required]]))
 
-(defn- label-elt-cmp [label]
+(defn- label-elt-cmp [bem label]
   (into
-    [:div {:class label-elt-bem}]
+    [:div {:class (build-label-elt-bem bem)}]
     (if (coll? label)
-      [(first label) [:span {:class label-aux-elt-bem} (second label)]]
+      [(first label) [:span {:class (build-label-aux-elt-bem bem)} (second label)]]
       [label])))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -37,10 +41,16 @@
 (defn widget
   "Renders form field.
 
+  Because of styling, it's not intended to be used directly but rather as a base for more specific form field widgets:
+  * [checkable-group-input-form-field](/widgets/checkable-group-input-form-field)
+
   Arguments:
   * `props` - optional, map, no default. Supported keys:
+    - `:bem` - string, 'nw-formField' by default. Would be used as widget's BEM. Provided by concrete form field widget
+      to augment styling.
     - `:cid` - any, no default. Component id.
     - `:cns` - string, no default. Component ns.
+    - `:disabled` - logical true/false, no default. Whether widget disabled or not.
     - `:inline` - logical true/false, no default. Whether label must be placed before or above input.
     - `:label` - string, tuple of strings, no default. Short description for field. When it's a tuple then first element
       would be used as label's main text and second element as auxiliary text.
@@ -48,10 +58,9 @@
   * `& children` - optional, any number of child components
 
   Notes:
-  * form field widget is a base for more specific or concrete input targeted widgets and so accurate label and input
-  positioning must be done in such concrete widgets"
+  * accurate label and input positioning can be done in concrete form field widgets"
   [& _args]
-  (let [[{:keys [label] :as props} children] ((juxt r/props r/children) (r/current-component))]
+  (let [[{:keys [bem label] :as props} children] ((juxt r/props r/children) (r/current-component))]
     [:div {:class (build-class props)}
-     (when (seq label) [label-elt-cmp label])
-     (into [:div {:class input-elt-bem}] children)]))
+     (when (seq label) [label-elt-cmp bem label])
+     (into [:div {:class (build-input-elt-bem bem)}] children)]))

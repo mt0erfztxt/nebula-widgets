@@ -184,7 +184,7 @@
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [actions] :as props} @*props
+      (let [{:keys [actions errors] :as props} @*props
             actions
             (when (str/starts-with? actions "yes")
               {:after
@@ -197,7 +197,11 @@
                  :on-click (r/partial handle-action-on-click "search")}]})]
         (into
           [ie/widget
-           [text-input/widget (assoc props :actions actions :on-change handle-on-change)]]
+           [text-input/widget
+            (assoc props
+              :actions actions
+              :errors (when (not= "no" errors) errors)
+              :on-change handle-on-change)]]
           (for [[cid items]
                 [[:actions (ie-cgi-knob/gen-items "no" "yes" "yes+disabled")]
                  [:busy]

@@ -8,7 +8,7 @@ const {
 
 /**
  * Base class for fragment.
- * 
+ *
  * @class
  * @extends {Fragment1}
  */
@@ -158,7 +158,7 @@ class Input extends BaseClass {
 
   /**
    * Obtains 'Value' part of fragment's state and returns it.
-   * 
+   *
    * @param {Options|Object} [options] Options
    * @returns {Promise<*>}
    */
@@ -170,7 +170,7 @@ class Input extends BaseClass {
 
   /**
    * Sets 'Value' part of fragment's state and returns it.
-   * 
+   *
    * @param {*} value New value for 'Value' part of fragment's state
    * @param {Options|Object} [options] Options
    * @return {Promise<*>} Current value of 'Value' part of fragment's state after set state operation is done.
@@ -222,7 +222,7 @@ class Input extends BaseClass {
 
   /**
    * Asserts that fragment has value.
-   * 
+   *
    * @returns {Promise<void>}
    */
   async expectHasValue() {
@@ -233,7 +233,7 @@ class Input extends BaseClass {
 
   /**
    * Asserts that fragment has no value.
-   * 
+   *
    * @returns {Promise<void>}
    */
   async expectHasNoValue() {
@@ -244,7 +244,7 @@ class Input extends BaseClass {
 
   /**
    * Asserts that fragment's value is equal specified one.
-   * 
+   *
    * @param {*} value Fragment's value must be equal specified one to pass assertion
    * @returns {Promise<void>}
    */
@@ -256,7 +256,7 @@ class Input extends BaseClass {
 
   /**
    * Asserts that fragment's value is not equal specified one.
-   * 
+   *
    * @param {*} value Fragment's value must be not equal specified one to pass assertion
    * @returns {Promise<void>}
    */
@@ -271,7 +271,7 @@ class Input extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * Just a convenience alias for `getValuePartOfState` method.
+   * Shortcut for {@link Input#getValuePartOfState}.
    *
    * @param {Options|Object} [options] Options
    * @returns {Promise<*>} Value of input.
@@ -281,7 +281,7 @@ class Input extends BaseClass {
   }
 
   /**
-   * Just a convenience alias for `setValuePartOfState` method.
+   * Shortcut for {@link Input#setValuePartOfState}.
    *
    * @param {*} value New value for input
    * @param {Options|Object} [options] Options

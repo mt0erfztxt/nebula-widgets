@@ -3,6 +3,8 @@
 (def default-db
   {:form-field-widget
    {:interactive-example
-    {:inline false
+    {:disabled false
+     :inline false
      :label "Field"
-     :required false}}})
+     :required false
+     :value ""}}})

@@ -1,60 +1,194 @@
-/**
- * Group input fragment doesn't represent concrete widget and used to aggregate
- * common functionality of fragments for concrete group input widgets, and
- * because of that it tested using checkable group input fragment.
- */
-
 import sinon from 'sinon';
+import testFragment from 'nebula-test-fragment';
 import unexpected from 'unexpected';
 import unexpectedSinon from 'unexpected-sinon';
+import { camelCase } from 'change-case';
 
 import CheckableGroupInput from '../../../../../src/js/widgets/checkable-group-input';
-import CheckableInput from '../../../../../src/js/widgets/checkable-input';
+import GroupInputFragment from '../../../../../src/js/widgets/group-input';
 import InteractiveExample from '../../../../../src/js/kitchen-sink/widgets/man-page/interactive-example';
 
 const expect = unexpected.clone();
 expect.use(unexpectedSinon);
 
+const {
+  Fragment1,
+  Options,
+  selector,
+  utils
+} = testFragment;
+
+class GroupInputItem extends Fragment1 {
+
+  /**
+   * Provides custom transformations for selector:
+   * 1. 'value' - String, text content
+   * 
+   * @param {*} transformations 
+   * @param {*} sel 
+   * @param {*} bemBase 
+   */
+  transformSelector(transformations, sel, bemBase) {
+    sel = super.transformSelector(transformations, sel, bemBase);
+
+    for (const k in transformations) {
+      if (transformations.hasOwnProperty(k) && k === 'value') {
+        const value = transformations[k];
+
+        if (utils.isNonBlankString(value) || _.isRegExp(value)) {
+          sel = selector.filterByText(sel, value);
+        }
+        else {
+          throw new TypeError(
+            `${this.displayName}: value for 'value' transformation must ` +
+            `be a non-blank string or a regular expression but it is ` +
+            `${typeOf(value)} (${value})`
+          );
+        }
+      }
+    }
+
+    return sel;
+  }
+
+  // ---------------------------------------------------------------------------
+  // State
+  // ---------------------------------------------------------------------------
+
+  getStateParts(options) {
+    const { onlyWritable } = new Options(options, {
+      defaults: {
+        onlyWritable: false
+      }
+    });
+
+    const writableParts = super.getStateParts({ onlyWritable });
+
+    if (onlyWritable) {
+      return writableParts;
+    }
+    else {
+      return writableParts.concat(['value']);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // State :: Value
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Obtains 'Value' part of fragment's state and returns it.
+   * 
+   * @returns {Promise<String>}
+   */
+  async getValuePartOfState() {
+    return this.selector.textContent;
+  }
+
+  /**
+   * Obtains 'Value' part of fragment's state and returns it because this part
+   * of state is read-only.
+   * 
+   * @return {Promise<String>}
+   */
+  async setValuePartOfState() {
+    return this.getValuePartOfState();
+  }
+
+  /**
+   * Asserts that 'Value' part of fragment's state is equal specified value.
+   *
+   * @param {String} value Part of state must equal that value to pass assertion
+   * @param {Options|Object} [options] Options
+   * @param {Boolean} [options.isNot=false] When truthy assertion would be inverted
+   * @return {Promise<void>}
+   */
+  async expectValuePartOfStateIs(value, options) {
+    const { isNot } = new Options(options, {
+      defaults: {
+        isNot: false
+      }
+    });
+    const v = await this.getValuePartOfState();
+    const assertionName = utils.buildTestCafeAssertionName('eql', { isNot });
+    await t.expect(v)[assertionName](value);
+  }
+}
+
+Object.defineProperties(GroupInputItem, {
+  bemBase: {
+    value: 'nw-groupInputItem'
+  },
+  displayName: {
+    value: 'Test_GroupInputItem'
+  }
+});
+
+class GroupInput extends GroupInputFragment {}
+
+Object.defineProperties(GroupInput, {
+  displayName: {
+    value: 'Test_GroupInput'
+  },
+  ItemFragment: {
+    value: GroupInputItem
+  }
+});
+
+/**
+ * @returns {Promise<InteractiveExample>}
+ */
 async function getInteractiveExample() {
   const ie = new InteractiveExample();
   await ie.expectIsExist();
   return ie;
 }
 
+/**
+ * @returns {Promise<CheckableGroupInput>}
+ */
 async function getKnob(cid, parent) {
   const knob = new CheckableGroupInput({ cid }, { parent });
   await knob.expectIsExist();
   return knob;
 }
 
+/**
+ * @returns {Promise<GroupInput>}
+ */
 async function getSut(parent) {
-  const sut = new CheckableGroupInput({ idx: 0 }, {
+  const sut = new GroupInput({ idx: 0 }, {
     parent: parent || (await getInteractiveExample()).viewElementSelector
   });
   await sut.expectIsExist();
   return sut;
 }
 
-async function getHelperFragments(knobCid) {
-  const parent = await getInteractiveExample();
-  return {
-    knob: knobCid ? (await getKnob(knobCid, parent)) : undefined,
-    parent,
-    sut: await getSut(parent.viewElementSelector)
-  };
+/**
+ * @returns {Promise<Object>}
+ */
+async function getHelperFragments(...knobCids) {
+  const ie = await getInteractiveExample();
+  const result = { ie };
+
+  for (const knobCid of knobCids) {
+    result[`${camelCase(knobCid)}Knob`] = await getKnob(knobCid, ie);
+  }
+
+  result.knob = result[`${camelCase(knobCids[0])}Knob`];
+  result.sut = await getSut(ie.viewElementSelector);
+
+  return result;
 }
 
-const sutLabels = [...Array(9).keys()]
-  .map((value) =>
-    `option${++value}` + (value === 2 ? ' (some long text here)' : '')
-  );
+const sutLabels = [...Array(9).keys()].map((v) => `item${++v}`);
 
-fixture('Widgets :: Group Input :: 010 Fragment')
-  .page('http://localhost:3449/widgets/checkable-group-input');
+fixture('Fragments :: Group Input :: 010 Fragment')
+  .page('http://localhost:3449/widgets/group-input');
 
 test("010 It should allow obtain group input", async () => {
-  const parent = await getInteractiveExample().viewElementSelector;
-  const sut = new CheckableGroupInput({ idx: 0 }, { parent });
+  const parent = (await getInteractiveExample()).viewElementSelector;
+  const sut = new GroupInput({ idx: 0 }, { parent });
   await sut.expectIsExist();
 });
 
@@ -63,6 +197,7 @@ test("020 It should allow get group's 'Columns' part of state using '#getColumns
 
   // -- Check when no columns
 
+  await knob.clickItem({ value: 'nil' });
   await sut.hover();
   expect(await sut.getColumnsPartOfState(), 'to be undefined');
 
@@ -92,7 +227,7 @@ test("030 It should allow assert on group's 'Columns' part of state value using 
 
   await knob.clickItem({ value: '5' });
   await sut.hover();
-  await sut.expectColumnsPartOfStateIs(5);
+  await sut.expectColumnsPartOfStateIs('5');
 
   // -- Failing case
 
@@ -105,7 +240,7 @@ test("030 It should allow assert on group's 'Columns' part of state value using 
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'columns,3'.+but it doesn't/
+      /AssertionError: 'Test_GroupInput'.+must have BEM modifier 'columns,3'.+but it doesn't/
     );
 
     isThrown = true;
@@ -140,7 +275,7 @@ test("040 It should allow assert on group's 'Columns' part of state value using 
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'columns,5'.+but it does/
+      /AssertionError: 'Test_GroupInput'.+must not have BEM modifier 'columns,5'.+but it does/
     );
 
     isThrown = true;
@@ -154,6 +289,7 @@ test("050 It should allow get group's 'Equidistant' part of state using '#getEqu
 
   // -- Check when not equidistant
 
+  await knob.clickItem({ value: 'false' });
   await sut.hover();
   expect(await sut.getEquidistantPartOfState(), 'to be false');
 
@@ -187,7 +323,7 @@ test("060 It should allow assert on whether group is equidistant using '#expectI
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'equidistant,'.+but it doesn't/
+      /AssertionError: 'Test_GroupInput.+must have BEM modifier 'equidistant,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -201,6 +337,7 @@ test("070 It should allow assert on whether group isn't equidistant using '#expe
 
   // -- Successful case
 
+  await knob.clickItem({ value: 'false' });
   await sut.hover();
   await sut.expectIsNotEquidistant();
 
@@ -218,7 +355,7 @@ test("070 It should allow assert on whether group isn't equidistant using '#expe
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'equidistant,'.+but it does/
+      /AssertionError: 'Test_GroupInput.+must not have BEM modifier 'equidistant,'.+but it does/
     );
 
     isThrown = true;
@@ -228,32 +365,47 @@ test("070 It should allow assert on whether group isn't equidistant using '#expe
 });
 
 test("080 It should allow get group's 'Inline' part of state using '#getInlinePartOfState()'", async () => {
-  const { knob, sut } = await getHelperFragments('inline');
+  const {
+    columnsKnob,
+    inlineKnob,
+    sut
+  } = await getHelperFragments('columns', 'inline');
+
+  // Columns implies inline and must be unset
+  await columnsKnob.clickItem({ value: 'nil' });
 
   // -- Check when not inline
 
+  await inlineKnob.clickItem({ value: 'false' });
   await sut.hover();
   expect(await sut.getInlinePartOfState(), 'to be false');
 
   // -- Check when inline
 
-  await knob.clickItem({ value: 'true' });
+  await inlineKnob.clickItem({ value: 'true' });
   await sut.hover();
   expect(await sut.getInlinePartOfState(), 'to be true');
 });
 
 test("090 It should allow assert on whether group is inline using '#expectIsInline()'", async () => {
-  const { knob, sut } = await getHelperFragments('inline');
+  const {
+    columnsKnob,
+    inlineKnob,
+    sut
+  } = await getHelperFragments('columns', 'inline');
+
+  // Columns implies inline and must be unset
+  await columnsKnob.clickItem({ value: 'nil' });
 
   // -- Successful case
 
-  await knob.clickItem({ value: 'true' });
+  await inlineKnob.clickItem({ value: 'true' });
   await sut.hover();
   await sut.expectIsInline();
 
   // -- Failing case
 
-  await knob.clickItem({ value: 'false' });
+  await inlineKnob.clickItem({ value: 'false' });
   await sut.hover();
 
   let isThrown = false;
@@ -265,7 +417,7 @@ test("090 It should allow assert on whether group is inline using '#expectIsInli
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'inline,'.+but it doesn't/
+      /AssertionError: 'Test_GroupInput.+must have BEM modifier 'inline,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -275,16 +427,24 @@ test("090 It should allow assert on whether group is inline using '#expectIsInli
 });
 
 test("100 It should allow assert on whether group isn't inline using '#expectIsNotInline()'", async () => {
-  const { knob, sut } = await getHelperFragments('inline');
+  const {
+    columnsKnob,
+    inlineKnob,
+    sut
+  } = await getHelperFragments('columns', 'inline');
+
+  // Columns implies inline and must be unset
+  await columnsKnob.clickItem({ value: 'nil' });
 
   // -- Successful case
 
+  await inlineKnob.clickItem({ value: 'false' });
   await sut.hover();
   await sut.expectIsNotInline();
 
   // -- Failing case
 
-  await knob.clickItem({ value: 'true' });
+  await inlineKnob.clickItem({ value: 'true' });
   await sut.hover();
 
   let isThrown = false;
@@ -296,7 +456,7 @@ test("100 It should allow assert on whether group isn't inline using '#expectIsN
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'inline,'.+but it does/
+      /AssertionError: 'Test_GroupInput.+must not have BEM modifier 'inline,'.+but it does/
     );
 
     isThrown = true;
@@ -310,6 +470,7 @@ test("110 It should allow get group's 'NoRowGap' part of state using '#getNoRowG
 
   // -- Check when not noRowGap
 
+  await knob.clickItem({ value: 'false' });
   await sut.hover();
   expect(await sut.getNoRowGapPartOfState(), 'to be false');
 
@@ -320,7 +481,7 @@ test("110 It should allow get group's 'NoRowGap' part of state using '#getNoRowG
   expect(await sut.getNoRowGapPartOfState(), 'to be true');
 });
 
-test("120 It should allow assert on whether group is noRowGap using '#expectIsNoRowGap()'", async () => {
+test("120 It should allow assert on whether group have no gap between rows using '#expectIsNoRowGap()'", async () => {
   const { knob, sut } = await getHelperFragments('no-row-gap');
 
   // -- Successful case
@@ -343,7 +504,7 @@ test("120 It should allow assert on whether group is noRowGap using '#expectIsNo
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'noRowGap,'.+but it doesn't/
+      /AssertionError: 'Test_GroupInput.+must have BEM modifier 'noRowGap,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -352,11 +513,12 @@ test("120 It should allow assert on whether group is noRowGap using '#expectIsNo
   expect(isThrown, 'to be true');
 });
 
-test("130 It should allow assert on whether group isn't noRowGap using '#expectIsNotNoRowGap()'", async () => {
+test("130 It should allow assert on whether group have gap between rows using '#expectIsNotNoRowGap()'", async () => {
   const { knob, sut } = await getHelperFragments('no-row-gap');
 
   // -- Successful case
 
+  await knob.clickItem({ value: 'false' });
   await sut.hover();
   await sut.expectIsNotNoRowGap();
 
@@ -374,7 +536,7 @@ test("130 It should allow assert on whether group isn't noRowGap using '#expectI
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'noRowGap,'.+but it does/
+      /AssertionError: 'Test_GroupInput.+must not have BEM modifier 'noRowGap,'.+but it does/
     );
 
     isThrown = true;
@@ -388,6 +550,7 @@ test("140 It should allow get group's 'SoftColumns' part of state using '#getSof
 
   // -- Check when not soft columns
 
+  await knob.clickItem({ value: 'false' });
   await sut.hover();
   expect(await sut.getSoftColumnsPartOfState(), 'to be false');
 
@@ -421,7 +584,7 @@ test("150 It should allow assert on whether group is soft columns using '#expect
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'softColumns,'.+but it doesn't/
+      /AssertionError: 'Test_GroupInput.+must have BEM modifier 'softColumns,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -435,6 +598,7 @@ test("160 It should allow assert on whether group isn't soft columns using '#exp
 
   // -- Successful case
 
+  await knob.clickItem({ value: 'false' });
   await sut.hover();
   await sut.expectIsNotSoftColumns();
 
@@ -452,7 +616,7 @@ test("160 It should allow assert on whether group isn't soft columns using '#exp
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'softColumns,'.+but it does/
+      /AssertionError: 'Test_GroupInput.+must not have BEM modifier 'softColumns,'.+but it does/
     );
 
     isThrown = true;
@@ -464,12 +628,13 @@ test("160 It should allow assert on whether group isn't soft columns using '#exp
 test("170 It should allow get group's 'StackedOnMobile' part of state using '#getStackedOnMobilePartOfState()'", async () => {
   const { knob, sut } = await getHelperFragments('stacked-on-mobile');
 
-  // -- Check when not stacked-on-mobile
+  // -- Check when not stacked on mobile
 
+  await knob.clickItem({ value: 'false' });
   await sut.hover();
   expect(await sut.getStackedOnMobilePartOfState(), 'to be false');
 
-  // -- Check when stacked-on-mobile
+  // -- Check when stacked on mobile
 
   await knob.clickItem({ value: 'true' });
   await sut.hover();
@@ -499,7 +664,7 @@ test("180 It should allow assert on whether group is stacked on mobile using '#e
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must have BEM modifier 'stackedOnMobile,'.+but it doesn't/
+      /AssertionError: 'Test_GroupInput.+must have BEM modifier 'stackedOnMobile,'.+but it doesn't/
     );
 
     isThrown = true;
@@ -513,6 +678,7 @@ test("190 It should allow assert on whether group isn't stacked on mobile using 
 
   // -- Successful case
 
+  await knob.clickItem({ value: 'false' });
   await sut.hover();
   await sut.expectIsNotStackedOnMobile();
 
@@ -530,7 +696,7 @@ test("190 It should allow assert on whether group isn't stacked on mobile using 
     expect(
       e.errMsg,
       'to match',
-      /AssertionError:.+\.checkable-group-input.+must not have BEM modifier 'stackedOnMobile,'.+but it does/
+      /AssertionError: 'Test_GroupInput.+must not have BEM modifier 'stackedOnMobile,'.+but it does/
     );
 
     isThrown = true;
@@ -539,13 +705,13 @@ test("190 It should allow assert on whether group isn't stacked on mobile using 
   expect(isThrown, 'to be true');
 });
 
-test("195 It should allow obtain item using '#getItem()'", async () => {
+test("195 It should allow obtain item using '#getItem()'", async (t) => {
   const sut = await getSut();
   const item = sut.getItem({ idx: 0 });
-  expect(item, 'to be a', CheckableInput);
+  expect(item, 'to be a', GroupInputItem);
   await item.expectIsExist();
   await item.hover();
-  await item.expectValuePartOfStateIs('option1');
+  await t.expect(item.selector.textContent).eql('item1')
 });
 
 test("200 It should allow assert on item existence using '#expectHasItem()'", async () => {
@@ -554,20 +720,20 @@ test("200 It should allow assert on item existence using '#expectHasItem()'", as
   // -- Successful case
 
   await sut.hover();
-  await sut.expectHasItem({ value: 'option3' });
+  await sut.expectHasItem({ value: 'item3' });
 
   // -- Failing case
 
   let isThrown = false;
 
   try {
-    await sut.expectHasItem({ value: 'non-existent option' });
+    await sut.expectHasItem({ value: 'non-existent item' });
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError: .+\.checkable-input.+DOM element.+: expected 0 to deeply equal 1/
+      /AssertionError: 'Test_GroupInputItem.+DOM element.+: expected 0 to deeply equal 1/
     );
 
     isThrown = true;
@@ -582,20 +748,20 @@ test("210 It should allow assert on item existence using '#expectHasItem()' - ca
   // -- Successful case
 
   await sut.hover();
-  await sut.expectHasItem({ value: 'option3' }, null, { idx: 2 });
+  await sut.expectHasItem({ value: 'item3' }, null, { idx: 2 });
 
   // -- Failing case
 
   let isThrown = false;
 
   try {
-    await sut.expectHasItem({ value: 'option3' }, null, { idx: 0 });
+    await sut.expectHasItem({ value: 'item3' }, null, { idx: 0 });
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError: .+\.checkable-input#expectIsEqual().+: expected 'option3' to deeply equal 'option1'/
+      /AssertionError: 'Test_GroupInputItem#expectIsEqual().+: expected 'item3' to deeply equal 'item1'/
     );
 
     isThrown = true;
@@ -611,9 +777,9 @@ test("220 It should allow assert on items existence using '#expectHasItems()'", 
 
   await sut.hover();
   await sut.expectHasItems([
-    [{ value: 'option6' }],
-    [{ value: 'option1' }],
-    [{ value: 'option4' }]
+    [{ value: 'item6' }],
+    [{ value: 'item1' }],
+    [{ value: 'item4' }]
   ]);
 
   // -- Failing case
@@ -622,17 +788,17 @@ test("220 It should allow assert on items existence using '#expectHasItems()'", 
 
   try {
     await sut.expectHasItems([
-      [{ value: 'option2' }], // this item has different label
-      [{ value: 'option1' }],
-      [{ value: 'option4' }],
-      [{ value: 'option3' }]
+      [{ value: 'itemA' }], // no such item
+      [{ value: 'item1' }],
+      [{ value: 'item4' }],
+      [{ value: 'item3' }]
     ]);
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError: .+\.checkable-input.+DOM element.+: expected 0 to deeply equal 1/
+      /AssertionError: 'Test_GroupInputItem.+DOM element.+: expected 0 to deeply equal 1/
     );
 
     isThrown = true;
@@ -648,15 +814,15 @@ test("230 It should allow assert on items existence using '#expectHasItems()' - 
 
   await sut.hover();
   await sut.expectHasItems([
-    [{ value: 'option2 (some long text here)' }],
-    [{ value: 'option4' }],
-    [{ value: 'option8' }],
-    [{ value: 'option9' }],
-    [{ value: 'option7' }],
-    [{ value: 'option5' }],
-    [{ value: 'option6' }],
-    [{ value: 'option1' }],
-    [{ value: 'option3' }]
+    [{ value: 'item2' }],
+    [{ value: 'item4' }],
+    [{ value: 'item8' }],
+    [{ value: 'item9' }],
+    [{ value: 'item7' }],
+    [{ value: 'item5' }],
+    [{ value: 'item6' }],
+    [{ value: 'item1' }],
+    [{ value: 'item3' }]
   ], {
     only: true
   });
@@ -667,15 +833,15 @@ test("230 It should allow assert on items existence using '#expectHasItems()' - 
 
   try {
     await sut.expectHasItems([
-      // Omit 'option2...' item for testing.
-      [{ value: 'option4' }],
-      [{ value: 'option8' }],
-      [{ value: 'option9' }],
-      [{ value: 'option7' }],
-      [{ value: 'option5' }],
-      [{ value: 'option6' }],
-      [{ value: 'option1' }],
-      [{ value: 'option3' }]
+      // Omit 'item2...' item for testing.
+      [{ value: 'item4' }],
+      [{ value: 'item8' }],
+      [{ value: 'item9' }],
+      [{ value: 'item7' }],
+      [{ value: 'item5' }],
+      [{ value: 'item6' }],
+      [{ value: 'item1' }],
+      [{ value: 'item3' }]
     ], {
       only: true
     });
@@ -700,15 +866,15 @@ test("240 It should allow assert on items existence using '#expectHasItems()' - 
 
   await sut.hover();
   await sut.expectHasItems([
-    [{ value: 'option1' }],
-    [{ value: 'option2 (some long text here)' }],
-    [{ value: 'option3' }],
-    [{ value: 'option4' }],
-    [{ value: 'option5' }],
-    [{ value: 'option6' }],
-    [{ value: 'option7' }],
-    [{ value: 'option8' }],
-    [{ value: 'option9' }]
+    [{ value: 'item1' }],
+    [{ value: 'item2' }],
+    [{ value: 'item3' }],
+    [{ value: 'item4' }],
+    [{ value: 'item5' }],
+    [{ value: 'item6' }],
+    [{ value: 'item7' }],
+    [{ value: 'item8' }],
+    [{ value: 'item9' }]
   ], {
     only: true,
     sameOrder: true
@@ -720,15 +886,15 @@ test("240 It should allow assert on items existence using '#expectHasItems()' - 
 
   try {
     await sut.expectHasItems([
-      [{ value: 'option1' }],
-      [{ value: 'option2 (some long text here)' }],
-      [{ value: 'option3' }],
-      [{ value: 'option5' }], // swap 'option4' and 'option5' items for testing
-      [{ value: 'option4' }],
-      [{ value: 'option6' }],
-      [{ value: 'option7' }],
-      [{ value: 'option8' }],
-      [{ value: 'option9' }]
+      [{ value: 'item1' }],
+      [{ value: 'item2' }],
+      [{ value: 'item3' }],
+      [{ value: 'item5' }], // swap 'item4' and 'item5' for testing
+      [{ value: 'item4' }],
+      [{ value: 'item6' }],
+      [{ value: 'item7' }],
+      [{ value: 'item8' }],
+      [{ value: 'item9' }]
     ], {
       only: true,
       sameOrder: true
@@ -738,7 +904,7 @@ test("240 It should allow assert on items existence using '#expectHasItems()' - 
     expect(
       e.errMsg,
       'to match',
-      /AssertionError: .+\.checkable-input#expectIsEqual().+: expected 'option5' to deeply equal 'option4'/
+      /AssertionError: 'Test_GroupInputItem#expectIsEqual().+: expected 'item5' to deeply equal 'item4'/
     );
 
     isThrown = true;
@@ -753,20 +919,20 @@ test("250 It should allow assert on item's index using '#expectItemIndexIs()'", 
   // -- Successful case
 
   await sut.hover();
-  await sut.expectItemIndexIs({ value: 'option3' }, null, 2);
+  await sut.expectItemIndexIs({ value: 'item3' }, null, 2);
 
   // -- Failing case
 
   let isThrown = false;
 
   try {
-    await sut.expectItemIndexIs({ value: 'option3' }, null, 3);
+    await sut.expectItemIndexIs({ value: 'item3' }, null, 3);
   }
   catch (e) {
     expect(
       e.errMsg,
       'to match',
-      /AssertionError: .+\.checkable-input#expectIsEqual().+: expected 'option3' to deeply equal 'option4'/
+      /AssertionError: 'Test_GroupInputItem#expectIsEqual().+: expected 'item3' to deeply equal 'item4'/
     );
 
     isThrown = true;
@@ -779,15 +945,15 @@ test("260 It should allow assert on items existence at specified indexes using '
   const sut = await getSut();
   const expectHasItemsSpy = sinon.spy(sut, 'expectHasItems');
   const items = [
-    [{ value: 'option1' }],
-    [{ value: 'option2 (some long text here)' }],
-    [{ value: 'option3' }],
-    [{ value: 'option4' }],
-    [{ value: 'option5' }],
-    [{ value: 'option6' }],
-    [{ value: 'option7' }],
-    [{ value: 'option8' }],
-    [{ value: 'option9' }]
+    [{ value: 'item1' }],
+    [{ value: 'item2' }],
+    [{ value: 'item3' }],
+    [{ value: 'item4' }],
+    [{ value: 'item5' }],
+    [{ value: 'item6' }],
+    [{ value: 'item7' }],
+    [{ value: 'item8' }],
+    [{ value: 'item9' }]
   ];
 
   await sut.hover();
@@ -925,74 +1091,17 @@ test("310 It should allow get group's 'Items' part of state using '#getItemsPart
   await sut.hover();
 
   const itemsState = await sut.getItemsPartOfState();
-  const expectedItemsState = [...Array(9).keys()]
-    .map((value) => {
-      const v = ++value;
-      return {
-        checked: v === 2,
-        disabled: false,
-        invalid: false,
-        labelShrinked: false,
-        selectionMode: 'multi',
-        size: 'normal',
-        value: `option${v}` + (v === 2 ? ' (some long text here)' : ''),
-        widget: 'icon'
-      }
-    });
-
+  const expectedItemsState = sutLabels.map((value) => ({ value }));
   expect(itemsState, 'to equal', expectedItemsState);
-});
-
-test("320 It should allow set group's 'Items' part of state using '#setItemsPartOfState()'", async () => {
-  const sut = await getSut();
-  await sut.hover();
-
-  const option2 = sut.getItem({ idx: 1 });
-  await option2.expectIsChecked()
-
-  const option5 = sut.getItem({ idx: 4 });
-  await option5.expectIsNotChecked()
-
-  const option6 = sut.getItem({ idx: 5 });
-  await option6.expectIsNotChecked()
-
-  const newItemsState = [...Array(9).keys()]
-    .map((idx) => {
-      return { // 'Checked' is only writable part of state of checkable input
-        checked: [4, 5].includes(idx)
-      };
-    });
-
-  const result = await sut.setItemsPartOfState(newItemsState);
-  await option2.expectIsNotChecked()
-  await option5.expectIsChecked()
-  await option6.expectIsChecked()
-  expect(newItemsState, 'to equal', result);
 });
 
 test("330 It should allow assert on group's 'Items' part of state using '#expectItemsPartOfStateIs()'", async () => {
   const sut = await getSut();
-  await sut.getItem({ value: /^option2.*/ }).expectIsChecked();
-  await sut.getItem({ value: 'option4' }).setCheckedPartOfState(true);
+  await sut.hover();
 
   // -- Successful case
 
-  await sut.expectItemsPartOfStateIs(
-    [...Array(9).keys()]
-    .map((value) => {
-      const v = ++value;
-      return {
-        checked: [2, 4].includes(v),
-        disabled: false,
-        invalid: false,
-        labelShrinked: false,
-        selectionMode: 'multi',
-        size: 'normal',
-        value: `option${v}` + (v === 2 ? ' (some long text here)' : ''),
-        widget: 'icon'
-      }
-    })
-  );
+  await sut.expectItemsPartOfStateIs(sutLabels.map((value) => ({ value })));
 
   // -- Failing case
 
@@ -1000,19 +1109,9 @@ test("330 It should allow assert on group's 'Items' part of state using '#expect
 
   try {
     await sut.expectItemsPartOfStateIs(
-      [...Array(9).keys()]
-      .map((value) => {
+      [...Array(9).keys()].map((value) => {
         const v = ++value;
-        return {
-          checked: true, // that's not true and cause error to be thrown
-          disabled: false,
-          invalid: false,
-          labelShrinked: false,
-          selectionMode: 'multi',
-          size: 'normal',
-          value: `option${v}` + (v === 2 ? ' (some long text here)' : ''),
-          widget: 'icon'
-        }
+        return { value: 'item' + (v === 2 ? 'A' : v) }
       })
     );
   }
@@ -1034,12 +1133,7 @@ test("340 It should allow get group's 'Value' part of state using '#getValuePart
   await sut.hover();
 
   const valueState = await sut.getValuePartOfState();
-  const expectedValueState = [...Array(9).keys()]
-    .map((value) =>
-      `option${++value}` + (value === 2 ? ' (some long text here)' : '')
-    );
-
-  expect(valueState, 'to equal', expectedValueState);
+  expect(valueState, 'to equal', sutLabels);
 });
 
 test("350 It should have setter for group's 'Value' part of state ('#setValuePartOfState()') that simply returns current value because part is read-only", async () => {
@@ -1047,12 +1141,7 @@ test("350 It should have setter for group's 'Value' part of state ('#setValuePar
   await sut.hover();
 
   const result = await sut.setValuePartOfState();
-  const expectedValueState = [...Array(9).keys()]
-    .map((value) =>
-      `option${++value}` + (value === 2 ? ' (some long text here)' : '')
-    );
-
-  expect(result, 'to equal', expectedValueState);
+  expect(result, 'to equal', sutLabels);
 });
 
 test("360 It should allow assert on group's 'Value' part of state using '#expectValuePartOfStateIs()'", async () => {
@@ -1192,4 +1281,12 @@ test("400 It should allow assert on group's 'Value' part of state using '#expect
   }
 
   expect(isThrown, 'to be true');
+});
+
+test("410 It should allow to obtain number of items in group using '#getItemsCount()'", async () => {
+  const sut = await getSut();
+  await sut.hover();
+
+  const itemsCount = await sut.getItemsCount();
+  expect(itemsCount, 'to equal', 9);
 });

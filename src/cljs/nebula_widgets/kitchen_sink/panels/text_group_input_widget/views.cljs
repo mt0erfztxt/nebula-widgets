@@ -16,7 +16,7 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:disabled :errors :invalid :no-row-gap :size :value]
+  (->> [:disabled :errors :invalid :multi-line :no-row-gap :size :value]
        (map
          (fn [prop]
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
@@ -29,27 +29,32 @@
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [value] :as props} @*props
+      (let [{:keys [errors value] :as props} @*props
             remove-allowed? (> (count value) 1)]
         (into
           [ie/widget
            [text-group-input/widget
             (assoc props
+              :errors (when (not= "no" errors) errors)
               :items (for [v value] {:remove-allowed remove-allowed?, :value v})
               :on-change (r/partial handle-on-change))]]
-          (for [[cid items]
-                [[:disabled]
+          (for [params
+                [[:- "text group input props"]
+                 :disabled
                  [:errors (ie-cgi-knob/gen-items "no" ["yes" #{"error 1" "error 2"}])]
-                 [:invalid]
-                 [:no-row-gap]
-                 [:size (ie-cgi-knob/gen-items "small" "normal" "large")]]]
+                 :invalid
+                 :multi-line
+                 :no-row-gap
+                 [:size (ie-cgi-knob/gen-items "small" "normal" "large")]]
+                :let [[cid label-or-items] (if (sequential? params) params [params])
+                      label? (= :- cid)]]
             [ie-cgi-knob/widget
-             {:cid cid}
+             {:cid cid, :label (when label? label-or-items)}
              (cond->
                {:cid cid
                 :on-change (get ie-setters cid)
                 :value (get props cid)}
-               items (assoc :items items))]))))))
+               (and (not label?) label-or-items) (assoc :items label-or-items))]))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
