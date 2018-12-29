@@ -170,6 +170,31 @@ class TextInput extends BaseClass {
    */
 
   // ---------------------------------------------------------------------------
+  // State :: MultiLine (read-only)
+  // ---------------------------------------------------------------------------
+  // Inherited from `BaseClass`
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name TextInput#getMultiLinePartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<*>}
+   */
+
+  /**
+   * @name TextInput#expectIsMultiLine
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name TextInput#expectIsNotMultiLine
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  // ---------------------------------------------------------------------------
   // State :: TextAlignment (read-only, not boolean)
   // ---------------------------------------------------------------------------
   // Inherited from `BaseClass`

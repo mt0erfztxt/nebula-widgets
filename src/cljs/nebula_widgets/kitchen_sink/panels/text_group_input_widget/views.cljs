@@ -38,7 +38,7 @@
               :items (for [v value] {:remove-allowed remove-allowed?, :value v})
               :on-change (r/partial handle-on-change))]]
           (for [params
-                [[:- "group props"]
+                [[:- "text group input props"]
                  :disabled
                  [:errors (ie-cgi-knob/gen-items "no" ["yes" #{"error 1" "error 2"}])]
                  :invalid

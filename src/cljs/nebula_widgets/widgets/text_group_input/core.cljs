@@ -76,7 +76,7 @@
      (-> props
          (assoc
            :bem "nw-textGroupInput"
-           :group-custom-props {"widget" (if multi-line? "textarea" "text")}
+           :group-custom-props {"multiLine" multi-line?, "widget" (if multi-line? "textarea" "text")}
            :item-widget text-input/widget
            :items
            (map-indexed
