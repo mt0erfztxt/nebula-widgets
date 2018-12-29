@@ -6,5 +6,6 @@
     {:disabled false
      :inline false
      :label "Field"
+     :multi-line false
      :required false
      :value ["foobar"]}}})

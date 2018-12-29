@@ -16,7 +16,7 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:disabled :inline :label :required :value]
+  (->> [:disabled :inline :label :multi-line :required :value]
        (map
          (fn [prop]
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
@@ -37,7 +37,7 @@
             [text-group-input-form-field/widget
              (select-keys props [:disabled :inline :label :required])
              (-> props
-                 (select-keys [:disabled :value])
+                 (select-keys [:disabled :multi-line :value])
                  (assoc
                    :items (for [v value] {:remove-allowed remove-allowed?, :value v})
                    :on-change (r/partial handle-on-change)))]]]
@@ -48,7 +48,9 @@
                  [:label
                   [{:label "string", :value "Field"}
                    {:label "tuple", :value ["Field" "auxiliary text"]}]]
-                 :required]
+                 :required
+                 [:- "text group input props"]
+                 :multi-line]
                 :let [[cid label-or-items] (if (sequential? params) params [params])
                       label? (= :- cid)]]
             [ie-cgi-knob/widget

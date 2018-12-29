@@ -1,14 +1,14 @@
-import textGroupInput from '../text-group-input';
 import FormField from '../form-field';
+import TextGroupInput from '../text-group-input';
 
 /**
  * Fragment that represents form field with text group input.
  *
  * @extends {FormField}
  */
-class textGroupInputFormField extends FormField {}
+class TextGroupInputFormField extends FormField {}
 
-Object.defineProperties(textGroupInputFormField, {
+Object.defineProperties(TextGroupInputFormField, {
   bemBase: {
     value: 'nw-textGroupInputFormField'
   },
@@ -16,8 +16,8 @@ Object.defineProperties(textGroupInputFormField, {
     value: 'nebula-widgets.widgets.text-group-input-form-field'
   },
   InputFragment: {
-    value: textGroupInput
+    value: TextGroupInput
   }
 });
 
-export default textGroupInputFormField;
+export default TextGroupInputFormField;
