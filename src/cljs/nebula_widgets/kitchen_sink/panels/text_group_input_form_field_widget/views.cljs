@@ -4,7 +4,6 @@
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.checkable-group-input :as ie-cgi-knob]
-    [nebula-widgets.utils :as utils]
     [nebula-widgets.widgets.text-group-input-form-field.core :as text-group-input-form-field]
     [re-frame.core :as rf]
     [reagent.core :as r]))
