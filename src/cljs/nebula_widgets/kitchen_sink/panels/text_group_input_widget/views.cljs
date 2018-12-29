@@ -29,12 +29,13 @@
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [value] :as props} @*props
+      (let [{:keys [errors value] :as props} @*props
             remove-allowed? (> (count value) 1)]
         (into
           [ie/widget
            [text-group-input/widget
             (assoc props
+              :errors (when (not= "no" errors) errors)
               :items (for [v value] {:remove-allowed remove-allowed?, :value v})
               :on-change (r/partial handle-on-change))]]
           (for [params

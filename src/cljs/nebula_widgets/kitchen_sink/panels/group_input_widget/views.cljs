@@ -30,11 +30,12 @@
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [props @*props]
+      (let [{:keys [errors] :as props} @*props]
         (into
           [ie/widget
            [group-input/widget
             (assoc props
+              :errors (when (not= "no" errors) errors)
               :item-widget item-widget
               :items
               (for [n (range 1 10) :let [label (str "item" n)]]

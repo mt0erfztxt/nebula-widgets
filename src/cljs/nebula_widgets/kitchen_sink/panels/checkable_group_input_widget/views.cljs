@@ -253,11 +253,12 @@
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [long-option2 multi-checkable] :as props} @*props]
+      (let [{:keys [errors long-option2 multi-checkable] :as props} @*props]
         (into
           [ie/widget
            [checkable-group-input/widget
             (assoc props
+              :errors (when (not= "no" errors) errors)
               :items
               (for [n (range 1 10) :let [label (str (if multi-checkable "option" "choice") n)]]
                 {:label

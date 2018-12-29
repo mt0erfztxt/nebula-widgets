@@ -4,7 +4,7 @@
   {:text-group-input-widget
    {:interactive-example
     {:disabled false
-     :errors nil
+     :errors "no"
      :invalid false
      :multi-line false
      :no-row-gap false

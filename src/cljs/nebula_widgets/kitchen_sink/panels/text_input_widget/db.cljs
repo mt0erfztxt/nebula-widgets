@@ -6,7 +6,7 @@
     {:actions "no"
      :busy false
      :disabled false
-     :errors nil
+     :errors "no"
      :invalid false
      :multi-line false
      :size "normal"
