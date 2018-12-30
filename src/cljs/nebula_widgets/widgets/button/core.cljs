@@ -7,17 +7,18 @@
 
 (def ^:private custom-props-vec
   "Vector of props that React doesn't allow on `<BUTTON>` tag plus :class prop because we not allow override CSS class."
-  [:cid :class :cns :flat :primary :secondary :text])
+  [:cid :class :cns :kind :text])
 
-(defn- build-class [{:keys [cid cns disabled flat primary secondary]}]
+(def ^:private kind-prop-set
+  #{:flat :normal :primary :secondary})
+
+(defn- build-class [{:keys [cid cns disabled kind]}]
   (bem-utils/build-class
     bem
     [["cns" cns]
      ["cid" cid]
      ["disabled" disabled]
-     ["flat" flat]
-     ["primary" primary]
-     ["secondary" secondary]]))
+     ["kind"] (-> kind keyword kind-prop-set (or :normal))]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -31,11 +32,10 @@
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.
     - `:disabled` - logical true/false, no default. Whether button is disabled or not.
-    - `:flat` - logical true/false, no default. Whether button is flat or not.
+    - `:kind` - one of :flat, :normal (default), :primary, :secondary or their string/symbol equivalents. Allows to
+      choose button kind.
     - `:href` - string, no default. When evaluates to logical true button would be rendered using `<A>` tag, otherwise
       it would be rendered using `<BUTTON>` tag.
-    - `:primary` - logical true/false, no default. Whether button is primary or not.
-    - `:secondary` - logical true/false, no default. Whether button is secondary or not.
     - `:text` - renderable, no default. Button's text (content).
     - any props that React supports for `<A>` or `<BUTTON>` tags"
   [{:keys [href text] :as props}]
