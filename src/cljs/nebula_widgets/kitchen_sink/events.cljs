@@ -2,6 +2,7 @@
   (:require
     [nebula-widgets.kitchen-sink.db :as db]
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.events]
+    [nebula-widgets.kitchen-sink.panels.button-widget.events]
     [nebula-widgets.kitchen-sink.panels.card-widget.events]
     [nebula-widgets.kitchen-sink.panels.checkable-group-input-form-field-widget.events]
     [nebula-widgets.kitchen-sink.panels.checkable-group-input-widget.events]
