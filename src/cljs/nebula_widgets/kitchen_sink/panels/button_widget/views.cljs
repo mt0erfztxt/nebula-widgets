@@ -75,7 +75,7 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:disabled :kind]
+  (->> [:disabled :href :kind]
        (map
          (fn [prop]
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
@@ -91,6 +91,9 @@
           (for [params
                 [[:- "button props"]
                  :disabled
+                 [:href
+                  [{:label "nil", :value nil}
+                   {:label "string", :value "http://example.tld"}]]
                  [:kind (ie-cgi-knob/gen-items "flat" "normal" "primary" "secondary")]]
                 :let [[cid label-or-items] (if (sequential? params) params [params])
                       label? (= :- cid)]]

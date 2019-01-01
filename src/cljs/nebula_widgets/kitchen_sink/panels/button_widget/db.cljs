@@ -4,4 +4,5 @@
   {:button-widget
    {:interactive-example
     {:disabled false
+     :href nil
      :kind "normal"}}})
