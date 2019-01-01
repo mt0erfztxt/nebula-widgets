@@ -1,6 +1,6 @@
 import { camelCase } from 'change-case';
 
-import Button from '../../../../../src/js/widgets/button';
+import ButtonGroup from '../../../../../src/js/widgets/button-group';
 import CheckableGroupInput from '../../../../../src/js/widgets/checkable-group-input';
 import InteractiveExample from '../../../../../src/js/kitchen-sink/widgets/man-page/interactive-example';
 
@@ -23,10 +23,10 @@ async function getKnob(cid, parent) {
 }
 
 /**
- * @returns {Promise<Button>}
+ * @returns {Promise<ButtonGroup>}
  */
 async function getSut(parent) {
-  const sut = new Button({ idx: 0 }, {
+  const sut = new ButtonGroup({ idx: 0 }, {
     parent: parent || (await getInteractiveExample()).viewElementSelector
   });
   await sut.expectIsExist();
@@ -50,29 +50,31 @@ async function getHelperFragments(...knobCids) {
   return result;
 }
 
-fixture('Widgets :: Button :: 020 Widget')
-  .page('http://localhost:3449/widgets/button');
+fixture('Widgets :: Button Group :: 020 Widget')
+  .page('http://localhost:3449/widgets/button-group');
 
-test("010 It should have 'disabled' attribute when 'disabled' prop evaluates to logical true", async (t) => {
+test("010 It should propagate 'disabled' prop to items", async () => {
   const { knob, sut } = await getHelperFragments('disabled');
 
-  await knob.clickItem({ value: 'false' });
-  await t
-    .expect(sut.selector.hasAttribute('disabled'))
-    .eql(false);
+  // -- Check disabled
 
   await knob.clickItem({ value: 'true' });
-  await t
-    .expect(sut.selector.hasAttribute('disabled'))
-    .eql(true);
-});
 
-test("020 It should be rendered using <A> tag when 'href' prop evaluates to logical true", async () => {
-  const { knob, sut } = await getHelperFragments('href');
+  for (let i = 0; i < 3; i++) {
+    const btn = sut.getButton({ idx: i });
+    await btn.expectIsExist();
+    await btn.hover();
+    await btn.expectIsDisabled();
+  }
 
-  await knob.clickItem({ value: 'nil' });
-  await sut.expectIsButton();
+  // -- Check enabled
 
-  await knob.clickItem({ value: 'string' });
-  await sut.expectIsLink({ href: 'http://example.tld' });
+  await knob.clickItem({ value: 'false' });
+
+  for (let i = 0; i < 3; i++) {
+    const btn = sut.getButton({ idx: i });
+    await btn.expectIsExist();
+    await btn.hover();
+    await btn.expectIsNotDisabled();
+  }
 });

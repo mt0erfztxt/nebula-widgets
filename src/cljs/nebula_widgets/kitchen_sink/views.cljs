@@ -2,9 +2,9 @@
   (:require
     [nebula-widgets.kitchen-sink.panels.home.views :as home-panel-views]
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.views :as app-panel-widget-panel-views]
-    [nebula-widgets.kitchen-sink.panels.button-widget.views :as button-widget-panel-views]
-    [nebula-widgets.kitchen-sink.panels.button-group-widget.views :as button-group-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.button-group-set-widget.views :as button-group-set-widget-panel-views]
+    [nebula-widgets.kitchen-sink.panels.button-group-widget.views :as button-group-widget-panel-views]
+    [nebula-widgets.kitchen-sink.panels.button-widget.views :as button-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.card-widget.views :as card-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.checkable-group-input-form-field-widget.views :as checkable-group-input-form-field-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.checkable-group-input-widget.views :as checkable-group-input-widget-panel-views]

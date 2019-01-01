@@ -24,7 +24,7 @@ async function getKnob(cid, parent) {
 }
 
 /**
- * @returns {Promise<CheckableGroupInput>}
+ * @returns {Promise<Button>}
  */
 async function getSut(parent) {
   const sut = new Button({ idx: 0 }, {
@@ -61,7 +61,7 @@ test("010 It should allow obtain button", async () => {
   await sut.hover();
 });
 
-test("020 It should allow obtain button - case of custom 'text' spec", async () => {
+test("020 It should allow obtain button - case of custom 'text' selector transformation", async () => {
   const parent = (await getInteractiveExample()).viewElementSelector;
 
   // -- Successful case

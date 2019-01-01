@@ -37,7 +37,10 @@
     - `:href` - string, no default. When evaluates to logical true button would be rendered using `<A>` tag, otherwise
       it would be rendered using `<BUTTON>` tag.
     - `:text` - renderable, no default. Button's text (content).
-    - any props that React supports for `<A>` or `<BUTTON>` tags"
+    - any props that React supports for `<A>` or `<BUTTON>` tags
+
+  TODO:
+  * fix transitions times"
   [{:keys [href text] :as props}]
   [(if href :a :button)
    (merge {:class (build-class props)} (apply dissoc props custom-props-vec))
