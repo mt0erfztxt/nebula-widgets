@@ -61,162 +61,105 @@ test("010 It should allow obtain button", async () => {
   await sut.hover();
 });
 
-// test("020 It should allow obtain button - case of custom 'text' spec", async () => {
-//   const example010 = new ManPageExample({ cid: '010' });
-//   await example010.expectIsExist();
+test("020 It should allow obtain button - case of custom 'text' spec", async () => {
+  const parent = (await getInteractiveExample()).viewElementSelector;
 
-//   const button1 = new Button({ parent: example010, text: 'DISABLED' });
-//   await button1.expectIsExist();
-//   await button1.hover();
+  // -- Successful case
 
-//   const button2 = new Button({ parent: example010, text: /isable/i });
-//   await button2.expectIsExist();
-//   await button2.hover();
-// });
+  const btn = new Button({ text: 'BUTTON' }, { parent });
+  await btn.expectIsExist();
+  await btn.hover();
 
-// test("030 It should allow get button's 'Disabled' part of state using `#getDisabledPartOfState()`", async () => {
-//   const example010 = new ManPageExample({ cid: '010' });
-//   await example010.expectIsExist();
+  // -- Failing case
 
-//   const enabledButton = new Button({ cid: '010', parent: example010 });
-//   await enabledButton.expectIsExist();
-//   await enabledButton.hover();
-//   expect(await enabledButton.getDisabledPartOfState(), 'to be false');
+  let isThrown = false;
 
-//   const disabledButton = new Button({ cid: '020', parent: example010 });
-//   await disabledButton.expectIsExist();
-//   await enabledButton.hover();
-//   expect(await disabledButton.getDisabledPartOfState(), 'to be true');
-// });
+  try {
+    await (new Button({ text: /button/ }, { parent })).expectIsExist();
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /^AssertionError:.+expected 0 to deeply equal 1$/
+    );
 
-// test("040 It should allow assert on whether button is disabled using `#expectIsDisabled()`", async () => {
-//   const example010 = new ManPageExample({ cid: '010' });
-//   await example010.expectIsExist();
+    isThrown = true;
+  }
 
-//   const disabledButton = new Button({ cid: '020', parent: example010 });
-//   await disabledButton.expectIsExist();
-//   await disabledButton.hover();
-//   await disabledButton.expectIsDisabled();
+  expect(isThrown, 'to be true');
+});
 
-//   // -- Failing case
+test("030 It should allow get input's 'Kind' part of state using '#getKindPartOfState()'", async () => {
+  const { knob, sut } = await getHelperFragments('kind');
 
-//   let isThrown = false;
+  // -- Check when normal
 
-//   const enabledButton = new Button({ cid: '010', parent: example010 });
-//   await enabledButton.expectIsExist();
-//   await enabledButton.hover();
+  await knob.clickItem({ value: 'normal' });
+  await sut.hover();
+  expect(await sut.getKindPartOfState(), 'to equal', 'normal');
 
-//   try {
-//     await enabledButton.expectIsDisabled();
-//   }
-//   catch (e) {
-//     expect(
-//       e.errMsg,
-//       'to match',
-//       /AssertionError:.+\.button.+must have BEM modifier 'disabled,'.+but it doesn't/
-//     );
+  // -- Check when secondary
 
-//     isThrown = true;
-//   }
+  await knob.clickItem({ value: 'secondary' });
+  await sut.hover();
+  expect(await sut.getKindPartOfState(), 'to equal', 'secondary');
+});
 
-//   expect(isThrown, 'to be true');
-// });
+test("040 It should allow assert on input's 'Kind' part of state using '#expectKindPartOfStateIs()'", async () => {
+  const { knob, sut } = await getHelperFragments('kind');
 
-// test("050 It should allow assert on whether button isn't disabled using `#expectIsNotDisabled()`", async () => {
-//   const example010 = new ManPageExample({ cid: '010' });
-//   await example010.expectIsExist();
+  // -- Successful case
 
-//   const enabledButton = new Button({ cid: '010', parent: example010 });
-//   await enabledButton.expectIsExist();
-//   await enabledButton.hover();
-//   await enabledButton.expectIsNotDisabled();
+  await knob.clickItem({ value: 'normal' });
+  await sut.hover();
+  await sut.expectKindPartOfStateIs('normal');
 
-//   // -- Failing case
+  // -- Failing case
 
-//   let isThrown = false;
+  let isThrown = false;
 
-//   const disabledButton = new Button({ cid: '020', parent: example010 });
-//   await disabledButton.expectIsExist();
-//   await disabledButton.hover();
+  try {
+    await sut.expectKindPartOfStateIs('flat');
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.button.+must have BEM modifier 'kind,flat'.+but it doesn't/
+    );
 
-//   try {
-//     await disabledButton.expectIsNotDisabled();
-//   }
-//   catch (e) {
-//     expect(
-//       e.errMsg,
-//       'to match',
-//       /AssertionError:.+\.button.+must not have BEM modifier 'disabled,'.+but it does/
-//     );
+    isThrown = true;
+  }
 
-//     isThrown = true;
-//   }
+  expect(isThrown, 'to be true');
+});
 
-//   expect(isThrown, 'to be true');
-// });
+test("050 It should allow assert on input's 'Kind' part of state using '#expectKindPartOfStateIs()' - with 'isNot' option set", async () => {
+  const { knob, sut } = await getHelperFragments('kind');
 
-// test("060 It should allow assert on whether button is enabled using `#expectIsEnabled()`", async () => {
-//   const example010 = new ManPageExample({ cid: '010' });
-//   await example010.expectIsExist();
+  // -- Successful case
 
-//   const enabledButton = new Button({ cid: '010', parent: example010 });
-//   await enabledButton.expectIsExist();
-//   await enabledButton.hover();
-//   await enabledButton.expectIsEnabled();
+  await knob.clickItem({ value: 'secondary' });
+  await sut.hover();
+  await sut.expectKindPartOfStateIs('primary', { isNot: true });
 
-//   // -- Failing case
+  // -- Failing case
 
-//   let isThrown = false;
+  let isThrown = false;
 
-//   const disabledButton = new Button({ cid: '020', parent: example010 });
-//   await disabledButton.expectIsExist();
-//   await disabledButton.hover();
+  try {
+    await sut.expectKindPartOfStateIs('secondary', { isNot: true });
+  }
+  catch (e) {
+    expect(
+      e.errMsg,
+      'to match',
+      /AssertionError:.+\.button.+must not have BEM modifier 'kind,secondary'.+but it does/
+    );
 
-//   try {
-//     await disabledButton.expectIsEnabled();
-//   }
-//   catch (e) {
-//     expect(
-//       e.errMsg,
-//       'to match',
-//       /AssertionError:.+\.button.+must not have BEM modifier 'disabled,'.+but it does/
-//     );
+    isThrown = true;
+  }
 
-//     isThrown = true;
-//   }
-
-//   expect(isThrown, 'to be true');
-// });
-
-// test("070 It should allow assert on whether button isn't enabled using `#expectIsNotEnabled()`", async () => {
-//   const example010 = new ManPageExample({ cid: '010' });
-//   await example010.expectIsExist();
-
-//   const disabledButton = new Button({ cid: '020', parent: example010 });
-//   await disabledButton.expectIsExist();
-//   await disabledButton.hover();
-//   await disabledButton.expectIsNotEnabled();
-
-//   // -- Failing case
-
-//   let isThrown = false;
-
-//   const enabledButton = new Button({ cid: '010', parent: example010 });
-//   await enabledButton.expectIsExist();
-//   await enabledButton.hover();
-
-//   try {
-//     await enabledButton.expectIsNotEnabled();
-//   }
-//   catch (e) {
-//     expect(
-//       e.errMsg,
-//       'to match',
-//       /AssertionError:.+\.button.+must have BEM modifier 'disabled,'.+but it doesn't/
-//     );
-
-//     isThrown = true;
-//   }
-
-//   expect(isThrown, 'to be true');
-// });
+  expect(isThrown, 'to be true');
+});

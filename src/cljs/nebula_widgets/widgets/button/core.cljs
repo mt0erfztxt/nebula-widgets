@@ -18,7 +18,7 @@
     [["cns" cns]
      ["cid" cid]
      ["disabled" disabled]
-     ["kind"] (-> kind keyword kind-prop-set (or :normal))]))
+     ["kind" (-> kind keyword kind-prop-set (or :normal))]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
