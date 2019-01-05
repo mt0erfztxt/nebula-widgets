@@ -8,6 +8,6 @@
 ;; Events
 ;;------------------------------------------------------------------------------
 
-(doseq [property [:alignment :disabled]]
+(doseq [property [:alignment :button-disabled :disabled]]
   (let [event (common/panel-path->keyword :interactive-example "/" :set property)]
     (rf/reg-event-db event (rf-utils/make-setter-event-handler event))))

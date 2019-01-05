@@ -4,4 +4,5 @@
   {:button-group-widget
    {:interactive-example
     {:alignment "center"
+     :button-disabled "nil"
      :disabled false}}})

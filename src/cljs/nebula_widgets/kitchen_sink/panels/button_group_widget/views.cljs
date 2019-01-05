@@ -68,7 +68,7 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:alignment :disabled]
+  (->> [:alignment :button-disabled :disabled]
        (map
          (fn [prop]
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
@@ -77,15 +77,22 @@
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [props @*props]
+      (let [{:keys [button-disabled] :as props} @*props]
         (into
           [ie/widget
            [:div {:style {:height 32, :position "relative", :text-align "center"}}
-            [button-group/widget (assoc props :buttons (for [n (range 3)] {:text (str "Button" n)}))]]]
+            [button-group/widget
+             (-> props
+                 (select-keys [:disabled])
+                 (assoc :buttons (for [n (range 3)]
+                                   {:disabled (when (not= "nil" button-disabled) button-disabled)
+                                    :text (str "Button" n)})))]]]
           (for [params
                 [[:- "button group props"]
                  [:alignment (ie-cgi-knob/gen-items "center" "left" "right")]
-                 :disabled]
+                 :disabled
+                 [:- "button props"]
+                 [:button-disabled (ie-cgi-knob/gen-items "nil" ["false" false] ["true" true])]]
                 :let [[cid label-or-items] (if (sequential? params) params [params])
                       label? (= :- cid)]]
             [ie-cgi-knob/widget

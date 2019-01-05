@@ -53,28 +53,45 @@ async function getHelperFragments(...knobCids) {
 fixture('Widgets :: Button Group :: 020 Widget')
   .page('http://localhost:3449/widgets/button-group');
 
-test("010 It should propagate 'disabled' prop to items", async () => {
-  const { knob, sut } = await getHelperFragments('disabled');
+test("010 It should propagate 'disabled' prop to buttons", async () => {
+  const {
+    disabledKnob,
+    buttonDisabledKnob,
+    sut
+  } = await getHelperFragments('disabled', 'button-disabled');
 
-  // -- Check disabled
+  const isButtonsDisabled = async (disabled) => {
+    for (let i = 0; i < 3; i++) {
+      const button = sut.getButton({ idx: i });
+      await button.expectIsExist();
+      await button.hover();
 
-  await knob.clickItem({ value: 'true' });
-
-  for (let i = 0; i < 3; i++) {
-    const btn = sut.getButton({ idx: i });
-    await btn.expectIsExist();
-    await btn.hover();
-    await btn.expectIsDisabled();
+      if (disabled) {
+        await button.expectIsDisabled();
+      }
+      else {
+        await button.expectIsNotDisabled();
+      }
+    }
   }
 
-  // -- Check enabled
+  // -- Check 'disabled' can't be overriden on button level for disabled group
 
-  await knob.clickItem({ value: 'false' });
+  await disabledKnob.clickItem({ value: 'true' });
 
-  for (let i = 0; i < 3; i++) {
-    const btn = sut.getButton({ idx: i });
-    await btn.expectIsExist();
-    await btn.hover();
-    await btn.expectIsNotDisabled();
-  }
+  await buttonDisabledKnob.clickItem({ value: 'nil' });
+  await isButtonsDisabled(true);
+
+  await buttonDisabledKnob.clickItem({ value: 'false' });
+  await isButtonsDisabled(true);
+
+  // -- Check 'disabled' can be overriden on button level for not disabled group
+
+  await disabledKnob.clickItem({ value: 'false' });
+
+  await buttonDisabledKnob.clickItem({ value: 'nil' });
+  await isButtonsDisabled(false);
+
+  await buttonDisabledKnob.clickItem({ value: 'true' });
+  await isButtonsDisabled(true);
 });
