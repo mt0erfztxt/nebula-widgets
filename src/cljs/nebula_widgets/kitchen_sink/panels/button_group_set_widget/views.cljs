@@ -26,7 +26,8 @@
   ([n disabled]
    (for [[alignment xs] (build-alignment-data n)]
      {:alignment alignment
-      :buttons (for [n xs] {:disabled disabled, :text (str "Button" n)})})))
+      :buttons (for [n xs] {:text (str "Button" n)})
+      :disabled disabled})))
 
 ;;------------------------------------------------------------------------------
 ;; Example 010
@@ -64,7 +65,7 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:button-disabled :disabled]
+  (->> [:disabled :group-disabled]
        (map
          (fn [prop]
            [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
@@ -73,18 +74,18 @@
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [button-disabled] :as props} @*props]
+      (let [{:keys [group-disabled] :as props} @*props]
         (into
           [ie/widget
            [button-group-set/widget
             (-> props
                 (select-keys [:disabled])
-                (assoc :groups (build-groups 2 (when (not= "nil" button-disabled) button-disabled))))]]
+                (assoc :groups (build-groups 2 (when (not= "nil" group-disabled) group-disabled))))]]
           (for [params
                 [[:- "button group set props"]
                  :disabled
-                 [:- "button props"]
-                 [:button-disabled (ie-cgi-knob/gen-items "nil" ["false" false] ["true" true])]]
+                 [:- "button group props"]
+                 [:group-disabled (ie-cgi-knob/gen-items "nil" ["false" false] ["true" true])]]
                 :let [[cid label-or-items] (if (sequential? params) params [params])
                       label? (= :- cid)]]
             [ie-cgi-knob/widget

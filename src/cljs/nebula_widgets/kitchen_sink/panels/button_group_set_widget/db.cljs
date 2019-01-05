@@ -3,5 +3,5 @@
 (def default-db
   {:button-group-set-widget
    {:interactive-example
-    {:button-disabled "nil"
-     :disabled false}}})
+    {:disabled false
+     :group-disabled "nil"}}})
