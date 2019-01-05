@@ -1,7 +1,7 @@
 import testFragment from 'nebula-test-fragment';
 
 const {
-  Fragment1,
+  Fragment,
   Options,
   selector,
   utils
@@ -11,9 +11,9 @@ const {
  * Base class for fragment.
  *
  * @class
- * @extends {Fragment1}
+ * @extends {Fragment}
  */
-const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
+const BaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
     ['disabled', { antonym: 'enabled' }],
     ['kind', { isBoolean: false }]
@@ -28,7 +28,7 @@ const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
  *   - disabled (antonym: enabled)
  *   - kind (not boolean)
  *
- * @extends {Fragment1}
+ * @extends {Fragment}
  */
 class Button extends BaseClass {
 

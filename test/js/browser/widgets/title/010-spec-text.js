@@ -11,7 +11,7 @@ expect.use(unexpectedSinon);
 fixture `Widgets :: Title :: 010 Spec 'text'`
   .page(appRootPath.path + '/test/js/browser/widgets/title/010-spec-text.html');
 
-test("010 It should throw error when `spec.text` is not valid", async () => {
+test.skip("010 It should throw error when `spec.text` is not valid", async () => {
   let isThrown = false;
 
   try {
@@ -29,7 +29,7 @@ test("010 It should throw error when `spec.text` is not valid", async () => {
   expect(isThrown, 'to be true');
 });
 
-test("020 It should obtain title fragment by 'text' spec - case of string", async (t) => {
+test.skip("020 It should obtain title fragment by 'text' spec - case of string", async (t) => {
   let isThrown = false;
 
   // Case of success.
@@ -53,7 +53,7 @@ test("020 It should obtain title fragment by 'text' spec - case of string", asyn
   expect(isThrown, 'to be true');
 });
 
-test("030 It should obtain title fragment by 'text' spec - case of regular expression", async (t) => {
+test.skip("030 It should obtain title fragment by 'text' spec - case of regular expression", async (t) => {
   let isThrown = false;
 
   // Case of success.

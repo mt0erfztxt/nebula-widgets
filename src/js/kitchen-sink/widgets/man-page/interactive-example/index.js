@@ -2,7 +2,7 @@ import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 
 const {
-  Fragment1
+  Fragment
 } = testFragment;
 
 /**
@@ -15,7 +15,7 @@ const fragmentDisplayName = 'nebula-widgets.kitchen-sink.widgets.man-page.intera
 /**
  * Fragment that represents man page's interactive example.
  */
-class InteractiveExample extends Fragment1 {
+class InteractiveExample extends Fragment {
 
   /**
    * BEM base for fragment's 'view' element.

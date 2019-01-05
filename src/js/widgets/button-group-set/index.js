@@ -6,7 +6,7 @@ import Button from '../button';
 import ButtonGroup from '../button-group';
 
 const {
-  Fragment1,
+  Fragment,
   Options
 } = testFragment;
 
@@ -14,9 +14,9 @@ const {
  * Base class for fragment.
  *
  * @class
- * @extends {Fragment1}
+ * @extends {Fragment}
  */
-const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
+const BaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
     ['disabled', { antonym: 'enabled' }]
   ]
@@ -25,7 +25,7 @@ const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
 /**
  * Fragment that represents button group set.
  *
- * @extends {Fragment1}
+ * @extends {Fragment}
  */
 class ButtonGroupSet extends BaseClass {
 
@@ -150,7 +150,7 @@ class ButtonGroupSet extends BaseClass {
    *
    * @param {*} [locator] See `locator` parameter of button fragment's class constructor
    * @param {*} [options] See `options` parameter of button fragment's class constructor
-   * @returns {Fragment1}
+   * @returns {Fragment}
    */
   getButton(locator, options) {
     return this.getSomething('Button', locator, options);
@@ -161,7 +161,7 @@ class ButtonGroupSet extends BaseClass {
    *
    * @param {*} [locator] See `locator` parameter of button group fragment's class constructor
    * @param {*} [options] See `options` parameter of button group fragment's class constructor
-   * @returns {Fragment1}
+   * @returns {Fragment}
    */
   getButtonGroup(locator, options) {
     return this.getSomething('ButtonGroup', locator, options);

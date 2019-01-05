@@ -4,7 +4,7 @@ import Button from '../button';
 
 const {
   bem: { BemBase },
-  Fragment1,
+  Fragment,
   Options,
   utils
 } = testFragment;
@@ -13,9 +13,9 @@ const {
  * Base class for fragment.
  *
  * @class
- * @extends {Fragment1}
+ * @extends {Fragment}
  */
-const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
+const BaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
     ['alignment', { isBoolean: false }],
     ['disabled', { antonym: 'enabled' }]
@@ -30,7 +30,7 @@ const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
  *   - alignment (not boolean)
  *   - disabled (antonym: enabled)
  *
- * @extends {Fragment1}
+ * @extends {Fragment}
  */
 class ButtonGroup extends BaseClass {
 
@@ -174,7 +174,7 @@ class ButtonGroup extends BaseClass {
    *
    * @param {*} [locator] See `locator` parameter of button fragment's class constructor
    * @param {*} [options] See `options` parameter of button fragment's class constructor
-   * @returns {Fragment1}
+   * @returns {Fragment}
    */
   getButton(locator, options) {
     return this.getSomething('button', locator, options);

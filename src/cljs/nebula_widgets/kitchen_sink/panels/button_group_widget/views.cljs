@@ -83,7 +83,7 @@
            [:div {:style {:height 32, :position "relative", :text-align "center"}}
             [button-group/widget
              (-> props
-                 (select-keys [:disabled])
+                 (select-keys [:alignment :disabled])
                  (assoc :buttons (for [n (range 3)]
                                    {:disabled (when (not= "nil" button-disabled) button-disabled)
                                     :text (str "Button" n)})))]]]
