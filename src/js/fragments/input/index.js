@@ -2,7 +2,7 @@ import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 
 const {
-  Fragment1,
+  Fragment,
   Options
 } = testFragment;
 
@@ -10,9 +10,9 @@ const {
  * Base class for fragment.
  *
  * @class
- * @extends {Fragment1}
+ * @extends {Fragment}
  */
-const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
+const BaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
     ['disabled', { antonym: 'enabled' }],
     ['invalid', { antonym: 'valid' }],

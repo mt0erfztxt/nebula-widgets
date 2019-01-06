@@ -3,7 +3,7 @@ import testFragment from 'nebula-test-fragment';
 import { t } from 'testcafe';
 
 const {
-  Fragment1,
+  Fragment,
   Options
 } = testFragment;
 
@@ -11,9 +11,9 @@ const {
  * Base class for fragment.
  *
  * @class
- * @extends {Fragment1}
+ * @extends {Fragment}
  */
-const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
+const BaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
     'disabled',
     'inline',
@@ -31,7 +31,7 @@ const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
  *   - input (writable)
  *   - required
  *
- * @extends {Fragment1}
+ * @extends {Fragment}
  */
 class FormField extends BaseClass {
 
@@ -112,7 +112,7 @@ class FormField extends BaseClass {
   /**
    * Input fragment used in this fragment.
    *
-   * @returns {Fragment1}
+   * @returns {Fragment}
    */
   get input() {
     if (!this._input) {
@@ -253,7 +253,7 @@ class FormField extends BaseClass {
    * Asserts that 'Input' part of fragment's state equal specified 'value'.
    *
    * @param {Object} value 'Input' part of fragment's state must be equal that value to pass assertion
-   * @param {Options|Object} [options] Same as in {@link Fragment1#expectStateIs}
+   * @param {Options|Object} [options] Same as in {@link Fragment#expectStateIs}
    * @return {Promise<void>}
    */
   async expectInputPartOfStateIs(value, options) {
@@ -291,7 +291,7 @@ class FormField extends BaseClass {
 
   /**
    * Asserts that form field's label equal or matches specified value. Accepts
-   * same arguments as {@link Fragment1#expectTextIs} except that 'selector'
+   * same arguments as {@link Fragment#expectTextIs} except that 'selector'
    * option forcibly set to fragment's label element selector.
    *
    * @returns {Promise<void>}

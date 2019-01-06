@@ -4,7 +4,7 @@ import testFragment from 'nebula-test-fragment';
 import Example from './example';
 
 const {
-  Fragment1
+  Fragment
 } = testFragment;
 
 /**
@@ -17,7 +17,7 @@ const fragmentDisplayName = 'nebula-widgets.kitchen-sink.widgets.man-page';
 /**
  * Fragment that represents man page.
  */
-class ManPage extends Fragment1 {
+class ManPage extends Fragment {
 
   /**
    * Class of example fragment used in this fragment.

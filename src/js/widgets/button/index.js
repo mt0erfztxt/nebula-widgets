@@ -1,87 +1,86 @@
-import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
-import { t } from 'testcafe';
 
 const {
   Fragment,
   Options,
-  selector
+  selector,
+  utils
 } = testFragment;
 
 /**
  * Base class for fragment.
- * 
+ *
  * @class
  * @extends {Fragment}
  */
 const BaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
     ['disabled', { antonym: 'enabled' }],
-    ['flat'],
-    ['primary'],
-    ['secondary']
+    ['kind', { isBoolean: false }]
   ]
 });
 
 /**
- * Display name of fragment.
- *
- * @type {String}
- */
-const fragmentDisplayName = 'nebula-widgets.widgets.button';
-
-/**
  * Fragment that represents button.
- * 
+ *
+ * State parts:
+ * * own:
+ *   - disabled (antonym: enabled)
+ *   - kind (not boolean)
+ *
  * @extends {Fragment}
  */
 class Button extends BaseClass {
 
   /**
-   * Creates fragment.
+   * Provides custom transformations for selector:
+   * 1. 'text' - String, button text
    *
-   * @param {Button|Object} [spec] When it's already instance of `Button` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter plus it implements following `custom` specs - `text`
-   * @param {String|RegExp} [spec.text] Button's text. Allows to find button with text equal or matches given value
-   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
+   * @param {*} transformations
+   * @param {*} sel
+   * @param {*} bemBase
    */
-  constructor(spec, opts) {
-    const {
-      initializedOpts,
-      initializedSpec,
-      isInstance
-    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
+  transformSelector(transformations, sel, bemBase) {
+    sel = super.transformSelector(transformations, sel, bemBase);
 
-    if (isInstance === true) {
-      return spec;
+    for (const k in transformations) {
+      if (transformations.hasOwnProperty(k) && k === 'text') {
+        const value = transformations[k];
+
+        if (utils.isNonBlankString(value) || utils.isRegExp(value)) {
+          sel = selector.filterByText(sel, value);
+        }
+        else {
+          throw new TypeError(
+            `${this.displayName}: value for 'text' transformation must ` +
+            `be a non-blank string or a regular expression but it is ` +
+            `${typeOf(value)} (${value})`
+          );
+        }
+      }
     }
 
-    super(initializedSpec, initializedOpts);
-
-    if (_.has(initializedSpec, 'text')) {
-      this.selector = selector.filterByText(this.selector, initializedSpec.text);
-    }
-
-    return this;
+    return sel;
   }
 
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
 
-  getStateParts(onlyWritable = false) {
-    const parentParts = super.getStateParts(onlyWritable);
-    const parts = _.concat(parentParts, []);
+  getStateParts(options) {
+    const { onlyWritable } = new Options(options, {
+      defaults: {
+        onlyWritable: false
+      }
+    });
+
+    const writableParts = super.getStateParts({ onlyWritable });
 
     if (onlyWritable) {
-      return parts;
+      return writableParts;
     }
     else {
-      return _.concat(parts, [
-        'disabled',
-        'flat',
-        'primary',
-        'secondary'
-      ]);
+      return writableParts.concat(['disabled', 'kind']);
     }
   }
 
@@ -123,101 +122,25 @@ class Button extends BaseClass {
    */
 
   // ---------------------------------------------------------------------------
-  // State :: Flat (read-only)
+  // State :: Kind (read-only, not boolean)
   // ---------------------------------------------------------------------------
   // Inherited from `BaseClass`
   // ---------------------------------------------------------------------------
 
   /**
-   * @name Button#getFlatPartOfState
+   * @name Button#getKindPartOfState
    * @method
    * @param {Options|Object} options
-   * @returns {Promise<Boolean>}
+   * @returns {Promise<*>}
    */
 
   /**
-   * @name Button#expectIsFlat
+   * @name Button#expectKindPartOfStateIs
    * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name Button#expectIsNotFlat
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
-  // State :: Primary (read-only)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name Button#getPrimaryPartOfState
-   * @method
+   * @param {*} value
    * @param {Options|Object} options
-   * @returns {Promise<Boolean>}
-   */
-
-  /**
-   * @name Button#expectIsPrimary
-   * @method
    * @returns {Promise<void>}
    */
-
-  /**
-   * @name Button#expectIsNotPrimary
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
-  // State :: Secondary (read-only)
-  // ---------------------------------------------------------------------------
-  // Inherited from `BaseClass`
-  // ---------------------------------------------------------------------------
-
-  /**
-   * @name Button#getSecondaryPartOfState
-   * @method
-   * @param {Options|Object} options
-   * @returns {Promise<Boolean>}
-   */
-
-  /**
-   * @name Button#expectIsSecondary
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  /**
-   * @name Button#expectIsNotSecondary
-   * @method
-   * @returns {Promise<void>}
-   */
-
-  // ---------------------------------------------------------------------------
-  // Other Methods
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Clicks on button.
-   * 
-   * @returns {Promise<void>}
-   */
-  async click() {
-    await t.click(this.selector);
-  }
-
-  /**
-   * Hovers on button.
-   * 
-   * @returns {Promise<void>}
-   */
-  async hover() {
-    await t.hover(this.selector);
-  }
 }
 
 Object.defineProperties(Button, {
@@ -225,7 +148,7 @@ Object.defineProperties(Button, {
     value: 'nw-button'
   },
   displayName: {
-    value: fragmentDisplayName
+    value: 'nebula-widgets.widgets.button'
   }
 });
 

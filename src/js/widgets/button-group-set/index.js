@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
 import typeOf from 'typeof--';
-import { t } from 'testcafe';
 
 import Button from '../button';
 import ButtonGroup from '../button-group';
@@ -13,7 +12,7 @@ const {
 
 /**
  * Base class for fragment.
- * 
+ *
  * @class
  * @extends {Fragment}
  */
@@ -24,63 +23,35 @@ const BaseClass = Fragment.makeFragmentClass(Fragment, {
 });
 
 /**
- * Display name of fragment.
- *
- * @type {String}
- */
-const fragmentDisplayName = 'nebula-widgets.widgets.button-group-set';
-
-/**
  * Fragment that represents button group set.
- * 
+ *
  * @extends {Fragment}
  */
 class ButtonGroupSet extends BaseClass {
 
   /**
-   * Creates fragment.
-   *
-   * @param {ButtonGroupSet|Object} [spec] When it's already instance of `ButtonGroupSet` it would be returned as-is otherwise it's same as extended fragment's constructor `spec` parameter
-   * @param {Options|Object} [opts] Options, same as extended fragment's constructor `opts` parameter
-   * @param {Object} [opts.ButtonFragmentOpts] Default `opts` for button fragment's constructor
-   * @param {Object} [opts.ButtonFragmentSpec] Default `spec` for button fragment's constructor
-   * @param {Object} [opts.ButtonGroupFragmentOpts] Default `opts` for button group fragment's constructor
-   * @param {Object} [opts.ButtonGroupFragmentSpec] Default `spec` for button group fragment's constructor
-   */
-  constructor(spec, opts) {
-    const {
-      initializedOpts,
-      initializedSpec,
-      isInstance
-    } = Fragment.initializeFragmentSpecAndOpts(spec, opts);
-
-    if (isInstance === true) {
-      return spec;
-    }
-
-    super(initializedSpec, initializedOpts);
-
-    this._buttons = {};
-    this._buttonGroups = {};
-
-    return this;
-  }
-
-  /**
    * Returns initialized button fragments mapping.
-   * 
+   *
    * @returns {Object}
    */
   get buttons() {
+    if (!this._buttons) {
+      this._buttons = {};
+    }
+
     return this._buttons;
   }
 
   /**
    * Returns initialized button group fragments mapping.
-   * 
+   *
    * @returns {Object}
    */
   get buttonGroups() {
+    if (!this._buttonGroups) {
+      this._buttonGroups = {};
+    }
+
     return this._buttonGroups;
   }
 
@@ -88,11 +59,11 @@ class ButtonGroupSet extends BaseClass {
    * Class of button fragment used in this fragment.
    *
    * @returns {class}
-   * @throws {TypeError} When item fragment class is not valid.
    */
   get ButtonFragment() {
     if (!this._buttonFragment) {
-      this._buttonFragment = this.getSomethingFragment('Button', ButtonGroupSet);
+      this._buttonFragment = this
+        .getSomethingFragment('Button', ButtonGroupSet);
     }
 
     return this._buttonFragment;
@@ -102,11 +73,11 @@ class ButtonGroupSet extends BaseClass {
    * Class of button group fragment used in this fragment.
    *
    * @returns {class}
-   * @throws {TypeError} When item fragment class is not valid.
    */
   get ButtonGroupFragment() {
     if (!this._buttonGroupFragment) {
-      this._buttonGroupFragment = this.getSomethingFragment('ButtonGroup', ButtonGroupSet);
+      this._buttonGroupFragment = this
+        .getSomethingFragment('ButtonGroup', ButtonGroupSet);
     }
 
     return this._buttonGroupFragment;
@@ -116,18 +87,20 @@ class ButtonGroupSet extends BaseClass {
   // State
   // ---------------------------------------------------------------------------
 
-  getStateParts(onlyWritable = false) {
-    const parentParts = super.getStateParts(onlyWritable);
-    const parts = _.concat(parentParts, []);
+  getStateParts(options) {
+    const { onlyWritable } = new Options(options, {
+      defaults: {
+        onlyWritable: false
+      }
+    });
+
+    const writableParts = super.getStateParts({ onlyWritable });
 
     if (onlyWritable) {
-      return parts;
+      return writableParts;
     }
     else {
-      return _.concat(parts, [
-        'alignment',
-        'disabled'
-      ]);
+      return writableParts.concat(['disabled']);
     }
   }
 
@@ -173,75 +146,56 @@ class ButtonGroupSet extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * Returns button fragment that matches `spec` and `opts`.
+   * Returns button fragment.
    *
-   * @param {*} [spec] See `spec` parameter of button fragment's class constructor
-   * @param {*} [opts] See `opts` parameter of button fragment's class constructor
+   * @param {*} [locator] See `locator` parameter of button fragment's class constructor
+   * @param {*} [options] See `options` parameter of button fragment's class constructor
    * @returns {Fragment}
    */
-  getButton(spec, opts) {
-    return this.getSomething(
-      this.ButtonFragment,
-      _.assign({}, this._opts.ButtonFragmentSpec, { parent: this.selector }, spec),
-      _.assign({}, this._opts.ButtonFragmentOpts, opts)
-    );
+  getButton(locator, options) {
+    return this.getSomething('Button', locator, options);
   }
 
   /**
-   * Returns button group fragment that matches `spec` and `opts`.
+   * Returns button group fragment.
    *
-   * @param {*} [spec] See `spec` parameter of button group fragment's class constructor
-   * @param {*} [opts] See `opts` parameter of button group fragment's class constructor
+   * @param {*} [locator] See `locator` parameter of button group fragment's class constructor
+   * @param {*} [options] See `options` parameter of button group fragment's class constructor
    * @returns {Fragment}
    */
-  getButtonGroup(spec, opts) {
-    return this.getSomething(
-      this.ButtonGroupFragment,
-      _.assign({}, this._opts.ButtonGroupFragmentSpec, { parent: this.selector }, spec),
-      _.assign({}, this._opts.ButtonGroupFragmentOpts, opts)
-    );
-  }
-
-  /**
-   * Clicks on button.
-   * 
-   * @returns {Promise<void>}
-   */
-  async click() {
-    await t.click(this.selector);
-  }
-
-  /**
-   * Hovers on button.
-   * 
-   * @returns {Promise<void>}
-   */
-  async hover() {
-    await t.hover(this.selector);
+  getButtonGroup(locator, options) {
+    return this.getSomething('ButtonGroup', locator, options);
   }
 
   /**
    * Accepts config object and creates button and button group fragments.
    *
    * @param {Object} [config] Config
-   * @param {Object} [config.buttons] Object where each key is a name for button and value is an array of button fragment spec and opts or just a button spec
-   * @param {Object} [config.buttonGroups] Object where each key is a name for button group and value is an array of button group fragment spec and opts or just a button group spec
-   * @throws {TypeError} When `cfg` argument is not valid.
+   * @param {Object} [config.buttons] Object where each key is a name for button and value is an array of button fragment locator and options or just a button locator
+   * @param {Object} [config.buttonGroups] Object where each key is a name for button group and value is an array of button group fragment locator and options or just a button group locator
+   * @throws {TypeError} When `config` argument is not valid.
    * @example
+   * ```js
    * {
    *   buttons: {
-   *     myButton1: [{ // button spec }, { // button opts }],
-   *     myButton2: [{ // button spec }],
-   *     myButton3:  { // button spec },
+   *     myButton1: [{ // button locator }, { // button options }],
+   *     myButton2: [{ // button locator }],
+   *     myButton3:  { // button locator },
    *   },
    *   buttonGroups: {
-   *     myButtonGroup1: [{ // button group spec }, { // button group opts }],
-   *     myButtonGroup2: [{ // button group spec }],
-   *     myButtonGroup3:  { // button group spec },
+   *     myButtonGroup1: [{ // button group locator }, { // button group options }],
+   *     myButtonGroup2: [{ // button group locator }],
+   *     myButtonGroup3:  { // button group locator },
    *   },
    * }
+   * ```
    */
   init(config) {
+
+    // (Re-)Initialize containers for buttons and button groups.
+    this._buttons = {};
+    this._buttonGroups = {};
+
     if (_.isNil(config)) {
       return;
     }
@@ -249,7 +203,7 @@ class ButtonGroupSet extends BaseClass {
     if (!_.isPlainObject(config)) {
       throw new TypeError(
         `${this.displayName}.init(): 'config' argument must be a plain ` +
-        `but it is ${typeOf(config)} (${config})`
+        `object but it is ${typeOf(config)} (${config})`
       );
     }
 
@@ -259,35 +213,44 @@ class ButtonGroupSet extends BaseClass {
       if (!_.isPlainObject(buttons)) {
         throw new TypeError(
           `${this.displayName}.init(): 'config.buttons' argument must be a ` +
-          `plain but it is ${typeOf(buttons)} (${buttons})`
+          `plain object but it is ${typeOf(buttons)} (${buttons})`
         );
       }
 
-      _.forOwn(
-        buttons,
-        (v, k) => {
-          let opts, spec = v;
+      for (const k in buttons) {
+        if (buttons.hasOwnProperty(k)) {
+          let locator = buttons[k];
+          let options;
 
-          if (_.isArray(spec)) {
-            [spec, opts] = spec;
+          if (Array.isArray(locator)) {
+            [locator, options] = locator;
           }
 
-          this._buttons[k] = this.getButton(spec, opts);
+          this._buttons[k] = this.getButton(locator, options);
         }
-      );
+      }
+    }
 
-      _.forOwn(
-        buttonGroups,
-        (v, k) => {
-          let opts, spec = v;
+    if (buttonGroups) {
+      if (!_.isPlainObject(buttonGroups)) {
+        throw new TypeError(
+          `${this.displayName}.init(): 'config.buttonGroups' argument must ` +
+          `be a plain object but it is ${typeOf(buttons)} (${buttons})`
+        );
+      }
 
-          if (_.isArray(spec)) {
-            [spec, opts] = spec;
+      for (const k in buttonGroups) {
+        if (buttonGroups.hasOwnProperty(k)) {
+          let lacator = buttonGroups[k];
+          let options;
+
+          if (Array.isArray(lacator)) {
+            [lacator, options] = lacator;
           }
 
-          this._buttonGroups[k] = this.getButtonGroup(spec, opts);
+          this._buttonGroups[k] = this.getButtonGroup(lacator, options);
         }
-      );
+      }
     }
   }
 }
@@ -303,7 +266,7 @@ Object.defineProperties(ButtonGroupSet, {
     value: ButtonGroup
   },
   displayName: {
-    value: fragmentDisplayName
+    value: 'nebula-widgets.widgets.button-group-set'
   }
 });
 

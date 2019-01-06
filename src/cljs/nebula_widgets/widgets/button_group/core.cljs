@@ -10,12 +10,15 @@
   "Vector of props that React doesn't allow on `<DIV>` tag plus :class prop because we not allow override CSS class."
   [:alignment :buttons :cid :class :cns])
 
+(def ^:private alignment-prop-set
+  #{:center :left :right})
+
 (defn- build-class [{:keys [alignment cid cns disabled]}]
   (bem-utils/build-class
     bem
     [["cns" cns]
      ["cid" cid]
-     ["alignment" (-> alignment keyword #{:center :left :right} (or :center))]
+     ["alignment" (-> alignment keyword alignment-prop-set (or :center))]
      ["disabled" disabled]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

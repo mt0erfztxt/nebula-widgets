@@ -12,13 +12,13 @@ const expect = unexpected.clone();
 expect.use(unexpectedSinon);
 
 const {
-  Fragment1,
+  Fragment,
   Options,
   selector,
   utils
 } = testFragment;
 
-class GroupInputItem extends Fragment1 {
+class GroupInputItem extends Fragment {
 
   /**
    * Provides custom transformations for selector:

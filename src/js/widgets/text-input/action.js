@@ -3,7 +3,7 @@ import { t } from 'testcafe';
 
 const {
   bem: { BemBase },
-  Fragment1,
+  Fragment,
   Options
 } = testFragment;
 
@@ -11,9 +11,9 @@ const {
  * Base class for fragment.
  * 
  * @class
- * @extends {Fragment1}
+ * @extends {Fragment}
  */
-const BaseClass = Fragment1.makeFragmentClass(Fragment1, {
+const BaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
     ['disabled', { antonym: 'enabled' }]
   ]
@@ -137,7 +137,7 @@ class Action extends BaseClass {
    * @returns {Promise<void>}
    */
   async hover(options) {
-    await Fragment1.prototype.hover.call(
+    await Fragment.prototype.hover.call(
       this,
       new Options(options, {
         defaults: {
