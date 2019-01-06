@@ -1,7 +1,7 @@
 (ns nebula-widgets.widgets.text-group-input-form-field.core
   (:require
-    [nebula-widgets.widgets.text-group-input.core :as text-group-input]
-    [nebula-widgets.widgets.form-field.core :as form-field]))
+    [nebula-widgets.widgets.form-field.core :as form-field]
+    [nebula-widgets.widgets.text-group-input.core :as text-group-input]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
