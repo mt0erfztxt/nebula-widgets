@@ -1,5 +1,6 @@
 (ns nebula-widgets.utils.event)
 
+;; DEPRECATED: Use `utils.re-frame/make-setter-event-handler` instead
 (defn make-setter-event-handler
   "Accepts path in app db to set/update and returns handler (for re-frame's db event) that accepts new value.
   When new value is a function it would receive old value and must return new one."
