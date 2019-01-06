@@ -9,6 +9,7 @@
     [nebula-widgets.kitchen-sink.panels.checkable-group-input-widget.db :as checkable-group-input-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.checkable-input-widget.db :as checkable-input-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.form-field-widget.db :as form-field-widget-panel-db]
+    [nebula-widgets.kitchen-sink.panels.form-widget.db :as form-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.group-input-widget.db :as group-input-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.text-group-input-form-field-widget.db :as text-group-input-form-field-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.text-group-input-widget.db :as text-group-input-widget-panel-db]
@@ -26,6 +27,7 @@
     checkable-group-input-widget-panel-db/default-db
     checkable-input-widget-panel-db/default-db
     form-field-widget-panel-db/default-db
+    form-widget-panel-db/default-db
     group-input-widget-panel-db/default-db
     text-group-input-form-field-widget-panel-db/default-db
     text-group-input-widget-panel-db/default-db

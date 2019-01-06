@@ -14,6 +14,7 @@
      ["/widgets/checkable-group-input-form-field" :widgets/checkable-group-input-form-field]
      ["/widgets/checkable-group-input" :widgets/checkable-group-input]
      ["/widgets/checkable-input" :widgets/checkable-input]
+     ["/widgets/form" :widgets/form]
      ["/widgets/form-field" :widgets/form-field]
      ["/widgets/group-input" :widgets/group-input]
      ["/widgets/text-group-input-form-field" :widgets/text-group-input-form-field]
