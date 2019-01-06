@@ -21,25 +21,25 @@
         color: @border-color;
 
 
-    &--flat
+    &--kind_flat
         border-color: transparent;
         padding-left: 16px;
         padding-right: 16px;
 
-    &--flat:hover:not(&--disabled)
+    &--kind_flat:hover:not(&--disabled)
         color: $g_color_primary_text--active;
 
 
-    &--secondary
+    &--kind_secondary
         border-style: dashed;
 
 
-    &--primary
+    &--kind_primary
         background-color: $g_color_accent;
         border-color: $g_color_accent;
         color: $g_color_primary_text--active;
         text-shadow: -1px 1px 0 shade($g_color_accent, 18%);
 
-    &--primary&--disabled
+    &--kind_primary&--disabled
         color: mix($g_color_primary_text--active, $g_color_accent, 36%);
         text-shadow: -1px 1px 0 shade($g_color_accent, 12%);
