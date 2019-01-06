@@ -9,22 +9,29 @@
 (defn- build-bem [bem]
   (or bem default-bem))
 
-(defn- build-class [{:keys [bem cid size]}]
+(def ^:private size-prop-set
+  #{:large :normal :small})
+
+(defn- build-class [{:keys [bem cid cns size]}]
   (bem-utils/build-class
     (build-bem bem)
-    [["cid" cid]
-     ["size" (-> size keyword #{:large :normal :small} (or :normal))]]))
+    [["cns" cns]
+     ["cid" cid]
+     ["size" (-> size keyword size-prop-set (or :normal))]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget [& _args]
-  "Renders title. Accepts optional props map and any number of child components.
-  Supported props:
-  * :bem  - string, nw-title by default. Would be used as widget's BEM.
-  * :cid  - any, no default. Component id.
-  * :size - one of :large, :normal (default), :small or their string/symbol equivalents. Title size."
+  "Renders title.
+
+  Arguments:
+  * `props` - map:
+    - `:bem` - string, 'nw-title' by default. Would be used as widget's BEM. Allows to augment widget styling.
+    - `:cid` - any, no default. Component id.
+    - `:cns` - any, no default. Component namespace.
+    - :size - one of :large, :normal (default), :small or their string/symbol equivalents. Size of title.
+  * `& children` - any number of renderables"
   (let [this (r/current-component)]
-    (into [:div {:class (-> this r/props build-class)}]
-          (r/children this))))
+    (into [:div {:class (-> this r/props build-class)}] (r/children this))))
