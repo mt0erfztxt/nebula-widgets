@@ -22,6 +22,9 @@
 (defn event->value [event]
   (oops/oget event "target.value"))
 
+(defn prevent-event-default [event]
+  (oops/ocall event "preventDefault"))
+
 (defn path-str->segments
   "Returns lazy seq of segments (strings) obtained by splitting passed in string on dot character. Returned seq doesn't
   contain blank items and each item is whitespace-trimmed."
