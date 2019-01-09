@@ -1,4 +1,6 @@
+import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
+import typeOf from 'typeof--';
 import { Selector } from 'testcafe';
 
 import Button from '../button';
@@ -32,7 +34,9 @@ const BaseClass = Fragment.makeFragmentClass(Fragment, {
  * State parts:
  * * own:
  *   - disabled (antonym: enabled)
+ *   - entityId
  *   - fetched (+waitUntil)
+ *   - fields (writable)
  *   - invalid (antonym: valid)
  *
  * @extends {Fragment}
@@ -124,7 +128,9 @@ class Form extends BaseClass {
       }
     });
 
-    const writableParts = super.getStateParts({ onlyWritable });
+    const writableParts = super
+      .getStateParts({ onlyWritable })
+      .concat(['fields']);
 
     if (onlyWritable) {
       return writableParts;
@@ -434,12 +440,17 @@ class Form extends BaseClass {
 
     const { actions, fields } = config || {};
 
-    for (const k in _.keys(actions)) {
-      const { locator, options } = object[k];
+    for (const k of _.keys(actions)) {
+      let locator = actions[k];
+      let options;
+
+      if (Array.isArray(locator)) {
+        [locator, options] = locator;
+      }
 
       if (_.isNil(locator)) {
         throw new TypeError(
-          `${this.displayName}#init(): 'config.actions.${k}.locator' ` +
+          `${this.displayName}#init(): 'config.actions.${k}' locator ` +
           `must be a non-empty locator but it is ${typeOf(locator)} ` +
           `(${locator})`
         );
@@ -451,22 +462,13 @@ class Form extends BaseClass {
       this.actions[k] = this.getAction(locator, opts);
     }
 
-    for (const k in _.keys(fields)) {
-      const { locator, options, type } = object[k];
-
-      if (_.isNil(locator)) {
-        throw new TypeError(
-          `${this.displayName}#init(): 'config.fields.${k}.locator' ` +
-          `must be a non-empty locator but it is ${typeOf(locator)} ` +
-          `(${locator})`
-        );
-      }
-
+    for (const k of _.keys(fields)) {
+      const [type, locator, options] = fields[k];
       const typeIsFunction = _.isFunction(type);
 
       if (!(typeIsFunction || _.isString(type))) {
         throw new TypeError(
-          `${this.displayName}#init(): 'config.fields.${k}.type' must ` +
+          `${this.displayName}#init(): 'config.fields.${k}' type must ` +
           `be a string, or a function but it is ${typeOf(type)} (${type})`
         );
       }
@@ -476,9 +478,17 @@ class Form extends BaseClass {
 
       if (!_.isFunction(FormFieldFragment)) {
         throw new TypeError(
-          `${this.displayName}#init(): 'config.fields.${k}.type' must ` +
+          `${this.displayName}#init(): 'config.fields.${k}'type must ` +
           `be a fragment class but it is ${typeOf(FormFieldFragment)} ` +
           `(${FormFieldFragment})`
+        );
+      }
+
+      if (_.isNil(locator)) {
+        throw new TypeError(
+          `${this.displayName}#init(): 'config.fields.${k}' locator ` +
+          `must be a non-empty locator but it is ${typeOf(locator)} ` +
+          `(${locator})`
         );
       }
 

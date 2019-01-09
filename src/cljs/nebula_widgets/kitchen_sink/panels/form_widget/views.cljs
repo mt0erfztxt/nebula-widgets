@@ -51,16 +51,18 @@
                    :groups
                    [{:alignment "center"
                      :buttons
-                     [{:kind "flat", :text "Save"}
+                     [{:cid "submit", :kind "flat", :text "Submit"}
                       {:kind "flat", :text "Cancel"}]}]}
                   :title "Profile"))
             [text-input-form-field/widget
-             {:disabled disabled
+             {:cid "first-name"
+              :disabled disabled
               :label "First name"}
              {:on-change handle-first-name-on-change
               :value first-name}]
             [checkable-group-input-form-field/widget
-             {:disabled disabled
+             {:cid "likes"
+              :disabled disabled
               :label "Likes"}
              {:items (for [label supported-likes] {:label label, :value (-> label str/lower-case keyword)})
               :on-change handle-likes-on-change
