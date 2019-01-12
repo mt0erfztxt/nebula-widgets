@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import testFragment from 'nebula-test-fragment';
-import { t } from 'testcafe';
 
 const {
   Fragment,
@@ -327,15 +326,6 @@ class FormField extends BaseClass {
   // ---------------------------------------------------------------------------
   // Other Methods
   // ---------------------------------------------------------------------------
-
-  /**
-   * Hovers on form field.
-   *
-   * @returns {Promise<void>}
-   */
-  async hover() {
-    await t.hover(this.selector);
-  }
 
   /**
    * Shortcut for input's `#getValuePartOfState()``.

@@ -7,8 +7,8 @@
 (def ^:private bem
   "nw-form")
 
-(def ^:private actions-bem
-  (str bem "__actions"))
+(def ^:private buttons-bem
+  (str bem "__buttons"))
 
 (def ^:private fields-bem
   (str bem "__fields"))
@@ -33,15 +33,15 @@
 
   Arguments:
   * `props` - map:
-    - `:actions` - map, same as `props` argument of [button-group-set](/widgets/button-group-set) widget, no default.
-      Used to render form actions.
+    - `:buttons` - map, same as `props` argument of [button-group-set](/widgets/button-group-set) widget, no default.
+      Used to render form buttons.
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.
-    - `:disabled` - logical true/false, no default. Whether input is disabled or not.
-    - `:invalid` - logical true/false, no default. Whether input is in invalid state or not.
+    - `:disabled` - logical true/false, no default. Whether form is disabled or not (doesn't propagate to `:buttons`).
+    - `:invalid` - logical true/false, no default. Whether form is in invalid state or not.
     - `:title` - string, no default. Form's title.
   * `& children` - any number of renderables (e.g. form fields)"
-  [{:keys [actions form-props title] :as props} & children]
+  [{:keys [buttons form-props title] :as props} & children]
   [:form
    (merge
      {:class (build-class props)
@@ -51,5 +51,5 @@
    (when title
      [:div {:class title-bem} title])
    (into [:div {:class fields-bem}] children)
-   [:div {:class actions-bem}
-    [button-group-set/widget actions]]])
+   [:div {:class buttons-bem}
+    [button-group-set/widget buttons]]])
