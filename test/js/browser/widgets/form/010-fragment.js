@@ -64,37 +64,37 @@ test("010 It should allow obtain form", async () => {
   await sut.hover();
 });
 
-test("020 It should allow to be initialized using '#init()' - case of actions", async () => {
+test("020 It should allow to be initialized using '#init()' - case of buttons", async () => {
   const sut = await getSut();
   await sut.hover();
 
   sut.init({
-    actions: {
+    buttons: {
       cancel: [{ text: 'CANCEL' }],
       nonExistent: { cid: 'foo' },
       submit: { cid: 'submit' }
     }
   });
 
-  expect(sut.actions, 'to be an', Object);
+  expect(sut.buttons, 'to be an', Object);
   expect(
-    sut.actions,
+    sut.buttons,
     'to only have keys',
     ['cancel', 'nonExistent', 'submit']
   );
   expect(
-    sut.actions,
+    sut.buttons,
     'to have values exhaustively satisfying',
     expect.it((value) => expect(value, 'to be a', Button))
   );
 
-  await sut.actions.cancel.expectIsExist();
-  await sut.actions.cancel.hover();
+  await sut.buttons.cancel.expectIsExist();
+  await sut.buttons.cancel.hover();
 
-  await sut.actions.nonExistent.expectIsNotExist();
+  await sut.buttons.nonExistent.expectIsNotExist();
 
-  await sut.actions.submit.expectIsExist();
-  await sut.actions.submit.hover();
+  await sut.buttons.submit.expectIsExist();
+  await sut.buttons.submit.hover();
 });
 
 test("030 It should allow to be initialized using '#init()' - case of fields", async () => {

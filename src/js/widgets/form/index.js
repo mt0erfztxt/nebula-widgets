@@ -44,33 +44,33 @@ const BaseClass = Fragment.makeFragmentClass(Fragment, {
 class Form extends BaseClass {
 
   /**
-   * BEM base for fragment's 'actions' element.
+   * BEM base for fragment's 'buttons' element.
    *
    * @returns {BemBase}
    */
-  get actionsElementBemBase() {
-    if (!this._actionsElementBemBase) {
-      this._actionsElementBemBase = this
+  get buttonsElementBemBase() {
+    if (!this._buttonsElementBemBase) {
+      this._buttonsElementBemBase = this
         .cloneBemBase()
-        .setElt('actions');
+        .setElt('buttons');
     }
 
-    return this._actionsElementBemBase;
+    return this._buttonsElementBemBase;
   }
 
   /**
-   * TestCafe selector for fragment's 'actions' element.
+   * TestCafe selector for fragment's 'buttons' element.
    *
    * @returns {Selector}
    */
-  get actionsElementSelector() {
-    if (!this._actionsElementSelector) {
-      this._actionsElementSelector = this
+  get buttonsElementSelector() {
+    if (!this._buttonsElementSelector) {
+      this._buttonsElementSelector = this
         .selector
-        .find(`.${this.actionsElementBemBase}`);
+        .find(`.${this.buttonsElementBemBase}`);
     }
 
-    return this._actionsElementSelector;
+    return this._buttonsElementSelector;
   }
 
   /**
@@ -104,17 +104,17 @@ class Form extends BaseClass {
   }
 
   /**
-   * Class of action fragment used in this fragment.
+   * Class of button fragment used in this fragment.
    *
    * @returns {class}
-   * @throws {TypeError} When action fragment class is not valid.
+   * @throws {TypeError} When button fragment class is not valid.
    */
-  get ActionFragment() {
-    if (!this._ActionFragment) {
-      this._ActionFragment = this.getSomethingFragment('Action', Form);
+  get ButtonFragment() {
+    if (!this._ButtonFragment) {
+      this._ButtonFragment = this.getSomethingFragment('Button', Form);
     }
 
-    return this._ActionFragment;
+    return this._ButtonFragment;
   }
 
   // ---------------------------------------------------------------------------
@@ -381,14 +381,14 @@ class Form extends BaseClass {
   // ---------------------------------------------------------------------------
 
   /**
-   * Returns action fragment.
+   * Returns button fragment.
    *
-   * @param {*} [locator] See `locator` parameter of action fragment's class constructor
-   * @param {*} [options] See `options` parameter of action fragment's class constructor
+   * @param {*} [locator] See `locator` parameter of button fragment's class constructor
+   * @param {*} [options] See `options` parameter of button fragment's class constructor
    * @returns {Button}
    */
-  getAction(locator, options) {
-    return this.getSomething('Action', locator, options);
+  getButton(locator, options) {
+    return this.getSomething('Button', locator, options);
   }
 
   /**
@@ -413,18 +413,17 @@ class Form extends BaseClass {
     };
   }
 
-  // TODO: Update docs
   /**
-   * Accepts config object and creates form actions and form fields specified
-   * in it, and then puts them on `actions` and `fields` properties of
+   * Accepts config object and creates form buttons and form fields specified
+   * in it, and then puts them on `buttons` and `fields` properties of
    * fragment. To re-initialize form call it with new `config`.
    *
    * @param {Object} [config] Config
-   * @param {object} [config.actions] Form actions config where keys is names under which group would appear in instance `actionsGrops` property and must be one of `center`, `left` or `right`, and values are objects which keys are names of form actions and values are actions config
-   * @param {Object} [config.fields] Form fields config where keys are names under which fields would appear in fragment's `fields` property and values are objects with `type`, `locator` and `options` properties. `type` is a stringified field of supported types or a custom form field class, e.g. `CustomInputFormField`, about `locator` and `options` see appropriate form field class. Note that `options.parent` is overriden to form fragmnet's selector
+   * @param {Object} [config.buttons] Each key is an attribute name for form button and value is an array of locator (required) and options (selector would be forcibly set to from's selector) for Button fragment. In case when no options provided value can be just a locator
+   * @param {Object} [config.fields] Each key is an attribute name for form field and value is an array of: 1 - form field type (required), which is a name of one of supported form field types or a user-defined fragment class; 2 - locator used to create form field fragment (required); 3 - options used to create form field fragment (optional). For list of supported field types see {@link #getFieldTypes}
    */
   init(config) {
-    this.actions = {};
+    this.buttons = {};
     this.fields = {};
 
     if (_.isNil(config)) {
@@ -438,10 +437,10 @@ class Form extends BaseClass {
       );
     }
 
-    const { actions, fields } = config || {};
+    const { buttons, fields } = config || {};
 
-    for (const k of _.keys(actions)) {
-      let locator = actions[k];
+    for (const k of _.keys(buttons)) {
+      let locator = buttons[k];
       let options;
 
       if (Array.isArray(locator)) {
@@ -450,7 +449,7 @@ class Form extends BaseClass {
 
       if (_.isNil(locator)) {
         throw new TypeError(
-          `${this.displayName}#init(): 'config.actions.${k}' locator ` +
+          `${this.displayName}#init(): 'config.buttons.${k}' locator ` +
           `must be a non-empty locator but it is ${typeOf(locator)} ` +
           `(${locator})`
         );
@@ -459,7 +458,7 @@ class Form extends BaseClass {
       const opts = new Options(options);
       opts.parent = this.selector;
 
-      this.actions[k] = this.getAction(locator, opts);
+      this.buttons[k] = this.getButton(locator, opts);
     }
 
     for (const k of _.keys(fields)) {
@@ -501,11 +500,11 @@ class Form extends BaseClass {
 }
 
 Object.defineProperties(Form, {
-  ActionFragment: {
-    value: Button
-  },
   bemBase: {
     value: 'nw-form'
+  },
+  ButtonFragment: {
+    value: Button
   },
   displayName: {
     value: 'nebula-widgets.widgets.form'

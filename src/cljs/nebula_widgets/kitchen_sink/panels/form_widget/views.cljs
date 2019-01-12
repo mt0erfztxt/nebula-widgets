@@ -46,7 +46,7 @@
             (-> props
                 (select-keys [:disabled :invalid])
                 (assoc
-                  :actions
+                  :buttons
                   {:disabled disabled
                    :groups
                    [{:alignment "center"
