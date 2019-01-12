@@ -37,8 +37,8 @@
       Used to render form buttons.
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.
-    - `:disabled` - logical true/false, no default. Whether input is disabled or not.
-    - `:invalid` - logical true/false, no default. Whether input is in invalid state or not.
+    - `:disabled` - logical true/false, no default. Whether form is disabled or not (doesn't propagate to `:buttons`).
+    - `:invalid` - logical true/false, no default. Whether form is in invalid state or not.
     - `:title` - string, no default. Form's title.
   * `& children` - any number of renderables (e.g. form fields)"
   [{:keys [buttons form-props title] :as props} & children]
