@@ -1,9 +1,12 @@
 (ns nebula-widgets.widgets.app-panel.core
   (:require
-    [nebula-widgets.widgets.app-panel.bar :as app-panel-bar]
+    [goog.dom :as gdom]
+    [goog.style :as gstyle]
     [nebula-widgets.widgets.app-panel.head :as app-panel-head]
+    [nebula-widgets.widgets.app-panel.toolbar :as app-panel-toolbar]
     [nebula-widgets.utils :as utils]
     [nebula-widgets.utils.bem :as bem-utils]
+    [oops.core :as oops]
     [reagent.core :as r]))
 
 (def ^:private bem
@@ -14,6 +17,9 @@
 
 (def ^:private footer-elt-bem
   (str bem "__footer"))
+
+(def ^:private head-elt-bem
+  (str bem "__head"))
 
 (def ^:private header-elt-bem
   (str bem "__header"))
@@ -27,17 +33,8 @@
 (def ^:private sidebar-elt-bem
   (str bem "__sidebar"))
 
-(defn- build-bar-modifiers [{:keys [placement separated] :as bar-props}]
-  (when (and (map? bar-props) (seq bar-props))
-    (let [prefix (-> placement name (str "Bar"))]
-      [prefix
-       [(str prefix "-separated") separated]])))
-
-(defn- build-header-modifiers [{:keys [pinned] :as header-props}]
-  (when (and (map? header-props) (seq header-props))
-    (let [prefix "header"]
-      [prefix
-       [(str prefix "-pinned") pinned]])))
+(def ^:private toolbars-elt-bem
+  (str bem "__toolbars"))
 
 (defn- build-sidebar-modifiers [{:keys [collapsed gutter placement size] :as sidebar-props}]
   (when (and (map? sidebar-props) (seq sidebar-props))
@@ -47,28 +44,33 @@
        [(str prefix "-gutter") gutter]
        [(str prefix "-size") size]])))
 
-(defn- build-class [{:keys [cid cns header]} bar-mapping sidebar-mapping]
+(defn- build-class [{:keys [cid cns header layout]} sidebar-mapping]
   (bem-utils/build-class
     bem
-    (apply concat
-           [["cns" cns] ["cid" cid]]
-           (build-header-modifiers header)
-           (concat (->> bar-mapping (map #(-> % second :props)) (map build-bar-modifiers))
-                   (->> sidebar-mapping (map #(-> % second :props)) (map build-sidebar-modifiers))))))
+    (apply
+      concat
+      [["cns" cns]
+       ["cid" cid]
+       ["header" (boolean header)]
+       ["layout" layout]]
+      (->> sidebar-mapping (map #(-> % second :props)) (map build-sidebar-modifiers)))))
 
-(defn- get-bar-mapping [bars]
-  (->> bars
+(defn- build-toolbar-mapping [toolbars]
+  (->> toolbars
        (map
-         (fn [{:keys [placement separated] :as bar-props}]
+         (fn [{:keys [placement separated] :as props}]
            (let [placement (-> placement keyword #{:bottom :top} (or :top))
-                 bar-props (assoc bar-props :placement placement
-                                            :separated (-> separated boolean #{false true} (or false)))]
-             [placement
-              {:hcp [app-panel-bar/widget bar-props]
-               :props bar-props}])))
-       (into {})))
+                 props (assoc props
+                         :placement placement
+                         :separated (-> separated boolean #{false true}))]
+             {:hcp [app-panel-toolbar/widget props]
+              :props props})))
+       (reduce
+         (fn [acc item]
+           (update acc (-> item :props :placement) #(conj (or % []) item)))
+         {})))
 
-(defn- get-sidebar-mapping [sidebars]
+(defn- build-sidebar-mapping [sidebars]
   (->> sidebars
        (map
          (fn [{:keys [content collapsed gutter placement size] :as sidebar-props}]
@@ -86,10 +88,20 @@
                :props sidebar-props}])))
        (into {})))
 
+(defn- update-main-elt-padding [this]
+  (let [node (r/dom-node this)]
+    (oops/oset!
+      (gdom/getElementByClass main-elt-bem node)
+      "style.paddingTop"
+      (if (= "pinned-header" (-> this r/props :layout name))
+        (-> header-elt-bem (gdom/getElementByClass node) gstyle/getSize (oops/oget "height") (str "px"))
+        0))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO: Update docs
 (defn widget
   "Renders app panel. Accepts optional props map and any number of child components.
   Supported props:
@@ -106,16 +118,39 @@
     - :placement - enum, one of :left (default), :right or their string/symbol equivalents. Sidebar placement.
     - :size - enum, one of :large, :normal (default), :small or their string/symbol equivalents. Sidebar size."
   [& _args]
-  (let [[{:keys [bars head header sidebars] :as props} children] ((juxt r/props r/children) (r/current-component))
-        {{left-sidebar :hcp} :left {right-sidebar :hcp} :right :as sidebar-mapping} (get-sidebar-mapping sidebars)
-        {{bottom-bar :hcp} :bottom {top-bar :hcp} :top :as bar-mapping} (get-bar-mapping bars)]
-    [:div {:class (build-class props bar-mapping sidebar-mapping)}
-     left-sidebar
-     right-sidebar
-     [:div {:class main-elt-bem}
-      (when-not (false? header)
-        [:div {:class header-elt-bem}
-         [:div {:class header-inner-elt-bem} [app-panel-head/widget head] top-bar]])
-      (into [:div {:class body-elt-bem}] children)]
-     [:div {:class footer-elt-bem}
-      bottom-bar]]))
+  (r/create-class
+    {:reagent-render
+     (fn [& _args]
+       (let [[{:keys [footer header sidebars toolbars] :as props} children] ((juxt r/props r/children) (r/current-component))
+             {{left-sidebar :hcp} :left, {right-sidebar :hcp} :right, :as sidebar-mapping} (build-sidebar-mapping sidebars)
+             {bottom-toolbars :bottom, top-toolbars :top} (build-toolbar-mapping toolbars)
+             top-toolbars? (boolean (seq top-toolbars))]
+         [:div {:class (build-class props sidebar-mapping)}
+          left-sidebar
+          right-sidebar
+          (cond-> [:div {:class main-elt-bem}]
+                  ;;
+                  (or header top-toolbars?)
+                  (conj
+                    (cond-> [:div {:class header-elt-bem}]
+                            ;;
+                            header
+                            (conj [:div {:class head-elt-bem} header])
+                            ;;
+                            top-toolbars?
+                            (conj (into [:div {:class toolbars-elt-bem}] (map :hcp top-toolbars)))))
+                  ;;
+                  :always
+                  (conj (into [:div {:class body-elt-bem}] children))
+                  ;;
+                  (seq bottom-toolbars)
+                  (conj (into [:div {:class toolbars-elt-bem}] (map :hcp bottom-toolbars)))
+                  ;;
+                  footer
+                  (conj [:div {:class footer-elt-bem} footer]))]))
+     :component-did-mount
+     (fn [this]
+       (update-main-elt-padding this))
+     :component-did-update
+     (fn [this _]
+       (update-main-elt-padding this))}))

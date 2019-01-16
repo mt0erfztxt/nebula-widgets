@@ -1,5 +1,5 @@
-@require './bar'
 @require './head'
+@require './toolbar'
 
 
 nw-appPanel-sidebar_border(side, enabled)
@@ -17,7 +17,7 @@ nw-appPanel-sidebar_border(side, enabled)
 
 
     &__header
-        display: none;
+        // display: none;
         transition: left $g_transition_delay, right $g_transition_delay;
 
 
@@ -34,8 +34,9 @@ nw-appPanel-sidebar_border(side, enabled)
         display: flex;
         flex-direction: column;
         height: 100%;
-        position: relative;
-        transition: margin-left $g_transition_delay;
+        // min-height: 100%;
+        // position: relative;
+        // transition: margin-left $g_transition_delay;
 
 
     &__sidebar
@@ -86,17 +87,22 @@ nw-appPanel-sidebar_border(side, enabled)
     // ------------------------------------------------------------------------
 
     &--header &__header
-        display: block;
+        // display: block;
 
 
     // ------------------------------------------------------------------------
-    // 'header-pinned'
+    // 'layout'
     //
-    // Header (head [+ top bar]) always visible
+    // - pinned-header, head (header [+ top toolbars]) always visible
     // ------------------------------------------------------------------------
 
-    &--header-pinned &__header
-        height: $g_appPanel-head_height + 16px;
+    &--layout_adjusted &__body
+        flex:1;
+        overflow-y: scroll
+
+
+    &--layout_pinned-header &__header
+        // height: $g_appPanel-head_height + 16px;
         left: 0;
         overflow: hidden;
         position: fixed;
@@ -104,14 +110,36 @@ nw-appPanel-sidebar_border(side, enabled)
         top: 0;
         z-index: $g_z-index_appPanel-head;
 
+    &--layout_pinned-header &__main
+        // padding-top: $g_appPanel-head_height + 1; // 1px is a bottom border
 
-    &--header-pinned &__main
-        padding-top: $g_appPanel-head_height + 1; // 1px is a bottom border
+
+    &--layout_static
+        //
+
+
+    //
+    // ---
+    //
+
+
+    // &--header-pinned &__header
+    //     height: $g_appPanel-head_height + 16px;
+    //     left: 0;
+    //     overflow: hidden;
+    //     position: fixed;
+    //     right: 0
+    //     top: 0;
+    //     z-index: $g_z-index_appPanel-head;
+
+
+    // &--header-pinned &__main
+    //     padding-top: $g_appPanel-head_height + 1; // 1px is a bottom border
 
 
     // ++ adjusted
-    &--header-pinned&--adjusted &__footer
-        z-index: $g_z-index_appPanel-head - 1;
+    // &--header-pinned&--adjusted &__footer
+    //     z-index: $g_z-index_appPanel-head - 1;
 
 
     // ------------------------------------------------------------------------
@@ -126,10 +154,10 @@ nw-appPanel-sidebar_border(side, enabled)
         border-right-color: $g_separator_color--dark;
 
 
-    // ++ header-pinned
+    // ++ layout_pinned-header
     // When sidebar expanded and head is pinned then they must be at same level visually.
-    &--leftSidebar&--header-pinned &__sidebar
-    &--rightSidebar&--header-pinned &__sidebar
+    &--leftSidebar&--layout_pinned-header &__sidebar
+    &--rightSidebar&--layout_pinned-header &__sidebar
         +above('n')
             z-index: $g_z-index_appPanel-head;
 
@@ -249,11 +277,11 @@ nw-appPanel-sidebar_border(side, enabled)
             width: $g_appPanel--sidebar-gutter_normal + $g_appPanel--sidebar-size_normal + 1;
 
 
-    // ++ header-pinned
-    &--leftSidebar-size_normal&--header-pinned &__header
+    // ++ layout_pinned-header
+    &--leftSidebar-size_normal&--layout_pinned-header &__header
         +above('n')
             left: $g_appPanel--sidebar-size_normal + 1;
-    &--rightSidebar-size_normal&--header-pinned &__header
+    &--rightSidebar-size_normal&--layout_pinned-header &__header
         +above('n')
             right: $g_appPanel--sidebar-size_normal + 1;
 
@@ -285,13 +313,13 @@ nw-appPanel-sidebar_border(side, enabled)
             nw-appPanel-sidebar_border(left, true);
 
 
-    // ++ gutter-n ++ header-pinned
-    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--header-pinned &__header
+    // ++ gutter-n ++ layout_pinned-header
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--layout_pinned-header &__header
         +above('s')
             left: $g_appPanel--sidebar-gutter_normal + 1;
         +above('n')
             left: $g_appPanel--sidebar-gutter_normal + $g_appPanel--sidebar-size_normal + 1;
-    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--header-pinned &__header
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--layout_pinned-header &__header
         +above('s')
             right: $g_appPanel--sidebar-gutter_normal + 1;
         +above('n')
@@ -304,29 +332,29 @@ nw-appPanel-sidebar_border(side, enabled)
     // ++ gutter-n ++ adjusted ++ collapsed
 
 
-    // ++ gutter-n ++ adjusted ++ header-pinned
-    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--adjusted&--header-pinned &__header
+    // ++ gutter-n ++ adjusted ++ layout_pinned-header
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--adjusted&--layout_pinned-header &__header
         +above('n')
             left: $g_appPanel--sidebar-gutter_normal + $g_appPanel--sidebar-size_normal + 1;
-    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--adjusted&--header-pinned &__header
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--adjusted&--layout_pinned-header &__header
         +above('n')
             right: $g_appPanel--sidebar-gutter_normal + $g_appPanel--sidebar-size_normal + 1;
 
 
-    // ++ header-pinned ++ collapsed
-    &--leftSidebar-size_normal&--leftSidebar-collapsed&--header-pinned &__header
+    // ++ layout_pinned-header ++ collapsed
+    &--leftSidebar-size_normal&--leftSidebar-collapsed&--layout_pinned-header &__header
         +above('s')
             left: 0;
-    &--rightSidebar-size_normal&--rightSidebar-collapsed&--header-pinned &__header
+    &--rightSidebar-size_normal&--rightSidebar-collapsed&--layout_pinned-header &__header
         +above('s')
             right: 0;
 
 
-    // ++ gutter-n ++ header-pinned ++ collapsed
-    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed&--header-pinned &__header
+    // ++ gutter-n ++ layout_pinned-header ++ collapsed
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed&--layout_pinned-header &__header
         +above('s')
             left: $g_appPanel--sidebar-gutter_normal + 1;
-    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed&--header-pinned &__header
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed&--layout_pinned-header &__header
         +above('s')
             right: $g_appPanel--sidebar-gutter_normal + 1;
 
@@ -338,7 +366,7 @@ nw-appPanel-sidebar_border(side, enabled)
     // ------------------------------------------------------------------------
 
     &--topBar
-        // 
+        //
 
 
     // ++ adjusted
@@ -351,12 +379,12 @@ nw-appPanel-sidebar_border(side, enabled)
         //
 
 
-    // ++ head-pinned
-    &--topBar&--header&--header-pinned &__header
+    // ++ layout_pinned-header
+    &--topBar&--header&--layout_pinned-header &__header
         height: $g_appPanel__header_height + $g_appPanel-bar_height + 16px;
 
 
-    &--topBar&--header-pinned &__main
+    &--topBar&--layout_pinned-header &__main
         padding-top: $g_appPanel__header_height + $g_appPanel-bar_height + 1px;
 
 
@@ -367,4 +395,4 @@ nw-appPanel-sidebar_border(side, enabled)
     // ------------------------------------------------------------------------
 
     &--topBar-separated
-        // 
+        //

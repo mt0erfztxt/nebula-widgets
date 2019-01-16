@@ -25,6 +25,20 @@
 (defn prevent-event-default [event]
   (oops/ocall event "preventDefault"))
 
+(defn flatten-until-sequential
+  "Accepts seq and flatten all its levels except last one.
+  ```clj
+  (flatten-until-sequential [[[[[:foo :bar] [:foo :buz]]]]])
+  ;; => [[:foo :bar] [:foo :buz]]
+  ```"
+  [xs]
+  (->> xs
+       (tree-seq sequential? seq)
+       (rest)
+       (map #(when-not (sequential? %) %))
+       (partition-by some?)
+       (filter (comp some? first))))
+
 (defn path-str->segments
   "Returns lazy seq of segments (strings) obtained by splitting passed in string on dot character. Returned seq doesn't
   contain blank items and each item is whitespace-trimmed."
@@ -68,6 +82,28 @@
               (true? event-name?) rest                      ; event name is a first segment of keyword's name
               concat-segments concat-segments
               (true? keywordize?) (map keyword)))))
+
+(defn expand-paths
+  "Accepts seq of simple (keywords or strings) or complex (nested seq of keywords or strings) paths and optional
+  starting point, and returns seq with all complex paths expanded.
+  ```clj
+  (expand-paths [:adjusted :header [:sidebar [:left :gutter :size] [:right :gutter :size]]])
+  ;; => [[:adjusted]
+  ;;     [:header]
+  ;;     [:sidebar :left :gutter]
+  ;;     [:sidebar :left :size]
+  ;;     [:sidebar :right :gutter]
+  ;;     [:sidebar :right :size]]
+  ```"
+  ([paths] (expand-paths paths []))
+  ([paths head]
+   (flatten-until-sequential
+     (map
+       (fn [path]
+         (if (sequential? path)
+           (expand-paths (rest path) (conj head (first path)))
+           (conj head path)))
+       paths))))
 
 ;; TODO: Unused?
 ;; TODO: Tests.

@@ -1,16 +1,21 @@
-(ns nebula-widgets.kitchen-sink.panels.app-panel-widget.common)
+(ns nebula-widgets.kitchen-sink.panels.app-panel-widget.common
+  (:require
+    [nebula-widgets.utils :as utils]))
 
-(def ^:private event-ns
-  "app-panel-widget-panel")
+(def panel-key
+  :app-panel-widget)
 
-(defn build-bar-setter-event-name [placement property]
-  (keyword event-ns
-           (str "set-" (name placement) "-bar-" (name property))))
+(def panel-path
+  [:panels panel-key])
 
-(defn build-header-setter-event-name [property]
-  (keyword event-ns
-           (str "set-header-" (name property))))
+(def panel-path->keyword
+  (apply partial utils/path->keyword panel-path))
 
-(defn build-sidebar-setter-event-name [placement property]
-  (keyword event-ns
-           (str "set-" (name placement) "-sidebar-" (name property))))
+(def knobs
+  (utils/expand-paths
+    [:header
+     :layout
+     [:sidebars
+      [:left :collapsed :gutter :size]
+      [:right :collapsed :gutter :size]]
+     :toolbars]))
