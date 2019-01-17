@@ -13,8 +13,10 @@
        ((set supported-keywords))
        (or default-value))))
 
-(defn calculate-size-like-prop-value [value]
-  (calculate-prop-value value #{:large :normal :small}))
+(defn calculate-size-like-prop-value
+  ([value] (calculate-size-like-prop-value value :normal))
+  ([value default-value]
+   (calculate-prop-value value #{:large :normal :small} default-value)))
 
 (defn event->checked [event]
   (oops/oget event "target.checked"))

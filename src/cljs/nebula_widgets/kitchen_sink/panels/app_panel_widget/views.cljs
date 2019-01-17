@@ -63,7 +63,15 @@
             [[:- "widget props"]
              :header
              [:layout (ie-cgi-knob/gen-items "adjusted" "pinned-header" "static")]
-             [:toolbars (ie-cgi-knob/gen-items "no" "top2" "bottom2" "top2+bottom2")]]
+             [:toolbars (ie-cgi-knob/gen-items "no" "top2" "bottom2" "top2+bottom2")]
+             [:- "left sidebar props"]
+             :sidebars.left.collapsed
+             [:sidebars.left.gutter (ie-cgi-knob/gen-items "none" "normal")]
+             [:sidebars.left.size (ie-cgi-knob/gen-items "normal")]
+             [:- "right sidebar props"]
+             :sidebars.right.collapsed
+             [:sidebars.right.gutter (ie-cgi-knob/gen-items "none" "normal")]
+             [:sidebars.right.size (ie-cgi-knob/gen-items "normal")]]
             :let [[cid label-or-items] (if (sequential? params) params [params])
                   label? (= :- cid)]]
         [ie-cgi-knob/widget
@@ -71,7 +79,7 @@
          (cond->
            {:cid cid
             :on-change (get ie-setters cid)
-            :value (get props cid)}
+            :value (get-in props (utils/keyword->path cid))}
            (and (not label?) label-or-items) (assoc :items label-or-items))]))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -87,7 +95,7 @@
              (select-keys [:layout])
              (merge
                {:cid "appPanelWidget"
-                :header (when header [:h1.appPanelWidget-header "Custom header"])
+                :header (when header [:h1.appPanelWidget-header "Header"])
                 :sidebars
                 [(build-sidebar-props sidebars :left)
                  (build-sidebar-props sidebars :right)]

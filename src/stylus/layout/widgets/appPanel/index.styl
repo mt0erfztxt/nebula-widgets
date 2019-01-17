@@ -17,16 +17,16 @@ nw-appPanel-sidebar_border(side, enabled)
 
 
     &__header
-        // display: none;
+        background-color: $g_color_background;
         transition: left $g_transition_delay, right $g_transition_delay;
 
 
-    &__header-inner
-        background-color: $g_color_primary;
-        border-left: 1px solid $g_color_primary;
-        border-right: 1px solid $g_color_primary;
-        border-bottom: 1px solid $g_separator_color--light;
-        box-shadow: 0 0 14px alpha(#000, 36%);
+    // &__header-inner
+    //     // background-color: $g_color_primary;
+    //     border-left: 1px solid $g_color_primary;
+    //     border-right: 1px solid $g_color_primary;
+    //     border-bottom: 1px solid $g_separator_color--light;
+    //     box-shadow: 0 0 14px alpha(#000, 36%);
 
 
     &__main
@@ -64,8 +64,10 @@ nw-appPanel-sidebar_border(side, enabled)
 
     &__sidebar-inner
         @extend $b_greedy;
-        background-color: $g_color_primary;
-        box-shadow: 0 0 14px alpha(#000, 36%);
+        // background-color: $g_color_primary;
+        background-color: $g_color_background;
+        // background-color: $g_color_background--darker;
+        // box-shadow: 0 0 14px alpha(#000, 36%);
         transition: left $g_transition_delay, width $g_transition_delay, z-index $g_transition_delay;
 
 
@@ -102,6 +104,7 @@ nw-appPanel-sidebar_border(side, enabled)
 
 
     &--layout_pinned-header &__header
+        box-shadow: 0 0 14px alpha(#000, 36%);
         // height: $g_appPanel-head_height + 16px;
         left: 0;
         overflow: hidden;
@@ -208,10 +211,12 @@ nw-appPanel-sidebar_border(side, enabled)
 
     &--leftSidebar-size_normal &__sidebar--placement_left &__sidebar-inner
         +above('s')
-            border-right: 1px solid $g_separator_color--light;
+            // border-right: 1px solid $g_separator_color--light;
+            border-right: 1px solid $g_color_primary;
     &--rightSidebar-size_normal &__sidebar--placement_right &__sidebar-inner
         +above('s')
-            border-left: 1px solid $g_separator_color--light;
+            // border-left: 1px solid $g_separator_color--light;
+            border-left: 1px solid $g_color_primary;
 
 
     // ++ adjusted

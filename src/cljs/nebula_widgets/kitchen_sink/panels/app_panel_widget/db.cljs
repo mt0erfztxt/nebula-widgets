@@ -3,15 +3,15 @@
 (def default-db
   {:app-panel-widget
    {:interactive-example
-    {:header true
+    {:header false
      :layout "pinned-header"
      :sidebars
      {:left
       {:collapsed false
-       :gutter "normal"
+       :gutter "none"
        :size "normal"}
       :right
       {:collapsed false
-       :gutter "normal"
+       :gutter "none"
        :size "normal"}}
      :toolbars "top2"}}})

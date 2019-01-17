@@ -55,13 +55,17 @@
        ["layout" layout]]
       (->> sidebar-mapping (map #(-> % second :props)) (map build-sidebar-modifiers)))))
 
+(def ^:private toolbar-placement-prop-set
+  #{:bottom :top})
+
 (defn- build-toolbar-mapping [toolbars]
   (->> toolbars
        (map
          (fn [{:keys [placement separated] :as props}]
-           (let [placement (-> placement keyword #{:bottom :top} (or :top))
+           (let [placement (-> placement keyword toolbar-placement-prop-set (or :top))
                  props (assoc props
                          :placement placement
+                         ;; TODO: Remove separated prop because of now toolbars always separated
                          :separated (-> separated boolean #{false true}))]
              {:hcp [app-panel-toolbar/widget props]
               :props props})))
@@ -70,22 +74,27 @@
            (update acc (-> item :props :placement) #(conj (or % []) item)))
          {})))
 
+(def ^:private sidebar-gutter-prop-set
+  #{:none :large :normal :small})
+
+(def ^:private sidebar-placement-prop-set
+  #{:left :right})
+
 (defn- build-sidebar-mapping [sidebars]
   (->> sidebars
        (map
          (fn [{:keys [content collapsed gutter placement size] :as sidebar-props}]
-           (let [placement (-> placement keyword #{:left :right} (or :left))
-                 sidebar-props
-                 (assoc sidebar-props
-                   :gutter (utils/calculate-prop-value gutter #{false :large :normal :small} false)
-                   :placement placement
-                   :size (utils/calculate-size-like-prop-value size))]
+           (let [placement (-> placement keyword sidebar-placement-prop-set (or :left))]
              [placement
               {:hcp
                [:div {:class (bem-utils/build-class sidebar-elt-bem [["collapsed" collapsed] ["placement" placement]])}
                 [:div {:class (str sidebar-elt-bem "-backdrop")}]
                 [:div {:class (str sidebar-elt-bem "-inner")} content]]
-               :props sidebar-props}])))
+               :props
+               (assoc sidebar-props
+                 :gutter (-> gutter keyword sidebar-gutter-prop-set (or :none))
+                 :placement placement
+                 :size (utils/calculate-size-like-prop-value size))}])))
        (into {})))
 
 (defn- update-main-elt-padding [this]
@@ -126,8 +135,6 @@
              {bottom-toolbars :bottom, top-toolbars :top} (build-toolbar-mapping toolbars)
              top-toolbars? (boolean (seq top-toolbars))]
          [:div {:class (build-class props sidebar-mapping)}
-          left-sidebar
-          right-sidebar
           (cond-> [:div {:class main-elt-bem}]
                   ;;
                   (or header top-toolbars?)
@@ -147,7 +154,9 @@
                   (conj (into [:div {:class toolbars-elt-bem}] (map :hcp bottom-toolbars)))
                   ;;
                   footer
-                  (conj [:div {:class footer-elt-bem} footer]))]))
+                  (conj [:div {:class footer-elt-bem} footer]))
+          left-sidebar
+          right-sidebar]))
      :component-did-mount
      (fn [this]
        (update-main-elt-padding this))
