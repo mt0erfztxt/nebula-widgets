@@ -62,7 +62,7 @@
       (for [params
             [[:- "widget props"]
              :header
-             [:layout (ie-cgi-knob/gen-items "adjusted" "pinned-header" "static")]
+             [:layout (ie-cgi-knob/gen-items "adjusted" "pinned" "pinned-footer" "pinned-header" "static")]
              [:toolbars (ie-cgi-knob/gen-items "no" "top2" "bottom2" "top2+bottom2")]
              [:- "left sidebar props"]
              :sidebars.left.collapsed

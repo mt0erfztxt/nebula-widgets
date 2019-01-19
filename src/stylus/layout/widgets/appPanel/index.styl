@@ -16,7 +16,7 @@ nw-appPanel-sidebar_border(side, enabled)
         transition: left $g_transition_delay;
 
 
-    &__header
+    &__crossbar
         background-color: $g_color_background;
         transition: left $g_transition_delay, right $g_transition_delay;
 
@@ -33,8 +33,8 @@ nw-appPanel-sidebar_border(side, enabled)
         background-color: $g_color_background;
         display: flex;
         flex-direction: column;
-        height: 100%;
-        // min-height: 100%;
+        // height: 100%;
+        min-height: 100%;
         // position: relative;
         // transition: margin-left $g_transition_delay;
 
@@ -88,7 +88,7 @@ nw-appPanel-sidebar_border(side, enabled)
     // App panel with header
     // ------------------------------------------------------------------------
 
-    &--header &__header
+    &--header &__crossbar
         // display: block;
 
 
@@ -103,15 +103,26 @@ nw-appPanel-sidebar_border(side, enabled)
         overflow-y: scroll
 
 
-    &--layout_pinned-header &__header
+    &--layout_pinned &__crossbar
+    &--layout_pinned-footer &__crossbar--placement_bottom
+    &--layout_pinned-header &__crossbar--placement_top
         box-shadow: 0 0 14px alpha(#000, 36%);
-        // height: $g_appPanel-head_height + 16px;
         left: 0;
         overflow: hidden;
         position: fixed;
         right: 0
-        top: 0;
         z-index: $g_z-index_appPanel-head;
+
+
+    &--layout_pinned &__crossbar--placement_bottom
+    &--layout_pinned-footer &__crossbar--placement_bottom
+        bottom: 0;
+
+
+    &--layout_pinned &__crossbar--placement_top
+    &--layout_pinned-header &__crossbar--placement_top
+        top: 0;
+
 
     &--layout_pinned-header &__main
         // padding-top: $g_appPanel-head_height + 1; // 1px is a bottom border
@@ -126,7 +137,7 @@ nw-appPanel-sidebar_border(side, enabled)
     //
 
 
-    // &--header-pinned &__header
+    // &--header-pinned &__crossbar
     //     height: $g_appPanel-head_height + 16px;
     //     left: 0;
     //     overflow: hidden;
@@ -151,9 +162,9 @@ nw-appPanel-sidebar_border(side, enabled)
     // Have sidebar placed before (at left) content
     // ------------------------------------------------------------------------
 
-    &--leftSidebar &__header-inner
+    &--leftSidebar &__crossbar-inner
         border-left-color: $g_separator_color--dark;
-    &--rightSidebar &__header-inner
+    &--rightSidebar &__crossbar-inner
         border-right-color: $g_separator_color--dark;
 
 
@@ -282,11 +293,17 @@ nw-appPanel-sidebar_border(side, enabled)
             width: $g_appPanel--sidebar-gutter_normal + $g_appPanel--sidebar-size_normal + 1;
 
 
-    // ++ layout_pinned-header
-    &--leftSidebar-size_normal&--layout_pinned-header &__header
+    // ++ layout_pinned
+    &--leftSidebar-size_normal&--layout_pinned &__crossbar--placement_bottom
+    &--leftSidebar-size_normal&--layout_pinned-footer &__crossbar--placement_bottom
+    &--leftSidebar-size_normal&--layout_pinned &__crossbar--placement_top
+    &--leftSidebar-size_normal&--layout_pinned-header &__crossbar--placement_top
         +above('n')
             left: $g_appPanel--sidebar-size_normal + 1;
-    &--rightSidebar-size_normal&--layout_pinned-header &__header
+    &--rightSidebar-size_normal&--layout_pinned &__crossbar--placement_bottom
+    &--rightSidebar-size_normal&--layout_pinned-footer &__crossbar--placement_bottom
+    &--rightSidebar-size_normal&--layout_pinned &__crossbar--placement_top
+    &--rightSidebar-size_normal&--layout_pinned-header &__crossbar--placement_top
         +above('n')
             right: $g_appPanel--sidebar-size_normal + 1;
 
@@ -318,13 +335,19 @@ nw-appPanel-sidebar_border(side, enabled)
             nw-appPanel-sidebar_border(left, true);
 
 
-    // ++ gutter-n ++ layout_pinned-header
-    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--layout_pinned-header &__header
+    // ++ gutter-n ++ layout_pinned
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--layout_pinned &__crossbar--placement_bottom
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--layout_pinned-footer &__crossbar--placement_bottom
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--layout_pinned &__crossbar--placement_top
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--layout_pinned-header &__crossbar--placement_top
         +above('s')
             left: $g_appPanel--sidebar-gutter_normal + 1;
         +above('n')
             left: $g_appPanel--sidebar-gutter_normal + $g_appPanel--sidebar-size_normal + 1;
-    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--layout_pinned-header &__header
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--layout_pinned &__crossbar--placement_bottom
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--layout_pinned-footer &__crossbar--placement_bottom
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--layout_pinned &__crossbar--placement_top
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--layout_pinned-header &__crossbar--placement_top
         +above('s')
             right: $g_appPanel--sidebar-gutter_normal + 1;
         +above('n')
@@ -338,28 +361,46 @@ nw-appPanel-sidebar_border(side, enabled)
 
 
     // ++ gutter-n ++ adjusted ++ layout_pinned-header
-    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--adjusted&--layout_pinned-header &__header
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--adjusted&--layout_pinned &__crossbar--placement_bottom
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--adjusted&--layout_pinned-footer &__crossbar--placement_bottom
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--adjusted&--layout_pinned &__crossbar--placement_top
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--adjusted&--layout_pinned-header &__crossbar--placement_top
         +above('n')
             left: $g_appPanel--sidebar-gutter_normal + $g_appPanel--sidebar-size_normal + 1;
-    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--adjusted&--layout_pinned-header &__header
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--adjusted&--layout_pinned &__crossbar--placement_bottom
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--adjusted&--layout_pinned-footer &__crossbar--placement_bottom
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--adjusted&--layout_pinned &__crossbar--placement_top
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--adjusted&--layout_pinned-header &__crossbar--placement_top
         +above('n')
             right: $g_appPanel--sidebar-gutter_normal + $g_appPanel--sidebar-size_normal + 1;
 
 
     // ++ layout_pinned-header ++ collapsed
-    &--leftSidebar-size_normal&--leftSidebar-collapsed&--layout_pinned-header &__header
+    &--leftSidebar-size_normal&--leftSidebar-collapsed&--layout_pinned &__crossbar--placement_bottom
+    &--leftSidebar-size_normal&--leftSidebar-collapsed&--layout_pinned-footer &__crossbar--placement_bottom
+    &--leftSidebar-size_normal&--leftSidebar-collapsed&--layout_pinned &__crossbar--placement_top
+    &--leftSidebar-size_normal&--leftSidebar-collapsed&--layout_pinned-header &__crossbar--placement_top
         +above('s')
             left: 0;
-    &--rightSidebar-size_normal&--rightSidebar-collapsed&--layout_pinned-header &__header
+    &--rightSidebar-size_normal&--rightSidebar-collapsed&--layout_pinned &__crossbar--placement_bottom
+    &--rightSidebar-size_normal&--rightSidebar-collapsed&--layout_pinned-footer &__crossbar--placement_bottom
+    &--rightSidebar-size_normal&--rightSidebar-collapsed&--layout_pinned &__crossbar--placement_top
+    &--rightSidebar-size_normal&--rightSidebar-collapsed&--layout_pinned-header &__crossbar--placement_top
         +above('s')
             right: 0;
 
 
     // ++ gutter-n ++ layout_pinned-header ++ collapsed
-    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed&--layout_pinned-header &__header
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed&--layout_pinned &__crossbar--placement_bottom
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed&--layout_pinned-footer &__crossbar--placement_bottom
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed&--layout_pinned &__crossbar--placement_top
+    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed&--layout_pinned-header &__crossbar--placement_top
         +above('s')
             left: $g_appPanel--sidebar-gutter_normal + 1;
-    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed&--layout_pinned-header &__header
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed&--layout_pinned &__crossbar--placement_bottom
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed&--layout_pinned-footer &__crossbar--placement_bottom
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed&--layout_pinned &__crossbar--placement_top
+    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed&--layout_pinned-header &__crossbar--placement_top
         +above('s')
             right: $g_appPanel--sidebar-gutter_normal + 1;
 
@@ -380,17 +421,20 @@ nw-appPanel-sidebar_border(side, enabled)
 
 
     // ++ header
-    &--topBar&--header &__header
+    &--topBar&--header &__crossbar--placement_top
         //
 
 
-    // ++ layout_pinned-header
-    &--topBar&--header&--layout_pinned-header &__header
+    // ++ layout_pinned
+    &--topBar&--header&--layout_pinned &__crossbar--placement_bottom
+    &--topBar&--header&--layout_pinned-footer &__crossbar--placement_bottom
+    &--topBar&--header&--layout_pinned &__crossbar--placement_top
+    &--topBar&--header&--layout_pinned-header &__crossbar--placement_top
         height: $g_appPanel__header_height + $g_appPanel-bar_height + 16px;
 
 
     &--topBar&--layout_pinned-header &__main
-        padding-top: $g_appPanel__header_height + $g_appPanel-bar_height + 1px;
+        // padding-top: $g_appPanel__header_height + $g_appPanel-bar_height + 1px;
 
 
     // ------------------------------------------------------------------------

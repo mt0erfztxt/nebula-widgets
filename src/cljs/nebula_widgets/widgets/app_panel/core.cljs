@@ -1,5 +1,6 @@
 (ns nebula-widgets.widgets.app-panel.core
   (:require
+    [clojure.string :as str]
     [goog.dom :as gdom]
     [goog.style :as gstyle]
     [nebula-widgets.widgets.app-panel.head :as app-panel-head]
@@ -14,6 +15,9 @@
 
 (def ^:private body-elt-bem
   (str bem "__body"))
+
+(def ^:private crossbar-elt-bem
+  (str bem "__crossbar"))
 
 (def ^:private footer-elt-bem
   (str bem "__footer"))
@@ -97,14 +101,29 @@
                  :size (utils/calculate-size-like-prop-value size))}])))
        (into {})))
 
+(defn- build-sidebar-container-class [placement]
+  (bem-utils/build-class crossbar-elt-bem [["placement" placement]]))
+
+(defn- get-crossbar-height [parent-node placement]
+  (some-> crossbar-elt-bem
+          (str "--placement_" placement)
+          (gdom/getElementByClass parent-node)
+          (gstyle/getSize)
+          (oops/oget "height")
+          (str "px")))
+
 (defn- update-main-elt-padding [this]
-  (let [node (r/dom-node this)]
-    (oops/oset!
-      (gdom/getElementByClass main-elt-bem node)
-      "style.paddingTop"
-      (if (= "pinned-header" (-> this r/props :layout name))
-        (-> header-elt-bem (gdom/getElementByClass node) gstyle/getSize (oops/oget "height") (str "px"))
-        0))))
+  (let [layout (-> this r/props :layout name)
+        main-node (gdom/getElementByClass main-elt-bem (r/dom-node this))]
+    (doseq [[placement aka] [["bottom" "footer"] ["top" "header"]]]
+      (oops/oset!+
+        main-node
+        (str "style.padding" (str/capitalize placement))
+        (or
+          (and
+            (#{"pinned" (str "pinned-" aka)} layout)
+            (get-crossbar-height main-node placement))
+          0)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -125,7 +144,10 @@
     - :gutter - enum, one of false (default), :large, :normal, :small or their string/symbol equivalents. Sidebar's
       gutter size.
     - :placement - enum, one of :left (default), :right or their string/symbol equivalents. Sidebar placement.
-    - :size - enum, one of :large, :normal (default), :small or their string/symbol equivalents. Sidebar size."
+    - :size - enum, one of :large, :normal (default), :small or their string/symbol equivalents. Sidebar size.
+
+  FIXME:
+  * sidebar without gutter disappears while collapsing"
   [& _args]
   (r/create-class
     {:reagent-render
@@ -133,13 +155,14 @@
        (let [[{:keys [footer header sidebars toolbars] :as props} children] ((juxt r/props r/children) (r/current-component))
              {{left-sidebar :hcp} :left, {right-sidebar :hcp} :right, :as sidebar-mapping} (build-sidebar-mapping sidebars)
              {bottom-toolbars :bottom, top-toolbars :top} (build-toolbar-mapping toolbars)
+             bottom-toolbars? (boolean (seq bottom-toolbars))
              top-toolbars? (boolean (seq top-toolbars))]
          [:div {:class (build-class props sidebar-mapping)}
           (cond-> [:div {:class main-elt-bem}]
                   ;;
                   (or header top-toolbars?)
                   (conj
-                    (cond-> [:div {:class header-elt-bem}]
+                    (cond-> [:div {:class (build-sidebar-container-class "top")}]
                             ;;
                             header
                             (conj [:div {:class head-elt-bem} header])
@@ -150,11 +173,15 @@
                   :always
                   (conj (into [:div {:class body-elt-bem}] children))
                   ;;
-                  (seq bottom-toolbars)
-                  (conj (into [:div {:class toolbars-elt-bem}] (map :hcp bottom-toolbars)))
-                  ;;
-                  footer
-                  (conj [:div {:class footer-elt-bem} footer]))
+                  (or footer bottom-toolbars?)
+                  (conj
+                    (cond-> [:div {:class (build-sidebar-container-class "bottom")}]
+                            ;;
+                            footer
+                            (conj [:div {:class footer-elt-bem} footer])
+                            ;;
+                            bottom-toolbars?
+                            (conj (into [:div {:class toolbars-elt-bem}] (map :hcp bottom-toolbars))))))
           left-sidebar
           right-sidebar]))
      :component-did-mount
