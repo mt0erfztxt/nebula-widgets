@@ -2,10 +2,6 @@
 @require './toolbar'
 
 
-nw-appPanel-sidebar_border(side, enabled)
-    border-{side}-width: enabled ? 1px : 0;
-
-
 .nw-appPanel
     color: $g_color_primary_text;
     height: 100%;
@@ -199,12 +195,6 @@ nw-appPanel-sidebar_border(side, enabled)
     &--rightSidebar-size_normal&--rightSidebar-collapsed &__sidebar--placement_right
         +above('s')
             width: 0;
-    &--leftSidebar-size_normal&--leftSidebar-collapsed &__sidebar--placement_left
-        +above('s')
-            nw-appPanel-sidebar_border(right, false);
-    &--rightSidebar-size_normal&--rightSidebar-collapsed &__sidebar--placement_right
-        +above('s')
-            nw-appPanel-sidebar_border(left, false);
 
     &--leftSidebar-size_normal&--leftSidebar-collapsed &__sidebar--placement_left
     &--rightSidebar-size_normal&--rightSidebar-collapsed &__sidebar--placement_right
@@ -237,11 +227,6 @@ nw-appPanel-sidebar_border(side, enabled)
         +above('n')
             width: $g_appPanel--sidebar-gutter_normal + $g_appPanel--sidebar-size_normal + 1;
 
-    // &--leftSidebar-size_normal&--leftSidebar-gutter_normal &__sidebar--placement_left
-    // &--rightSidebar-size_normal&--rightSidebar-gutter_normal &__sidebar--placement_right
-    //     +above('s')
-    //         width: $g_appPanel--sidebar-gutter_normal + $g_appPanel--sidebar-size_normal + 1;
-
 
     // ++ layout_pinned
     &--leftSidebar-size_normal&--layout_pinned &__crossbar--placement_bottom
@@ -258,9 +243,6 @@ nw-appPanel-sidebar_border(side, enabled)
             right: $g_appPanel--sidebar-size_normal + 1;
 
 
-    // ++ gutter-n ++ adjusted
-
-
     // ++ gutter-n ++ collapsed
     &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed &__main
         +above('s')
@@ -273,12 +255,6 @@ nw-appPanel-sidebar_border(side, enabled)
     &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed &__sidebar--placement_right
         +above('s')
             width: $g_appPanel--sidebar-gutter_normal + 1;
-    &--leftSidebar-size_normal&--leftSidebar-gutter_normal&--leftSidebar-collapsed &__sidebar--placement_left
-        +above('s')
-            nw-appPanel-sidebar_border(right, true);
-    &--rightSidebar-size_normal&--rightSidebar-gutter_normal&--rightSidebar-collapsed &__sidebar--placement_right
-        +above('s')
-            nw-appPanel-sidebar_border(left, true);
 
 
     // ++ gutter-n ++ layout_pinned
