@@ -16,6 +16,6 @@
     [:header
      :layout
      [:sidebars
-      [:left :collapsed :gutter :size]
-      [:right :collapsed :gutter :size]]
+      [:left :collapsed :exists :gutter :size]
+      [:right :collapsed :exists :gutter :size]]
      :toolbars]))

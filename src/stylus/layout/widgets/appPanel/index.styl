@@ -14,7 +14,6 @@
 
     &__crossbar
         background-color: $g_color_background;
-        transition: left $g_transition_delay, right $g_transition_delay;
 
 
     &__main
@@ -31,28 +30,6 @@
         overflow: hidden;
         position: fixed;
         width: 100%;
-
-
-    &__sidebar--placement_left
-        right: auto;
-        transition:
-            border-width $g_transition_delay,
-            left $g_transition_delay,
-            width $g_transition_delay,
-            z-index $g_transition_delay;
-        +above('s')
-            width: auto;
-
-
-    &__sidebar--placement_right
-        left: auto;
-        transition:
-            border-width $g_transition_delay,
-            right $g_transition_delay,
-            width $g_transition_delay,
-            z-index $g_transition_delay;
-        +above('s')
-            width: auto;
 
 
     &__sidebar-backdrop
@@ -113,10 +90,38 @@
     // Have sidebar placed at (left|right) of content
     // ------------------------------------------------------------------------
 
-    &--leftSidebar &__crossbar-inner
-        border-left-color: $g_separator_color--dark;
-    &--rightSidebar &__crossbar-inner
-        border-right-color: $g_separator_color--dark;
+    &--leftSidebar &__crossbar
+        transition: left $g_transition_delay;
+
+    &--rightSidebar &__crossbar
+        transition: right $g_transition_delay;
+
+    &--leftSidebar&--rightSidebar &__crossbar
+        transition:
+            left $g_transition_delay,
+            right $g_transition_delay;
+
+
+    &--leftSidebar &__sidebar--placement_left
+        right: auto;
+        transition:
+            border-width $g_transition_delay,
+            left $g_transition_delay,
+            width $g_transition_delay,
+            z-index $g_transition_delay;
+        +above('s')
+            width: auto;
+
+
+    &--rightSidebar &__sidebar--placement_right
+        left: auto;
+        transition:
+            border-width $g_transition_delay,
+            right $g_transition_delay,
+            width $g_transition_delay,
+            z-index $g_transition_delay;
+        +above('s')
+            width: auto;
 
 
     // ++ layout_pinned-header

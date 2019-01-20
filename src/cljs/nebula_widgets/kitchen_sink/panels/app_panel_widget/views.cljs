@@ -20,6 +20,11 @@
      :placement placement
      :size size}))
 
+(defn- build-sidebars-prop [sidebars]
+  (cond-> []
+          (-> sidebars :left :exists) (conj (build-sidebar-props sidebars :left))
+          (-> sidebars :right :exists) (conj (build-sidebar-props sidebars :right))))
+
 (defn- build-toolbar-props [placement separated]
   {:content [:div.appPanelWidget-toolbar (str "Content of " (name placement) " toolbar")]
    :placement placement
@@ -70,10 +75,12 @@
              [:toolbars (ie-cgi-knob/gen-items "no" "top2" "bottom2" "top2+bottom2")]
              [:- "left sidebar props"]
              :sidebars.left.collapsed
+             :sidebars.left.exists
              [:sidebars.left.gutter (ie-cgi-knob/gen-items "none" "normal")]
              [:sidebars.left.size (ie-cgi-knob/gen-items "normal")]
              [:- "right sidebar props"]
              :sidebars.right.collapsed
+             :sidebars.right.exists
              [:sidebars.right.gutter (ie-cgi-knob/gen-items "none" "normal")]
              [:sidebars.right.size (ie-cgi-knob/gen-items "normal")]]
             :let [[cid label-or-items] (if (sequential? params) params [params])
@@ -100,9 +107,7 @@
              (merge
                {:cid "appPanelWidget"
                 :header (when header [:h1.appPanelWidget-header "Header"])
-                :sidebars
-                [(build-sidebar-props sidebars :left)
-                 (build-sidebar-props sidebars :right)]
+                :sidebars (build-sidebars-prop sidebars)
                 :toolbars (build-toolbars-prop toolbars)}))
          [man-page/widget
           "# Application panel widget (app-panel)"

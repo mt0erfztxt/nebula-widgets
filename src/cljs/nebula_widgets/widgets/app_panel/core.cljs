@@ -129,22 +129,28 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: Update docs
 (defn widget
-  "Renders app panel.
+  "Renders application panel.
 
   Arguments:
   * `props` - optional, map. Supported props:
-    - `:toolbars` - seq of maps. Each map is a props for [app-panel.toolbar](/widgets/app-panel-toolbar) widget.
-    - :header - renderable, no default. Used to display user-defined header.
-    - :sidebars - seq of maps, where map is:
-      * :content - renderable, no default. Sidebar content.
-      * :collapsed - logical true/false, no default. Whether sidebar is collapse or not.
-      * :gutter - enum, one of false (default), :large, :normal, :small or their string/symbol equivalents. Sidebar's
+    - `:footer` - renderable, no default. Used to display user-defined header.
+    - `:header` - renderable, no default. Used to display user-defined header.
+    - `:layout` - enum, one of :adjusted, :pinned, :pinned-footer, :pinned-header, :static or their string/symbol
+      equivalents. Layout of application panel.
+    - `:sidebars` - seq of maps, where map is:
+      * `:content` - renderable, no default. Content to place into sidebar.
+      * `:collapsed` - logical true/false, no default. Whether sidebar is collapse or not.
+      * `:gutter` - enum, one of :none (default), :large, :normal, :small or their string/symbol equivalents. Sidebar's
         gutter size.
-      * :placement - enum, one of :left (default), :right or their string/symbol equivalents. Sidebar placement.
-      * :size - enum, one of :large, :normal (default), :small or their string/symbol equivalents. Sidebar size.
-  * & children` - renderables, any number of child components"
+      * `:placement` - enum, one of :left (default), :right or their string/symbol equivalents. Sidebar placement.
+      * `:size` - enum, one of :large, :normal (default), :small or their string/symbol equivalents. Sidebar size.
+    - `:toolbars` - seq of maps. Each map is a props for [app-panel.toolbar](/widgets/app-panel-toolbar) widget.
+  * `& children` - renderables, any number of child components
+
+  FIXME:
+  * when sidebar created transition doesn't applied to it, but we have transition for crossbar and all it looks like
+  content of crossbar flows from under created sidebar"
   [& _args]
   (r/create-class
     {:reagent-render
