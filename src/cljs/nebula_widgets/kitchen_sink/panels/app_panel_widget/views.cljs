@@ -6,12 +6,16 @@
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.checkable-group-input :as ie-cgi-knob]
     [nebula-widgets.utils :as utils]
+    [nebula-widgets.utils.bem :as bem-utils]
     [nebula-widgets.widgets.app-panel.core :as app-panel]
     [re-frame.core :as rf]))
 
 (defn- build-sidebar-props [sidebars placement]
   (let [{:keys [collapsed gutter size]} (get sidebars placement)]
     {:collapsed collapsed
+     :content
+     [:h1 {:class (bem-utils/build-class "appPanelWidget-sidebar" [[placement]])}
+      (str (-> placement name str/capitalize) " sidebar")]
      :gutter gutter
      :placement placement
      :size size}))

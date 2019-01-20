@@ -93,7 +93,7 @@
               {:hcp
                [:div {:class (bem-utils/build-class sidebar-elt-bem [["collapsed" collapsed] ["placement" placement]])}
                 [:div {:class (str sidebar-elt-bem "-backdrop")}]
-                [:div {:class (str sidebar-elt-bem "-inner")} content]]
+                content]
                :props
                (assoc sidebar-props
                  :gutter (-> gutter keyword sidebar-gutter-prop-set (or :none))
@@ -131,23 +131,20 @@
 
 ;; TODO: Update docs
 (defn widget
-  "Renders app panel. Accepts optional props map and any number of child components.
-  Supported props:
-  * :bars - seq of maps. Each item in deq is a props for app-panel-bar widget with :placement prop set to :top
-    by default, and :separated set to false by default.
-  * :header - any, no default. Props for app header (container for head and top bar). No header when false or map:
-    - :pinned - boolean, no default. Whether header is pinned (sticky header) or not.
-  * :head - renderable, no default. App panel's head.
-  * :sidebars - seq of maps, where map is:
-    - :content - renderable, no default. Sidebar content.
-    - :collapsed - logical true/false, no default. Whether sidebar is collapse or not.
-    - :gutter - enum, one of false (default), :large, :normal, :small or their string/symbol equivalents. Sidebar's
-      gutter size.
-    - :placement - enum, one of :left (default), :right or their string/symbol equivalents. Sidebar placement.
-    - :size - enum, one of :large, :normal (default), :small or their string/symbol equivalents. Sidebar size.
+  "Renders app panel.
 
-  FIXME:
-  * sidebar without gutter disappears while collapsing"
+  Arguments:
+  * `props` - optional, map. Supported props:
+    - `:toolbars` - seq of maps. Each map is a props for [app-panel.toolbar](/widgets/app-panel-toolbar) widget.
+    - :header - renderable, no default. Used to display user-defined header.
+    - :sidebars - seq of maps, where map is:
+      * :content - renderable, no default. Sidebar content.
+      * :collapsed - logical true/false, no default. Whether sidebar is collapse or not.
+      * :gutter - enum, one of false (default), :large, :normal, :small or their string/symbol equivalents. Sidebar's
+        gutter size.
+      * :placement - enum, one of :left (default), :right or their string/symbol equivalents. Sidebar placement.
+      * :size - enum, one of :large, :normal (default), :small or their string/symbol equivalents. Sidebar size.
+  * & children` - renderables, any number of child components"
   [& _args]
   (r/create-class
     {:reagent-render
