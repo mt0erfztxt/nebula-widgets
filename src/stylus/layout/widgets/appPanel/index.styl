@@ -99,8 +99,14 @@ nw-appPanel-sidebar_border(side, enabled)
     // ------------------------------------------------------------------------
 
     &--layout_adjusted &__body
-        flex:1;
-        overflow-y: scroll
+        flex: 1;
+        overflow-y: scroll;
+        position: relative;
+
+
+    &--layout_adjusted &__main
+        height: 100%;
+        min-height: auto;
 
 
     &--layout_pinned &__crossbar
