@@ -143,7 +143,6 @@
   FIXME:
   * when sidebar created transition doesn't applied to it, but we have transition for crossbar and all it looks like
   content of crossbar flows from under created sidebar
-  * absent transition of unpinned footer/header on sidebar collapsing
 
   TODO:
   * perhaps `&__sidebar-inner` element need to be returned because of clicks on sidebar's content must not be caught by backdrop"
