@@ -3,7 +3,8 @@
 (def default-db
   {:app-panel-widget
    {:interactive-example
-    {:header false
+    {:footer false
+     :header false
      :layout "pinned-header"
      :sidebars
      {:left

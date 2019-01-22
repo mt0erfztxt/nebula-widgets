@@ -143,6 +143,7 @@
   FIXME:
   * when sidebar created transition doesn't applied to it, but we have transition for crossbar and all it looks like
   content of crossbar flows from under created sidebar
+  * absent transition of unpinned footer/header on sidebar collapsing
 
   TODO:
   * perhaps `&__sidebar-inner` element need to be returned because of clicks on sidebar's content must not be caught by backdrop"
@@ -170,8 +171,8 @@
             (or footer bottom-toolbars?)
             (conj
               (cond-> [:div {:class (build-sidebar-container-class "bottom")}]
-                footer (conj [:div {:class footer-elt-bem} footer])
-                bottom-toolbars? (conj (into [:div {:class toolbars-elt-bem}] (map :hcp bottom-toolbars))))))
+                bottom-toolbars? (conj (into [:div {:class toolbars-elt-bem}] (map :hcp bottom-toolbars)))
+                footer (conj [:div {:class footer-elt-bem} footer]))))
           (-> sidebar-mapping :left :hcp)
           (-> sidebar-mapping :right :hcp)]))
      :component-did-mount

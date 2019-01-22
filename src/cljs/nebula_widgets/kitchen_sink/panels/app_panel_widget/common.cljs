@@ -13,7 +13,8 @@
 
 (def knobs
   (utils/expand-paths
-    [:header
+    [:footer
+     :header
      :layout
      [:sidebars
       [:left :collapsed :exists :gutter :size]

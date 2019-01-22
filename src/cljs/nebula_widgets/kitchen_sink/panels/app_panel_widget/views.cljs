@@ -70,6 +70,7 @@
        [:p "This page itself is interactive example"]]
       (for [params
             [[:- "widget props"]
+             :footer
              :header
              [:layout (ie-cgi-knob/gen-items "adjusted" "pinned" "pinned-footer" "pinned-header" "static")]
              [:toolbars (ie-cgi-knob/gen-items "no" "top2" "bottom2" "top2+bottom2")]
@@ -100,12 +101,13 @@
 (defn widget []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [header sidebars toolbars] :as props} @*props]
+      (let [{:keys [footer header sidebars toolbars] :as props} @*props]
         [app-panel/widget
          (-> props
              (select-keys [:layout])
              (merge
                {:cid "appPanelWidget"
+                :footer (when footer [:h1.appPanelWidget-footer "Footer"])
                 :header (when header [:h1.appPanelWidget-header "Header"])
                 :sidebars (build-sidebars-prop sidebars)
                 :toolbars (build-toolbars-prop toolbars)}))
