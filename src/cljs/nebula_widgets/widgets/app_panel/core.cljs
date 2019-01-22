@@ -3,7 +3,6 @@
     [clojure.string :as str]
     [goog.dom :as gdom]
     [goog.style :as gstyle]
-    [nebula-widgets.widgets.app-panel.head :as app-panel-head]
     [nebula-widgets.widgets.app-panel.toolbar :as app-panel-toolbar]
     [nebula-widgets.utils :as utils]
     [nebula-widgets.utils.bem :as bem-utils]
@@ -22,14 +21,8 @@
 (def ^:private footer-elt-bem
   (str bem "__footer"))
 
-(def ^:private head-elt-bem
-  (str bem "__head"))
-
 (def ^:private header-elt-bem
   (str bem "__header"))
-
-(def ^:private header-inner-elt-bem
-  (str header-elt-bem "-inner"))
 
 (def ^:private main-elt-bem
   (str bem "__main"))
@@ -65,12 +58,8 @@
 (defn- build-toolbar-mapping [toolbars]
   (->> toolbars
        (map
-         (fn [{:keys [placement separated] :as props}]
-           (let [placement (-> placement keyword toolbar-placement-prop-set (or :top))
-                 props (assoc props
-                         :placement placement
-                         ;; TODO: Remove separated prop because of now toolbars always separated
-                         :separated (-> separated boolean #{false true}))]
+         (fn [props]
+           (let [props (assoc props :placement (-> props :placement keyword toolbar-placement-prop-set (or :top)))]
              {:hcp [app-panel-toolbar/widget props]
               :props props})))
        (reduce
@@ -138,55 +127,53 @@
     - `:header` - renderable, no default. Used to display user-defined header.
     - `:layout` - enum, one of :adjusted, :pinned, :pinned-footer, :pinned-header, :static or their string/symbol
       equivalents. Layout of application panel.
-    - `:sidebars` - seq of maps, where map is:
+    - `:sidebars` - seq of maps, where each map can have following keys:
       * `:content` - renderable, no default. Content to place into sidebar.
       * `:collapsed` - logical true/false, no default. Whether sidebar is collapse or not.
       * `:gutter` - enum, one of :none (default), :large, :normal, :small or their string/symbol equivalents. Sidebar's
         gutter size.
       * `:placement` - enum, one of :left (default), :right or their string/symbol equivalents. Sidebar placement.
       * `:size` - enum, one of :large, :normal (default), :small or their string/symbol equivalents. Sidebar size.
-    - `:toolbars` - seq of maps. Each map is a props for [app-panel.toolbar](/widgets/app-panel-toolbar) widget.
+    - `:toolbars` - seq of maps, where each map can have following keys:
+      * `:content` - map or renderable, no default. When a map it's same as a `props` of action-bar widget, otherwise it
+        would be rendered as-is.
+      * `:placement` - required, one of :bottom, :top (default) or their string/symbol equivalents. Toolbar placement.
   * `& children` - renderables, any number of child components
 
   FIXME:
   * when sidebar created transition doesn't applied to it, but we have transition for crossbar and all it looks like
-  content of crossbar flows from under created sidebar"
+  content of crossbar flows from under created sidebar
+
+  TODO:
+  * perhaps `&__sidebar-inner` element need to be returned because of clicks on sidebar's content must not be caught by backdrop"
   [& _args]
   (r/create-class
     {:reagent-render
      (fn [& _args]
-       (let [[{:keys [footer header sidebars toolbars] :as props} children] ((juxt r/props r/children) (r/current-component))
-             {{left-sidebar :hcp} :left, {right-sidebar :hcp} :right, :as sidebar-mapping} (build-sidebar-mapping sidebars)
+       (let [this (r/current-component)
+             {:keys [footer header sidebars toolbars] :as props} (r/props this)
+             sidebar-mapping (build-sidebar-mapping sidebars)
              {bottom-toolbars :bottom, top-toolbars :top} (build-toolbar-mapping toolbars)
              bottom-toolbars? (boolean (seq bottom-toolbars))
              top-toolbars? (boolean (seq top-toolbars))]
          [:div {:class (build-class props sidebar-mapping)}
           (cond-> [:div {:class main-elt-bem}]
-                  ;;
-                  (or header top-toolbars?)
-                  (conj
-                    (cond-> [:div {:class (build-sidebar-container-class "top")}]
-                            ;;
-                            header
-                            (conj [:div {:class head-elt-bem} header])
-                            ;;
-                            top-toolbars?
-                            (conj (into [:div {:class toolbars-elt-bem}] (map :hcp top-toolbars)))))
-                  ;;
-                  :always
-                  (conj (into [:div {:class body-elt-bem}] children))
-                  ;;
-                  (or footer bottom-toolbars?)
-                  (conj
-                    (cond-> [:div {:class (build-sidebar-container-class "bottom")}]
-                            ;;
-                            footer
-                            (conj [:div {:class footer-elt-bem} footer])
-                            ;;
-                            bottom-toolbars?
-                            (conj (into [:div {:class toolbars-elt-bem}] (map :hcp bottom-toolbars))))))
-          left-sidebar
-          right-sidebar]))
+            (or header top-toolbars?)
+            (conj
+              (cond-> [:div {:class (build-sidebar-container-class "top")}]
+                header (conj [:div {:class header-elt-bem} header])
+                top-toolbars? (conj (into [:div {:class toolbars-elt-bem}] (map :hcp top-toolbars)))))
+            ;;
+            :always
+            (conj (into [:div {:class body-elt-bem}] (r/children this)))
+            ;;
+            (or footer bottom-toolbars?)
+            (conj
+              (cond-> [:div {:class (build-sidebar-container-class "bottom")}]
+                footer (conj [:div {:class footer-elt-bem} footer])
+                bottom-toolbars? (conj (into [:div {:class toolbars-elt-bem}] (map :hcp bottom-toolbars))))))
+          (-> sidebar-mapping :left :hcp)
+          (-> sidebar-mapping :right :hcp)]))
      :component-did-mount
      (fn [this]
        (update-main-elt-padding this))

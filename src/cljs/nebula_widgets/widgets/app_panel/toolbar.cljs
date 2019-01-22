@@ -8,12 +8,6 @@
 (def ^:private inner-elt-bem
   (str bem "__inner"))
 
-(defn- build-class [{:keys [placement separated]}]
-  (bem-utils/build-class
-    bem
-    [["placement" placement]
-     ["separated" separated]]))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24,9 +18,8 @@
   Arguments:
   * `props` - required, map. Supported keys:
     - `:content` - map or renderable, no default. When a map it's same as a `props` in action-bar.
-    - `:placement` - required, one of :bottom, :top or their string/symbol equivalents. Toolbar placement.
-    - `:separated` - logical true/false, no default. Whether toolbar has separator or not."
-  [{:keys [content] :as props}]
-  [:div {:class (build-class props)}
+    - `:placement` - required, one of :bottom, :top or their string/symbol equivalents. Toolbar placement."
+  [{:keys [content placement]}]
+  [:div {:class (bem-utils/build-class bem [["placement" placement]])}
    [:div {:class (str inner-elt-bem)}
     (if (map? content) "Not implemented" content)]])
