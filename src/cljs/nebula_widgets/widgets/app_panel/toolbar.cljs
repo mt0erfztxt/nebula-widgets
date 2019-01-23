@@ -5,9 +5,6 @@
 (def ^:private bem
   "nw-appPanel-toolbar")
 
-(def ^:private inner-elt-bem
-  (str bem "__inner"))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21,5 +18,4 @@
     - `:placement` - required, one of :bottom, :top or their string/symbol equivalents. Toolbar placement."
   [{:keys [content placement]}]
   [:div {:class (bem-utils/build-class bem [["placement" placement]])}
-   [:div {:class (str inner-elt-bem)}
-    (if (map? content) "Not implemented" content)]])
+   (if (map? content) "Not implemented" content)])

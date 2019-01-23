@@ -22,13 +22,12 @@
 
 (defn- build-sidebars-prop [sidebars]
   (cond-> []
-          (-> sidebars :left :exists) (conj (build-sidebar-props sidebars :left))
-          (-> sidebars :right :exists) (conj (build-sidebar-props sidebars :right))))
+    (-> sidebars :left :exists) (conj (build-sidebar-props sidebars :left))
+    (-> sidebars :right :exists) (conj (build-sidebar-props sidebars :right))))
 
-(defn- build-toolbar-props [placement separated]
-  {:content [:div.appPanelWidget-toolbar (str "Content of " (name placement) " toolbar")]
-   :placement placement
-   :separated separated})
+(defn- build-toolbar-props [placement idx]
+  {:content [:div.appPanelWidget-toolbar (str "Content of toolbar " (inc idx))]
+   :placement placement})
 
 (defn- build-toolbars-prop
   "Accepts specially formatted string and returns seq of maps suitable to be used as `:toolbars` prop of widget.
@@ -46,7 +45,7 @@
                (if cnt (repeat (js/parseFloat cnt) placement) placement)))))
        (flatten)
        (filter some?)
-       (map #(build-toolbar-props % false))))
+       (map-indexed #(build-toolbar-props %2 %1))))
 
 ;;------------------------------------------------------------------------------
 ;; Interactive example
@@ -104,13 +103,13 @@
       (let [{:keys [footer header sidebars toolbars] :as props} @*props]
         [app-panel/widget
          (-> props
-             (select-keys [:layout])
-             (merge
-               {:cid "appPanelWidget"
-                :footer (when footer [:h1.appPanelWidget-footer "Footer"])
-                :header (when header [:h1.appPanelWidget-header "Header"])
-                :sidebars (build-sidebars-prop sidebars)
-                :toolbars (build-toolbars-prop toolbars)}))
+           (select-keys [:layout])
+           (merge
+             {:cid "appPanelWidget"
+              :footer (when footer [:h1.appPanelWidget-footer "Footer"])
+              :header (when header [:h1.appPanelWidget-header "Header"])
+              :sidebars (build-sidebars-prop sidebars)
+              :toolbars (build-toolbars-prop toolbars)}))
          [man-page/widget
           "# Application panel widget (app-panel)"
           (-> #'app-panel/widget meta :doc)
