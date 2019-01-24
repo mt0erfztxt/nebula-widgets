@@ -1,4 +1,3 @@
-import expect from 'unexpected';
 import { camelCase } from 'change-case';
 
 import AppPanel from '../../../../../src/js/widgets/app-panel';
@@ -66,4 +65,14 @@ test("020 It should allow obtain application panel's sidebar using '#getSidebar(
   await sidebar.expectIsExist();
   await sidebar.hover();
   await t.expect(sidebar.selector.textContent).eql('Left sidebar');
+});
+
+test("030 It should allow obtain application panel's toolbar using '#getToolbar()'", async (t) => {
+  const { knob, sut } = await getHelperFragments('toolbars');
+  const toolbar = sut.getToolbar([{ placement: 'top' }, { idx: 1 }]);
+
+  await knob.clickItem({ value: 'top2+bottom2' });
+  await toolbar.expectIsExist();
+  await toolbar.hover();
+  await t.expect(toolbar.selector.textContent).eql('Content of toolbar 2');
 });
