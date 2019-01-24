@@ -145,7 +145,10 @@
   content of crossbar flows from under created sidebar
 
   TODO:
-  * perhaps `&__sidebar-inner` element need to be returned because of clicks on sidebar's content must not be caught by backdrop"
+  * perhaps `&__sidebar-inner` element need to be returned because of clicks on sidebar's content must not be caught by
+  backdrop
+  * duplicate BEM related to sidebar onto sidebar's element
+  * allow sidebar to be resizable"
   [& _args]
   (r/create-class
     {:reagent-render
