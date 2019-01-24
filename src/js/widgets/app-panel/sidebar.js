@@ -13,6 +13,7 @@ const {
  */
 const BaseClass = Fragment.makeFragmentClass(Fragment, {
   stateParts: [
+    ['collapsed', { antonym: 'expanded' }],
     ['placement', { isBoolean: false }]
   ]
 });
@@ -22,6 +23,7 @@ const BaseClass = Fragment.makeFragmentClass(Fragment, {
  *
  * State parts:
  * * own:
+ *   - collapsed
  *   - placement (not boolean)
  */
 class AppPanelSidebar extends BaseClass {
@@ -75,9 +77,44 @@ class AppPanelSidebar extends BaseClass {
       return writableParts;
     }
     else {
-      return writableParts.concat(['placement']);
+      return writableParts.concat(['collapsed', 'placement']);
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // State :: Collapsed (read-only, antonym: Expanded)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @name AppPanelSidebar#getCollapsedPartOfState
+   * @method
+   * @param {Options|Object} options
+   * @returns {Promise<Boolean>}
+   */
+
+  /**
+   * @name AppPanelSidebar#expectIsCollapsed
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name AppPanelSidebar#expectIsNotCollapsed
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name AppPanelSidebar#expectIsExpanded
+   * @method
+   * @returns {Promise<void>}
+   */
+
+  /**
+   * @name AppPanelSidebar#expectIsNotExpanded
+   * @method
+   * @returns {Promise<void>}
+   */
 
   // ---------------------------------------------------------------------------
   // State :: Placement (read-only, not boolean)
