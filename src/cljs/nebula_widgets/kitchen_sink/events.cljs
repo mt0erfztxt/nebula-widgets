@@ -12,6 +12,7 @@
     [nebula-widgets.kitchen-sink.panels.form-field-widget.events]
     [nebula-widgets.kitchen-sink.panels.form-widget.events]
     [nebula-widgets.kitchen-sink.panels.group-input-widget.events]
+    [nebula-widgets.kitchen-sink.panels.tabs-widget.events]
     [nebula-widgets.kitchen-sink.panels.text-group-input-form-field-widget.events]
     [nebula-widgets.kitchen-sink.panels.text-group-input-widget.events]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.events]

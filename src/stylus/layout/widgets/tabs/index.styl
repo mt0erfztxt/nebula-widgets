@@ -1,0 +1,490 @@
+$tabs-color-background     = $g_color_secondary;
+$tabs-color-background-alt = blend(alpha($g_color_primary, 0.32), $tabs-color-background);
+$tabs-color-foreground     = $g_color_primary;
+$tabs-color-text           = $g_color_primary_text;
+$tabs-color-text-active    = $g_color_primary_text--active;
+
+$tabs-head-fontSize--size-l = $g_font_size;
+$tabs-head-fontSize--size-n = $tabs-head-fontSize--size-l - 2;
+$tabs-head-fontSize--size-s = $tabs-head-fontSize--size-n - 2;
+
+$tabs--size-l = $g_size--l;
+$tabs--size-n = $g_size--n;
+$tabs--size-s = $g_size--s;
+
+$tabs-tab-head-backgroundColor = $tabs-color-foreground;
+
+$tabs-tab-head--size-l = $tabs--size-l - 1px;
+$tabs-tab-head--size-n = $tabs--size-n - 1px;
+$tabs-tab-head--size-s = $tabs--size-s - 1px;
+
+$tabs-tab-head-icon-fontSize--size-l = $tabs-head-fontSize--size-l + 16px;
+$tabs-tab-head-icon-fontSize--size-n = $tabs-head-fontSize--size-n + 16px;
+$tabs-tab-head-icon-fontSize--size-s = $tabs-head-fontSize--size-s + 16px;
+$tabs-tab-head-text-fontsize--size-l = $tabs-head-fontSize--size-l;
+$tabs-tab-head-text-fontsize--size-n = $tabs-head-fontSize--size-n;
+$tabs-tab-head-text-fontsize--size-s = $tabs-head-fontSize--size-s;
+
+$tabs-tab-head--active--backgroundColor = $tabs-color-foreground;
+$tabs-tab-head--active--borderTopColor  = $g_color_accent;
+
+$tabs-tab-head--disabled--backgroundColor = $tabs-color-foreground;
+$tabs-tab-head--disabled--color           = $tabs-color-foreground;
+
+$tabs-tab-separator-backgroundColor = tint($tabs-color-background, 2%);
+
+$tabs--collapsed--tab-separator-backgroundColor = $color-separator-light;
+
+$tabs--sidebar-n         = $g_appPanel--sidebar-size_normal;
+$tabs--sidebar-n--gutter = $g_size--n;
+
+
+.nw-tabs
+    background-color: $tabs-color-background;
+    display: block;
+    position: relative;
+
+
+    &__body
+        background-color: $tabs-color-foreground;
+        position: relative;
+
+
+    // Button rendered using <BUTTON> or <A> tags.
+    &__button
+        padding: 2px;
+        max-width: $tabs--size-n;
+        text-align: center;
+        width: @max-width;
+
+
+    &__button-inner
+        background-color: inherit;
+        border: none;
+        font-size: $tabs-tab-head-icon-fontSize--size-n - 10;
+        line-height: $tabs--size-n - (2 * 2);
+        max-width: $tabs--size-n - (2 * 2);
+        outline: none;
+        padding: 0;
+        transition: color 500ms, transform 500ms;
+        width: @max-width;
+
+        &:hover
+            color: $tabs-color-text-active;
+
+
+    &__button--rotated &__button-inner
+        transform: rotate(180deg);
+
+
+    &__buttons
+        // width: inherit;
+
+
+    &__buttons--group_after
+    &__buttons--group_before
+    &__buttons--group_end
+    &__buttons--group_start
+        //
+
+
+    &__head
+        background-color: $tabs-color-background;
+        color: $tabs-color-text;
+        display: block;
+        font-size: $tabs-head-fontSize--size-n;
+        text-transform: uppercase;
+        transition: background-color 500ms;
+        width: 100%;
+
+
+    &__list
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+
+    // Tab rendered using <BUTTON> or <A> tags.
+    &__tab-head
+        // border-color: red;
+        border-color: $color-primary;
+        color: inherit;
+        cursor: pointer;
+        display: block;
+        outline: none;
+        text-align: center;
+        text-decoration: none;
+        // TODO Transition of border collor cause border to flash when active tab changed.
+        // transition: background-color 500ms, border-left-color 500ms, border-right-color 500ms, border-top-color 500ms, color 500ms;
+        // transition: background-color 500ms, color 500ms;
+        transition: background-color 500ms, border-color 500ms, color 500ms;
+
+
+    &:not(&--collapsed) &__tab-head:not(&__tab-head--active):not(&__tab-head--disabled):hover
+        background-color: $tabs-color-background-alt;
+
+
+    &__tab-head-icon
+        // line-height: 1;
+        font-size: $tabs-tab-head-icon-fontSize--size-n;
+
+
+    &__tab-head-text
+        // color: inherit;
+        font-size: $tabs-tab-head-text-fontsize--size-n;
+        text-decoration: none;
+
+
+    &__tab-head--active
+        background-color: $tabs-tab-head--active--backgroundColor;
+        color: $tabs-color-text-active;
+
+
+    &__tab-head--disabled
+        color: $tabs-tab-head--disabled--color;
+        cursor: default;
+
+
+    &__title
+        color: $tabs-color-text-active;
+        display: block;
+
+    &__body
+        //
+
+
+    &__tab-body
+        // background-color: $tabs-color-foreground;
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+        // transition: opacity 200ms;
+
+
+    &__tab-body--active
+        height: auto;
+        opacity: 1;
+        transition: opacity 550ms 50ms;
+
+
+    // ------------------------------------------------------------------------
+    // Collapsed
+    //
+    // Tabs component with body hidden
+    // ------------------------------------------------------------------------
+
+    // Collapsed Tabs component have its head flattened.
+    &--collapsed > &__head
+        background-color: $tabs-color-foreground;
+
+
+    // ------------------------------------------------------------------------
+    // Adjusted
+    //
+    // Tabs component that adjusts to parent container size
+    // ------------------------------------------------------------------------
+
+    // Stretch elements to fit parent size.
+    // &--adjusted
+    // &--adjusted > &__body
+    // &--adjusted > &__body > &__tab-body
+    //     @extend $b_greedy;
+    //
+    // &--adjusted > &__head
+    //     left: 0;
+    //     height: $tabs--size-n;
+    //     overflow: hidden;
+    //     position: absolute;
+    //     top: 0;
+
+
+    // ?? Overlap sidebar's shadow.
+    // &--adjusted > &__head
+    //     z-index: 2;
+
+
+    // ------------------------------------------------------------------------
+    // Horizontal
+    //
+    // Tabs body placed below head
+    // ------------------------------------------------------------------------
+
+    &--layout_horizontal > &__head
+        clearfix();
+
+
+    &--layout_horizontal > &__head &__button
+        display: inline-block;
+        width: @line-height;
+
+
+    &--layout_horizontal > &__head &__buttons--group_end
+        float: right;
+
+    &--layout_horizontal > &__head &__buttons--group_start
+        float: left;
+
+
+    &--layout_horizontal &__list
+        float: left;
+
+
+    &--layout_horizontal &__list--right
+        float: right;
+
+
+    &--layout_horizontal > &__head &__tab-head
+        border-left: 1px solid $tabs-tab-separator-backgroundColor;
+        float: left;
+        height: $tabs--size-n;
+        padding: 1px 1px 1px 0;
+
+        &:last-child
+            border-right: 1px solid $tabs-tab-separator-backgroundColor;
+            padding-right: 0;
+
+
+    // ?? On mouse over effect for inactive and not disabled tabs.
+    // &--layout_horizontal &__tab-head:not(&__tab-head--active):not(&__tab-head--disabled):hover
+    //     border-top: 1px solid $tabs-color-hovered-tab-marker;
+
+
+    &--layout_horizontal > &__head &__tab-head--active
+        border-left-width: 0;
+        border-top: 1px solid $tabs-tab-head--active--borderTopColor;
+        padding-left: 1px;
+        padding-top: 0;
+
+
+    &--layout_horizontal > &__head &__tab-head-icon
+    &--layout_horizontal > &__head &__tab-head-text
+        display: inline-block;
+        line-height: $tabs--size-n - 2;
+        padding: 0 4px;
+        vertical-align: middle;
+
+        &:first-child
+            padding-left: 15px;
+
+        &:last-child
+            padding-right: 15px;
+
+    // &--layout_horizontal > &__head &__tab-head-icon:first-child
+    // &--layout_horizontal > &__head &__tab-head-text:first-child
+    //     padding-left: 16px;
+    //     padding-right: @padding-left;
+
+    // &--layout_horizontal > &__head &__tab-head-icon:last-child
+    // &--layout_horizontal > &__head &__tab-head-text:last-child
+    //     // padding-right: 23px;
+
+
+    // &--layout_horizontal > &__head &__tab-head-icon
+    //     // line-height: $tabs--size-n - 2;
+    //     // vertical-align middle
+
+
+    // ??
+    // &--layout_horizontal > &__head &__title
+    //     height: inherit;
+
+
+    &--layout_horizontal &__title
+        padding: 1px 16px;
+
+    &--layout_horizontal &__title--placement_after
+        float: right;
+
+    &--layout_horizontal &__title--placement_before
+        float: left;
+
+    &--layout_horizontal&--adjusted
+    &--layout_horizontal&--adjusted > &__body
+    &--layout_horizontal&--adjusted > &__body > &__tab-body
+        @extend $b_greedy;
+
+
+    &--layout_horizontal&--adjusted > &__body
+        top: $tabs--size-n;
+
+
+    &--layout_horizontal&--adjusted > &__head
+        left: 0;
+        height: $tabs--size-n;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+
+
+    // Light border between tab heads in collapsed Tabs component.
+    &--layout_horizontal&--collapsed > &__head &__tab-head
+        border-left: 1px solid $tabs--collapsed--tab-separator-backgroundColor;
+        padding-left: 0;
+
+        &:last-child
+            border-right: 1px solid $tabs--collapsed--tab-separator-backgroundColor;
+            padding-right: 0;
+
+
+    &--layout_horizontal&--size_normal &__title
+        line-height: $tabs-tab-head--size-n - 1; // 2px reserved for padding for size to be consitent with tab's head size
+
+    // ------------------------------------------------------------------------
+    // ?? As sidebar base.
+    // ------------------------------------------------------------------------
+
+    // &--sidebar&--collapsed > &__body
+    //     left - $container-sidebar-panel-width
+    //
+    //
+    // &--tab-size_large &__tab-head
+    //     font-size: $tab-font-size + 2;
+    //
+    //
+    // &--tab-size_large&--layout_horizontal &__tab-head-icon
+    // &--tab-size_large&--layout_horizontal &__tab-head-text
+    //     display: inline-block;
+    //     padding: 0 10px 0 23px;
+    //
+    //     &:first-child
+    //         padding-left: 23px;
+    //
+    //     &:last-child
+    //         padding-right: 23px;
+    //
+    //
+    // &--tab-size_small &__tab-head
+    //     font-size: $tab-font-size - 2;
+
+
+    // ------------------------------------------------------------------------
+    // Vertical
+    //
+    // Tabs body place right aside head
+    // ------------------------------------------------------------------------
+
+    &--layout_vertical
+        transition: width 500ms;
+
+
+    &--layout_vertical > &__body
+        left: $tabs--size-n;
+        top: 0;
+        // transition: left 500ms, opacity 500ms 50ms; // expand transitions
+        transition: left 500ms;
+
+
+    &--layout_vertical&--collapsed > &__body
+        // opacity: 0;
+
+
+    &--layout_vertical > &__head
+        width: $tabs--size-n;
+        z-index: 100;
+
+
+    &--layout_vertical > &__head &__button
+        display: block;
+
+
+    &--layout_vertical > &__head &__buttons--group_end
+        bottom: 0;
+        left: 0;
+        position: absolute;
+
+    &--layout_vertical > &__head &__buttons--before
+        left: 0;
+        position: absolute;
+        top: 0;
+
+
+    &--layout_vertical > &__head &__list
+        float none
+        height auto
+        width inherit
+
+
+    &--layout_vertical > &__head &__tab-head
+        border-top: 1px solid $tabs-tab-separator-backgroundColor;
+        padding: 0 1px 1px 1px;
+
+        &:last-child
+            border-bottom: 1px solid $tabs-tab-separator-backgroundColor;
+            padding-bottom: 0;
+
+
+    // ?? On mouse over effect for inactive and not disabled tabs.
+    // &--layout_vertical&--collapsed > &__head &__tab-head:not(&__tab-head--active):not(&__tab-head--disabled)
+    //     border-left-color $tabs-color-active-tab-background
+
+    // ??
+    // &--layout_vertical > &__head &__tab-head:not(&__tab-head--active):not(&__tab-head--disabled):hover
+    //     border-left-color $tabs-color-hovered-tab-marker
+
+
+    &--layout_vertical > &__head &__tab-head--active
+        border-left: 1px solid $tabs-tab-head--active--borderTopColor;
+        border-top: none;
+        border-top: 0 solid $color-primary;
+        padding-left: 0;
+        padding-top: 1px;
+
+
+    &--layout_vertical > &__head &__tab-head-icon
+    &--layout_vertical > &__head &__tab-head-text
+        display: block;
+        padding: 0 0 9px 0;
+
+        &:first-child
+            padding-top: 13px;
+
+        &:last-child
+            padding-bottom: 13px;
+
+
+    &--layout_vertical > &__head &__tab-head-text
+        font-size: $tabs-head-fontSize--size-n - 4;
+
+
+    &--layout_vertical&--adjusted
+    &--layout_vertical&--adjusted > &__body
+    &--layout_vertical&--adjusted > &__body > &__tab-body
+    &--layout_vertical&--adjusted > &__head
+        @extend $b_greedy;
+
+
+    &--layout_vertical&--adjusted > &__body
+        left: $tabs--size-n;
+
+
+    &--layout_vertical&--adjusted > &__head
+        right: $tabs--size-n;
+
+
+    // Light border between tab heads in collapsed Tabs component.
+    &--layout_vertical&--collapsed > &__head &__tab-head
+        // border-top: 1px solid $tabs--collapsed--tab-separator-backgroundColor;
+        // border-top: 1px solid transparent;
+        border-top: 1px solid $color-primary;
+        padding-top: 0;
+
+        &:last-child
+            // border-bottom: 1px solid $tabs--collapsed--tab-separator-backgroundColor;
+            // border-bottom: 1px solid transparent;
+            border-bottom: 1px solid $color-primary;
+            padding-bottom: 0;
+
+
+    &--layout_vertical&--sidebar_normal
+        width: $tabs--sidebar-n + $tabs--sidebar-n--gutter;
+
+
+    &--layout_vertical&--sidebar_normal &__body
+        width: $tabs--sidebar-n;
+
+
+    &--layout_vertical&--sidebar_normal&--collapsed
+        width: $tabs--sidebar-n--gutter;
+
+    &--layout_vertical&--sidebar_normal&--collapsed &__body
+        left: $tabs--sidebar-n--gutter - $tabs--sidebar-n;
