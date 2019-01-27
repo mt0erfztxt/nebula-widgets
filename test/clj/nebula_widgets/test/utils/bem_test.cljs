@@ -34,7 +34,9 @@
       (is (= "foo_bar" (sut "foo" "bar")))
       (is (= "foo_42" (sut "foo" 42))))
     (testing "070 It sets optional modifier value to true by default"
-      (is (= "foobar" (sut "foobar" true))))))
+      (is (= "foobar" (sut "foobar" true))))
+    (testing "080 It replaces dots in value of 'cid' modifier with dashes"
+      (is (= "cid_foo-bar-buz" (sut "cid" "foo.bar.buz"))))))
 
 (deftest build-class-test
   (let [sut #'bem-utils/build-class]

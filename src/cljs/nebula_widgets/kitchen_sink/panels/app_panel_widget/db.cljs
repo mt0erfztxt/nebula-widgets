@@ -2,14 +2,19 @@
 
 (def default-db
   {:app-panel-widget
-   {:bar {:bottom {}, :top {:separated true}}
-    :header {:absent false, :pinned false}
-    :sidebar
-    {:left
-     {:collapsed false
-      :gutter "normal"
-      :size "normal"}
-     :right
-     {:collapsed false
-      :gutter "normal"
-      :size "normal"}}}})
+   {:interactive-example
+    {:footer false
+     :header false
+     :layout "pinned-header"
+     :sidebars
+     {:left
+      {:collapsed false
+       :exists true
+       :gutter "none"
+       :size "normal"}
+      :right
+      {:collapsed false
+       :exists false
+       :gutter "none"
+       :size "normal"}}
+     :toolbars "top2"}}})

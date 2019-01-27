@@ -1,113 +1,117 @@
 (ns nebula-widgets.kitchen-sink.panels.app-panel-widget.views
   (:require
+    [clojure.string :as str]
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.common :as common]
-    [nebula-widgets.widgets.app-panel.core :as app-panel]
+    [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
+    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
+    [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.checkable-group-input :as ie-cgi-knob]
     [nebula-widgets.utils :as utils]
+    [nebula-widgets.utils.bem :as bem-utils]
+    [nebula-widgets.widgets.app-panel.core :as app-panel]
     [re-frame.core :as rf]))
 
-(defn- sidebar-knobs-cmp [placement {:keys [collapsed gutter size]}]
-  [:<>
-   [:h1 (-> placement name (str "Sidebar"))]
-   [:ul
-    [:li
-     [:label
-      [:input
-       {:checked collapsed
-        :on-change #(rf/dispatch [(common/build-sidebar-setter-event-name placement :collapsed) (utils/event->checked %)])
-        :type "checkbox"}]
-      "collapsed?"]]
-    [:li
-     [:h2 "gutter"]
-     (for [s [false "small" "normal" "large"]]
-       ^{:key s}
-       [:label
-        [:input
-         {:checked (= gutter s)
-          :disabled (#{"small" "large"} s)
-          :on-change #(rf/dispatch [(common/build-sidebar-setter-event-name placement :gutter) s])
-          :type "radio"}]
-        (or s "none")])]
-    [:li
-     [:h2 "size"]
-     (for [s ["small" "normal" "large"]]
-       ^{:key s}
-       [:label
-        [:input
-         {:checked (= size s)
-          :disabled (#{"small" "large"} s)
-          :on-change #(rf/dispatch [(common/build-sidebar-setter-event-name placement :size) s])
-          :type "radio"}]
-        s])]]])
+(defn- build-sidebar-props [sidebars placement]
+  (let [{:keys [collapsed gutter size]} (get sidebars placement)]
+    {:collapsed collapsed
+     :content
+     [:h1 {:class (bem-utils/build-class "appPanelWidget-sidebar" [[placement]])}
+      (str (-> placement name str/capitalize) " sidebar")]
+     :gutter gutter
+     :placement placement
+     :size size}))
 
-(defn- build-sidebar-props [placement {:keys [collapsed gutter size]}]
-  {:collapsed collapsed
-   :gutter gutter
-   :placement placement
-   :size size})
+(defn- build-sidebars-prop [sidebars]
+  (cond-> []
+    (-> sidebars :left :exists) (conj (build-sidebar-props sidebars :left))
+    (-> sidebars :right :exists) (conj (build-sidebar-props sidebars :right))))
+
+(defn- build-toolbar-props [placement idx]
+  {:content [:div.appPanelWidget-toolbar (str "Content of toolbar " (inc idx))]
+   :placement placement})
+
+(defn- build-toolbars-prop
+  "Accepts specially formatted string and returns seq of maps suitable to be used as `:toolbars` prop of widget.
+  Examples of string format:
+  - top - one top toolbar
+  - top2 - two top toolbars
+  - top+bottom2 - one top and two bottom toolbars
+  - foo - no toolbars"
+  [value]
+  (->> (str/split value #"\+")
+       (map
+         (fn [s]
+           (let [[_ placement cnt :as result] (re-matches #"(top|bottom)(\d*)" s)]
+             (when result
+               (if cnt (repeat (js/parseFloat cnt) placement) placement)))))
+       (flatten)
+       (filter some?)
+       (map-indexed #(build-toolbar-props %2 %1))))
+
+;;------------------------------------------------------------------------------
+;; Interactive example
+;;------------------------------------------------------------------------------
+
+(def ^:private interactive-example-path->keyword
+  (partial common/panel-path->keyword :interactive-example "/"))
+
+(def ^:private ie-setters
+  (->> common/knobs
+       (map
+         (fn [knob]
+           [(apply utils/path->keyword knob)
+            #(rf/dispatch [(apply interactive-example-path->keyword :set knob) %])]))
+       (into {})))
+
+(defn- interactive-example-cmp [*props]
+  (let [props @*props]
+    (into
+      [ie/widget
+       [:p "This page itself is interactive example"]]
+      (for [params
+            [[:- "widget props"]
+             :footer
+             :header
+             [:layout (ie-cgi-knob/gen-items "adjusted" "pinned" "pinned-footer" "pinned-header" "static")]
+             [:toolbars (ie-cgi-knob/gen-items "no" "top2" "bottom2" "top2+bottom2")]
+             [:- "left sidebar props"]
+             :sidebars.left.collapsed
+             :sidebars.left.exists
+             [:sidebars.left.gutter (ie-cgi-knob/gen-items "none" "normal")]
+             [:sidebars.left.size (ie-cgi-knob/gen-items "normal")]
+             [:- "right sidebar props"]
+             :sidebars.right.collapsed
+             :sidebars.right.exists
+             [:sidebars.right.gutter (ie-cgi-knob/gen-items "none" "normal")]
+             [:sidebars.right.size (ie-cgi-knob/gen-items "normal")]]
+            :let [[cid label-or-items] (if (sequential? params) params [params])
+                  label? (= :- cid)]]
+        [ie-cgi-knob/widget
+         {:cid cid, :label (when label? label-or-items)}
+         (cond->
+           {:cid cid
+            :on-change (get ie-setters cid)
+            :value (get-in props (utils/keyword->path cid))}
+           (and (not label?) label-or-items) (assoc :items label-or-items))]))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO Make demo to test whether changing content of reagent atom de-referenced in child component causes...
-;;      re-rendering of parent component?
-(comment
-  (defn- parent-cmp [child]
-    (js/console.log "parent :: render()")
-    [:div.parent child])
-
-  (defn- child-cmp [data]
-    (js/console.log "child :: render()" data)
-    [:div.child data])
-
-  (defn- demo-parent-child-re-rendering []
-    (let [*data (rf/subscribe [:data])]
-      (fn []
-        [parent-cmp
-         [child-cmp @*data]]))))
-
 (defn widget []
-  (let [*header (rf/subscribe [:app-panel-widget-panel/header])
-        *left-sidebar (rf/subscribe [:app-panel-widget-panel/left-sidebar])
-        *right-sidebar (rf/subscribe [:app-panel-widget-panel/right-sidebar])
-        *top-bar (rf/subscribe [:app-panel-widget-panel/top-bar])]
+  (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{header-absent? :absent header-pinned? :pinned :as header} @*header
-            left-sidebar @*left-sidebar
-            right-sidebar @*right-sidebar
-            top-bar @*top-bar]
-        [:div.appPanelWidgetPanel
-         [app-panel/widget
-          {:bars [{:content [:div "Content of top bar"] :placement "top" :separated (:separated top-bar)}]
-           :head [:div "Content of app panel head"]
-           :header (if (:absent header) false header)
-           :sidebars
-           [(build-sidebar-props :left left-sidebar)
-            (build-sidebar-props :right right-sidebar)]}
-          [:h1 "header"]
-          [:ul
-           [:li
-            [:label
-             [:input
-              {:checked header-absent?
-               :on-change #(rf/dispatch [(common/build-header-setter-event-name :absent) (utils/event->checked %)])
-               :type "checkbox"}]
-             "absent?"]]
-           [:li
-            [:label
-             [:input
-              {:checked header-pinned?
-               :on-change #(rf/dispatch [(common/build-header-setter-event-name :pinned) (utils/event->checked %)])
-               :type "checkbox"}]
-             "pinned?"]]]
-          [:h1 "topBar"]
-          [:ul
-           [:li
-            [:label
-             [:input
-              {:checked (:separated top-bar)
-               :on-change #(rf/dispatch [(common/build-bar-setter-event-name :top :separated) (utils/event->checked %)])
-               :type "checkbox"}]
-             ":separated"]]]
-          [sidebar-knobs-cmp :left left-sidebar]
-          [sidebar-knobs-cmp :right right-sidebar]]]))))
+      (let [{:keys [footer header sidebars toolbars] :as props} @*props]
+        [app-panel/widget
+         (-> props
+           (select-keys [:layout])
+           (merge
+             {:cid "appPanelWidget"
+              :footer (when footer [:h1.appPanelWidget-footer "Footer"])
+              :header (when header [:h1.appPanelWidget-header "Header"])
+              :sidebars (build-sidebars-prop sidebars)
+              :toolbars (build-toolbars-prop toolbars)}))
+         [man-page/widget
+          "# Application panel widget (app-panel)"
+          (-> #'app-panel/widget meta :doc)
+          "## Interactive example"
+          [interactive-example-cmp *props]]]))))

@@ -22,6 +22,13 @@
     (testing "070 It should allow to provide default value"
       (is (= "default-value" (sut :non-existent #{:foo :bar :foobar} "default-value"))))))
 
+(deftest flatten-until-sequential-tests
+  (testing "010 It works"
+    (is (= [[:foo :bar]
+            [:foo :buz]]
+           (utils/flatten-until-sequential
+             [[[[[:foo :bar] [:foo :buz]]]]])))))
+
 (deftest path-str->segments-test
   (let [sut #'utils/path-str->segments]
     (testing "010 It should exist and be a function"
@@ -71,6 +78,34 @@
     (testing "040 It should return that consists from string segments when keywordize? option is not true"
       (is (= ["ns-segment-a" "ns-segment-b" "foo" "bar"]
              (sut :ns-segment-a.ns-segment-b/foo.bar {:keywordize? false}))))))
+
+(deftest split-paths-test
+  (testing "010 It should work"
+    (is (= [[:adjustable]
+            [:bars]
+            [:header]
+            [:sidebar :left :collapsed]
+            [:sidebar :left :gutter]
+            [:sidebar :left :size]
+            [:sidebar :left :theme :foo]
+            [:sidebar :left :theme :bar]
+            [:sidebar :right :collapsed]
+            [:sidebar :right :gutter]
+            [:sidebar :right :size]]
+           (utils/expand-paths
+             [:adjustable
+              :bars
+              :header
+              [:sidebar
+               [:left
+                :collapsed
+                :gutter
+                :size
+                [:theme :foo :bar]]
+               [:right
+                :collapsed
+                :gutter
+                :size]]])))))
 
 (deftest update-hcp-props-test
   (let [sut #'utils/update-hcp-props
