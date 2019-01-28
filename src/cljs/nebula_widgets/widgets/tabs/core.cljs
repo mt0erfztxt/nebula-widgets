@@ -36,19 +36,26 @@
 (def ^:private tab-head-icon-elt-bem
   (str tab-head-elt-bem "-icon"))
 
+(def ^:private tab-head-inner-elt-bem
+  (str bem "__tab-head-inner"))
+
+(def ^:private tab-head-spacer-elt-bem
+  (str bem "__tab-head-spacer"))
+
 (def ^:private tab-head-text-elt-bem
   (str tab-head-elt-bem "-text"))
 
 (def ^:private title-elt-bem
   (str bem "__title"))
 
+;; TODO: Update docs
 (defn- button-cmp
   "Component that displays tabs button. Accepts `props` map:
   * `:cid` - required, any. Must be unique across all buttons of `tabs` widget
     instance because it used to identify button.
   * `:icon` - required, string. An icon from FontAwesome icon set but without
     'fa-' prefix, for example, 'fa-edit' would be 'edit'.
-  * `:on-click` - optional, function, no default. Would be called on button
+  * `:on-click` - required, function, no default. Would be called on button
     click with browser event object and info map as arguments.
   * `:placement` - optional, one of `:after`, `:before` or their string
     equivalents, `:before` by default. Allows to choose where to place button -
@@ -59,12 +66,11 @@
   * `:rotated` - optional, any, no default. When evaluates to logical true then
     button would be 180deg rotated."
   [{:keys [cid icon on-click rotated] :as props} info]
-  [:span {:class (bem-utils/build-class button-elt-bem [["cid" cid] ["rotated" rotated]])}
-   [:button
-    {:class button-inner-elt-bem
-     :on-click (r/partial on-click props info)
-     :type "button"}
-    [:i {:class (str "fa fa-fw fa-" icon)}]]])
+  [:span
+   {:class (bem-utils/build-class button-elt-bem [["cid" cid] ["rotated" rotated]])
+    :on-click (r/partial on-click props info)
+    :type "button"}
+   [:i {:class (str "fa fa-fw fa-" icon)}]])
 
 (def ^:private buttons-group-set
   #{:after :before :end :start})
@@ -73,7 +79,7 @@
   "Renders list of buttons for specified group but only when group has buttons. Accepts map where keys are groups and
   values are buttons in group. Group must be one of :after, :before, :end or :start."
   [button-hcp-by-group-mapping group]
-  (when-let [button-hcps (:group button-hcp-by-group-mapping)]
+  (when-let [button-hcps (get button-hcp-by-group-mapping group)]
     (into
       [:div {:class (bem-utils/build-class buttons-elt-bem [["group" group]])}]
       button-hcps)))
@@ -105,13 +111,14 @@
           [:div {:class tab-head-icon-elt-bem}
            [:i {:class (str "fa fa-fw fa-" icon)}]])
         label-hcp (when label [:div {:class tab-head-text-elt-bem} label])]
-    (cond->
-      [(if href :a :div)
-       {:class (bem-utils/build-class tab-head-elt-bem [["cid" cid] ["active" active] ["disabled" disabled]])
-        :href href
-        :on-click on-click}]
-      icon-hcp (conj icon-hcp)
-      label-hcp (conj label-hcp))))
+    [(if href :a :div)
+     {:class (bem-utils/build-class tab-head-elt-bem [["cid" cid] ["active" active] ["disabled" disabled]])
+      :href href
+      :on-click on-click}
+     [:div {:class tab-head-spacer-elt-bem}]
+     (cond-> [:div {:class tab-head-inner-elt-bem}]
+       icon-hcp (conj icon-hcp)
+       label-hcp (conj label-hcp))]))
 
 (def ^:private layout-prop-set
   #{:horizontal :vertical})
@@ -167,6 +174,9 @@
     {:body nil, :head nil}
     (-> props :items :data reverse)))
 
+(def ^:private button-group-prop-set
+  #{:after :before :end :start})
+
 (def ^:private placement-prop-set
   #{:after :before})
 
@@ -218,16 +228,11 @@
   [props]
   (let [button-hcp-by-group-mapping
         (reduce
-          (fn [acc {:keys [placement position] :as item}]
-            (let [placement (-> placement keyword placement-prop-set (or :before))
-                  position (-> position keyword position-prop-set (or :start))]
-              (update
-                acc
-                (keyword
-                  (if (= (name position) (name (-> props :items :position (-> keyword position-prop-set (or :start)))))
-                    placement
-                    position))
-                #(conj (or % []) [button-cmp item (select-keys props [:active-tab :collapsed])]))))
+          (fn [acc item]
+            (update
+              acc
+              (-> item :group keyword button-group-prop-set (or :after))
+              #(conj (or % []) [button-cmp item (select-keys props [:active-tab :collapsed])])))
           {}
           (:buttons props))
         tab-parts-hcps (build-tab-parts-hcps props)]
@@ -241,7 +246,11 @@
             [["placement" (-> title :placement keyword placement-prop-set (or :before))]])}
          title])
       [buttons-cmp button-hcp-by-group-mapping :start]
-      [:div {:class list-container-elt-bem}
+      [:div
+       {:class
+        (bem-utils/build-class
+          list-container-elt-bem
+          [["position" (-> props :items :position keyword position-prop-set (or :start))]])}
        [buttons-cmp button-hcp-by-group-mapping :before]
        [:div {:class list-elt-bem} (:head tab-parts-hcps)]
        [buttons-cmp button-hcp-by-group-mapping :after]]
