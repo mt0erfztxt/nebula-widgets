@@ -21,8 +21,11 @@
     (if (<= result 9) result (recur result))))
 
 (defn- build-button-props [group idx]
-  {:group group
-   :icon (nth icons (reduce-number-to-single-digit idx))})
+  {:active (= 1 idx)
+   :disabled (= 2 idx)
+   :group group
+   :icon (nth icons (reduce-number-to-single-digit idx))
+   :on-click identity})
 
 (defn- build-buttons-prop
   "Accepts specially formatted string and returns seq of maps suitable to be used as `:buttons` prop of widget.
@@ -82,7 +85,7 @@
              [[:- "tabs props"]
               [:active-tab (ie-cgi-knob/gen-items "tab1" "tab2" "tab3")]
               [:- "knobs"]
-              [:buttons (ie-cgi-knob/gen-items "after" "before2" "end2" "no" "start")]
+              [:buttons (ie-cgi-knob/gen-items "after" "before2" "end3" "no" "start")]
               [:items-position (ie-cgi-knob/gen-items "end" "start")]]
              :let [[cid label-or-items] (if (sequential? params) params [params])
                    label? (= :- cid)]]

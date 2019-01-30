@@ -3,6 +3,7 @@ $tabs-color-background-alt = blend(alpha($g_color_primary, 0.32), $tabs-color-ba
 $tabs-color-foreground     = $g_color_primary;
 $tabs-color-text           = $g_color_primary_text;
 $tabs-color-text-active    = $g_color_primary_text--active;
+$tabs-color--highlighted   = alpha($tabs-color-foreground, 0.36);
 
 $tabs-head-fontSize--size-l = $g_font_size;
 $tabs-head-fontSize--size-n = $tabs-head-fontSize--size-l - 2;
@@ -57,14 +58,47 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
     // Button rendered using <BUTTON> or <A> tags.
     &__button
-        // padding: 2px;
         font-size: $tabs-tab-head-icon-fontSize--size-n - 10;
-        max-width: $tabs--size-n;
+        display: flex;
+        height: $tabs--size-n;
+        max-height: @height;
+        min-height: @height;
+        margin-right: 4px;
+        max-width: $tabs--size-n - 8;
+        min-width: @max-width;
+        padding: 4px 0;
         text-align: center;
         width: @max-width;
 
-        &:hover
-            color: $tabs-color-text-active;
+        &:last-child
+            margin-right: 0;
+
+
+    &__button-inner
+        background-color: transparent;
+        // border: 1px solid $tabs-color-foreground;
+        border: none;
+        border-radius: 2px;
+        outline: none;
+        width: 100%;
+
+        // &:hover
+        //     // background-color: transparentify($tabs-color-text, $tabs-color-background, 5%);
+        //     // background-color: transparentify($tabs-color-foreground, $tabs-color-background, 15%);
+        //     background-color: alpha($tabs-color-foreground, 0.36);
+
+
+    &__button--active &__button-inner
+        background-color: $tabs-color--highlighted;
+
+
+    &__button--disabled &__button-inner
+        border-color: $tabs-color--highlighted;
+        color: @border-color;
+
+
+    &__button:not(&__button--disabled) &__button-inner:hover
+        background-color: $tabs-color--highlighted;
 
 
     // &__button-inner
@@ -87,17 +121,26 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
 
     &__buttons
-        align-items: center;
+        // align-items: center;
         display: flex;
-        justify-content: center;
+        // justify-content: center;
         // width: inherit;
 
 
     &__buttons--group_after
+        margin-left: 4px;
+
+
     &__buttons--group_before
+        margin-right: 4px;
+
+
     &__buttons--group_end
+        margin-left: 4px;
+
+
     &__buttons--group_start
-        //
+        margin-right: 4px;
 
 
     &__head
@@ -257,7 +300,7 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
 
     &--layout_horizontal > &__head &__button
-        display: inline-block;
+        // display: inline-block;
         // width: @line-height;
 
 
@@ -302,7 +345,7 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
     &--layout_horizontal > &__head &__tab-head-icon
     &--layout_horizontal > &__head &__tab-head-text
-        display: inline-block;
+        // display: inline-block;
         // line-height: $tabs--size-n - 2;
         // padding: 0 4px;
         // vertical-align: middle;

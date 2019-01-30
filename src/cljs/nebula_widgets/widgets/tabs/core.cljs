@@ -51,8 +51,10 @@
 ;; TODO: Update docs
 (defn- button-cmp
   "Component that displays tabs button. Accepts `props` map:
+  * `:active`
   * `:cid` - required, any. Must be unique across all buttons of `tabs` widget
     instance because it used to identify button.
+  * `:disabled`
   * `:icon` - required, string. An icon from FontAwesome icon set but without
     'fa-' prefix, for example, 'fa-edit' would be 'edit'.
   * `:on-click` - required, function, no default. Would be called on button
@@ -65,12 +67,21 @@
     button must positioned.
   * `:rotated` - optional, any, no default. When evaluates to logical true then
     button would be 180deg rotated."
-  [{:keys [cid icon on-click rotated] :as props} info]
-  [:span
-   {:class (bem-utils/build-class button-elt-bem [["cid" cid] ["rotated" rotated]])
-    :on-click (r/partial on-click props info)
-    :type "button"}
-   [:i {:class (str "fa fa-fw fa-" icon)}]])
+  [{:keys [active cid disabled icon on-click rotated] :as props} info]
+  [:div
+   {:class
+    (bem-utils/build-class
+      button-elt-bem
+      [["cid" cid]
+       ["active" active]
+       ["disabled" disabled]
+       ["rotated" rotated]])}
+   [:button
+    {:class button-inner-elt-bem
+     :disabled disabled
+     :on-click (r/partial on-click props info)
+     :type "button"}
+    [:i {:class (str "fa fa-fw fa-" icon)}]]])
 
 (def ^:private buttons-group-set
   #{:after :before :end :start})
