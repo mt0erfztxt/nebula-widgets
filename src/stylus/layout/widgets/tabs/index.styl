@@ -42,7 +42,8 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
 .nw-tabs
     // background-color: $tabs-color-background;
-    display: block;
+    display: flex;
+    flex-direction: column;
     position: relative;
 
 
@@ -60,18 +61,7 @@ $tabs--sidebar-n--gutter = $g_size--n;
     &__button
         font-size: $tabs-tab-head-icon-fontSize--size-n - 10;
         display: flex;
-        height: $tabs--size-n;
-        max-height: @height;
-        min-height: @height;
-        margin-right: 4px;
-        max-width: $tabs--size-n - 8;
-        min-width: @max-width;
-        padding: 4px 0;
         text-align: center;
-        width: @max-width;
-
-        &:last-child
-            margin-right: 0;
 
 
     &__button-inner
@@ -127,25 +117,10 @@ $tabs--sidebar-n--gutter = $g_size--n;
         // width: inherit;
 
 
-    &__buttons--group_after
-        margin-left: 4px;
-
-
-    &__buttons--group_before
-        margin-right: 4px;
-
-
-    &__buttons--group_end
-        margin-left: 4px;
-
-
-    &__buttons--group_start
-        margin-right: 4px;
-
-
     &__head
         // background-color: $tabs-color-background;
-        border-bottom: 1px solid $tabs-color-foreground;
+        border: solid $tabs-color-foreground;
+        border-width: 0 0 1px 0;
         color: $tabs-color-text;
         display: flex;
         font-size: $tabs-head-fontSize--size-n;
@@ -164,22 +139,12 @@ $tabs--sidebar-n--gutter = $g_size--n;
     &__listContainer
         display: flex;
 
-    &__listContainer--position_end
-        margin-left: auto;
-
-    &__listContainer--position_start
-        margin-right: auto;
-
-
     // Tab rendered using <BUTTON> or <A> tags.
     &__tab-head
         align-items: center;
         // border-color: red;
         // border-color: $color-primary;
         border: solid transparent;
-        border-top-left-radius: 2px;
-        border-top-right-radius: 2px;
-        border-width: 1px 1px 0 1px;
         color: inherit;
         cursor: pointer;
         display: flex;
@@ -194,11 +159,11 @@ $tabs--sidebar-n--gutter = $g_size--n;
         // transition: background-color 500ms, border-color 500ms, color 500ms;
 
     &__tab-head-spacer
-        bottom: -1px;
-        height: 1px;
-        left: 0;
+        // bottom: -1px;
+        // height: 1px;
+        // left: 0;
         position: absolute;
-        right: 0;
+        // right: 0;
         z-index: 10;
 
 
@@ -210,14 +175,27 @@ $tabs--sidebar-n--gutter = $g_size--n;
         // line-height: 1;
         font-size: $tabs-tab-head-icon-fontSize--size-n;
 
+        &:first-child
+            padding-left: 16px;
+
+        &:last-child
+            padding-right: 16px;
+
 
     &__tab-head-text
         // color: inherit;
         font-size: $tabs-tab-head-text-fontsize--size-n;
         text-decoration: none;
 
+        &:first-child
+            padding-left: 16px;
+
+        &:last-child
+            padding-right: 16px;
+
 
     &__tab-head--active
+        border-color: $tabs-color-foreground;
         // background-color: $tabs-tab-head--active--backgroundColor;
         // color: $tabs-color-text-active;
 
@@ -296,30 +274,42 @@ $tabs--sidebar-n--gutter = $g_size--n;
     // ------------------------------------------------------------------------
 
     &--layout_horizontal > &__head
-        clearfix();
+        // clearfix();
 
 
     &--layout_horizontal > &__head &__button
+        margin-right: 4px;
+        max-width: $tabs--size-n - 8;
+        min-width: @max-width;
+        width: @max-width;
+
+        &:last-child
+            margin-right: 0;
         // display: inline-block;
         // width: @line-height;
 
 
+    &--layout_horizontal > &__head &__buttons
+        height: $tabs--size-n;
+        max-height: @height;
+        min-height: @height;
+        padding: 4px 0;
+
+    &--layout_horizontal > &__head &__buttons--group_after
+        margin-left: 4px;
+
     &--layout_horizontal > &__head &__buttons--group_end
-        // float: right;
+        margin-left: 4px;
 
     &--layout_horizontal > &__head &__buttons--group_start
-        // float: left;
+        margin-right: 4px;
 
-
-    &--layout_horizontal &__list
-        // float: left;
-
-
-    &--layout_horizontal &__list--right
-        // float: right;
+    &--layout_horizontal > &__head &__buttons--group_before
+        margin-right: 4px;
 
 
     &--layout_horizontal > &__head &__tab-head
+        border-width: 1px 1px 0 1px;
         // border-left: 1px solid $tabs-tab-separator-backgroundColor;
         // float: left;
         height: $tabs--size-n;
@@ -339,22 +329,33 @@ $tabs--sidebar-n--gutter = $g_size--n;
         // border-left-width: 0;
         // border-top: 1px solid $tabs-tab-head--active--borderTopColor;
         // padding-left: 1px;
-        border-color: $tabs-color-foreground;
-        padding-top: 0;
-
+        // border-color: $tabs-color-foreground;
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+        // padding-top: 0;
 
     &--layout_horizontal > &__head &__tab-head-icon
-    &--layout_horizontal > &__head &__tab-head-text
+        //
+
         // display: inline-block;
         // line-height: $tabs--size-n - 2;
         // padding: 0 4px;
         // vertical-align: middle;
 
-        &:first-child
-            padding-left: 15px;
+        // &:first-child
+        //     padding-left: 15px;
 
-        &:last-child
-            padding-right: 15px;
+        // &:last-child
+        //     padding-right: 15px;
+
+    &--layout_horizontal > &__head &__tab-head-spacer
+        bottom: -1px;
+        height: 1px;
+        left: 0;
+        right: 0;
+
+    &--layout_horizontal > &__head &__tab-head-text
+        //
 
     // &--layout_horizontal > &__head &__tab-head-icon:first-child
     // &--layout_horizontal > &__head &__tab-head-text:first-child
@@ -376,6 +377,21 @@ $tabs--sidebar-n--gutter = $g_size--n;
     //     height: inherit;
 
 
+    &--layout_horizontal &__list
+        // float: left;
+
+
+    &--layout_horizontal &__list--right
+        // float: right;
+
+
+    &--layout_horizontal &__listContainer--position_end
+        margin-left: auto;
+
+    &--layout_horizontal &__listContainer--position_start
+        margin-right: auto;
+
+
     &--layout_horizontal &__title
         padding: 1px 16px;
 
@@ -385,22 +401,22 @@ $tabs--sidebar-n--gutter = $g_size--n;
     &--layout_horizontal &__title--placement_before
         // float: left;
 
-    &--layout_horizontal&--adjusted
-    &--layout_horizontal&--adjusted > &__body
-    &--layout_horizontal&--adjusted > &__body > &__tab-body
-        @extend $b_greedy;
+    // &--layout_horizontal&--adjusted
+    // &--layout_horizontal&--adjusted > &__body
+    // &--layout_horizontal&--adjusted > &__body > &__tab-body
+    //     @extend $b_greedy;
 
 
-    &--layout_horizontal&--adjusted > &__body
-        top: $tabs--size-n;
+    // &--layout_horizontal&--adjusted > &__body
+    //     top: $tabs--size-n;
 
 
-    &--layout_horizontal&--adjusted > &__head
-        left: 0;
-        height: $tabs--size-n;
-        overflow: hidden;
-        position: absolute;
-        top: 0;
+    // &--layout_horizontal&--adjusted > &__head
+    //     left: 0;
+    //     height: $tabs--size-n;
+    //     overflow: hidden;
+    //     position: absolute;
+    //     top: 0;
 
 
     // Light border between tab heads in collapsed Tabs component.
@@ -451,12 +467,18 @@ $tabs--sidebar-n--gutter = $g_size--n;
     // ------------------------------------------------------------------------
 
     &--layout_vertical
+        flex-direction: row;
         // transition: width 500ms;
 
 
     &--layout_vertical > &__body
-        left: $tabs--size-n;
-        top: 0;
+        border-width: 1px 1px 1px 0;
+        flex: 1 1 auto;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 2px;
+        border-top-right-radius: 2px;
+        // left: $tabs--size-n;
+        // top: 0;
         // transition: left 500ms, opacity 500ms 50ms; // expand transitions
         // transition: left 500ms;
 
@@ -466,38 +488,71 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
 
     &--layout_vertical > &__head
-        width: $tabs--size-n;
-        z-index: 100;
+        border-width: 0 1px 0 0;
+        flex: none;
+        flex-direction: column;
+        width: auto;
+        // width: $tabs--size-n;
+        // z-index: 100;
 
 
     &--layout_vertical > &__head &__button
-        display: block;
+        //
 
+
+    &--layout_vertical > &__head &__button
+        height: $tabs--size-n - 8;
+        margin-bottom: 4px;
+        max-height: @height;
+        min-height: @height;
+
+        &:last-child
+            margin-bottom: 0;
+
+
+    &--layout_vertical > &__head &__buttons
+        flex-direction: column;
+        padding: 0 4px;
+
+    &--layout_vertical > &__head &__buttons--group_after
+        margin-top: 4px;
 
     &--layout_vertical > &__head &__buttons--group_end
-        bottom: 0;
-        left: 0;
-        position: absolute;
+        margin-top: 4px;
 
-    &--layout_vertical > &__head &__buttons--before
-        left: 0;
-        position: absolute;
-        top: 0;
+    &--layout_vertical > &__head &__buttons--group_start
+        margin-bottom: 4px;
+
+    &--layout_vertical > &__head &__buttons--group_before
+        margin-bottom: 4px;
 
 
     &--layout_vertical > &__head &__list
-        // float none
-        height auto
-        width inherit
+        flex-direction: column;
+        margin-right: 0;
+
+
+    &--layout_vertical > &__head &__listContainer
+        flex-direction: column;
+
+    &--layout_vertical &__listContainer--position_end
+        margin-top: auto;
+
+    &--layout_vertical &__listContainer--position_start
+        margin-bottom: auto;
+
 
 
     &--layout_vertical > &__head &__tab-head
         // border-top: 1px solid $tabs-tab-separator-backgroundColor;
         // padding: 0 1px 1px 1px;
+        border-width: 1px 0 1px 1px;
+        // flex: none;
+        height: $tabs--size-n;
 
         &:last-child
             // border-bottom: 1px solid $tabs-tab-separator-backgroundColor;
-            padding-bottom: 0;
+            // padding-bottom: 0;
 
 
     // ?? On mouse over effect for inactive and not disabled tabs.
@@ -513,39 +568,51 @@ $tabs--sidebar-n--gutter = $g_size--n;
         // border-left: 1px solid $tabs-tab-head--active--borderTopColor;
         // border-top: none;
         // border-top: 0 solid $color-primary;
-        padding-left: 0;
+        // padding-left: 0;
         // padding-top: 1px;
+        border-bottom-left-radius: 2px;
+        border-top-left-radius: 2px;
+        border-width: 1px 0 1px 1px;
 
 
     &--layout_vertical > &__head &__tab-head-icon
-    &--layout_vertical > &__head &__tab-head-text
-        display: block;
-        padding: 0 0 9px 0;
+        //
 
-        &:first-child
-            padding-top: 13px;
-
-        &:last-child
-            padding-bottom: 13px;
-
+    &--layout_vertical > &__head &__tab-head-spacer
+        bottom: 0;
+        right: -1px;
+        top: 0;
+        width: 1px;
 
     &--layout_vertical > &__head &__tab-head-text
-        font-size: $tabs-head-fontSize--size-n - 4;
+        //
+
+        // display: block;
+        // padding: 0 0 9px 0;
+
+        // &:first-child
+            // padding-top: 13px;
+
+        // &:last-child
+            // padding-bottom: 13px;
 
 
-    &--layout_vertical&--adjusted
-    &--layout_vertical&--adjusted > &__body
-    &--layout_vertical&--adjusted > &__body > &__tab-body
-    &--layout_vertical&--adjusted > &__head
-        @extend $b_greedy;
+    &--layout_vertical > &__head &__tab-head-text
+        // font-size: $tabs-head-fontSize--size-n - 4;
+
+    // &--layout_vertical&--adjusted
+    // &--layout_vertical&--adjusted > &__body
+    // &--layout_vertical&--adjusted > &__body > &__tab-body
+    // &--layout_vertical&--adjusted > &__head
+    //     @extend $b_greedy;
 
 
-    &--layout_vertical&--adjusted > &__body
-        left: $tabs--size-n;
+    // &--layout_vertical&--adjusted > &__body
+    //     left: $tabs--size-n;
 
 
-    &--layout_vertical&--adjusted > &__head
-        right: $tabs--size-n;
+    // &--layout_vertical&--adjusted > &__head
+    //     right: $tabs--size-n;
 
 
     // Light border between tab heads in collapsed Tabs component.
@@ -561,16 +628,16 @@ $tabs--sidebar-n--gutter = $g_size--n;
             padding-bottom: 0;
 
 
-    &--layout_vertical&--sidebar_normal
-        width: $tabs--sidebar-n + $tabs--sidebar-n--gutter;
+    // &--layout_vertical&--sidebar_normal
+    //     width: $tabs--sidebar-n + $tabs--sidebar-n--gutter;
 
 
-    &--layout_vertical&--sidebar_normal &__body
-        width: $tabs--sidebar-n;
+    // &--layout_vertical&--sidebar_normal &__body
+    //     width: $tabs--sidebar-n;
 
 
-    &--layout_vertical&--sidebar_normal&--collapsed
-        width: $tabs--sidebar-n--gutter;
+    // &--layout_vertical&--sidebar_normal&--collapsed
+    //     width: $tabs--sidebar-n--gutter;
 
-    &--layout_vertical&--sidebar_normal&--collapsed &__body
-        left: $tabs--sidebar-n--gutter - $tabs--sidebar-n;
+    // &--layout_vertical&--sidebar_normal&--collapsed &__body
+    //     left: $tabs--sidebar-n--gutter - $tabs--sidebar-n;

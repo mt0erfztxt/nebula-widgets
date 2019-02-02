@@ -4,5 +4,6 @@
   {:tabs-widget
    {:interactive-example
     {:active-tab "tab1"
-     :buttons "start"
-     :items-position "start"}}})
+     :buttons "no"
+     :items-position "start"
+     :layout "horizontal"}}})

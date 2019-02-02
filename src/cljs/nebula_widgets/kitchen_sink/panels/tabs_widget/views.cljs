@@ -5,6 +5,7 @@
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.checkable-group-input :as ie-cgi-knob]
+    [nebula-widgets.utils.bem :as bem-utils]
     [nebula-widgets.widgets.tabs.core :as tabs]
     [re-frame.core :as rf]
     [reagent.core :as r]))
@@ -54,7 +55,7 @@
 
 (def ^:private ie-setters
   (->>
-    [:active-tab :buttons :items-position]
+    [:active-tab :buttons :items-position :layout]
     (map
       (fn [prop]
         [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
@@ -63,19 +64,22 @@
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [buttons items-position] :as props} @*props]
+      (let [{:keys [buttons items-position layout] :as props} @*props]
         (into
           [ie/widget
            [tabs/widget
-            (->
-              props
-              (select-keys [:active-tab])
+            (-> props
+              (select-keys [:active-tab :layout])
               (merge
                 {:buttons (build-buttons-prop buttons)
                  :items
                  {:data
-                  (for [i (range 1 4) :let [label (str "Tab" i), cid (str/lower-case label)]]
-                    {:content [:div.tabsWidgetPanel-tabContent (str label " content")]
+                  (for [i (range 1 4)
+                        :let [label (str "Tab" (apply str (repeat i i)))
+                              cid (str "tab" i)]]
+                    {:content
+                     [:div {:class (bem-utils/build-class "tabsWidgetPanel-tabContent" [["layout" layout]])}
+                      (str label " content")]
                      :cid cid
                      :label label
                      :on-click (r/partial (:active-tab ie-setters) cid)})
@@ -84,6 +88,7 @@
             [params
              [[:- "tabs props"]
               [:active-tab (ie-cgi-knob/gen-items "tab1" "tab2" "tab3")]
+              [:layout (ie-cgi-knob/gen-items "horizontal" "vertical")]
               [:- "knobs"]
               [:buttons (ie-cgi-knob/gen-items "after" "before2" "end3" "no" "start")]
               [:items-position (ie-cgi-knob/gen-items "end" "start")]]
