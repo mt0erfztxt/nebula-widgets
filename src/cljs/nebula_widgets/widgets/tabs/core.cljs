@@ -143,15 +143,16 @@
 (defn- build-class
   "Returns string - CSS class for widget's element. Accepts component props."
   [{:keys [adjusted cid cns collapsed layout sidebar size]}]
-  (bem-utils/build-class
-    bem
-    [["cns" cns]
-     ["cid" cid]
-     ["adjusted" adjusted]
-     ["collapsed" collapsed]
-     ["layout" (-> layout keyword layout-prop-set (or :horizontal))]
-     ["sidebar" (-> sidebar keyword size-prop-set (or :normal))]
-     ["size" (-> size keyword size-prop-set (or :normal))]]))
+  (let [layout (if sidebar "vertical" layout)]
+    (bem-utils/build-class
+      bem
+      [["cns" cns]
+       ["cid" cid]
+       ["adjusted" adjusted]
+       ["collapsed" collapsed]
+       ["layout" (-> layout keyword layout-prop-set (or :horizontal))]
+       ["sidebar" (when sidebar (-> sidebar keyword size-prop-set (or :normal)))]
+       ["size" (-> size keyword size-prop-set (or :normal))]])))
 
 (def ^:private supported-tab-body-props
   "List of props for tab's body."

@@ -5,5 +5,7 @@
    {:interactive-example
     {:active-tab "tab1"
      :buttons "no"
+     :collapsed false
      :items-position "start"
-     :layout "horizontal"}}})
+     :layout "horizontal"
+     :sidebar "no"}}})

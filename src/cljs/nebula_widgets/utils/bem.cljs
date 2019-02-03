@@ -25,10 +25,11 @@
              (= "cid" m-name) (-> m-value name (str/replace "." "-"))
              :else (name m-value))))))))
 
-(defn build-class [base modifiers]
+(defn build-class
   "Returns string, as for class attribute of DOM element, constructed from BEM base and seq of modifiers, where each
   modifier can be anything that `modifier->string` supports.
   Example, (build-class 'foo' [['bar' 42]]) => 'foo foo--bar_42'."
+  [base modifiers]
   (let [base (name base)]
     (->> modifiers
          (map #(->> (if (sequential? %) % [%]) (apply modifier->string)))

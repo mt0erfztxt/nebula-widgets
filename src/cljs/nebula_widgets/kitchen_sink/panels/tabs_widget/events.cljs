@@ -8,6 +8,6 @@
 ;; Events
 ;;------------------------------------------------------------------------------
 
-(doseq [property [:active-tab :buttons :items-position :layout]]
+(doseq [property [:active-tab :buttons :collapsed :items-position :layout :sidebar]]
   (let [event (common/panel-path->keyword :interactive-example "/" :set property)]
     (rf/reg-event-db event (rf-utils/make-setter-event-handler event))))

@@ -3,7 +3,6 @@ $tabs-color-background-alt = blend(alpha($g_color_primary, 0.32), $tabs-color-ba
 $tabs-color-foreground     = $g_color_primary;
 $tabs-color-text           = $g_color_primary_text;
 $tabs-color-text-active    = $g_color_primary_text--active;
-$tabs-color--highlighted   = alpha($tabs-color-foreground, 0.36);
 
 $tabs-head-fontSize--size-l = $g_font_size;
 $tabs-head-fontSize--size-n = $tabs-head-fontSize--size-l - 2;
@@ -36,8 +35,28 @@ $tabs-tab-separator-backgroundColor = tint($tabs-color-background, 2%);
 
 $tabs--collapsed--tab-separator-backgroundColor = $color-separator-light;
 
-$tabs--sidebar-n         = $g_appPanel--sidebar-size_normal;
-$tabs--sidebar-n--gutter = $g_size--n;
+$tabs--sidebar-n               = $g_appPanel--sidebar-size_normal;
+$tabs--sidebar-n--gutter       = $g_size--n;
+$tabs--sidebar-gutter-bg-color = $g_color_background--darker;
+
+
+// --
+
+$tabs-borderColor            = rgb(96, 102, 111);
+$tabs-color                  = $tabs-borderColor;
+$tabs-color--active          = $g_color_primary_text;
+$tabs-color--highlighted     = rgb(52, 61, 74);
+
+$tabs_tab-color              = rgb(100, 107, 117);
+
+
+$tabs_button-backgroundColor            = $tabs-color--highlighted;
+$tabs_button-backgroundColor--disabled  = mix($tabs_button-backgroundColor, $tabs-color-background, 45%);
+$tabs_button-backgroundColor--highlited = alpha($tabs-borderColor, 0.36);
+$tabs_button-borderColor                = $tabs-borderColor;
+$tabs_button-color                      = $tabs_tab-color;
+$tabs_button--active-color              = $tabs-color--active;
+
 
 
 .nw-tabs
@@ -48,9 +67,8 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
 
     &__body
-        // background-color: $tabs-color-foreground;
-        // border: 1px solid $tabs-color-foreground;
-        border: solid $tabs-color-foreground;
+        // border: solid $tabs-color-foreground;
+        border: solid $tabs-borderColor;
         border-bottom-left-radius: 2px;
         border-bottom-right-radius: 2px;
         border-width: 0 1px 1px 1px;
@@ -59,6 +77,7 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
     // Button rendered using <BUTTON> or <A> tags.
     &__button
+        color: $tabs_tab-color;
         font-size: $tabs-tab-head-icon-fontSize--size-n - 10;
         display: flex;
         text-align: center;
@@ -66,44 +85,25 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
     &__button-inner
         background-color: transparent;
-        // border: 1px solid $tabs-color-foreground;
-        border: none;
+        border: 1px dashed $tabs_button-borderColor;
         border-radius: 2px;
         outline: none;
         width: 100%;
 
-        // &:hover
-        //     // background-color: transparentify($tabs-color-text, $tabs-color-background, 5%);
-        //     // background-color: transparentify($tabs-color-foreground, $tabs-color-background, 15%);
-        //     background-color: alpha($tabs-color-foreground, 0.36);
-
 
     &__button--active &__button-inner
-        background-color: $tabs-color--highlighted;
+        background-color: $tabs_button-backgroundColor--highlited;
+        color: $tabs_button--active-color;
 
 
     &__button--disabled &__button-inner
-        border-color: $tabs-color--highlighted;
+        border-color: $tabs_button-backgroundColor--disabled;
         color: @border-color;
 
 
     &__button:not(&__button--disabled) &__button-inner:hover
-        background-color: $tabs-color--highlighted;
-
-
-    // &__button-inner
-    //     background-color: inherit;
-    //     border: none;
-    //     font-size: $tabs-tab-head-icon-fontSize--size-n - 10;
-    //     line-height: $tabs--size-n - (2 * 2);
-    //     max-width: $tabs--size-n - (2 * 2);
-    //     outline: none;
-    //     padding: 0;
-    //     // transition: color 500ms, transform 500ms;
-    //     width: @max-width;
-
-    //     &:hover
-    //         color: $tabs-color-text-active;
+        background-color: $tabs_button-backgroundColor--highlited;
+        color: $tabs_button--active-color;
 
 
     &__button--rotated &__button-inner
@@ -111,75 +111,72 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
 
     &__buttons
-        // align-items: center;
         display: flex;
-        // justify-content: center;
-        // width: inherit;
 
 
     &__head
-        // background-color: $tabs-color-background;
-        border: solid $tabs-color-foreground;
+        // border: solid $tabs-color-foreground;
+        border: solid $tabs-borderColor;
         border-width: 0 0 1px 0;
-        color: $tabs-color-text;
         display: flex;
         font-size: $tabs-head-fontSize--size-n;
         text-transform: uppercase;
-        // transition: background-color 500ms;
         width: 100%;
 
 
     &__list
         display: flex;
-        // list-style-type: none;
-        // margin: 0;
-        // padding: 0;
 
 
     &__listContainer
         display: flex;
 
+
     // Tab rendered using <BUTTON> or <A> tags.
     &__tab-head
-        align-items: center;
-        // border-color: red;
-        // border-color: $color-primary;
+        align-items: stretch;
         border: solid transparent;
-        color: inherit;
+        color: $tabs-color;
         cursor: pointer;
         display: flex;
         font-weight: bold;
         outline: none;
         position: relative;
-        // text-align: center;
         text-decoration: none;
-        // TODO Transition of border collor cause border to flash when active tab changed.
-        // transition: background-color 500ms, border-left-color 500ms, border-right-color 500ms, border-top-color 500ms, color 500ms;
-        // transition: background-color 500ms, color 500ms;
-        // transition: background-color 500ms, border-color 500ms, color 500ms;
 
-    &__tab-head-spacer
-        // bottom: -1px;
-        // height: 1px;
-        // left: 0;
-        position: absolute;
-        // right: 0;
-        z-index: 10;
+    &__tab-head--active
+        border-color: $tabs-borderColor;
+        color: $tabs-color-text;
 
+    &__tab-head--active &__tab-head-spacer
+        background-color: $tabs-color-background;
 
-    &:not(&--collapsed) &__tab-head:not(&__tab-head--active):not(&__tab-head--disabled):hover
-        // background-color: $tabs-color-background-alt;
+    &__tab-head--disabled
+        color: $tabs-tab-head--disabled--color;
+        cursor: default;
 
 
     &__tab-head-icon
-        // line-height: 1;
-        font-size: $tabs-tab-head-icon-fontSize--size-n;
+        font-size: $tabs-tab-head-icon-fontSize--size-n - 10;
 
         &:first-child
             padding-left: 16px;
 
+        &:first-child:not(:last-child)
+            padding-right: 8px;
+
         &:last-child
             padding-right: 16px;
+
+
+    &__tab-head-inner
+        align-items: center;
+        display: flex;
+
+
+    &__tab-head-spacer
+        position: absolute;
+        z-index: 10;
 
 
     &__tab-head-text
@@ -194,29 +191,6 @@ $tabs--sidebar-n--gutter = $g_size--n;
             padding-right: 16px;
 
 
-    &__tab-head--active
-        border-color: $tabs-color-foreground;
-        // background-color: $tabs-tab-head--active--backgroundColor;
-        // color: $tabs-color-text-active;
-
-
-    &__tab-head--active &__tab-head-spacer
-        background-color: $tabs-color-background;
-
-
-    &__tab-head--disabled
-        color: $tabs-tab-head--disabled--color;
-        cursor: default;
-
-
-    &__title
-        color: $tabs-color-text-active;
-        display: block;
-
-    &__body
-        //
-
-
     &__tab-body
         // background-color: $tabs-color-foreground;
         height: 0;
@@ -229,6 +203,11 @@ $tabs--sidebar-n--gutter = $g_size--n;
         height: auto;
         opacity: 1;
         // transition: opacity 550ms 50ms;
+
+
+    &__title
+        color: $tabs-color-text-active;
+        display: block;
 
 
     // ------------------------------------------------------------------------
@@ -433,34 +412,6 @@ $tabs--sidebar-n--gutter = $g_size--n;
         // line-height: $tabs-tab-head--size-n - 1; // 2px reserved for padding for size to be consitent with tab's head size
 
     // ------------------------------------------------------------------------
-    // ?? As sidebar base.
-    // ------------------------------------------------------------------------
-
-    // &--sidebar&--collapsed > &__body
-    //     left - $container-sidebar-panel-width
-    //
-    //
-    // &--tab-size_large &__tab-head
-    //     font-size: $tab-font-size + 2;
-    //
-    //
-    // &--tab-size_large&--layout_horizontal &__tab-head-icon
-    // &--tab-size_large&--layout_horizontal &__tab-head-text
-    //     display: inline-block;
-    //     padding: 0 10px 0 23px;
-    //
-    //     &:first-child
-    //         padding-left: 23px;
-    //
-    //     &:last-child
-    //         padding-right: 23px;
-    //
-    //
-    // &--tab-size_small &__tab-head
-    //     font-size: $tab-font-size - 2;
-
-
-    // ------------------------------------------------------------------------
     // Vertical
     //
     // Tabs body place right aside head
@@ -544,15 +495,9 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
 
     &--layout_vertical > &__head &__tab-head
-        // border-top: 1px solid $tabs-tab-separator-backgroundColor;
-        // padding: 0 1px 1px 1px;
         border-width: 1px 0 1px 1px;
-        // flex: none;
+        justify-content: center;
         height: $tabs--size-n;
-
-        &:last-child
-            // border-bottom: 1px solid $tabs-tab-separator-backgroundColor;
-            // padding-bottom: 0;
 
 
     // ?? On mouse over effect for inactive and not disabled tabs.
@@ -578,24 +523,16 @@ $tabs--sidebar-n--gutter = $g_size--n;
     &--layout_vertical > &__head &__tab-head-icon
         //
 
+
     &--layout_vertical > &__head &__tab-head-spacer
         bottom: 0;
         right: -1px;
         top: 0;
         width: 1px;
 
+
     &--layout_vertical > &__head &__tab-head-text
         //
-
-        // display: block;
-        // padding: 0 0 9px 0;
-
-        // &:first-child
-            // padding-top: 13px;
-
-        // &:last-child
-            // padding-bottom: 13px;
-
 
     &--layout_vertical > &__head &__tab-head-text
         // font-size: $tabs-head-fontSize--size-n - 4;
@@ -615,16 +552,10 @@ $tabs--sidebar-n--gutter = $g_size--n;
     //     right: $tabs--size-n;
 
 
-    // Light border between tab heads in collapsed Tabs component.
     &--layout_vertical&--collapsed > &__head &__tab-head
-        // border-top: 1px solid $tabs--collapsed--tab-separator-backgroundColor;
-        // border-top: 1px solid transparent;
         padding-top: 0;
 
         &:last-child
-            // border-bottom: 1px solid $tabs--collapsed--tab-separator-backgroundColor;
-            // border-bottom: 1px solid transparent;
-            // border-bottom: 1px solid $color-primary;
             padding-bottom: 0;
 
 
@@ -641,3 +572,101 @@ $tabs--sidebar-n--gutter = $g_size--n;
 
     // &--layout_vertical&--sidebar_normal&--collapsed &__body
     //     left: $tabs--sidebar-n--gutter - $tabs--sidebar-n;
+
+
+    // ------------------------------------------------------------------------
+    // ?? As sidebar base.
+    // ------------------------------------------------------------------------
+
+    &--sidebar_normal
+        width: $tabs--sidebar-n + $tabs--sidebar-n--gutter;
+
+
+    &--sidebar_normal > &__body
+        border-color: transparent;
+
+
+    &--sidebar_normal > &__head
+        background-color: $tabs--sidebar-gutter-bg-color;
+        border-width: 0;
+        width: $tabs--sidebar-n--gutter;
+
+
+    &--sidebar_normal > &__head &__button
+        color: alpha($tabs-color-text, 0.27);
+
+        &:hover
+            color: alpha($tabs-color-text, 0.45);
+
+
+    &--sidebar_normal > &__head &__button--active &__button-inner
+        background-color: alpha($tabs-color--highlighted, 0.18);
+
+    &--sidebar_normal > &__head &__button:not(&__button--disabled) &__button-inner:hover
+        background-color: alpha($tabs-color--highlighted, 0.18);
+
+
+    &--sidebar_normal > &__head &__buttons--group_after
+        margin-bottom: 4px;
+
+    &--sidebar_normal > &__head &__buttons--group_before
+        margin-top: 4px;
+
+    &--sidebar_normal > &__head &__buttons--group_end
+        margin-bottom: 4px;
+
+    &--sidebar_normal > &__head &__buttons--group_start
+        margin-top: 4px;
+
+
+    &--sidebar_normal > &__head &__tab-head
+        border-radius: 0;
+        border-width: 0 0 0 1px
+        color: alpha($tabs-color-text, 0.27);
+        justify-content: center;
+
+    &--sidebar_normal > &__head &__tab-head--active
+        background-color: $tabs-color-background;
+        border-color: $tabs-color-background;
+        border-left-color: $tabs-tab-head--active--borderTopColor;
+        color: $tabs-color-text;
+
+    &--sidebar_normal > &__head &__tab-head:not(&__tab-head--active)
+        &:hover
+            color: alpha($tabs-color-text, 0.45);
+
+
+    &--sidebar_normal > &__head &__tab-head-icon
+        padding: 0;
+
+
+    &--sidebar_normal > &__head &__tab-head-spacer
+        display: none;
+
+
+    &--sidebar_normal > &__head &__tab-head-inner
+        //
+
+
+    // &--sidebar&--collapsed > &__body
+    //     left - $container-sidebar-panel-width
+    //
+    //
+    // &--tab-size_large &__tab-head
+    //     font-size: $tab-font-size + 2;
+    //
+    //
+    // &--tab-size_large&--layout_horizontal &__tab-head-icon
+    // &--tab-size_large&--layout_horizontal &__tab-head-text
+    //     display: inline-block;
+    //     padding: 0 10px 0 23px;
+    //
+    //     &:first-child
+    //         padding-left: 23px;
+    //
+    //     &:last-child
+    //         padding-right: 23px;
+    //
+    //
+    // &--tab-size_small &__tab-head
+    //     font-size: $tab-font-size - 2;

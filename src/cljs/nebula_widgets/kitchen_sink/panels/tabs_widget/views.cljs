@@ -10,8 +10,11 @@
     [re-frame.core :as rf]
     [reagent.core :as r]))
 
-(def ^:private icons
-  ["angle-double-left" "anchor" "check" "bolt" "bomb" "pencil-alt" "plus" "sync-alt" "eraser" "trash"])
+(def ^:private button-icons
+  ["angle-double-left" "anchor" "lock" "angle-double-left"])
+
+(def ^:private tab-icons
+  ["pencil" "check" "bolt" "eraser" "plus" "trash"])
 
 (defn- reduce-number-to-single-digit [n]
   (let [result
@@ -25,8 +28,9 @@
   {:active (= 1 idx)
    :disabled (= 2 idx)
    :group group
-   :icon (nth icons (reduce-number-to-single-digit idx))
-   :on-click identity})
+   :icon (nth button-icons (reduce-number-to-single-digit idx))
+   :on-click identity
+   :rotated (= 3 idx)})
 
 (defn- build-buttons-prop
   "Accepts specially formatted string and returns seq of maps suitable to be used as `:buttons` prop of widget.
@@ -54,43 +58,58 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->>
-    [:active-tab :buttons :items-position :layout]
+  (->> [:active-tab :buttons :collapsed :items-position :layout :sidebar]
     (map
       (fn [prop]
         [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
     (into {})))
 
+(let [{layout-setter :layout sidebar-setter :sidebar} ie-setters]
+  (defn- handle-sidebar-on-change [value _]
+    (sidebar-setter value)
+    (when (not= "no" value)
+      (layout-setter "vertical"))))
+
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [buttons items-position layout] :as props} @*props]
+      (let [{:keys [buttons items-position layout sidebar] :as props} @*props
+            sidebar? (not= "no" sidebar)
+            layout (if sidebar? "vertical" layout)]
         (into
           [ie/widget
            [tabs/widget
             (-> props
-              (select-keys [:active-tab :layout])
+              (select-keys [:active-tab :collapsed :layout])
               (merge
                 {:buttons (build-buttons-prop buttons)
                  :items
                  {:data
-                  (for [i (range 1 4)
+                  (for [i (range 1 5)
                         :let [label (str "Tab" (apply str (repeat i i)))
                               cid (str "tab" i)]]
-                    {:content
-                     [:div {:class (bem-utils/build-class "tabsWidgetPanel-tabContent" [["layout" layout]])}
-                      (str label " content")]
-                     :cid cid
-                     :label label
-                     :on-click (r/partial (:active-tab ie-setters) cid)})
-                  :position items-position}}))]]
+                    (merge
+                      {:content
+                       [:div {:class (bem-utils/build-class "tabsWidgetPanel-tabContent" [["layout" layout]])}
+                        (str label " content")]
+                       :cid cid
+                       :on-click (r/partial (:active-tab ie-setters) cid)}
+                      (cond
+                        sidebar? {:icon (nth tab-icons (-> i dec reduce-number-to-single-digit))}
+                        (= 2 i) {:label label, :icon (nth tab-icons (dec i))}
+                        (= 4 i) {:icon (nth tab-icons (dec i))}
+                        :else {:label label})))
+                  :position items-position}
+                 :sidebar (when sidebar? sidebar)}))]]
           (for
             [params
              [[:- "tabs props"]
               [:active-tab (ie-cgi-knob/gen-items "tab1" "tab2" "tab3")]
+              :collapsed
               [:layout (ie-cgi-knob/gen-items "horizontal" "vertical")]
+              [:sidebar (ie-cgi-knob/gen-items "no" "normal")]
               [:- "knobs"]
-              [:buttons (ie-cgi-knob/gen-items "after" "before2" "end3" "no" "start")]
+              [:buttons (ie-cgi-knob/gen-items "after" "before2" "end4" "no" "start")]
               [:items-position (ie-cgi-knob/gen-items "end" "start")]]
              :let [[cid label-or-items] (if (sequential? params) params [params])
                    label? (= :- cid)]]
@@ -98,7 +117,7 @@
              {:cid cid, :label (when label? label-or-items)}
              (cond->
                {:cid cid
-                :on-change (get ie-setters cid)
+                :on-change (if (= :sidebar cid) handle-sidebar-on-change (get ie-setters cid))
                 :value (get props cid)}
                (and (not label?) label-or-items) (assoc :items label-or-items))]))))))
 
