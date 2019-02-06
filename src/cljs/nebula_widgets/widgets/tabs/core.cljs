@@ -15,17 +15,17 @@
 (def ^:private button-inner-elt-bem
   (str bem "__button-inner"))
 
-(def ^:private buttons-elt-bem
-  (str bem "__buttons"))
+(def ^:private button-group-elt-bem
+  (str bem "__buttonGroup"))
 
 (def ^:private head-elt-bem
   (str bem "__head"))
 
-(def ^:private list-elt-bem
-  (str bem "__list"))
-
 (def ^:private list-container-elt-bem
   (str bem "__listContainer"))
+
+(def ^:private list-elt-bem
+  (str bem "__list"))
 
 (def ^:private tab-body-elt-bem
   (str bem "__tab-body"))
@@ -38,9 +38,6 @@
 
 (def ^:private tab-head-inner-elt-bem
   (str bem "__tab-head-inner"))
-
-(def ^:private tab-head-spacer-elt-bem
-  (str bem "__tab-head-spacer"))
 
 (def ^:private tab-head-text-elt-bem
   (str tab-head-elt-bem "-text"))
@@ -83,17 +80,15 @@
      :type "button"}
     [:i {:class (str "fa fa-fw fa-" icon)}]]])
 
-(def ^:private buttons-group-set
-  #{:after :before :end :start})
-
-(defn- buttons-cmp
+;; TODO: Update docs
+(defn- button-group-cmp
   "Renders list of buttons for specified group but only when group has buttons. Accepts map where keys are groups and
   values are buttons in group. Group must be one of :after, :before, :end or :start."
-  [button-hcp-by-group-mapping group]
-  (when-let [button-hcps (get button-hcp-by-group-mapping group)]
-    (into
-      [:div {:class (bem-utils/build-class buttons-elt-bem [["group" group]])}]
-      button-hcps)))
+  [placement button-groups widget-info]
+  [:div {:class (bem-utils/build-class button-group-elt-bem [["placement" placement]])}
+   (for [{:keys [cid] :as button-props} (-> button-groups (get placement) :buttons)]
+     ^{:key cid}
+     [button-cmp button-props widget-info])])
 
 (defn- tab-body
   "Renders tab's body. Accepts `props` map:
@@ -126,7 +121,6 @@
      {:class (bem-utils/build-class tab-head-elt-bem [["cid" cid] ["active" active] ["disabled" disabled]])
       :href href
       :on-click on-click}
-     [:div {:class tab-head-spacer-elt-bem}]
      (cond-> [:div {:class tab-head-inner-elt-bem}]
        icon-hcp (conj icon-hcp)
        label-hcp (conj label-hcp))]))
@@ -195,11 +189,15 @@
 (def ^:private position-prop-set
   #{:end :start})
 
+(defn- button-group-empty? [button-groups placement]
+  (-> button-groups placement :buttons empty?))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: Update docs.
+;; TODO: Update docs and :
+;;       - buttons in button-group must have cid because it used as React `key`.
 (defn widget
   "Component that displays tabs. Accepts `props` map:
   * `:active-tab` - optional, any, no default. Item of `:items` prop with same
@@ -237,17 +235,9 @@
   TODO:
   * maybe flexbox can be used instead of float/position to place buttons and tab heads
   * cleanup styles"
-  [props]
-  (let [button-hcp-by-group-mapping
-        (reduce
-          (fn [acc item]
-            (update
-              acc
-              (-> item :group keyword button-group-prop-set (or :after))
-              #(conj (or % []) [button-cmp item (select-keys props [:active-tab :collapsed])])))
-          {}
-          (:buttons props))
-        tab-parts-hcps (build-tab-parts-hcps props)]
+  [{:keys [button-groups] :as props}]
+  (let [tab-parts-hcps (build-tab-parts-hcps props)
+        widget-info (select-keys props [:active-tab :collapsed])]
     [:div {:class (build-class props)}
      [:div {:class head-elt-bem}
       (when-let [title (:title props)]
@@ -257,14 +247,24 @@
             title-elt-bem
             [["placement" (-> title :placement keyword placement-prop-set (or :before))]])}
          title])
-      [buttons-cmp button-hcp-by-group-mapping :start]
+      [button-group-cmp :start button-groups widget-info]
       [:div
        {:class
         (bem-utils/build-class
           list-container-elt-bem
           [["position" (-> props :items :position keyword position-prop-set (or :start))]])}
-       [buttons-cmp button-hcp-by-group-mapping :before]
-       [:div {:class list-elt-bem} (:head tab-parts-hcps)]
-       [buttons-cmp button-hcp-by-group-mapping :after]]
-      [buttons-cmp button-hcp-by-group-mapping :end]]
+       [button-group-cmp :before button-groups widget-info]
+       [:div
+        {:class
+         (bem-utils/build-class
+           list-elt-bem
+           [["firstChild"
+             (and (button-group-empty? button-groups :before)
+                  (button-group-empty? button-groups :start))]
+            ["lastChild"
+             (and (button-group-empty? button-groups :after)
+                  (button-group-empty? button-groups :end))]])}
+        (:head tab-parts-hcps)]
+       [button-group-cmp :after button-groups widget-info]]
+      [button-group-cmp :end button-groups widget-info]]
      [:div {:class body-elt-bem} (:body tab-parts-hcps)]]))

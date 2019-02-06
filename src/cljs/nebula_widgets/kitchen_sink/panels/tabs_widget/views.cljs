@@ -24,31 +24,39 @@
           (reduce +))]
     (if (<= result 9) result (recur result))))
 
-(defn- build-button-props [group idx]
-  {:active (= 1 idx)
-   :disabled (= 2 idx)
-   :group group
-   :icon (nth button-icons (reduce-number-to-single-digit idx))
-   :on-click identity
-   :rotated (= 3 idx)})
+(defn- build-button-props [idx]
+  (let [icon (nth button-icons (reduce-number-to-single-digit idx))]
+    {:active (= 1 idx)
+     :cid (str icon "-" idx)
+     :disabled (= 2 idx)
+     :icon icon
+     :on-click identity
+     :rotated (= 3 idx)}))
 
-(defn- build-buttons-prop
+(defn- build-button-group-props [buttons-count]
+  {:buttons (map build-button-props (range buttons-count))})
+
+(defn- build-button-groups-prop
   "Accepts specially formatted string and returns seq of maps suitable to be used as `:buttons` prop of widget.
   Examples of string format:
   - after - one button placed after items
   - before2 - two buttons placed before items
   - end1+start2 - one button placed at start of items list and two buttons placed at end of items list"
   [value]
-  (->>
-    (str/split value #"\+")
-    (map
-      (fn [s]
-        (let [[_ group cnt :as result] (re-matches #"(after|before|end|start)(\d*)" s)]
-          (when result
-            (if (seq cnt) (repeat (js/parseFloat cnt) group) group)))))
-    (flatten)
-    (filter some?)
-    (map-indexed #(build-button-props %2 %1))))
+  (let [placement-seq
+        (->>
+          (str/split value #"\+")
+          (map
+            (fn [s]
+              (let [[_ placement cnt :as result] (re-matches #"(after|before|end|start)(\d*)" s)]
+                (when result
+                  (if (seq cnt) (repeat (js/parseFloat cnt) placement) placement)))))
+          (flatten)
+          (filter some?))]
+    (when (seq placement-seq)
+      (hash-map
+        (-> placement-seq first keyword)
+        (build-button-group-props (count placement-seq))))))
 
 ;;------------------------------------------------------------------------------
 ;; Interactive example
@@ -58,7 +66,7 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:active-tab :buttons :collapsed :items-position :layout :sidebar]
+  (->> [:active-tab :button-groups :collapsed :items-position :layout :sidebar]
     (map
       (fn [prop]
         [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
@@ -73,7 +81,7 @@
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [buttons items-position layout sidebar] :as props} @*props
+      (let [{:keys [button-groups items-position layout sidebar] :as props} @*props
             sidebar? (not= "no" sidebar)
             layout (if sidebar? "vertical" layout)]
         (into
@@ -82,7 +90,7 @@
             (-> props
               (select-keys [:active-tab :collapsed :layout])
               (merge
-                {:buttons (build-buttons-prop buttons)
+                {:button-groups (build-button-groups-prop button-groups)
                  :items
                  {:data
                   (for [i (range 1 5)
@@ -109,7 +117,7 @@
               [:layout (ie-cgi-knob/gen-items "horizontal" "vertical")]
               [:sidebar (ie-cgi-knob/gen-items "no" "normal")]
               [:- "knobs"]
-              [:buttons (ie-cgi-knob/gen-items "after" "before2" "end4" "no" "start")]
+              [:button-groups (ie-cgi-knob/gen-items "after" "before2" "end4" "no" "start")]
               [:items-position (ie-cgi-knob/gen-items "end" "start")]]
              :let [[cid label-or-items] (if (sequential? params) params [params])
                    label? (= :- cid)]]

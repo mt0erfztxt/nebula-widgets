@@ -4,7 +4,7 @@
   {:tabs-widget
    {:interactive-example
     {:active-tab "tab1"
-     :buttons "no"
+     :button-groups "after"
      :collapsed false
      :items-position "start"
      :layout "horizontal"
