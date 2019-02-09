@@ -70,6 +70,9 @@ $tabs_button--disabled-color            = lighten($tabs_head-backgroundColor, 2.
 
 $tabs_tab-head--active-borderColor = $g_color_accent;
 
+$tabs_sidebarGutter--n = $g_size--n;
+$tabs_sidebarPanel--n  = $g_appPanel--sidebar-size_normal;
+
 
 .nw-tabs
     display: flex;
@@ -79,6 +82,8 @@ $tabs_tab-head--active-borderColor = $g_color_accent;
 
     &__body
         border: solid $tabs_head-backgroundColor;
+        height: auto;
+        overflow: hidden;
         position: relative;
 
 
@@ -205,13 +210,10 @@ $tabs_tab-head--active-borderColor = $g_color_accent;
 
     // ------------------------------------------------------------------------
     // Collapsed
-    //
-    // Tabs component with body hidden
     // ------------------------------------------------------------------------
 
-    // Collapsed Tabs component have its head flattened
-    &--collapsed > &__head
-        background-color: $tabs-color-foreground;
+    // &--collapsed > &__body
+    //     border-radius: 0;
 
 
     // ------------------------------------------------------------------------
@@ -247,9 +249,11 @@ $tabs_tab-head--active-borderColor = $g_color_accent;
 
 
     &--layout_horizontal > &__body
+        border-width: 0 1px 1px 1px;
+
+    &--layout_horizontal:not(&--collapsed) > &__body
         border-bottom-left-radius: 2px;
         border-bottom-right-radius: 2px;
-        border-width: 0 1px 1px 1px;
 
 
     &--layout_horizontal > &__head &__button
@@ -318,6 +322,12 @@ $tabs_tab-head--active-borderColor = $g_color_accent;
         padding: 1px 16px;
 
 
+    &--layout_horizontal&--collapsed > &__body
+        height: 1px;
+        max-height: @height;
+        padding-bottom: @height;
+
+
     // ------------------------------------------------------------------------
     // Vertical
     //
@@ -331,9 +341,11 @@ $tabs_tab-head--active-borderColor = $g_color_accent;
     &--layout_vertical > &__body
         border-width: 1px 1px 1px 0;
         flex: 1 1 auto;
+        border-width: 1px 1px 1px 0;
+
+    &--layout_vertical:not(&--collapsed) > &__body
         border-bottom-right-radius: 2px;
         border-top-right-radius: 2px;
-        border-width: 1px 1px 1px 0;
 
 
     &--layout_vertical > &__head
@@ -374,20 +386,20 @@ $tabs_tab-head--active-borderColor = $g_color_accent;
     &--layout_vertical > &__head &__listContainer--position_end
         margin-top: auto;
 
-    &--layout_vertical > &__head &__listContainer--position_end &__list--lastChild
-        padding-bottom: 1px;
-
     &--layout_vertical > &__head &__listContainer--position_end &__list--lastChild &__tab-head:not(&__tab-head--active)
         border-bottom-color: $tabs_head-backgroundColor;
+
+    &--layout_vertical:not(&--sidebar) > &__head &__listContainer--position_end &__list--lastChild
+        padding-bottom: 1px;
 
     &--layout_vertical > &__head &__listContainer--position_start
         margin-bottom: auto;
 
-    &--layout_vertical > &__head &__listContainer--position_start &__list--firstChild
-        padding-top: 1px;
-
     &--layout_vertical > &__head &__listContainer--position_start &__list--firstChild &__tab-head:first-child:not(&__tab-head--active)
         border-top-color: $tabs--sidebar-gutter-bg-color;
+
+    &--layout_vertical:not(&--sidebar) > &__head &__listContainer--position_start &__list--firstChild
+        padding-top: 1px;
 
 
     &--layout_vertical > &__head &__tab-head
@@ -412,81 +424,157 @@ $tabs_tab-head--active-borderColor = $g_color_accent;
         border-bottom-color: $tabs_head-backgroundColor--lighten;
 
 
+    &--layout_vertical&--collapsed:not(&--sidebar) > &__body
+        max-width: 1px;
+        padding-right: 1px;
+        width: 1px;
+
+
     // ------------------------------------------------------------------------
-    // ?? As sidebar base.
+    // As sidebar for application panel.
     // ------------------------------------------------------------------------
 
-    &--sidebar_normal
-        width: $tabs--sidebar-n + $tabs--sidebar-n--gutter;
+    // &--sidebar_normal
+    //     width: $tabs--sidebar-n + $tabs--sidebar-n--gutter;
 
 
-    &--sidebar_normal > &__body
-        border-color: transparent;
+    &--sidebar
+        bottom: 0;
+        display: block;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        transition: width 500ms ease;
 
 
-    &--sidebar_normal > &__head
-        background-color: $tabs--sidebar-gutter-bg-color;
-        border-width: 0;
-        width: $tabs--sidebar-n--gutter;
-
-
-    &--sidebar_normal > &__head &__button
-        color: alpha($tabs-color-text, 0.27);
-
-        &:hover
-            color: alpha($tabs-color-text, 0.45);
-
-
-    &--sidebar_normal > &__head &__button--active &__button-inner
-        background-color: alpha($tabs-color--highlighted, 0.18);
-
-    &--sidebar_normal > &__head &__button:not(&__button--disabled) &__button-inner:hover
-        background-color: alpha($tabs-color--highlighted, 0.18);
-
-
-    &--sidebar_normal > &__head &__buttonGroup--placement_after &__button:first-child
-        margin-bottom: 4px;
-
-    &--sidebar_normal > &__head &__buttonGroup--placement_before &__button:first-child
-        margin-top: 4px;
-
-    &--sidebar_normal > &__head &__buttonGroup--placement_end &__button:first-child
-        margin-bottom: 4px;
-
-    &--sidebar_normal > &__head &__buttonGroup--placement_start &__button:first-child
-        margin-top: 4px;
-
-
-    &--sidebar_normal > &__head &__listContainer--position_end &__list--firstChild
-        margin-top: 56px;
-
-
-    &--sidebar_normal > &__head &__listContainer--position_start &__list--lastChild
-        margin-bottom: 56px;
-
-
-    &--sidebar_normal > &__head &__listContainer--position_start &__tab-head:first-child
-        border-top-width: 0;
-
-
-    &--sidebar_normal > &__head &__tab-head
+    &--sidebar > &__body
+        border: none;
         border-radius: 0;
-        border-top-color: lighten($tabs--sidebar-gutter-bg-color, 1);
-        border-left-color: $tabs--sidebar-gutter-bg-color;
-        border-width: 1px 0 0 1px;
-        color: alpha($tabs-color-text, 0.27);
-        justify-content: center;
-
-    &--sidebar_normal > &__head &__tab-head--active
-        background-color: $tabs-color-background;
-        border-color: $tabs-color-background;
-        border-left-color: $tabs-tab-head--active--borderTopColor;
-        color: $tabs-color-text;
-
-    &--sidebar_normal > &__head &__tab-head:not(&__tab-head--active)
-        &:hover
-            color: alpha($tabs-color-text, 0.45);
+        bottom: 0;
+        flex: none;
+        position: absolute;
+        top: 0;
+        width: $g_appPanel--sidebar-size_normal;
+        z-index: 1;
 
 
-    &--sidebar_normal > &__head &__tab-head-icon
-        padding: 0;
+    &--sidebar > &__head
+        bottom: 0;
+        position: absolute;
+        top: 0;
+        z-index: 2;
+
+
+    &--sidebarGutter_normal > &__head
+        width: $tabs_sidebarGutter--n;
+
+    &--sidebarPanel_normal > &__body
+        width: $tabs_sidebarPanel--n;
+
+    &--sidebarGutter_normal&--sidebarPanel_normal
+        width: $g_appPanel--sidebar-size_normal + $tabs_sidebarGutter--n;
+
+
+
+
+    &--sidebarPlacement_left
+        left: 0;
+
+    &--sidebarPlacement_left > &__body
+        transition: left 500ms ease;
+
+    &--sidebarPlacement_left > &__head
+        left: 0;
+
+    &--sidebarPlacement_left&--sidebarGutter_normal&--sidebarPanel_normal > &__body
+        left: $tabs_sidebarGutter--n;
+
+    &--sidebarPlacement_left&--sidebarGutter_normal&--sidebarPanel_normal&--collapsed > &__body
+        left: $tabs_sidebarGutter--n - $g_appPanel--sidebar-size_normal;
+
+
+    &--sidebarPlacement_right
+        right: 0;
+
+    &--sidebarPlacement_right > &__head &__tab-head
+        border-width: 1px 1px 1px 0;
+
+    &--sidebarPlacement_right > &__head &__tab-head--active
+        border-right-color: $tabs_tab-head--active-borderColor;
+
+    &--sidebarPlacement_right > &__body
+        transition: right 500ms ease;
+
+    &--sidebarPlacement_right > &__head
+        right: 0;
+
+    &--sidebarPlacement_right&--sidebarGutter_normal&--collapsed
+        width: $tabs_sidebarGutter--n;
+
+    &--sidebarPlacement_right&--sidebarGutter_normal&--sidebarPanel_normal > &__body
+        right: $tabs_sidebarGutter--n;
+
+    &--sidebarPlacement_right&--sidebarGutter_normal&--sidebarPanel_normal&--collapsed > &__body
+        right: - $g_appPanel--sidebar-size_normal;
+
+
+    // &--sidebar_normal > &__head &__button
+    //     color: alpha($tabs-color-text, 0.27);
+
+    //     &:hover
+    //         color: alpha($tabs-color-text, 0.45);
+
+
+    // &--sidebar_normal > &__head &__button--active &__button-inner
+    //     background-color: alpha($tabs-color--highlighted, 0.18);
+
+    // &--sidebar_normal > &__head &__button:not(&__button--disabled) &__button-inner:hover
+    //     background-color: alpha($tabs-color--highlighted, 0.18);
+
+
+    // &--sidebar_normal > &__head &__buttonGroup--placement_after &__button:first-child
+    //     margin-bottom: 4px;
+
+    // &--sidebar_normal > &__head &__buttonGroup--placement_before &__button:first-child
+    //     margin-top: 4px;
+
+    // &--sidebar_normal > &__head &__buttonGroup--placement_end &__button:first-child
+    //     margin-bottom: 4px;
+
+    // &--sidebar_normal > &__head &__buttonGroup--placement_start &__button:first-child
+    //     margin-top: 4px;
+
+
+    // &--sidebar_normal > &__head &__listContainer--position_end &__list--firstChild
+    //     margin-top: 56px;
+
+
+    // &--sidebar_normal > &__head &__listContainer--position_start &__list--lastChild
+    //     margin-bottom: 56px;
+
+
+    // &--sidebar_normal > &__head &__listContainer--position_start &__tab-head:first-child
+    //     border-top-width: 0;
+
+
+    // &--sidebar_normal > &__head &__tab-head
+    //     border-radius: 0;
+    //     border-top-color: lighten($tabs--sidebar-gutter-bg-color, 1);
+    //     border-left-color: $tabs--sidebar-gutter-bg-color;
+    //     border-width: 1px 0 0 1px;
+    //     color: alpha($tabs-color-text, 0.27);
+    //     justify-content: center;
+
+    // &--sidebar_normal > &__head &__tab-head--active
+    //     background-color: $tabs-color-background;
+    //     border-color: $tabs-color-background;
+    //     border-left-color: $tabs-tab-head--active--borderTopColor;
+    //     color: $tabs-color-text;
+
+    // &--sidebar_normal > &__head &__tab-head:not(&__tab-head--active)
+    //     &:hover
+    //         color: alpha($tabs-color-text, 0.45);
+
+
+    // &--sidebar_normal > &__head &__tab-head-icon
+    //     padding: 0;

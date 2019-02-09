@@ -128,24 +128,48 @@
 (def ^:private layout-prop-set
   #{:horizontal :vertical})
 
-(def ^:private sidebar-prop-set
-  #{:normal})
+(def ^:private sidebar-gutter-prop-set
+  #{:normal :large})
+
+(def ^:private sidebar-panel-prop-set
+  #{:normal :large})
+
+(def ^:private sidebar-placement-prop-set
+  #{:left :right})
+
+(def ^:private sidebar-default-prop
+  {:gutter :none
+   :panel :normal
+   :placement :left})
 
 (def ^:private size-prop-set
   #{:large :normal :small})
 
+(defn- build-sidebar-prop [value]
+  (when-let [{:keys [gutter panel placement]}
+             (cond
+               (true? value) sidebar-default-prop
+               (map? value) (merge sidebar-default-prop value))]
+    {:gutter (-> gutter keyword sidebar-gutter-prop-set (or :normal))
+     :panel (-> panel keyword sidebar-panel-prop-set (or :normal))
+     :placement (-> placement keyword sidebar-placement-prop-set (or :left))}))
+
 (defn- build-class
   "Returns string - CSS class for widget's element. Accepts component props."
   [{:keys [adjusted cid cns collapsed layout sidebar size]}]
-  (let [layout (if sidebar "vertical" layout)]
+  (let [{sidebar-gutter :gutter sidebar-panel :panel sidebar-placement :placement} (build-sidebar-prop sidebar)
+        sidebar? (boolean sidebar-gutter)]
     (bem-utils/build-class
       bem
       [["cns" cns]
        ["cid" cid]
        ["adjusted" adjusted]
        ["collapsed" collapsed]
-       ["layout" (-> layout keyword layout-prop-set (or :horizontal))]
-       ["sidebar" (when sidebar (-> sidebar keyword size-prop-set (or :normal)))]
+       ["layout" (-> (if sidebar? "vertical" layout) keyword layout-prop-set (or :horizontal))]
+       ["sidebar" sidebar?]
+       ["sidebarGutter" sidebar-gutter]
+       ["sidebarPanel" sidebar-panel]
+       ["sidebarPlacement" sidebar-placement]
        ["size" (-> size keyword size-prop-set (or :normal))]])))
 
 (def ^:private supported-tab-body-props
@@ -196,8 +220,9 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: Update docs and :
-;;       - buttons in button-group must have cid because it used as React `key`.
+;; TODO: Update docs and:
+;;       - buttons in button-group must have cid because it used as React `key`
+;;       - use `size` prop instead of `sidebar.gutter` as they do the same
 (defn widget
   "Component that displays tabs. Accepts `props` map:
   * `:active-tab` - optional, any, no default. Item of `:items` prop with same

@@ -8,4 +8,7 @@
      :collapsed false
      :items-position "start"
      :layout "horizontal"
-     :sidebar "no"}}})
+     :sidebar
+     {:gutter "normal"
+      :panel "normal"
+      :placement "none"}}}})

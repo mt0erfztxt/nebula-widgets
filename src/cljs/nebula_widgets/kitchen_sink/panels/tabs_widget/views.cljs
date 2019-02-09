@@ -5,13 +5,35 @@
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.checkable-group-input :as ie-cgi-knob]
+    [nebula-widgets.utils :as utils]
     [nebula-widgets.utils.bem :as bem-utils]
     [nebula-widgets.widgets.tabs.core :as tabs]
     [re-frame.core :as rf]
     [reagent.core :as r]))
 
-(def ^:private button-icons
-  ["angle-double-left" "anchor" "lock" "angle-double-left"])
+(def ^:private bem
+  "tabsWidgetPanel")
+
+(def ^:private ie-container-bem
+  "tabsWidgetPanel-ieContainer")
+
+(def ^:private tab-content-bem
+  "tabsWidgetPanel-tabContent")
+
+(defn- get-button-icon [{:keys [layout sidebar-placement]} idx]
+  (case idx
+    0 (str
+        "angle-double-"
+        (cond
+          (not= "none" sidebar-placement) sidebar-placement
+          (and
+            (= "none" sidebar-placement)
+            (= "vertical" (name layout)))
+          "left"
+          :else "up"))
+    1 "anchor"
+    2 "lock"
+    3 "shield"))
 
 (def ^:private tab-icons
   ["pencil" "check" "bolt" "eraser" "plus" "trash"])
@@ -24,17 +46,18 @@
           (reduce +))]
     (if (<= result 9) result (recur result))))
 
-(defn- build-button-props [idx]
-  (let [icon (nth button-icons (reduce-number-to-single-digit idx))]
+(defn- build-button-props [{:keys [collapsed] :as ctx} idx]
+  (let [icon (get-button-icon ctx (reduce-number-to-single-digit idx))
+        toggle-collapse? (= 0 idx)]
     {:active (= 1 idx)
-     :cid (str icon "-" idx)
+     :cid icon
      :disabled (= 2 idx)
      :icon icon
-     :on-click identity
-     :rotated (= 3 idx)}))
+     :on-click (if toggle-collapse? (:handle-toggle-collapsed-click ctx) identity)
+     :rotated (and toggle-collapse? collapsed)}))
 
-(defn- build-button-group-props [buttons-count]
-  {:buttons (map build-button-props (range buttons-count))})
+(defn- build-button-group-props [ctx buttons-count]
+  {:buttons (map (partial build-button-props ctx) (range buttons-count))})
 
 (defn- build-button-groups-prop
   "Accepts specially formatted string and returns seq of maps suitable to be used as `:buttons` prop of widget.
@@ -42,7 +65,7 @@
   - after - one button placed after items
   - before2 - two buttons placed before items
   - end1+start2 - one button placed at start of items list and two buttons placed at end of items list"
-  [value]
+  [ctx value]
   (let [placement-seq
         (->>
           (str/split value #"\+")
@@ -56,7 +79,7 @@
     (when (seq placement-seq)
       (hash-map
         (-> placement-seq first keyword)
-        (build-button-group-props (count placement-seq))))))
+        (build-button-group-props ctx (count placement-seq))))))
 
 ;;------------------------------------------------------------------------------
 ;; Interactive example
@@ -66,56 +89,81 @@
   (partial common/panel-path->keyword :interactive-example "/"))
 
 (def ^:private ie-setters
-  (->> [:active-tab :button-groups :collapsed :items-position :layout :sidebar]
+  (->> common/knobs
     (map
-      (fn [prop]
-        [prop #(rf/dispatch [(interactive-example-path->keyword :set prop) %])]))
+      (fn [knob]
+        [(apply utils/path->keyword knob)
+         #(rf/dispatch [(apply interactive-example-path->keyword :set knob) %2])]))
     (into {})))
 
-(let [{layout-setter :layout sidebar-setter :sidebar} ie-setters]
-  (defn- handle-sidebar-on-change [value _]
-    (sidebar-setter value)
-    (when (not= "no" value)
-      (layout-setter "vertical"))))
+(let [{layout-setter :layout sidebar-placement-setter :sidebar.placement} ie-setters]
+  (defn- handle-layout-on-change [*props value _]
+    (when (= "none" (-> @*props :sidebar :placement))
+      (layout-setter *props value)))
+
+  (defn- handle-sidebar-placement-on-change [*props value _]
+    (sidebar-placement-setter *props value)
+    (when (not= "none" value)
+      (layout-setter *props "vertical"))))
+
+(def ^:private tabs-indexes (range 1 5))
 
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [button-groups items-position layout sidebar] :as props} @*props
-            sidebar? (not= "no" sidebar)
+      (let [{:keys [button-groups collapsed items-position layout sidebar] :as props} @*props
+            {sidebar-placement :placement} sidebar
+            sidebar? (not= "none" sidebar-placement)
             layout (if sidebar? "vertical" layout)]
         (into
           [ie/widget
-           [tabs/widget
-            (-> props
-              (select-keys [:active-tab :collapsed :layout])
-              (merge
-                {:button-groups (build-button-groups-prop button-groups)
-                 :items
-                 {:data
-                  (for [i (range 1 5)
-                        :let [label (str "Tab" (apply str (repeat i i)))
-                              cid (str "tab" i)]]
-                    (merge
-                      {:content
-                       [:div {:class (bem-utils/build-class "tabsWidgetPanel-tabContent" [["layout" layout]])}
-                        (str label " content")]
-                       :cid cid
-                       :on-click (r/partial (:active-tab ie-setters) cid)}
-                      (cond
-                        sidebar? {:icon (nth tab-icons (-> i dec reduce-number-to-single-digit))}
-                        (= 2 i) {:label label, :icon (nth tab-icons (dec i))}
-                        (= 4 i) {:icon (nth tab-icons (dec i))}
-                        :else {:label label})))
-                  :position items-position}
-                 :sidebar (when sidebar? sidebar)}))]]
+           [:div
+            {:class
+             (bem-utils/build-class
+               ie-container-bem
+               [["sidebar" sidebar?] ["sidebarPlacement" sidebar-placement]])}
+            [tabs/widget
+             (-> props
+               (select-keys [:active-tab :collapsed :layout])
+               (merge
+                 {:button-groups
+                  (build-button-groups-prop
+                    {:collapsed collapsed
+                     :handle-toggle-collapsed-click (r/partial (:collapsed ie-setters) *props (not collapsed))
+                     :layout layout
+                     :sidebar-placement sidebar-placement}
+                    button-groups)
+                  :items
+                  {:data
+                   (for [i tabs-indexes
+                         :let [label (str "Tab" (apply str (repeat i i)))
+                               cid (str "tab" i)]]
+                     (merge
+                       {:content
+                        [:div
+                         {:class
+                          (bem-utils/build-class
+                            tab-content-bem
+                            [["layout" layout] ["sidebar" (not= "none" sidebar-placement)]])}
+                         (str label " content")]
+                        :cid cid
+                        :on-click (r/partial (:active-tab ie-setters) *props cid)}
+                       (cond
+                         sidebar? {:icon (nth tab-icons (-> i dec reduce-number-to-single-digit))}
+                         (= 2 i) {:label label, :icon (nth tab-icons (dec i))}
+                         (= 4 i) {:icon (nth tab-icons (dec i))}
+                         :else {:label label})))
+                   :position items-position}
+                  :sidebar (when sidebar? sidebar)}))]]]
           (for
             [params
              [[:- "tabs props"]
-              [:active-tab (ie-cgi-knob/gen-items "tab1" "tab2" "tab3")]
+              [:active-tab (apply ie-cgi-knob/gen-items (map (partial str "tab") tabs-indexes))]
               :collapsed
               [:layout (ie-cgi-knob/gen-items "horizontal" "vertical")]
-              [:sidebar (ie-cgi-knob/gen-items "no" "normal")]
+              [:sidebar.gutter (ie-cgi-knob/gen-items "large" "none" "normal")]
+              [:sidebar.panel (ie-cgi-knob/gen-items "large" "normal")]
+              [:sidebar.placement (ie-cgi-knob/gen-items "left" "none" "right")]
               [:- "knobs"]
               [:button-groups (ie-cgi-knob/gen-items "after" "before2" "end4" "no" "start")]
               [:items-position (ie-cgi-knob/gen-items "end" "start")]]
@@ -125,8 +173,14 @@
              {:cid cid, :label (when label? label-or-items)}
              (cond->
                {:cid cid
-                :on-change (if (= :sidebar cid) handle-sidebar-on-change (get ie-setters cid))
-                :value (get props cid)}
+                :on-change
+                (r/partial
+                  (condp = cid
+                    :layout handle-layout-on-change
+                    :sidebar.placement handle-sidebar-placement-on-change
+                    (get ie-setters cid))
+                  *props)
+                :value (get-in props (utils/keyword->path cid))}
                (and (not label?) label-or-items) (assoc :items label-or-items))]))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

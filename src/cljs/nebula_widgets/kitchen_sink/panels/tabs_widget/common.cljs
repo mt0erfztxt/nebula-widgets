@@ -10,3 +10,12 @@
 
 (def panel-path->keyword
   (apply partial utils/path->keyword panel-path))
+
+(def knobs
+  (utils/expand-paths
+    [:active-tab
+     :button-groups
+     :collapsed
+     :items-position
+     :layout
+     [:sidebar :gutter :panel :placement]]))
