@@ -18,4 +18,5 @@
      :collapsed
      :items-position
      :layout
-     [:sidebar :gutter :panel :placement]]))
+     [:sidebar :panel :placement]
+     :size]))

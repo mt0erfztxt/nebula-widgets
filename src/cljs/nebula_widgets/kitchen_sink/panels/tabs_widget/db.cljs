@@ -9,6 +9,6 @@
      :items-position "start"
      :layout "horizontal"
      :sidebar
-     {:gutter "normal"
-      :panel "normal"
-      :placement "none"}}}})
+     {:panel "normal"
+      :placement "none"}
+     :size "normal"}}})

@@ -161,9 +161,9 @@
               [:active-tab (apply ie-cgi-knob/gen-items (map (partial str "tab") tabs-indexes))]
               :collapsed
               [:layout (ie-cgi-knob/gen-items "horizontal" "vertical")]
-              [:sidebar.gutter (ie-cgi-knob/gen-items "large" "none" "normal")]
-              [:sidebar.panel (ie-cgi-knob/gen-items "large" "normal")]
+              [:sidebar.panel (ie-cgi-knob/gen-items "normal")]
               [:sidebar.placement (ie-cgi-knob/gen-items "left" "none" "right")]
+              [:size (ie-cgi-knob/gen-items "normal")]
               [:- "knobs"]
               [:button-groups (ie-cgi-knob/gen-items "after" "before2" "end4" "no" "start")]
               [:items-position (ie-cgi-knob/gen-items "end" "start")]]

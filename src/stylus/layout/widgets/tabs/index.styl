@@ -434,10 +434,6 @@ $tabs_sidebarPanel--n  = $g_appPanel--sidebar-size_normal;
     // As sidebar for application panel.
     // ------------------------------------------------------------------------
 
-    // &--sidebar_normal
-    //     width: $tabs--sidebar-n + $tabs--sidebar-n--gutter;
-
-
     &--sidebar
         bottom: 0;
         display: block;
@@ -465,16 +461,15 @@ $tabs_sidebarPanel--n  = $g_appPanel--sidebar-size_normal;
         z-index: 2;
 
 
-    &--sidebarGutter_normal > &__head
+    &--sidebar&--size_normal > &__head
         width: $tabs_sidebarGutter--n;
+
 
     &--sidebarPanel_normal > &__body
         width: $tabs_sidebarPanel--n;
 
-    &--sidebarGutter_normal&--sidebarPanel_normal
+    &--sidebarPanel_normal&--size_normal
         width: $g_appPanel--sidebar-size_normal + $tabs_sidebarGutter--n;
-
-
 
 
     &--sidebarPlacement_left
@@ -486,10 +481,10 @@ $tabs_sidebarPanel--n  = $g_appPanel--sidebar-size_normal;
     &--sidebarPlacement_left > &__head
         left: 0;
 
-    &--sidebarPlacement_left&--sidebarGutter_normal&--sidebarPanel_normal > &__body
+    &--sidebarPlacement_left&--sidebarPanel_normal&--size_normal > &__body
         left: $tabs_sidebarGutter--n;
 
-    &--sidebarPlacement_left&--sidebarGutter_normal&--sidebarPanel_normal&--collapsed > &__body
+    &--sidebarPlacement_left&--sidebarPanel_normal&--size_normal&--collapsed > &__body
         left: $tabs_sidebarGutter--n - $g_appPanel--sidebar-size_normal;
 
 
@@ -508,73 +503,11 @@ $tabs_sidebarPanel--n  = $g_appPanel--sidebar-size_normal;
     &--sidebarPlacement_right > &__head
         right: 0;
 
-    &--sidebarPlacement_right&--sidebarGutter_normal&--collapsed
+    &--sidebarPlacement_right&--size_normal&--collapsed
         width: $tabs_sidebarGutter--n;
 
-    &--sidebarPlacement_right&--sidebarGutter_normal&--sidebarPanel_normal > &__body
+    &--sidebarPlacement_right&--sidebarPanel_normal&--size_normal > &__body
         right: $tabs_sidebarGutter--n;
 
-    &--sidebarPlacement_right&--sidebarGutter_normal&--sidebarPanel_normal&--collapsed > &__body
+    &--sidebarPlacement_right&--sidebarPanel_normal&--size_normal&--collapsed > &__body
         right: - $g_appPanel--sidebar-size_normal;
-
-
-    // &--sidebar_normal > &__head &__button
-    //     color: alpha($tabs-color-text, 0.27);
-
-    //     &:hover
-    //         color: alpha($tabs-color-text, 0.45);
-
-
-    // &--sidebar_normal > &__head &__button--active &__button-inner
-    //     background-color: alpha($tabs-color--highlighted, 0.18);
-
-    // &--sidebar_normal > &__head &__button:not(&__button--disabled) &__button-inner:hover
-    //     background-color: alpha($tabs-color--highlighted, 0.18);
-
-
-    // &--sidebar_normal > &__head &__buttonGroup--placement_after &__button:first-child
-    //     margin-bottom: 4px;
-
-    // &--sidebar_normal > &__head &__buttonGroup--placement_before &__button:first-child
-    //     margin-top: 4px;
-
-    // &--sidebar_normal > &__head &__buttonGroup--placement_end &__button:first-child
-    //     margin-bottom: 4px;
-
-    // &--sidebar_normal > &__head &__buttonGroup--placement_start &__button:first-child
-    //     margin-top: 4px;
-
-
-    // &--sidebar_normal > &__head &__listContainer--position_end &__list--firstChild
-    //     margin-top: 56px;
-
-
-    // &--sidebar_normal > &__head &__listContainer--position_start &__list--lastChild
-    //     margin-bottom: 56px;
-
-
-    // &--sidebar_normal > &__head &__listContainer--position_start &__tab-head:first-child
-    //     border-top-width: 0;
-
-
-    // &--sidebar_normal > &__head &__tab-head
-    //     border-radius: 0;
-    //     border-top-color: lighten($tabs--sidebar-gutter-bg-color, 1);
-    //     border-left-color: $tabs--sidebar-gutter-bg-color;
-    //     border-width: 1px 0 0 1px;
-    //     color: alpha($tabs-color-text, 0.27);
-    //     justify-content: center;
-
-    // &--sidebar_normal > &__head &__tab-head--active
-    //     background-color: $tabs-color-background;
-    //     border-color: $tabs-color-background;
-    //     border-left-color: $tabs-tab-head--active--borderTopColor;
-    //     color: $tabs-color-text;
-
-    // &--sidebar_normal > &__head &__tab-head:not(&__tab-head--active)
-    //     &:hover
-    //         color: alpha($tabs-color-text, 0.45);
-
-
-    // &--sidebar_normal > &__head &__tab-head-icon
-    //     padding: 0;
