@@ -45,25 +45,9 @@
 (def ^:private title-elt-bem
   (str bem "__title"))
 
-;; TODO: Update docs
+;; TODO: Call `:on-click` with only browser event
 (defn- button-cmp
-  "Component that displays tabs button. Accepts `props` map:
-  * `:active`
-  * `:cid` - required, any. Must be unique across all buttons of `tabs` widget
-    instance because it used to identify button.
-  * `:disabled`
-  * `:icon` - required, string. An icon from FontAwesome icon set but without
-    'fa-' prefix, for example, 'fa-edit' would be 'edit'.
-  * `:on-click` - required, function, no default. Would be called on button
-    click with browser event object and info map as arguments.
-  * `:placement` - optional, one of `:after`, `:before` or their string
-    equivalents, `:before` by default. Allows to choose where to place button -
-    before or after list of tab heads.
-  * `:position` - optional, one of `:end`, `:start` or their string equivalents,
-    `:start` by default. Allows to choose at which edge of `tabs` widget's head
-    button must positioned.
-  * `:rotated` - optional, any, no default. When evaluates to logical true then
-    button would be 180deg rotated."
+  "See docs for `:button-groups` prop of widget for details"
   [{:keys [active cid disabled icon on-click rotated] :as props} info]
   [:div
    {:class
@@ -80,45 +64,37 @@
      :type "button"}
     [:i {:class (str "fa fa-fw fa-" icon)}]]])
 
-;; TODO: Update docs
 (defn- button-group-cmp
-  "Renders list of buttons for specified group but only when group has buttons. Accepts map where keys are groups and
-  values are buttons in group. Group must be one of :after, :before, :end or :start."
+  "Renders group of buttons. Accepts group placement, `button-groups` prop passed to widget and a map with info to be
+  passed on each button's click handler."
   [placement button-groups widget-info]
   [:div {:class (bem-utils/build-class button-group-elt-bem [["placement" placement]])}
    (for [{:keys [cid] :as button-props} (-> button-groups (get placement) :buttons)]
      ^{:key cid}
      [button-cmp button-props widget-info])])
 
-(defn- tab-body
-  "Renders tab's body. Accepts `props` map:
-  * `:active` - logical false/true, no default. Whether tab is active or not.
-  * `:content` - renderable. Content for tab's body. Use React fragment to put multiple renderables without wrapper.
-  * `:cid` - required, any. Component id. Must be unique across all tabs of widget because it used to identify tab."
-  [{:keys [active content cid]}]
-  [:div {:class (bem-utils/build-class tab-body-elt-bem [["cid" cid] ["active" active]])}
+(defn- tab-body [{:keys [active content cid]}]
+  [:div
+   {:class
+    (bem-utils/build-class
+      tab-body-elt-bem
+      [["cid" cid]
+       ["active" active]])}
    content])
 
-(defn- tab-head
-  "Renders tab's head. Accepts `props` map:
-  * `:active` - logical false/true, no default. Whether tab is active or not.
-  * `:cid` - required, any. Component id. Must be unique across all tabs of widget because it used to identify tab.
-  * `:disabled` - logical false/true, no default. Whether tab is disabled or not.
-  * `:href` - string, no default. When evaluates to logical true tab's head would be rendered using `<A>` tag with
-    'href' attribute set to that value.
-  * `:icon` - string, no default. An icon from FontAwesome icon set but without 'fa-' prefix, for example, 'fa-edit'
-    would be 'edit'.
-  * `:label` - string, no default. Text that would be placed inside tab's head.
-  * `:on-click` - function, no default. Would be called on tab's head click with tab's head props and browser event.
-    Called even when `:disabled` is logical true."
-  [{:keys [active cid disabled href icon label on-click]}]
+(defn- tab-head [{:keys [active cid disabled href icon label on-click]}]
   (let [icon-hcp
         (when icon
           [:div {:class tab-head-icon-elt-bem}
            [:i {:class (str "fa fa-fw fa-" icon)}]])
         label-hcp (when label [:div {:class tab-head-text-elt-bem} label])]
     [(if href :a :div)
-     {:class (bem-utils/build-class tab-head-elt-bem [["cid" cid] ["active" active] ["disabled" disabled]])
+     {:class
+      (bem-utils/build-class
+        tab-head-elt-bem
+        [["cid" cid]
+         ["active" active]
+         ["disabled" disabled]])
       :href href
       :on-click on-click}
      (cond-> [:div {:class tab-head-inner-elt-bem}]
@@ -151,14 +127,13 @@
 
 (defn- build-class
   "Returns string - CSS class for widget's element. Accepts component props."
-  [{:keys [adjusted cid cns collapsed layout sidebar size]}]
+  [{:keys [cid cns collapsed layout sidebar size]}]
   (let [{sidebar-panel :panel sidebar-placement :placement} (build-sidebar-prop sidebar)
         sidebar? (boolean sidebar-placement)]
     (bem-utils/build-class
       bem
       [["cns" cns]
        ["cid" cid]
-       ["adjusted" adjusted]
        ["collapsed" collapsed]
        ["layout" (-> (if sidebar? "vertical" layout) keyword layout-prop-set (or :horizontal))]
        ["sidebar" sidebar?]
@@ -168,15 +143,17 @@
 
 (def ^:private supported-tab-body-props
   "List of props for tab's body."
-  [:active :content :cid])
+  [:active :cid :content])
 
 (def ^:private supported-tab-head-props
   "List of props for tab's head."
-  [:active :cid :disabled :icon :label :href :on-click])
+  [:active :cid :disabled :href :icon :label :on-click])
 
+;; TODO: Call `:on-tab-click` with tab's :cid and browser event
+;; TODO: Call `:on-click` with only browser event
 (defn- build-tab-parts-hcps
-  "Accepts widget's `props`, walks through `:items.data` prop of widget and returns map that contains vector of
-  `tab-body` components placed under `:body` key and vector of `tab-head` components placed under `:head` key."
+  "Accepts widget's `props`, walks through `:items.data` prop and returns map that contains vector of `tab-body`
+  components placed under `:body` key and vector of `tab-head` components placed under `:head` key."
   [{:keys [active-tab on-tab-click] :as props}]
   (reduce
     (fn [{:keys [body head]} {:keys [cid on-click] :as item}]
@@ -214,45 +191,54 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: Update docs and:
-;;       - buttons in button-group must have cid because it used as React `key`
 (defn widget
-  "Component that displays tabs. Accepts `props` map:
-  * `:active-tab` - optional, any, no default. Item of `:items` prop with same
-    `:cid` prop would be marked active.
-  * `:adjusted` - optional, any, no default. When evaluates to logical true
-    then widget adjusts to size of parent element. Adjusting is made by using
-    absolute positioning of widget's element, so parent must have proper CSS
-    positioning ('absolute', 'relative', etc).
-  * `:buttons` - optional, map:
-    - `:after` - optional, seq of maps, no default. Allows to add buttons after
-      list of item heads. See `tabs-button` component for details.
-    - `:before` - optional, seq of maps, no default. Allows to add buttons
-      before list of item heads. See `tabs-button` component for details.
-  * `:cid` - optional, no default. Anything that can be used as component id.
-  * `:cns` - optional, no default. Anything that can be used as component ns.
-  * `:items` - optional, map:
-    - `:data` - optional, seq of maps, no default. Each map used as data for
-      single tab.
-    - `:position` - optional, one of `:end`, `:start` or their string
-      equivalents, `:start` by default. Allows to choose at which edge of `tabs`
-      widget's head list of tab heads must positioned.
-  * `:layout` - optional, one of `:horizontal`, `:vertical` or their string
-    equivalents, `:horizontal` by default. Whether list of item heads and bodies
-    must be displayed one-below-other or side-by-side.
-  * `:on-tab-click` - optional, function, no default. Would be called before tab
-    head's click handler with browser event object and tab map as arguments.
-  * `:size` - optional, one of `:large`, `:normal`, `:small` or their string
-    equivalents, `:normal` by default. Allows to set size of tab's head.
-  * `:title` - optional, map, no default. Title for widget:
-    - `:placement` - optional, one of `:after`, `:before` or their string
-      equivalents, `:before` by default. Allows to display title after or before
-      list of item heads.
-    - `:text` - optional, string, no default. Widget's title.
+  "Renders tabs.
+
+  Arguments:
+  * `props` - required, map. Supported props:
+    - `:active-tab` - any, no default. Item of `:items` prop with same `:cid` would be marked active.
+    - `:button-groups` - map, no default. Used to render buttons grouped in four predefined groups. Keys must be on of
+      :after, :before, :end or :start and values are seq of maps, where each map is:
+      * `:active` - logical true/false, no default. Whether button is active or not.
+      * `:cid` - required, any. Must be unique across all buttons in group because it used as React key.
+      * `:disabled` - logical true/false, no default. Whether button is disabled or not.
+      * `:icon` - required, string. An icon from FontAwesome icon set but without 'fa-' prefix, for example, 'fa-edit'
+        would be 'edit'.
+      * `:on-click` - required, function, no default. Would be called on button click with button props (this map),
+        widget info (map that contains widget's :active-tab and :collapsed props) and browser event object as arguments.
+      * `:rotated` - logical true/false, no default. Whether button is button rotated by 180deg or not.
+    - `:cid` - any, no default. Component id.
+    - `:cns` - any, no default. Component namespace.
+    - `:collapsed` - logical true/false, no default. Whether tab's bodies list collapsed or not.
+    - `:items` - map, no default:
+      * `:data` - seq of maps, no default. Each map is a data for single tab:
+        - `:cid` - required, any. Component id. Must be unique across all tabs because it used to identify active tab.
+        - `:content` - single renderable, no default. Content for tab's body.
+        - `:disabled` - logical false/true, no default. Whether tab is disabled or not.
+        - `:href` - string, no default. If used, tab's head would be rendered using <A> tag with 'href' attribute.
+        - `:icon` - string, no default. An icon from FontAwesome 4 icon set but without 'fa-' prefix.
+        - `:label` - string, no default. If used, tab's head would have that text in it.
+        - `:on-click` - function, no default. If used, would be called (even when `:disabled` is logical true) on tab's
+          head click with browser event.
+      * `:position` - one of :end, :start (default) or their string/symbol equivalents. Allows to choose at which edge
+        list of tabs must be positioned.
+    - `:layout` - one of :horizontal (default), :vertical or their string/symbol equivalents. Whether list of tab heads
+      and bodies displayed one-below-other or side-by-side.
+    - `:on-tab-click` - function, no default. If used, it would be called before tab's :on-click with tab's head props
+      and browser event as arguments.
+    - `:sidebar` - map, no default. Allows to configure widget to be used as application panel's sidebar:
+      * `:panel` - one of :large, :normal (default) or their string/symbol equivalents. Determines panel size (width).
+      * `:placement` - one of :left (default), :right or their string/symbol equivalents. Determines in which sidebar of
+        application panel widget to be used.
+    - `:size` - one of :large, :normal (default) or their string/symbol equivalents. Allows to set size of tab's head.
+    - `:title` - map, no default. Title for widget:
+      * `:placement` - one of :after, :before (default) or their string/symbol equivalents. Allows to display title
+        after or before list of tab's heads.
+      * `:text` - string, no default. Widget's title.
 
   TODO:
-  * maybe flexbox can be used instead of float/position to place buttons and tab heads
-  * cleanup styles"
+  * cleanup styles
+  * rename `:items.position` to `:items.placement`"
   [{:keys [button-groups] :as props}]
   (let [tab-parts-hcps (build-tab-parts-hcps props)
         widget-info (select-keys props [:active-tab :collapsed])]
