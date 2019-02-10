@@ -111,7 +111,7 @@
 (defn- interactive-example-cmp []
   (let [*props (rf/subscribe [(interactive-example-path->keyword)])]
     (fn []
-      (let [{:keys [button-groups collapsed items-position layout sidebar] :as props} @*props
+      (let [{:keys [button-groups collapsed items layout sidebar] :as props} @*props
             {sidebar-placement :placement} sidebar
             sidebar? (not= "none" sidebar-placement)
             layout (if sidebar? "vertical" layout)]
@@ -153,20 +153,20 @@
                          (= 2 i) {:label label, :icon (nth tab-icons (dec i))}
                          (= 4 i) {:icon (nth tab-icons (dec i))}
                          :else {:label label})))
-                   :position items-position}
+                   :placement (:placement items)}
                   :sidebar (when sidebar? sidebar)}))]]]
           (for
             [params
-             [[:- "tabs props"]
+             [[:- "widget props"]
               [:active-tab (apply ie-cgi-knob/gen-items (map (partial str "tab") tabs-indexes))]
               :collapsed
+              [:items.placement (ie-cgi-knob/gen-items "end" "start")]
               [:layout (ie-cgi-knob/gen-items "horizontal" "vertical")]
               [:sidebar.panel (ie-cgi-knob/gen-items "normal")]
               [:sidebar.placement (ie-cgi-knob/gen-items "left" "none" "right")]
               [:size (ie-cgi-knob/gen-items "normal")]
               [:- "knobs"]
-              [:button-groups (ie-cgi-knob/gen-items "after" "before2" "end4" "no" "start")]
-              [:items-position (ie-cgi-knob/gen-items "end" "start")]]
+              [:button-groups (ie-cgi-knob/gen-items "after" "before2" "end4" "no" "start")]]
              :let [[cid label-or-items] (if (sequential? params) params [params])
                    label? (= :- cid)]]
             [ie-cgi-knob/widget

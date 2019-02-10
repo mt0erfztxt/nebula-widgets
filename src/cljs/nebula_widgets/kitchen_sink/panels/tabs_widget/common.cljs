@@ -16,7 +16,7 @@
     [:active-tab
      :button-groups
      :collapsed
-     :items-position
+     [:items :placement]
      :layout
      [:sidebar :panel :placement]
      :size]))

@@ -6,7 +6,7 @@
     {:active-tab "tab1"
      :button-groups "after"
      :collapsed false
-     :items-position "start"
+     :items {:placement "start"}
      :layout "horizontal"
      :sidebar
      {:panel "normal"

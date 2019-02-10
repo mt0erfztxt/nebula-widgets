@@ -175,14 +175,11 @@
     {:body nil, :head nil}
     (-> props :items :data reverse)))
 
-(def ^:private button-group-prop-set
-  #{:after :before :end :start})
-
-(def ^:private placement-prop-set
-  #{:after :before})
-
-(def ^:private position-prop-set
+(def ^:private items-placement-prop-set
   #{:end :start})
+
+(def ^:private title-placement-prop-set
+  #{:after :before})
 
 (defn- button-group-empty? [button-groups placement]
   (-> button-groups placement :buttons empty?))
@@ -220,8 +217,8 @@
         - `:label` - string, no default. If used, tab's head would have that text in it.
         - `:on-click` - function, no default. If used, would be called (even when `:disabled` is logical true) on tab's
           head click with browser event.
-      * `:position` - one of :end, :start (default) or their string/symbol equivalents. Allows to choose at which edge
-        list of tabs must be positioned.
+      * `:placement` - one of :end, :start (default) or their string/symbol equivalents. Allows to choose at which edge
+        list of tabs must be placed.
     - `:layout` - one of :horizontal (default), :vertical or their string/symbol equivalents. Whether list of tab heads
       and bodies displayed one-below-other or side-by-side.
     - `:on-tab-click` - function, no default. If used, it would be called before tab's :on-click with tab's head props
@@ -237,8 +234,7 @@
       * `:text` - string, no default. Widget's title.
 
   TODO:
-  * cleanup styles
-  * rename `:items.position` to `:items.placement`"
+  * cleanup styles"
   [{:keys [button-groups] :as props}]
   (let [tab-parts-hcps (build-tab-parts-hcps props)
         widget-info (select-keys props [:active-tab :collapsed])]
@@ -249,14 +245,14 @@
          {:class
           (bem-utils/build-class
             title-elt-bem
-            [["placement" (-> title :placement keyword placement-prop-set (or :before))]])}
+            [["placement" (-> title :placement keyword title-placement-prop-set (or :before))]])}
          title])
       [button-group-cmp :start button-groups widget-info]
       [:div
        {:class
         (bem-utils/build-class
           list-container-elt-bem
-          [["position" (-> props :items :position keyword position-prop-set (or :start))]])}
+          [["placement" (-> props :items :placement keyword items-placement-prop-set (or :start))]])}
        [button-group-cmp :before button-groups widget-info]
        [:div
         {:class

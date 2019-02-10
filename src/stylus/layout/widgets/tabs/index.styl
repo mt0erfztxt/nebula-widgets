@@ -279,22 +279,22 @@ $tabs_sidebarPanel--n  = $g_appPanel--sidebar-size_normal;
             margin-right: 4px;
 
 
-    &--layout_horizontal > &__head &__listContainer--position_end
+    &--layout_horizontal > &__head &__listContainer--placement_end
         margin-left: auto;
 
-    &--layout_horizontal > &__head &__listContainer--position_end &__list--lastChild
+    &--layout_horizontal > &__head &__listContainer--placement_end &__list--lastChild
         padding-right: 1px;
 
-    &--layout_horizontal > &__head &__listContainer--position_end &__list--lastChild &__tab-head:not(&__tab-head--active)
+    &--layout_horizontal > &__head &__listContainer--placement_end &__list--lastChild &__tab-head:not(&__tab-head--active)
         border-right-color: $tabs_head-backgroundColor;
 
-    &--layout_horizontal > &__head &__listContainer--position_start
+    &--layout_horizontal > &__head &__listContainer--placement_start
         margin-right: auto;
 
-    &--layout_horizontal > &__head &__listContainer--position_start &__list--firstChild
+    &--layout_horizontal > &__head &__listContainer--placement_start &__list--firstChild
         padding-left: 1px;
 
-    &--layout_horizontal > &__head &__listContainer--position_start &__list--firstChild &__tab-head:first-child:not(&__tab-head--active)
+    &--layout_horizontal > &__head &__listContainer--placement_start &__list--firstChild &__tab-head:first-child:not(&__tab-head--active)
         border-left-color: $tabs--sidebar-gutter-bg-color;
 
 
@@ -383,22 +383,22 @@ $tabs_sidebarPanel--n  = $g_appPanel--sidebar-size_normal;
     &--layout_vertical > &__head &__listContainer
         flex-direction: column;
 
-    &--layout_vertical > &__head &__listContainer--position_end
+    &--layout_vertical > &__head &__listContainer--placement_end
         margin-top: auto;
 
-    &--layout_vertical > &__head &__listContainer--position_end &__list--lastChild &__tab-head:not(&__tab-head--active)
+    &--layout_vertical > &__head &__listContainer--placement_end &__list--lastChild &__tab-head:not(&__tab-head--active)
         border-bottom-color: $tabs_head-backgroundColor;
 
-    &--layout_vertical:not(&--sidebar) > &__head &__listContainer--position_end &__list--lastChild
+    &--layout_vertical:not(&--sidebar) > &__head &__listContainer--placement_end &__list--lastChild
         padding-bottom: 1px;
 
-    &--layout_vertical > &__head &__listContainer--position_start
+    &--layout_vertical > &__head &__listContainer--placement_start
         margin-bottom: auto;
 
-    &--layout_vertical > &__head &__listContainer--position_start &__list--firstChild &__tab-head:first-child:not(&__tab-head--active)
+    &--layout_vertical > &__head &__listContainer--placement_start &__list--firstChild &__tab-head:first-child:not(&__tab-head--active)
         border-top-color: $tabs--sidebar-gutter-bg-color;
 
-    &--layout_vertical:not(&--sidebar) > &__head &__listContainer--position_start &__list--firstChild
+    &--layout_vertical:not(&--sidebar) > &__head &__listContainer--placement_start &__list--firstChild
         padding-top: 1px;
 
 
