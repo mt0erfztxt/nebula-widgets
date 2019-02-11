@@ -101,6 +101,9 @@
        icon-hcp (conj icon-hcp)
        label-hcp (conj label-hcp))]))
 
+(def ^:private alignment-prop-set
+  #{:end :start})
+
 (def ^:private layout-prop-set
   #{:horizontal :vertical})
 
@@ -127,13 +130,14 @@
 
 (defn- build-class
   "Returns string - CSS class for widget's element. Accepts component props."
-  [{:keys [cid cns collapsed layout sidebar size]}]
+  [{:keys [alignment cid cns collapsed layout sidebar size]}]
   (let [{sidebar-panel :panel sidebar-placement :placement} (build-sidebar-prop sidebar)
         sidebar? (boolean sidebar-placement)]
     (bem-utils/build-class
       bem
       [["cns" cns]
        ["cid" cid]
+       ["alignment" (-> alignment keyword alignment-prop-set (or :start))]
        ["collapsed" collapsed]
        ["layout" (-> (if sidebar? "vertical" layout) keyword layout-prop-set (or :horizontal))]
        ["sidebar" sidebar?]
@@ -174,9 +178,6 @@
               supported-tab-head-props)])}))
     {:body nil, :head nil}
     (-> props :tabs reverse)))
-
-(def ^:private alignment-prop-set
-  #{:end :start})
 
 (def ^:private title-placement-prop-set
   #{:after :before})
@@ -247,11 +248,7 @@
             [["placement" (-> title :placement keyword title-placement-prop-set (or :before))]])}
          title])
       [button-group-cmp :start button-groups widget-info]
-      [:div
-       {:class
-        (bem-utils/build-class
-          list-container-elt-bem
-          [["placement" (-> props :alignment keyword alignment-prop-set (or :start))]])}
+      [:div {:class list-container-elt-bem}
        [button-group-cmp :before button-groups widget-info]
        [:div
         {:class
