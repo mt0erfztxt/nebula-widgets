@@ -45,10 +45,9 @@
 (def ^:private title-elt-bem
   (str bem "__title"))
 
-;; TODO: Call `:on-click` with only browser event
 (defn- button-cmp
   "See docs for `:button-groups` prop of widget for details"
-  [{:keys [active cid disabled icon on-click rotated] :as props} info]
+  [{:keys [active cid disabled icon on-click rotated]}]
   [:div
    {:class
     (bem-utils/build-class
@@ -60,18 +59,18 @@
    [:button
     {:class button-inner-elt-bem
      :disabled disabled
-     :on-click (r/partial on-click props info)
+     :on-click on-click
      :type "button"}
     [:i {:class (str "fa fa-fw fa-" icon)}]]])
 
 (defn- button-group-cmp
   "Renders group of buttons. Accepts group placement, `button-groups` prop passed to widget and a map with info to be
   passed on each button's click handler."
-  [placement button-groups widget-info]
+  [placement button-groups]
   [:div {:class (bem-utils/build-class button-group-elt-bem [["placement" placement]])}
    (for [{:keys [cid] :as button-props} (-> button-groups (get placement) :buttons)]
      ^{:key cid}
-     [button-cmp button-props widget-info])])
+     [button-cmp button-props])])
 
 (defn- tab-body [{:keys [active content cid]}]
   [:div
@@ -153,15 +152,13 @@
   "List of props for tab's head."
   [:active :cid :disabled :href :icon :label :on-click])
 
-;; TODO: Call `:on-tab-click` with tab's :cid and browser event
-;; TODO: Call `:on-click` with only browser event
 (defn- build-tab-parts-hcps
   "Accepts widget's `props`, walks through `:tabs` prop and returns map that contains vector of `tab-body` components
   placed under `:body` key and vector of `tab-head` components placed under `:head` key."
   [{:keys [active-tab on-tab-click] :as props}]
   (reduce
-    (fn [{:keys [body head]} {:keys [cid on-click] :as item}]
-      (let [tab (assoc item :active (= cid active-tab))]
+    (fn [{:keys [body head]} {:keys [cid on-click] :as tab}]
+      (let [tab (assoc tab :active (= cid active-tab))]
         {:body (conj body ^{:key cid} [tab-body (select-keys tab supported-tab-body-props)])
          :head
          (conj
@@ -173,8 +170,8 @@
                 :on-click
                 (r/partial
                   (fn [event]
-                    (when on-tab-click (on-tab-click tab event))
-                    (when on-click (on-click tab event)))))
+                    (when on-tab-click (on-tab-click cid event))
+                    (when on-click (on-click event)))))
               supported-tab-head-props)])}))
     {:body nil, :head nil}
     (-> props :tabs reverse)))
@@ -204,8 +201,7 @@
       * `:disabled` - logical true/false, no default. Whether button is disabled or not.
       * `:icon` - required, string. An icon from FontAwesome icon set but without 'fa-' prefix, for example, 'fa-edit'
         would be 'edit'.
-      * `:on-click` - required, function, no default. Would be called on button click with button props (this map),
-        widget info (map that contains widget's :active-tab and :collapsed props) and browser event object as arguments.
+      * `:on-click` - required, function, no default. Would be called on button click with browser event as argument.
       * `:rotated` - logical true/false, no default. Whether button is button rotated by 180deg or not.
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.
@@ -221,7 +217,7 @@
         head click with browser event.
     - `:layout` - one of :horizontal (default), :vertical or their string/symbol equivalents. Whether list of tab heads
       and bodies displayed one-below-other or side-by-side.
-    - `:on-tab-click` - function, no default. If used, it would be called before tab's :on-click with tab's head props
+    - `:on-tab-click` - function, no default. If used, it would be called before tab's :on-click with clicked tab :cid
       and browser event as arguments.
     - `:sidebar` - map, no default. Allows to configure widget to be used as application panel's sidebar:
       * `:panel` - one of :large, :normal (default) or their string/symbol equivalents. Determines panel size (width).
@@ -236,8 +232,7 @@
   TODO:
   * cleanup styles"
   [{:keys [button-groups] :as props}]
-  (let [tab-parts-hcps (build-tab-parts-hcps props)
-        widget-info (select-keys props [:active-tab :collapsed])]
+  (let [tab-parts-hcps (build-tab-parts-hcps props)]
     [:div {:class (build-class props)}
      [:div {:class head-elt-bem}
       (when-let [title (:title props)]
@@ -247,9 +242,9 @@
             title-elt-bem
             [["placement" (-> title :placement keyword title-placement-prop-set (or :before))]])}
          title])
-      [button-group-cmp :start button-groups widget-info]
+      [button-group-cmp :start button-groups]
       [:div {:class list-container-elt-bem}
-       [button-group-cmp :before button-groups widget-info]
+       [button-group-cmp :before button-groups]
        [:div
         {:class
          (bem-utils/build-class
@@ -261,6 +256,6 @@
              (and (button-group-empty? button-groups :after)
                   (button-group-empty? button-groups :end))]])}
         (:head tab-parts-hcps)]
-       [button-group-cmp :after button-groups widget-info]]
-      [button-group-cmp :end button-groups widget-info]]
+       [button-group-cmp :after button-groups]]
+      [button-group-cmp :end button-groups]]
      [:div {:class body-elt-bem} (:body tab-parts-hcps)]]))
