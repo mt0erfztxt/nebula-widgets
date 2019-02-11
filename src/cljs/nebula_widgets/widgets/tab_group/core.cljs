@@ -186,6 +186,11 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO: Empty button-group elements rendered because I think that components (only w/o keys?) re-created when their
+;;       order in parent changed, e.g., [a b c] => [a b nil] doesn't cause re-creation of a and b, but
+;;       [a b c] => [nil b c] would cause re-creation of b and c. Need to make demo to be sure and if demo doesn't
+;;       approve this then empty button-groups elements can be removed and logic for calculation of whether list is a
+;;       first/last child is redundant and same result can be achieved with CSS :first|last-child selectors.
 (defn widget
   "Renders group of tabs.
 
