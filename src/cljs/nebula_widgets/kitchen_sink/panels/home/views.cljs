@@ -17,7 +17,7 @@
    :widgets/checkable-group-input-form-field
    :widgets/text-group-input-form-field
    :widgets/form
-   :widgets/tabs])
+   :widgets/tab-group])
 
 (def ^:private pages-href-and-text
   (for [route widgets-routes]

@@ -1,10 +1,10 @@
-(ns nebula-widgets.widgets.tabs.core
+(ns nebula-widgets.widgets.tab-group.core
   (:require
     [reagent.core :as r]
     [nebula-widgets.utils.bem :as bem-utils]))
 
 (def ^:private bem
-  "nw-tabs")
+  "nw-tabGroup")
 
 (def ^:private body-elt-bem
   (str bem "__body"))
@@ -152,8 +152,8 @@
 ;; TODO: Call `:on-tab-click` with tab's :cid and browser event
 ;; TODO: Call `:on-click` with only browser event
 (defn- build-tab-parts-hcps
-  "Accepts widget's `props`, walks through `:items.data` prop and returns map that contains vector of `tab-body`
-  components placed under `:body` key and vector of `tab-head` components placed under `:head` key."
+  "Accepts widget's `props`, walks through `:tabs` prop and returns map that contains vector of `tab-body` components
+  placed under `:body` key and vector of `tab-head` components placed under `:head` key."
   [{:keys [active-tab on-tab-click] :as props}]
   (reduce
     (fn [{:keys [body head]} {:keys [cid on-click] :as item}]
@@ -173,9 +173,9 @@
                     (when on-click (on-click tab event)))))
               supported-tab-head-props)])}))
     {:body nil, :head nil}
-    (-> props :items :data reverse)))
+    (-> props :tabs reverse)))
 
-(def ^:private items-placement-prop-set
+(def ^:private alignment-prop-set
   #{:end :start})
 
 (def ^:private title-placement-prop-set
@@ -189,11 +189,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "Renders tabs.
+  "Renders group of tabs.
 
   Arguments:
   * `props` - required, map. Supported props:
-    - `:active-tab` - any, no default. Item of `:items` prop with same `:cid` would be marked active.
+    - `:active-tab` - any, no default. Item of `:tabs` prop with same `:cid` would be marked active.
+    - `:alignment` - one of :end, :start (default) or their string/symbol equivalents. Allows to choose to which edge
+      list of tabs' heads must be aligned.
     - `:button-groups` - map, no default. Used to render buttons grouped in four predefined groups. Keys must be on of
       :after, :before, :end or :start and values are seq of maps, where each map is:
       * `:active` - logical true/false, no default. Whether button is active or not.
@@ -207,18 +209,15 @@
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.
     - `:collapsed` - logical true/false, no default. Whether tab's bodies list collapsed or not.
-    - `:items` - map, no default:
-      * `:data` - seq of maps, no default. Each map is a data for single tab:
-        - `:cid` - required, any. Component id. Must be unique across all tabs because it used to identify active tab.
-        - `:content` - single renderable, no default. Content for tab's body.
-        - `:disabled` - logical false/true, no default. Whether tab is disabled or not.
-        - `:href` - string, no default. If used, tab's head would be rendered using <A> tag with 'href' attribute.
-        - `:icon` - string, no default. An icon from FontAwesome 4 icon set but without 'fa-' prefix.
-        - `:label` - string, no default. If used, tab's head would have that text in it.
-        - `:on-click` - function, no default. If used, would be called (even when `:disabled` is logical true) on tab's
-          head click with browser event.
-      * `:placement` - one of :end, :start (default) or their string/symbol equivalents. Allows to choose at which edge
-        list of tabs must be placed.
+    - `:tabs` - seq of maps, no default. Each map is a data for single tab:
+      * `:cid` - required, any. Component id. Must be unique across all tabs because it used to identify active tab.
+      * `:content` - single renderable, no default. Content for tab's body.
+      * `:disabled` - logical false/true, no default. Whether tab is disabled or not.
+      * `:href` - string, no default. If used, tab's head would be rendered using <A> tag with 'href' attribute.
+      * `:icon` - string, no default. An icon from FontAwesome 4 icon set but without 'fa-' prefix.
+      * `:label` - string, no default. If used, tab's head would have that text in it.
+      * `:on-click` - function, no default. If used, would be called (even when `:disabled` is logical true) on tab's
+        head click with browser event.
     - `:layout` - one of :horizontal (default), :vertical or their string/symbol equivalents. Whether list of tab heads
       and bodies displayed one-below-other or side-by-side.
     - `:on-tab-click` - function, no default. If used, it would be called before tab's :on-click with tab's head props
@@ -252,7 +251,7 @@
        {:class
         (bem-utils/build-class
           list-container-elt-bem
-          [["placement" (-> props :items :placement keyword items-placement-prop-set (or :start))]])}
+          [["placement" (-> props :alignment keyword alignment-prop-set (or :start))]])}
        [button-group-cmp :before button-groups widget-info]
        [:div
         {:class

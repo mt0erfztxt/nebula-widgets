@@ -1,12 +1,12 @@
-(ns nebula-widgets.kitchen-sink.panels.tabs-widget.db)
+(ns nebula-widgets.kitchen-sink.panels.tab-group-widget.db)
 
 (def default-db
-  {:tabs-widget
+  {:tab-group-widget
    {:interactive-example
     {:active-tab "tab1"
+     :alignment "start"
      :button-groups "after"
      :collapsed false
-     :items {:placement "start"}
      :layout "horizontal"
      :sidebar
      {:panel "normal"

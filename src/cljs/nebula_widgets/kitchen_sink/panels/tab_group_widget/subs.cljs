@@ -1,6 +1,6 @@
-(ns nebula-widgets.kitchen-sink.panels.tabs-widget.subs
+(ns nebula-widgets.kitchen-sink.panels.tab-group-widget.subs
   (:require
-    [nebula-widgets.kitchen-sink.panels.tabs-widget.common :as common]
+    [nebula-widgets.kitchen-sink.panels.tab-group-widget.common :as common]
     [re-frame.core :as rf]))
 
 (def ^:private panel-subscription-key
