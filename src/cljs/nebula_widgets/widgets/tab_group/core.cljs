@@ -28,16 +28,16 @@
   (str bem "__list"))
 
 (def ^:private tab-body-elt-bem
-  (str bem "__tab-body"))
+  (str bem "__tabBody"))
 
 (def ^:private tab-head-elt-bem
-  (str bem "__tab-head"))
+  (str bem "__tabHead"))
 
 (def ^:private tab-head-icon-elt-bem
   (str tab-head-elt-bem "-icon"))
 
 (def ^:private tab-head-inner-elt-bem
-  (str bem "__tab-head-inner"))
+  (str tab-head-elt-bem "-inner"))
 
 (def ^:private tab-head-text-elt-bem
   (str tab-head-elt-bem "-text"))
@@ -232,10 +232,7 @@
     - `:title` - map, no default. Title for widget:
       * `:placement` - one of :after, :before (default) or their string/symbol equivalents. Allows to display title
         after or before list of tab's heads.
-      * `:text` - string, no default. Widget's title.
-
-  TODO:
-  * cleanup styles"
+      * `:text` - string, no default. Widget's title."
   [{:keys [button-groups] :as props}]
   (let [tab-parts-hcps (build-tab-parts-hcps props)]
     [:div {:class (build-class props)}
