@@ -160,8 +160,8 @@
               [:alignment (ie-cgi-knob/gen-items "end" "start")]
               :collapsed
               [:layout (ie-cgi-knob/gen-items "horizontal" "vertical")]
-              [:sidebar.panel (ie-cgi-knob/gen-items "normal")]
               [:sidebar.placement (ie-cgi-knob/gen-items "left" "none" "right")]
+              [:sidebar.size (ie-cgi-knob/gen-items "normal")]
               [:size (ie-cgi-knob/gen-items "normal")]
               [:- "knobs"]
               [:button-groups (ie-cgi-knob/gen-items "after" "before2" "end4" "no" "start")]]

@@ -9,6 +9,6 @@
      :collapsed false
      :layout "horizontal"
      :sidebar
-     {:panel "normal"
-      :placement "none"}
+     {:placement "none"
+      :size "normal"}
      :size "normal"}}})

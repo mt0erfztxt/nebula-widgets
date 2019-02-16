@@ -18,5 +18,5 @@
      :button-groups
      :collapsed
      :layout
-     [:sidebar :panel :placement]
+     [:sidebar :placement :size]
      :size]))

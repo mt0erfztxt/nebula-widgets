@@ -106,7 +106,7 @@
 (def ^:private layout-prop-set
   #{:horizontal :vertical})
 
-(def ^:private sidebar-panel-prop-set
+(def ^:private sidebar-size-prop-set
   #{:normal :large})
 
 (def ^:private sidebar-placement-prop-set
@@ -120,17 +120,17 @@
   #{:large :normal :small})
 
 (defn- build-sidebar-prop [value]
-  (when-let [{:keys [panel placement]}
+  (when-let [{:keys [placement size]}
              (cond
                (true? value) sidebar-default-prop
                (map? value) (merge sidebar-default-prop value))]
-    {:panel (-> panel keyword sidebar-panel-prop-set (or :normal))
-     :placement (-> placement keyword sidebar-placement-prop-set (or :left))}))
+    {:placement (-> placement keyword sidebar-placement-prop-set (or :left))
+     :size (-> size keyword sidebar-size-prop-set (or :normal))}))
 
 (defn- build-class
   "Returns string - CSS class for widget's element. Accepts component props."
   [{:keys [alignment cid cns collapsed layout sidebar size]}]
-  (let [{sidebar-panel :panel sidebar-placement :placement} (build-sidebar-prop sidebar)
+  (let [{sidebar-placement :placement, sidebar-size :size} (build-sidebar-prop sidebar)
         sidebar? (boolean sidebar-placement)]
     (bem-utils/build-class
       bem
@@ -140,8 +140,8 @@
        ["collapsed" collapsed]
        ["layout" (-> (if sidebar? "vertical" layout) keyword layout-prop-set (or :horizontal))]
        ["sidebar" sidebar?]
-       ["sidebarPanel" sidebar-panel]
        ["sidebarPlacement" sidebar-placement]
+       ["sidebarSize" sidebar-size]
        ["size" (-> size keyword size-prop-set (or :normal))]])))
 
 (def ^:private supported-tab-body-props
@@ -225,9 +225,10 @@
     - `:on-tab-click` - function, no default. If used, it would be called before tab's :on-click with clicked tab :cid
       and browser event as arguments.
     - `:sidebar` - map, no default. Allows to configure widget to be used as application panel's sidebar:
-      * `:panel` - one of :large, :normal (default) or their string/symbol equivalents. Determines panel size (width).
       * `:placement` - one of :left (default), :right or their string/symbol equivalents. Determines in which sidebar of
         application panel widget to be used.
+      * `:size` - one of :large, :normal (default) or their string/symbol equivalents. Determines size of sidebar
+        (actually it's a width of widget's body element).
     - `:size` - one of :large, :normal (default) or their string/symbol equivalents. Allows to set size of tab's head.
     - `:title` - map, no default. Title for widget:
       * `:placement` - one of :after, :before (default) or their string/symbol equivalents. Allows to display title

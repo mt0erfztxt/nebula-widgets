@@ -21,7 +21,7 @@ $tabs_button--hover-backgroundColor = darken($tabs_head-backgroundColor, 1.36);
 $tabs_button-fontSize--size_n       = $g_font_size + 2;
 
 $tabs_head-height--size_n           = $g_size--n;
-$tabs_sidebarPanel-width--size_n    = $g_appPanel--sidebar-size_normal;
+$tabs_sidebarSize--normal-width     = $g_appPanel--sidebar-size_normal;
 
 
 .nw-tabGroup
@@ -383,10 +383,10 @@ $tabs_sidebarPanel-width--size_n    = $g_appPanel--sidebar-size_normal;
         width: $tabs_head-height--size_n;
 
 
-    &--sidebarPanel_normal > &__body
-        width: $tabs_sidebarPanel-width--size_n;
+    &--sidebarSize_normal > &__body
+        width: $tabs_sidebarSize--normal-width;
 
-    &--sidebarPanel_normal&--size_normal
+    &--sidebarSize_normal&--size_normal
         width: $g_appPanel--sidebar-size_normal + $tabs_head-height--size_n;
 
 
@@ -399,10 +399,10 @@ $tabs_sidebarPanel-width--size_n    = $g_appPanel--sidebar-size_normal;
     &--sidebarPlacement_left > &__head
         left: 0;
 
-    &--sidebarPlacement_left&--sidebarPanel_normal&--size_normal > &__body
+    &--sidebarPlacement_left&--sidebarSize_normal&--size_normal > &__body
         left: $tabs_head-height--size_n;
 
-    &--sidebarPlacement_left&--sidebarPanel_normal&--size_normal&--collapsed > &__body
+    &--sidebarPlacement_left&--sidebarSize_normal&--size_normal&--collapsed > &__body
         left: $tabs_head-height--size_n - $g_appPanel--sidebar-size_normal;
 
 
@@ -424,8 +424,8 @@ $tabs_sidebarPanel-width--size_n    = $g_appPanel--sidebar-size_normal;
     &--sidebarPlacement_right&--size_normal&--collapsed
         width: $tabs_head-height--size_n;
 
-    &--sidebarPlacement_right&--sidebarPanel_normal&--size_normal > &__body
+    &--sidebarPlacement_right&--sidebarSize_normal&--size_normal > &__body
         right: $tabs_head-height--size_n;
 
-    &--sidebarPlacement_right&--sidebarPanel_normal&--size_normal&--collapsed > &__body
+    &--sidebarPlacement_right&--sidebarSize_normal&--size_normal&--collapsed > &__body
         right: - $g_appPanel--sidebar-size_normal;
