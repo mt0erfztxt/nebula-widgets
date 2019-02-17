@@ -7,7 +7,6 @@
   :dependencies
   [[binaryage/oops "0.6.2"]
    [com.taoensso/timbre "4.10.0"]
-   [devcards "0.2.5" :exclusions [cljsjs/react cljsjs/react-dom]] ; w/o exclusions compilation fails
    [funcool/bide "1.6.0"]
    [org.clojure/clojure "1.9.0"]
    [org.clojure/clojurescript "1.10.339" :scope "provided"]
@@ -21,8 +20,6 @@
   [:target-path
    [:cljsbuild :builds :kitchen-sink :compiler :output-dir]
    [:cljsbuild :builds :kitchen-sink :compiler :output-to]
-   [:cljsbuild :builds :devcards :compiler :output-dir]
-   [:cljsbuild :builds :devcards :compiler :output-to]
    [:cljsbuild :builds :test :compiler :output-dir]
    [:cljsbuild :builds :test :compiler :output-to]]
   :source-paths ["src/clj"]
@@ -59,19 +56,6 @@
         :source-map-timestamp true}
        :figwheel {:on-jsload "nebula-widgets.kitchen-sink.views/mount-root-view"}
        :source-paths ["src/clj" "src/cljs"]}
-      :devcards
-      {:compiler
-       {:asset-path "/assets/js/devcards"
-        :main nebula-widgets.devcards.core
-        :optimizations :none
-        :output-dir "target/cljsbuild/public/assets/js/devcards"
-        :output-to "target/cljsbuild/public/assets/js/devcards.js"
-        :preloads [devtools.preload]
-        :pretty-print true
-        :source-map true
-        :source-map-timestamp true}
-       :figwheel {:devcards true}
-       :source-paths ["src/clj" "src/cljs" "devcards_src"]}
       :test
       {:compiler
        {:foreign-libs
