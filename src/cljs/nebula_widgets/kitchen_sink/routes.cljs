@@ -17,6 +17,7 @@
      ["/widgets/form" :widgets/form]
      ["/widgets/form-field" :widgets/form-field]
      ["/widgets/group-input" :widgets/group-input]
+     ["/widgets/tab-group" :widgets/tab-group]
      ["/widgets/text-group-input-form-field" :widgets/text-group-input-form-field]
      ["/widgets/text-group-input" :widgets/text-group-input]
      ["/widgets/text-input" :widgets/text-input]]))

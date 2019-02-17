@@ -11,6 +11,7 @@
     [nebula-widgets.kitchen-sink.panels.form-field-widget.subs]
     [nebula-widgets.kitchen-sink.panels.form-widget.subs]
     [nebula-widgets.kitchen-sink.panels.group-input-widget.subs]
+    [nebula-widgets.kitchen-sink.panels.tab-group-widget.subs]
     [nebula-widgets.kitchen-sink.panels.text-group-input-form-field-widget.subs]
     [nebula-widgets.kitchen-sink.panels.text-group-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.subs]

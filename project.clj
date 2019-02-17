@@ -89,8 +89,8 @@
     [[binaryage/devtools "0.9.10"]
      [cider/cider-nrepl "0.17.0"]
      [com.cemerick/piggieback "0.2.2"]
-     [doo "0.1.10"]
      [day8.re-frame/re-frame-10x "0.3.3-react16"]
+     [doo "0.1.10"]
      [ring/ring-core "1.6.3"]]
     :figwheel
     {:css-dirs ["resources/public/assets/css"]

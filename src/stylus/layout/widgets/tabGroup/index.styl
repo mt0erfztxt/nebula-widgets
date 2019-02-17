@@ -1,0 +1,431 @@
+$tabs--size_n                       = $g_size--n;
+
+$tabs_body-backgroundColor          = $g_color_background;
+
+$tabs_head-backgroundColor          = $g_color_background--darker;
+
+$tabs_tabHead-borderColor           = lighten($tabs_head-backgroundColor, 1);
+$tabs_tabHead-color                 = darken($g_color_primary_text, 36%);
+$tabs_tabHead--active-borderColor   = $g_color_accent;
+$tabs_tabHead--active-color         = $g_color_primary_text;
+$tabs_tabHead--disabled-color       = lighten($tabs_head-backgroundColor, 2.99)
+
+$tabs_tabHead-icon-fontSize--size_n = $g_font_size + 4;
+$tabs_tabHead-text-fontSize--size_n = $g_font_size - 2;
+
+$tabs_button-backgroundColor        = $tabs_head-backgroundColor;
+$tabs_button-color                  = $tabs_tabHead-color;
+$tabs_button--active-color          = $g_color_primary_text;
+$tabs_button--disabled-color        = lighten($tabs_head-backgroundColor, 2.99);
+$tabs_button--hover-backgroundColor = darken($tabs_head-backgroundColor, 1.36);
+$tabs_button-fontSize--size_n       = $g_font_size + 2;
+
+$tabs_head-height--size_n           = $g_size--n;
+$tabs_sidebarSize--normal-width     = $g_appPanel--sidebar-size_normal;
+
+
+.nw-tabGroup
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+
+    &__body
+        border: solid $tabs_head-backgroundColor;
+        height: auto;
+        overflow: hidden;
+        position: relative;
+
+
+    // Button rendered using <BUTTON> or <A> tags.
+    &__button
+        color: $tabs_button-color;
+        font-size: $tabs_button-fontSize--size_n;
+        display: flex;
+        text-align: center;
+
+
+    &__button-inner
+        background-color: transparent;
+        border: 1px solid transparent;
+        border-radius: 2px;
+        outline: none;
+        width: 100%;
+
+
+    &__button--active &__button-inner
+        background-color: $tabs_button--hover-backgroundColor;
+        color: $tabs_button--active-color;
+
+
+    &__button--disabled &__button-inner
+        color: $tabs_button--disabled-color;
+
+
+    &__button:not(&__button--disabled) &__button-inner:hover
+        background-color: $tabs_button--hover-backgroundColor;
+        color: $tabs_button--active-color;
+
+
+    &__button--rotated &__button-inner
+        transform: rotate(180deg);
+
+
+    &__buttonGroup
+        display: flex;
+
+
+    &__head
+        background-color: $tabs_head-backgroundColor;
+        display: flex;
+        text-transform: uppercase;
+        width: 100%;
+
+
+    &__list
+        display: flex;
+
+
+    &__listContainer
+        display: flex;
+
+
+    // Tab's head is rendered using <BUTTON> or <A> tags
+    &__tabHead
+        align-items: stretch;
+        border: solid transparent;
+        color: $tabs_tabHead-color;
+        cursor: pointer;
+        display: flex;
+        font-weight: bold;
+        outline: none;
+        position: relative;
+        text-decoration: none;
+
+    &__tabHead--active
+        background-color: $tabs_body-backgroundColor;
+        border-color: $tabs_body-backgroundColor; // make separating edge of active tab (left|top) sharp
+        color: $tabs_tabHead--active-color;
+
+    &__tabHead--disabled
+        color: $tabs_tabHead--disabled-color;
+        cursor: default;
+
+
+    &__tabHead-icon
+        font-size: $tabs_tabHead-icon-fontSize--size_n;
+
+        &:first-child
+            padding-left: 16px;
+
+        &:first-child:not(:last-child)
+            padding-right: 8px;
+
+        &:last-child
+            padding-right: 16px;
+
+
+    &__tabHead-inner
+        align-items: center;
+        display: flex;
+
+
+    &__tabHead-text
+        font-size: $tabs_tabHead-text-fontSize--size_n;
+        text-decoration: none;
+
+        &:first-child
+            padding-left: 16px;
+
+        &:last-child
+            padding-right: 16px;
+
+
+    &__tabBody
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+
+
+    &__tabBody--active
+        height: auto;
+        opacity: 1;
+
+
+    &__title
+        color: $tabs_tabHead-color;
+        display: block;
+
+
+    // ------------------------------------------------------------------------
+    // Horizontal
+    //
+    // Tab's body placed below head
+    // ------------------------------------------------------------------------
+
+
+    &--layout_horizontal > &__body
+        border-width: 0 1px 1px 1px;
+
+    &--layout_horizontal:not(&--collapsed) > &__body
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px;
+
+
+    &--layout_horizontal > &__head &__button
+        margin-right: 4px;
+        max-width: $tabs--size_n - 8;
+        min-width: @max-width;
+        width: @max-width;
+
+        &:last-child
+            margin-right: 0;
+
+
+    &--layout_horizontal > &__head &__buttonGroup
+        height: $tabs--size_n;
+        max-height: @height;
+        min-height: @height;
+        padding: 4px 0;
+
+    &--layout_horizontal > &__head &__buttonGroup &__button
+        &:first-child
+            margin-left: 4px;
+        &:last-child
+            margin-right: 4px;
+
+
+    &--layout_horizontal&--alignment_end > &__head &__listContainer
+        margin-left: auto;
+
+    &--layout_horizontal&--alignment_end > &__head &__listContainer &__list--lastChild
+        padding-right: 1px;
+
+    &--layout_horizontal&--alignment_end > &__head &__listContainer &__list--lastChild &__tabHead:not(&__tabHead--active)
+        border-right-color: $tabs_head-backgroundColor;
+
+    &--layout_horizontal&--alignment_start > &__head &__listContainer
+        margin-right: auto;
+
+    &--layout_horizontal&--alignment_start > &__head &__listContainer &__list--firstChild
+        padding-left: 1px;
+
+    &--layout_horizontal&--alignment_start > &__head &__listContainer &__list--firstChild &__tabHead:first-child:not(&__tabHead--active)
+        border-left-color: $tabs_head-backgroundColor;
+
+
+    &--layout_horizontal > &__head &__tabHead
+        border-width: 1px 1px 0 1px;
+        height: $tabs--size_n;
+
+    &--layout_horizontal > &__head &__tabHead:not(&__tabHead--active)
+        border-left-color: $tabs_tabHead-borderColor;
+
+    &--layout_horizontal > &__head &__tabHead--active
+        border-top-color: $tabs_tabHead--active-borderColor;
+
+    // Make border of tab adjusent to active tab more sharp
+    &--layout_horizontal > &__head &__tabHead--active + &__tabHead
+        border-left-color: $tabs_head-backgroundColor;
+
+    &--layout_horizontal > &__head &__tabHead:last-child
+        padding-right: 0;
+
+    &--layout_horizontal > &__head &__tabHead:last-child:not(&__tabHead--active)
+        border-right-color: $tabs_tabHead-borderColor;
+
+    &--layout_horizontal &__title
+        padding: 1px 16px;
+
+
+    &--layout_horizontal&--collapsed > &__body
+        height: 1px;
+        max-height: @height;
+        padding-bottom: @height;
+
+
+    // ------------------------------------------------------------------------
+    // Vertical
+    //
+    // Tab's body placed right aside head
+    // ------------------------------------------------------------------------
+
+    &--layout_vertical
+        flex-direction: row;
+
+
+    &--layout_vertical > &__body
+        border-width: 1px 1px 1px 0;
+        flex: 1 1 auto;
+        border-width: 1px 1px 1px 0;
+
+    &--layout_vertical:not(&--collapsed) > &__body
+        border-bottom-right-radius: 2px;
+        border-top-right-radius: 2px;
+
+
+    &--layout_vertical > &__head
+        flex: none;
+        flex-direction: column;
+        width: auto;
+
+
+    &--layout_vertical > &__head &__button
+        height: $tabs--size_n - 8;
+        margin-bottom: 4px;
+        max-height: @height;
+        min-height: @height;
+
+        &:last-child
+            margin-bottom: 0;
+
+
+    &--layout_vertical > &__head &__buttonGroup
+        flex-direction: column;
+        padding: 0 4px;
+
+    &--layout_vertical > &__head &__buttonGroup &__button
+        &:first-child
+            margin-top: 4px;
+        &:last-child
+            margin-bottom: 4px;
+
+
+    &--layout_vertical > &__head &__list
+        flex-direction: column;
+        margin-right: 0;
+
+
+    &--layout_vertical > &__head &__listContainer
+        flex-direction: column;
+
+    &--layout_vertical&--alignment_end > &__head &__listContainer
+        margin-top: auto;
+
+    &--layout_vertical&--alignment_end > &__head &__listContainer &__list--lastChild &__tabHead:not(&__tabHead--active)
+        border-bottom-color: $tabs_head-backgroundColor;
+
+    &--layout_vertical&--alignment_end:not(&--sidebar) > &__head &__listContainer &__list--lastChild
+        padding-bottom: 1px;
+
+    &--layout_vertical&--alignment_start > &__head &__listContainer
+        margin-bottom: auto;
+
+    &--layout_vertical&--alignment_start > &__head &__listContainer &__list--firstChild &__tabHead:first-child:not(&__tabHead--active)
+        border-top-color: $tabs_head-backgroundColor;
+
+    &--layout_vertical&--alignment_start:not(&--sidebar) > &__head &__listContainer &__list--firstChild
+        padding-top: 1px;
+
+
+    &--layout_vertical > &__head &__tabHead
+        border-width: 1px 0 1px 1px;
+        justify-content: center;
+        height: $tabs--size_n;
+
+    &--layout_vertical > &__head &__tabHead:not(&__tabHead--active)
+        border-top-color: $tabs_tabHead-borderColor;
+
+    &--layout_vertical > &__head &__tabHead--active
+        border-left-color: $tabs_tabHead--active-borderColor;
+
+    // Make border of tab adjusent to active tab more sharp
+    &--layout_vertical > &__head &__tabHead--active + &__tabHead
+        border-top-color: $tabs_head-backgroundColor;
+
+    &--layout_vertical > &__head &__tabHead:last-child
+        padding-bottom: 0;
+
+    &--layout_vertical > &__head &__tabHead:last-child:not(&__tabHead--active)
+        border-bottom-color: $tabs_tabHead-borderColor;
+
+
+    &--layout_vertical&--collapsed:not(&--sidebar) > &__body
+        max-width: 1px;
+        padding-right: 1px;
+        width: 1px;
+
+
+    // ------------------------------------------------------------------------
+    // Sidebar
+    //
+    // As sidebar for application panel
+    // ------------------------------------------------------------------------
+
+    &--sidebar
+        bottom: 0;
+        display: block;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        transition: width 500ms ease;
+
+
+    &--sidebar > &__body
+        border: none;
+        border-radius: 0;
+        bottom: 0;
+        flex: none;
+        position: absolute;
+        top: 0;
+        width: $g_appPanel--sidebar-size_normal;
+        z-index: 1;
+
+
+    &--sidebar > &__head
+        bottom: 0;
+        position: absolute;
+        top: 0;
+        z-index: 2;
+
+
+    &--sidebar&--size_normal > &__head
+        width: $tabs_head-height--size_n;
+
+
+    &--sidebarSize_normal > &__body
+        width: $tabs_sidebarSize--normal-width;
+
+    &--sidebarSize_normal&--size_normal
+        width: $g_appPanel--sidebar-size_normal + $tabs_head-height--size_n;
+
+
+    &--sidebarPlacement_left
+        left: 0;
+
+    &--sidebarPlacement_left > &__body
+        transition: left 500ms ease;
+
+    &--sidebarPlacement_left > &__head
+        left: 0;
+
+    &--sidebarPlacement_left&--sidebarSize_normal&--size_normal > &__body
+        left: $tabs_head-height--size_n;
+
+    &--sidebarPlacement_left&--sidebarSize_normal&--size_normal&--collapsed > &__body
+        left: $tabs_head-height--size_n - $g_appPanel--sidebar-size_normal;
+
+
+    &--sidebarPlacement_right
+        right: 0;
+
+    &--sidebarPlacement_right > &__head &__tabHead
+        border-width: 1px 1px 1px 0;
+
+    &--sidebarPlacement_right > &__head &__tabHead--active
+        border-right-color: $tabs_tabHead--active-borderColor;
+
+    &--sidebarPlacement_right > &__body
+        transition: right 500ms ease;
+
+    &--sidebarPlacement_right > &__head
+        right: 0;
+
+    &--sidebarPlacement_right&--size_normal&--collapsed
+        width: $tabs_head-height--size_n;
+
+    &--sidebarPlacement_right&--sidebarSize_normal&--size_normal > &__body
+        right: $tabs_head-height--size_n;
+
+    &--sidebarPlacement_right&--sidebarSize_normal&--size_normal&--collapsed > &__body
+        right: - $g_appPanel--sidebar-size_normal;
