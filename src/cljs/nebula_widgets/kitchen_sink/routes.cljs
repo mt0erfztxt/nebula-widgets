@@ -20,7 +20,8 @@
      ["/widgets/tab-group" :widgets/tab-group]
      ["/widgets/text-group-input-form-field" :widgets/text-group-input-form-field]
      ["/widgets/text-group-input" :widgets/text-group-input]
-     ["/widgets/text-input" :widgets/text-input]]))
+     ["/widgets/text-input" :widgets/text-input]
+     ["/widgets/toolbar" :widgets/toolbar]]))
 
 (defn match [url]
   (bide/match router url))

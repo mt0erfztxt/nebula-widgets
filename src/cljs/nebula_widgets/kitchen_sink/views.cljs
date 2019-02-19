@@ -16,6 +16,7 @@
     [nebula-widgets.kitchen-sink.panels.text-group-input-form-field-widget.views :as text-group-input-form-field-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.text-group-input-widget.views :as text-group-input-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.views :as text-input-widget-panel-views]
+    [nebula-widgets.kitchen-sink.panels.toolbar-widget.views :as toolbar-widget-panel-views]
     [oops.core :as oops]
     [re-frame.core :as rf]
     [reagent.core :as r]))
@@ -39,7 +40,8 @@
         :widgets/text-group-input-form-field [text-group-input-form-field-widget-panel-views/widget]
         :widgets/text-group-input [text-group-input-widget-panel-views/widget]
         :widgets/text-input [text-input-widget-panel-views/widget]
-        :widgets/tab-group [tab-group-widget-panel-views/widget]))))
+        :widgets/tab-group [tab-group-widget-panel-views/widget]
+        :widgets/toolbar [toolbar-widget-panel-views/widget]))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC

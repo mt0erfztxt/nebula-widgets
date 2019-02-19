@@ -15,6 +15,7 @@
     [nebula-widgets.kitchen-sink.panels.text-group-input-form-field-widget.subs]
     [nebula-widgets.kitchen-sink.panels.text-group-input-widget.subs]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.subs]
+    [nebula-widgets.kitchen-sink.panels.toolbar-widget.subs]
     [re-frame.core :as rf]))
 
 (rf/reg-sub

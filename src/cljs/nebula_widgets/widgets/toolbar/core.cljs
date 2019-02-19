@@ -20,10 +20,15 @@
      ["disabled" disabled]
      ["size" size]]))
 
-(defn- partition-elt-cmp [{:keys [disabled size] :as props}]
+(defn- partition-elt-cmp [{:keys [alignment disabled size] :as props}]
   (let [disabled? (boolean (or disabled (:disabled props)))]
     (into
-      [:div {:class (bem-utils/build-class partition-elt-bem [["disabled" disabled?]])}]
+      [:div
+       {:class
+        (bem-utils/build-class
+          partition-elt-bem
+          [["alignment" alignment]
+           ["disabled" disabled?]])}]
       (for [ap (:action-panels props)]
         [action-panel/widget (merge ap {:disabled disabled?, :size size})]))))
 
@@ -34,7 +39,7 @@
 ;; TODO: Update docs
 (defn widget
   "Component that displays action bar. Actually it's just a new version of
-  `toolbar` widget but old version is stil in use so we make a new name. Accepts
+  `toolbar` widget but old version is still in use so we make a new name. Accepts
   `props` map:
   * `:cid` - optional, no default. Anything that can be used as component id.
   * `:cns` - optional, no default. Anything that can be used as component ns.
@@ -60,5 +65,5 @@
         size (-> size keyword size-prop-set (or :normal))]
     (into
       [:div {:class (build-class (assoc props :size size))}]
-      (for [p partitions]
-        [partition-elt-cmp (merge p {:disabled disabled?, :size size})]))))
+      (for [[a p] (->> [:left :right] (map #(vector % (get partitions %))) (filter second))]
+        [partition-elt-cmp (merge p {:alignment a, :disabled disabled?, :size size})]))))
