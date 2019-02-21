@@ -1,4 +1,4 @@
-(ns nebula-widgets.widgets.toolbar.action-panel.action
+(ns nebula-widgets.widgets.action-panel.action
   (:require
     [nebula-widgets.utils.bem :as bem-utils]))
 
@@ -11,16 +11,20 @@
 (def ^:private text-elt-bem
   (str bem "__text"))
 
-(defn- build-class [{:keys [cid cns disabled size]}]
+(defn- build-class [{:keys [accented active cid cns disabled font-size reversed size]}]
   (bem-utils/build-class
     bem
     [["cns" cns]
      ["cid" cid]
+     ["accented" accented]
+     ["active" active]
      ["disabled" disabled]
+     ["font-size" font-size]
+     ["reversed" reversed]
      ["size" size]]))
 
 (def ^:private props-vec
-  [:accented :active :checked :cid :class :cns :font-size :icon :reversed :text :type])
+  [:accented :active :cid :class :cns :font-size :icon :reversed :text :type])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC

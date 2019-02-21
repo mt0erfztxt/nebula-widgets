@@ -1,5 +1,6 @@
 (ns nebula-widgets.kitchen-sink.subs
   (:require
+    [nebula-widgets.kitchen-sink.panels.action-panel-action-widget.subs]
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.subs]
     [nebula-widgets.kitchen-sink.panels.button-group-set-widget.subs]
     [nebula-widgets.kitchen-sink.panels.button-group-widget.subs]

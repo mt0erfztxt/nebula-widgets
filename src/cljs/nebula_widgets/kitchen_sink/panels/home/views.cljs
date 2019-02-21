@@ -3,7 +3,8 @@
     [nebula-widgets.kitchen-sink.routes :as routes]))
 
 (def ^:private widgets-routes
-  [:widgets/app-panel
+  [:widgets/action-panel-action
+   :widgets/app-panel
    :widgets/button
    :widgets/button-group
    :widgets/button-group-set

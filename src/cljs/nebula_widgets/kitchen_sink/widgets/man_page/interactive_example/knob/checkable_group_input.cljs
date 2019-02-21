@@ -31,5 +31,11 @@
   [knob/widget knob-props checkable-group-input/widget (merge default-cgi-props input-props)])
 
 (defn gen-items [& labels]
-  (for [item labels :let [[label value] (if (string? item) [item] item)]]
-    {:label label, :value (or value label)}))
+  (for [item labels
+        :let [simple? (string? item)
+              [label value] (if simple? [item] item)]]
+    {:label (if (some? label) label "nil")
+     :value (cond
+              (some? value) value
+              (not simple?) nil
+              :else label)}))

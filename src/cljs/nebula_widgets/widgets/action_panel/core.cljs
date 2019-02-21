@@ -1,7 +1,7 @@
-(ns nebula-widgets.widgets.toolbar.action-panel.core
+(ns nebula-widgets.widgets.action-panel.core
   (:require
     [nebula-widgets.utils.bem :as bem-utils]
-    [nebula-widgets.widgets.toolbar.action-panel.action :as action]))
+    [nebula-widgets.widgets.action-panel.action :as action]))
 
 (def ^:private bem
   "nw-actionPanel")

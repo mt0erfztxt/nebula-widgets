@@ -1,6 +1,7 @@
 (ns nebula-widgets.kitchen-sink.views
   (:require
     [nebula-widgets.kitchen-sink.panels.home.views :as home-panel-views]
+    [nebula-widgets.kitchen-sink.panels.action-panel-action-widget.views :as action-panel-action-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.views :as app-panel-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.button-group-set-widget.views :as button-group-set-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.button-group-widget.views :as button-group-widget-panel-views]
@@ -26,6 +27,7 @@
     (fn []
       (case (:id @*route)
         :home [home-panel-views/widget]
+        :widgets/action-panel-action [action-panel-action-widget-panel-views/widget]
         :widgets/app-panel [app-panel-widget-panel-views/widget]
         :widgets/button [button-widget-panel-views/widget]
         :widgets/button-group [button-group-widget-panel-views/widget]
