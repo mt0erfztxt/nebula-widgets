@@ -1,5 +1,6 @@
 (ns nebula-widgets.kitchen-sink.panels.action-panel-action-widget.views
   (:require
+    [clojure.string :as str]
     [nebula-widgets.kitchen-sink.panels.action-panel-action-widget.common :as common]
     [nebula-widgets.kitchen-sink.routes :as routes]
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
@@ -51,7 +52,7 @@
               [:href (ie-cgi-knob/gen-items ["no" nil] ["yes" href])]
               [:icon (ie-cgi-knob/gen-items ["no" nil] ["yes" icon])]
               :reversed
-              [:text (ie-cgi-knob/gen-items ["no" nil] ["yes" text])]
+              [:text (ie-cgi-knob/gen-items ["no" nil] ["Title case" text] ["Upper case" (str/upper-case text)])]
               [:size (ie-cgi-knob/gen-items "normal" "large" "small")]]
              :let [[cid label-or-items] (if (sequential? params) params [params])
                    label? (= :- cid)]]

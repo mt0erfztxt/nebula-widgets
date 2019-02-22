@@ -1,0 +1,73 @@
+$nw-actionPanel-action-backgroundColor         = $g_color_background;
+$nw-actionPanel-action--active-backgroundColor = lighten($nw-actionPanel-action-backgroundColor, 3);
+$nw-actionPanel-action--disabled-color         = mix($g_color_primary_text, $nw-actionPanel-action-backgroundColor, 16%);
+$nw-actionPanel--size_normal-height            = 36px;
+
+
+.nw-actionPanel-action
+    align-items: center;
+    background-color: $nw-actionPanel-action-backgroundColor;
+    border: none;
+    border-radius: 2px;
+    color: inherit;
+    display: inline-flex;
+    flex: none;
+    outline: none;
+    padding: 0 12px;
+    text-decoration: none;
+
+    &:hover:not(&--accented):not(&--disabled)
+        background-color: $nw-actionPanel-action--active-backgroundColor;
+
+
+    &__icon
+        //
+
+
+    &__text
+        &:first-child:not(last-child)
+            padding-right: 4px;
+
+        &:last-child:not(first-child)
+            padding-left: 4px;
+
+
+    &--accented
+        background-color: $g_color_accent;
+        color: $g_color_primary_text--active;
+        text-shadow: -1px 1px 0 shade($g_color_accent, 9%);
+
+    &--accented&--disabled
+        opacity: 0.27;
+        color: $g_color_primary_text--active;
+
+
+    &--active:not(&--accented)
+            background-color: $nw-actionPanel-action--active-backgroundColor;
+
+
+    &--disabled
+        color: $nw-actionPanel-action--disabled-color;
+
+    &--size_normal
+        height: $nw-actionPanel--size_normal-height;
+        min-height: @height;
+
+    &--size_normal &__icon
+        font-size: $g_font_size + 5;
+
+
+    &--size_large
+        height: $g_size--n;
+        min-height: @height;
+
+    &--size_large &__icon
+        font-size: $g_font_size + 12;
+
+
+    &--size_small
+        height: $g_size--n - 16;
+        min-height: @height;
+
+    &--size_small &__icon
+        font-size: $g_font_size - 4;

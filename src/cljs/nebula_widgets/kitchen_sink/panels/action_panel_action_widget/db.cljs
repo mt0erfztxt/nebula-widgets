@@ -10,5 +10,5 @@
      :href nil
      :icon nil
      :reversed false
-     :text "Action"
+     :text "ACTION"
      :size "normal"}}})
