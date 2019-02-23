@@ -1,6 +1,6 @@
-(ns nebula-widgets.kitchen-sink.panels.action-panel-action-widget.subs
+(ns nebula-widgets.kitchen-sink.panels.action-group-action-widget.subs
   (:require
-    [nebula-widgets.kitchen-sink.panels.action-panel-action-widget.common :as common]
+    [nebula-widgets.kitchen-sink.panels.action-group-action-widget.common :as common]
     [re-frame.core :as rf]))
 
 (def ^:private panel-subscription-key

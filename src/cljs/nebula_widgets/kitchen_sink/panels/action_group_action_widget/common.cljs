@@ -1,9 +1,9 @@
-(ns nebula-widgets.kitchen-sink.panels.action-panel-action-widget.common
+(ns nebula-widgets.kitchen-sink.panels.action-group-action-widget.common
   (:require
     [nebula-widgets.utils :as utils]))
 
 (def panel-key
-  :action-panel-action-widget)
+  :action-group-action-widget)
 
 (def panel-path
   [:panels panel-key])
@@ -12,4 +12,4 @@
   (apply partial utils/path->keyword panel-path))
 
 (def knobs
-  [:accented :active :disabled :font-size :href :icon :reversed :text :size])
+  [:accented :active :disabled :href :icon :reversed :text :size])

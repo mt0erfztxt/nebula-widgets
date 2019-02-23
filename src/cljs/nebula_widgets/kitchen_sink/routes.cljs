@@ -6,7 +6,8 @@
 (def router
   (bide/router
     [["/" :home]
-     ["/widgets/action-panel-action" :widgets/action-panel-action]
+     ["/widgets/action-group" :widgets/action-group]
+     ["/widgets/action-group-action" :widgets/action-group-action]
      ["/widgets/app-panel" :widgets/app-panel]
      ["/widgets/button" :widgets/button]
      ["/widgets/button-group" :widgets/button-group]

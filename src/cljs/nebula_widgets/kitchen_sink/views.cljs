@@ -1,7 +1,7 @@
 (ns nebula-widgets.kitchen-sink.views
   (:require
-    [nebula-widgets.kitchen-sink.panels.home.views :as home-panel-views]
-    [nebula-widgets.kitchen-sink.panels.action-panel-action-widget.views :as action-panel-action-widget-panel-views]
+    [nebula-widgets.kitchen-sink.panels.action-group-widget.views :as action-group-widget-panel-views]
+    [nebula-widgets.kitchen-sink.panels.action-group-action-widget.views :as action-group-action-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.views :as app-panel-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.button-group-set-widget.views :as button-group-set-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.button-group-widget.views :as button-group-widget-panel-views]
@@ -13,6 +13,7 @@
     [nebula-widgets.kitchen-sink.panels.form-field-widget.views :as form-field-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.form-widget.views :as form-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.group-input-widget.views :as group-input-widget-panel-views]
+    [nebula-widgets.kitchen-sink.panels.home.views :as home-panel-views]
     [nebula-widgets.kitchen-sink.panels.tab-group-widget.views :as tab-group-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.text-group-input-form-field-widget.views :as text-group-input-form-field-widget-panel-views]
     [nebula-widgets.kitchen-sink.panels.text-group-input-widget.views :as text-group-input-widget-panel-views]
@@ -27,7 +28,8 @@
     (fn []
       (case (:id @*route)
         :home [home-panel-views/widget]
-        :widgets/action-panel-action [action-panel-action-widget-panel-views/widget]
+        :widgets/action-group [action-group-widget-panel-views/widget]
+        :widgets/action-group-action [action-group-action-widget-panel-views/widget]
         :widgets/app-panel [app-panel-widget-panel-views/widget]
         :widgets/button [button-widget-panel-views/widget]
         :widgets/button-group [button-group-widget-panel-views/widget]

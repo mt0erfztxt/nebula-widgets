@@ -1,7 +1,7 @@
 (ns nebula-widgets.widgets.toolbar.core
   (:require
     [nebula-widgets.utils.bem :as bem-utils]
-    [nebula-widgets.widgets.action-panel.core :as action-panel]))
+    [nebula-widgets.widgets.action-group.core :as action-group]))
 
 (def ^:private bem
   "nw-toolbar")
@@ -29,8 +29,8 @@
           partition-elt-bem
           [["alignment" alignment]
            ["disabled" disabled?]])}]
-      (for [ap (:action-panels props)]
-        [action-panel/widget (merge ap {:disabled disabled?, :size size})]))))
+      (for [ap (:action-groups props)]
+        [action-group/widget (merge ap {:disabled disabled?, :size size})]))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -57,7 +57,7 @@
         true then group and all its items would be disabled.
       * `:items` - optional, seq of items, no default. Each item can be anything
         that Reagent can render or a map. When it's a map it's must be props map
-        for `action-panel` widget.
+        for `action-group` widget.
   * `:size` - optional, one of `:large`, `:normal`, `:small` or their string, or
     symbol equivalents, `:normal` by default. Allows to set size of action bar."
   [{:keys [disabled partitions size] :as props}]

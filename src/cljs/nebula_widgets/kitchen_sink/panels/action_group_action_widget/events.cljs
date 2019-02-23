@@ -1,6 +1,6 @@
-(ns nebula-widgets.kitchen-sink.panels.action-panel-action-widget.events
+(ns nebula-widgets.kitchen-sink.panels.action-group-action-widget.events
   (:require
-    [nebula-widgets.kitchen-sink.panels.action-panel-action-widget.common :as common]
+    [nebula-widgets.kitchen-sink.panels.action-group-action-widget.common :as common]
     [nebula-widgets.utils.re-frame :as rf-utils]
     [re-frame.core :as rf]))
 

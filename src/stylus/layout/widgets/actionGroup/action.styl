@@ -1,0 +1,64 @@
+$nw-actionGroup-action-backgroundColor         = $g_color_background;
+$nw-actionGroup-action--active-backgroundColor = lighten($nw-actionGroup-action-backgroundColor, 3);
+$nw-actionGroup-action--disabled-color         = mix($g_color_primary_text, $nw-actionGroup-action-backgroundColor, 16%);
+$nw-actionGroup--size_large-height             = 40px;
+$nw-actionGroup--size_normal-height            = 36px;
+
+
+.nw-actionGroup-action
+    align-items: center;
+    background-color: $nw-actionGroup-action-backgroundColor;
+    border: none;
+    border-radius: 2px;
+    color: inherit;
+    display: inline-flex;
+    flex: none;
+    outline: none;
+    padding: 0 12px;
+    text-decoration: none;
+
+    &:hover:not(&--accented):not(&--disabled)
+        background-color: $nw-actionGroup-action--active-backgroundColor;
+
+
+    &__icon
+        //
+
+
+    &__text
+        padding: 0 4px;
+
+
+    &--accented
+        background-color: $g_color_accent;
+        color: $g_color_primary_text--active;
+
+    &--accented&--disabled
+        opacity: 0.27;
+        color: $g_color_primary_text--active;
+
+    &--accented:not(&--disabled)
+        text-shadow: -1px 1px 0 alpha(#000, 0.16);
+
+
+    &--active:not(&--accented)
+            background-color: $nw-actionGroup-action--active-backgroundColor;
+
+
+    &--disabled
+        color: $nw-actionGroup-action--disabled-color;
+
+    &--size_normal
+        height: $nw-actionGroup--size_normal-height;
+        min-height: @height;
+
+    &--size_normal &__icon
+        font-size: $g_font_size + 5;
+
+
+    &--size_large
+        height: $nw-actionGroup--size_large-height;
+        min-height: @height;
+
+    &--size_large &__icon
+        font-size: $g_font_size + 9;

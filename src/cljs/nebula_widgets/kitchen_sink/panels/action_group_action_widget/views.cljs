@@ -1,14 +1,25 @@
-(ns nebula-widgets.kitchen-sink.panels.toolbar-widget.views
+(ns nebula-widgets.kitchen-sink.panels.action-group-action-widget.views
   (:require
-    [nebula-widgets.kitchen-sink.panels.toolbar-widget.common :as common]
+    [clojure.string :as str]
+    [nebula-widgets.kitchen-sink.panels.action-group-action-widget.common :as common]
+    [nebula-widgets.kitchen-sink.routes :as routes]
     [nebula-widgets.kitchen-sink.widgets.man-page.core :as man-page]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.core :as ie]
     [nebula-widgets.kitchen-sink.widgets.man-page.interactive-example.knob.checkable-group-input :as ie-cgi-knob]
-    [nebula-widgets.widgets.toolbar.core :as toolbar]
+    [nebula-widgets.widgets.action-group.action :as action-group-action]
     [re-frame.core :as rf]))
 
 (def ^:private bem
-  "tabGroupWidgetPanel")
+  "actionGroupActionWidgetPanel")
+
+(def ^:private href
+  (routes/resolve :widgets/action-group))
+
+(def ^:private icon
+  "pencil")
+
+(def ^:private text
+  "Action")
 
 ;;------------------------------------------------------------------------------
 ;; Interactive example
@@ -30,18 +41,18 @@
       (let [props @*props]
         (into
           [ie/widget
-           [toolbar/widget
-            (merge
-              props
-              {:partitions
-               {:left
-                {:action-groups
-                 [{:actions [{:cid "edit", :icon "pencil"}]}]}}})]]
+           [action-group-action/widget props]]
           (for
             [params
              [[:- "widget props"]
+              :accented
+              :active
               :disabled
-              [:size (ie-cgi-knob/gen-items "normal" "large")]]
+              [:href (ie-cgi-knob/gen-items ["no" nil] ["yes" href])]
+              [:icon (ie-cgi-knob/gen-items ["no" nil] ["yes" icon])]
+              :reversed
+              [:text (ie-cgi-knob/gen-items ["no" nil] ["Title case" text] ["Upper case" (str/upper-case text)])]
+              [:size (ie-cgi-knob/gen-items "large" "normal")]]
              :let [[cid label-or-items] (if (sequential? params) params [params])
                    label? (= :- cid)]]
             [ie-cgi-knob/widget
@@ -59,7 +70,7 @@
 (defn widget []
   [:div {:class bem}
    [man-page/widget
-    "# Toolbar widget"
-    (-> #'toolbar/widget meta :doc)
+    "# Action group's action widget"
+    (-> #'action-group-action/widget meta :doc)
     "## Interactive example"
     [interactive-example-cmp]]])

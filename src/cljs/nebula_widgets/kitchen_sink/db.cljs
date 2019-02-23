@@ -1,6 +1,7 @@
 (ns nebula-widgets.kitchen-sink.db
   (:require
-    [nebula-widgets.kitchen-sink.panels.action-panel-action-widget.db :as action-panel-action-widget-panel-db]
+    [nebula-widgets.kitchen-sink.panels.action-group-widget.db :as action-group-widget-panel-db]
+    [nebula-widgets.kitchen-sink.panels.action-group-action-widget.db :as action-group-action-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.db :as app-panel-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.button-group-set-widget.db :as button-group-set-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.button-group-widget.db :as button-group-widget-panel-db]
@@ -21,7 +22,8 @@
 (def ^:private db-panels
   (merge
     {}
-    action-panel-action-widget-panel-db/default-db
+    action-group-widget-panel-db/default-db
+    action-group-action-widget-panel-db/default-db
     app-panel-widget-panel-db/default-db
     button-group-set-widget-panel-db/default-db
     button-group-widget-panel-db/default-db
