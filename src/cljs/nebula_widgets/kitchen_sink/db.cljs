@@ -1,5 +1,7 @@
 (ns nebula-widgets.kitchen-sink.db
   (:require
+    [nebula-widgets.kitchen-sink.panels.action-group-widget.db :as action-group-widget-panel-db]
+    [nebula-widgets.kitchen-sink.panels.action-group-action-widget.db :as action-group-action-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.db :as app-panel-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.button-group-set-widget.db :as button-group-set-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.button-group-widget.db :as button-group-widget-panel-db]
@@ -14,11 +16,14 @@
     [nebula-widgets.kitchen-sink.panels.tab-group-widget.db :as tab-group-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.text-group-input-form-field-widget.db :as text-group-input-form-field-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.text-group-input-widget.db :as text-group-input-widget-panel-db]
-    [nebula-widgets.kitchen-sink.panels.text-input-widget.db :as text-input-widget-panel-db]))
+    [nebula-widgets.kitchen-sink.panels.text-input-widget.db :as text-input-widget-panel-db]
+    [nebula-widgets.kitchen-sink.panels.toolbar-widget.db :as toolbar-widget-panel-db]))
 
 (def ^:private db-panels
   (merge
     {}
+    action-group-widget-panel-db/default-db
+    action-group-action-widget-panel-db/default-db
     app-panel-widget-panel-db/default-db
     button-group-set-widget-panel-db/default-db
     button-group-widget-panel-db/default-db
@@ -33,7 +38,8 @@
     tab-group-widget-panel-db/default-db
     text-group-input-form-field-widget-panel-db/default-db
     text-group-input-widget-panel-db/default-db
-    text-input-widget-panel-db/default-db))
+    text-input-widget-panel-db/default-db
+    toolbar-widget-panel-db/default-db))
 
 (def default-db
   {:app {:route {:id :home, :params nil, :query nil}}

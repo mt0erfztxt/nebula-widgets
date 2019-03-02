@@ -109,21 +109,6 @@ class TabGroupButton extends BaseClass {
    * @method
    * @returns {Promise<void>}
    */
-
-  // ---------------------------------------------------------------------------
-  // Assertions
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Asserts that fragment has specified icon.
-   *
-   * @param {String} icon Button must have that icon to pass assertion. Icon must be one of FontAwesome 4 icons, but without 'fa-' prefix
-   */
-  async expectIconIs(icon) {
-    await t
-      .expect(this.selector.find(`i.fa-${icon}`).count)
-      .eql(1, `${this.displayName} icon is not '${icon}'`);
-  }
 }
 
 Object.defineProperties(TabGroupButton, {

@@ -3,7 +3,9 @@
     [nebula-widgets.kitchen-sink.routes :as routes]))
 
 (def ^:private widgets-routes
-  [:widgets/app-panel
+  [:widgets/action-group
+   :widgets/action-group-action
+   :widgets/app-panel
    :widgets/button
    :widgets/button-group
    :widgets/button-group-set
@@ -17,7 +19,8 @@
    :widgets/checkable-group-input-form-field
    :widgets/text-group-input-form-field
    :widgets/form
-   :widgets/tab-group])
+   :widgets/tab-group
+   :widgets/toolbar])
 
 (def ^:private pages-href-and-text
   (for [route widgets-routes]

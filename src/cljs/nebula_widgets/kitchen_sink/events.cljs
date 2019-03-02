@@ -1,6 +1,8 @@
 (ns nebula-widgets.kitchen-sink.events
   (:require
     [nebula-widgets.kitchen-sink.db :as db]
+    [nebula-widgets.kitchen-sink.panels.action-group-widget.events]
+    [nebula-widgets.kitchen-sink.panels.action-group-action-widget.events]
     [nebula-widgets.kitchen-sink.panels.app-panel-widget.events]
     [nebula-widgets.kitchen-sink.panels.button-group-set-widget.events]
     [nebula-widgets.kitchen-sink.panels.button-group-widget.events]
@@ -16,6 +18,7 @@
     [nebula-widgets.kitchen-sink.panels.text-group-input-form-field-widget.events]
     [nebula-widgets.kitchen-sink.panels.text-group-input-widget.events]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.events]
+    [nebula-widgets.kitchen-sink.panels.toolbar-widget.events]
     [re-frame.core :as rf]))
 
 ;;------------------------------------------------------------------------------
