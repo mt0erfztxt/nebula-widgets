@@ -27,7 +27,7 @@
      ["size" (-> size keyword size-prop-set (or :normal))]]))
 
 (def ^:private props-vec
-  [:accented :active :cid :class :cns :font-size :icon :reversed :text :type])
+  [:accented :active :cid :class :cns :icon :reversed :text :type])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC

@@ -46,7 +46,7 @@
     - `:disabled` - logical true/false, no default. Whether toolbar is disabled or not. When evaluates to logical true,
       then all partitions would have their :disabled prop set to `true`. Also passed to :disabled prop of action-groups.
     - `:partitions` - map, no default. Supported keys are :left and :right - a map to provide action groups for toolbar,
-      See [action-group](/widgets/action-group) for details.
+      see [action-group](/widgets/action-group) for details.
     - `:size` - one of :large, :normal (default) or their string/symbol equivalents. Size of toolbar, also passed to
       :size prop of action-groups."
   [{:keys [disabled partitions size] :as props}]
