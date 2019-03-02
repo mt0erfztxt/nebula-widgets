@@ -12,4 +12,4 @@
   (apply partial utils/path->keyword panel-path))
 
 (def knobs
-  [:disabled :size])
+  [:disabled :partitions :size])

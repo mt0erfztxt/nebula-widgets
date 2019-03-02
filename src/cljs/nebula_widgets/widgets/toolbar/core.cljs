@@ -36,30 +36,19 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: Update docs
 (defn widget
-  "Component that displays action bar. Actually it's just a new version of
-  `toolbar` widget but old version is still in use so we make a new name. Accepts
-  `props` map:
-  * `:cid` - optional, no default. Anything that can be used as component id.
-  * `:cns` - optional, no default. Anything that can be used as component ns.
-  * `:disabled` - optional, boolean, no default. When evaluates to logical true
-    then action bar and all its partitions, groups and items would be disabled.
-  * `:partitions` - optional, seq of maps, no default. Used to display
-    partitions inside action bar. Each item of seq is a `props` map:
-    - `:alignment` - optional, one of `:left`, `:right` or their string, or
-      symbol equivalents, `:left` by default. Sets alignment of partition.
-    - `:disabled` - optional, boolean, no default. When evaluates to logical
-      true then partition and all its groups and items would be disabled.
-    - `:groups` - optional, seq of maps, no default. Used to display groups
-      inside partition. Each item of seq is a `props` map:
-      * `:disabled` - optional, boolean, no default. When evaluates to logical
-        true then group and all its items would be disabled.
-      * `:items` - optional, seq of items, no default. Each item can be anything
-        that Reagent can render or a map. When it's a map it's must be props map
-        for `action-group` widget.
-  * `:size` - optional, one of `:large`, `:normal`, `:small` or their string, or
-    symbol equivalents, `:normal` by default. Allows to set size of action bar."
+  "Renders toolbar.
+
+  Arguments:
+  * `props` - optional, map. Supported props:
+    - `:cid` - any, no default. Component id.
+    - `:cns` - any, no default. Component namespace.
+    - `:disabled` - logical true/false, no default. Whether toolbar is disabled or not. When evaluates to logical true,
+      then all partitions would have their :disabled prop set to `true`. Also passed to :disabled prop of action-groups.
+    - `:partitions` - map, no default. Supported keys are :left and :right - a map to provide action groups for toolbar,
+      See [action-group](/widgets/action-group) for details.
+    - `:size` - one of :large, :normal (default) or their string/symbol equivalents. Size of toolbar, also passed to
+      :size prop of action-groups."
   [{:keys [disabled partitions size] :as props}]
   (let [disabled? (boolean disabled)
         size (-> size keyword size-prop-set (or :normal))]

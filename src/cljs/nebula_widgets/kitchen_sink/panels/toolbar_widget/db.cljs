@@ -4,4 +4,5 @@
   {:toolbar-widget
    {:interactive-example
     {:disabled false
+     :partitions "left"
      :size "normal"}}})
