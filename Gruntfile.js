@@ -57,25 +57,25 @@ module.exports = function(grunt) {
         cmd: 'lein do clean, figwheel kitchen-sink'
       },
       kitchenSinkDevCssBuild: {
-        cmd: 'mkdir -p ./resources/public/assets/css && yarn stylus -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink/index.styl'
+        cmd: 'mkdir -p ./resources/public/assets/css && npx stylus -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink/index.styl'
       },
       kitchenSinkDevCssWatch: {
-        cmd: 'mkdir -p ./resources/public/assets/css && yarn stylus -w -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink/index.styl'
+        cmd: 'mkdir -p ./resources/public/assets/css && npx stylus -w -m -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink/index.styl'
       },
       kitchenSinkDevJsBuild: {
-        cmd: 'yarn webpack --config config/webpack.kitchen-sink.dev.js'
+        cmd: 'npx webpack --config config/webpack.kitchen-sink.dev.js'
       },
       kitchenSinkProdCljsBuild: {
         cmd: 'lein with-profile prod do clean, cljsbuild once kitchen-sink'
       },
       kitchenSinkProdCssBuild: {
-        cmd: 'mkdir -p ./resources/public/assets/css && yarn stylus --hoist-atrules -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink/index.styl && yarn cleancss -o resources/public/assets/css/kitchen-sink.css resources/public/assets/css/kitchen-sink.css'
+        cmd: 'mkdir -p ./resources/public/assets/css && npx stylus --hoist-atrules -u autoprefixer-stylus -u axis -u jeet -u rupture --include-css -o ./resources/public/assets/css/kitchen-sink.css ./src/stylus/kitchen-sink/index.styl && npx cleancss -o resources/public/assets/css/kitchen-sink.css resources/public/assets/css/kitchen-sink.css'
       },
       kitchenSinkProdJsBuild: {
-        cmd: 'yarn webpack --config config/webpack.kitchen-sink.prod.js'
+        cmd: 'npx webpack --config config/webpack.kitchen-sink.prod.js'
       },
       kitchenSinkProdStaticServe: {
-        cmd: 'yarn serve --listen 3449 --single'
+        cmd: 'npx serve --listen 3449 --single'
       }
     },
     sprite: {
