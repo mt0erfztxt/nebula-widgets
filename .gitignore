@@ -4,6 +4,7 @@
 /.idea
 /.lein-*
 /.nrepl-port
+/.vscode
 /bak
 /checkouts
 /classes
