@@ -49,8 +49,8 @@
   "Renders group of text inputs.
 
   Arguments:
-  * `props` - map. Same as in [group-input](/widgets/group-input) widget, plus:
-  * `:items` - seq of maps. Same as in [group-input](/widgets/group-input) widget, plus:
+  * `props` - map. Same as in [group-input](/nebula-widgets/widgets/group-input) widget, plus:
+  * `:items` - seq of maps. Same as in [group-input](/nebula-widgets/widgets/group-input) widget, plus:
     - `:actions` - overridden so text input have two actions - insert and remove
     - `:insert-allowed` - logical true/false, true by default. Insert action is disabled when boolean false
     - `:remove-allowed` - logical true/false, true by default. Remove action is disabled when boolean false

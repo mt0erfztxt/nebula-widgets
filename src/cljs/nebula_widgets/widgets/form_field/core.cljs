@@ -42,7 +42,7 @@
   "Renders form field.
 
   Because of styling, it's not intended to be used directly but rather as a base for more specific form field widgets:
-  * [checkable-group-input-form-field](/widgets/checkable-group-input-form-field)
+  * [checkable-group-input-form-field](/nebula-widgets/widgets/checkable-group-input-form-field)
 
   Arguments:
   * `props` - optional, map, no default. Supported keys:

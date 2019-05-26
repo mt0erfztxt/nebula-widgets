@@ -34,7 +34,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn widget
-  "Renders action of [action-group](/widgets/action-group).
+  "Renders action of [action-group](/nebula-widgets/widgets/action-group).
 
   Arguments:
   * `props` - optional, map. Supported props:

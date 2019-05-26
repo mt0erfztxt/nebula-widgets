@@ -30,7 +30,7 @@
   Arguments:
   * `props` - optional, map. Supported props:
     - `:actions` - seq of maps and/or renderables, no default. When element is a map, then it used as props to render
-      [action-group's action](/widgets/action-group-action) widget, otherwise element rendered as-is.
+      [action-group's action](/nebula-widgets/widgets/action-group-action) widget, otherwise element rendered as-is.
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.
     - `:disabled` - logical true/false, no default. Whether action is disabled or not. When evaluates to logical true,

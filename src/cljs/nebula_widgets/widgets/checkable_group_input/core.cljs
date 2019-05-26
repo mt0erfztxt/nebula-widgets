@@ -19,11 +19,12 @@
   "Renders group of checkable inputs.
 
   Arguments:
-  * `props` - map. Same as in [group-input](/widgets/group-input) widget, plus:
+  * `props` - map. Same as in [group-input](/nebula-widgets/widgets/group-input) widget, plus:
     - `:boolean` - logical true/false, no default. Only for group with `:multi-checkable` set to logical true, and when
       logical true, each map in `:items` must have `:path` key, otherwise it must have `:value` key.
-    - `:items` - seq of maps, no default. Each map is a props for [checkable-input](/widgets/checkable-input) widget,
-      where `:checked` prop of each item calculated from group's `:value` prop.
+    - `:items` - seq of maps, no default. Each map is a props for
+      [checkable-input](/nebula-widgets/widgets/checkable-input) widget, where `:checked` prop of each item calculated
+      from group's `:value` prop.
     - `:label-shrinked` - logical true/false, no default. Whether items in group has their label shrinked or not.
     - `:on-change` - function, no default. It called with value of `:path` prop when `:multi-checkable` and `:boolean`
       are logical true or value of `:value` prop otherwise, and browser event as arguments when item checked or

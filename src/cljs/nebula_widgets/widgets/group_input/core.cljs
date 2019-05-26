@@ -60,8 +60,8 @@
   "Renders group input.
 
   Not intended to be used directly but rather as a base for more specific group input widgets:
-  * [checkable-group-input](/widgets/checkable-group-input)
-  * [text-group-input](/widgets/text-group-input)
+  * [checkable-group-input](/nebula-widgets/widgets/checkable-group-input)
+  * [text-group-input](/nebula-widgets/widgets/text-group-input)
 
   Arguments:
   * `props` - required, map. Supported keys:

@@ -32,7 +32,8 @@
   * `props` - required, map. Supported keys:
     - `:alignment` - one of :center (default), :left, :right or their string/symbol equivalents. Specifies group
       alignment.
-    - `:buttons` - seq of maps, no default. Group buttons, each map is a props for [button](/widgets/button) widget.
+    - `:buttons` - seq of maps, no default. Group buttons, each map is a props for
+      [button](/nebula-widgets/widgets/button) widget.
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.
     - `:disabled` - logical true/false, no default. Whether button group is disabled or not. When true all buttons in

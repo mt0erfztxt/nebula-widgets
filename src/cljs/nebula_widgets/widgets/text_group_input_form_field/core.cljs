@@ -11,9 +11,9 @@
   "Renders form field with text group input.
 
   Arguments:
-  * `ff-props` - map. Same as in [form-field](/widgets/form-field) widget, plus:
+  * `ff-props` - map. Same as in [form-field](/nebula-widgets/widgets/form-field) widget, plus:
     - `:bem` - forcibly set to 'nw-textGroupInputFormField'
-  * `tgi-props` - map. Same as in [text-group-input](/widgets/text-group-input) widget.
+  * `tgi-props` - map. Same as in [text-group-input](/nebula-widgets/widgets/text-group-input) widget.
 
   TODO:
   * update styles for better positioning of label, input and etc"

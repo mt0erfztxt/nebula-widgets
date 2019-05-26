@@ -33,7 +33,8 @@
 
   Arguments:
   * `props` - map:
-    - `:buttons` - map, same as `props` argument of [button-group-set](/widgets/button-group-set) widget, no default.
+    - `:buttons` - map, same as `props` argument of [button-group-set](/nebula-widgets/widgets/button-group-set) widget,
+      no default.
       Used to render form buttons.
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.

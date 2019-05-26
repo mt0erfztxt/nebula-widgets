@@ -70,9 +70,9 @@
   * `props` - map:
     - `:actions` - map, no default. Action for text input:
       * `:after` - seq of maps, no default. Actions to render after text input. Each map is a props for
-        [text-input.action](/widgets/text-input-action)
+        [text-input.action](/nebula-widgets/widgets/text-input-action)
       * `:before` - seq of maps, no default. Actions to render before text input. Each map is a props for
-        [text-input.action](/widgets/text-input-action)
+        [text-input.action](/nebula-widgets/widgets/text-input-action)
     - `:busy` - logical true/false, no default. Whether to show busy indicator or not.
     - `:cid` - any, no default. Component id.
     - `:cns` - any, no default. Component namespace.

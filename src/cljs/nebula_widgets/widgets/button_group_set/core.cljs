@@ -31,7 +31,7 @@
     - `:disabled` - logical true/false, no default. Whether button group set is disabled or not. When true all button
       groups in set would be disabled.
     - `:groups` - seq of maps, no default. Button groups of set, each map is a props for
-      [button-group](/widgets/button-group) widget.
+      [button-group](/nebula-widgets/widgets/button-group) widget.
     - any props that React supports for `<DIV>` tag"
   [{:keys [disabled groups] :as props}]
   (into [:div (merge {:class (build-class props)} (apply dissoc props custom-props-vec))]
