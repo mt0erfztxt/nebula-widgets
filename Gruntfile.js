@@ -39,8 +39,14 @@ module.exports = function(grunt) {
         dest: 'resources/public/assets/images'
       },
       kitchenSinkHtml: {
-        src: 'src/html/kitchen-sink.html',
+        src: 'src/html/kitchen-sink/index.html',
         dest: 'resources/public/index.html'
+      },
+      kitchenSinkGhPagesHtml: {
+        expand: true,
+        cwd: 'src/html/kitchen-sink/gh-pages',
+        src: '*.*',
+        dest: 'resources/public'
       }
     },
     sh: {
@@ -64,6 +70,12 @@ module.exports = function(grunt) {
       },
       kitchenSinkDevJsBuild: {
         cmd: 'npx webpack --config config/webpack.kitchen-sink.dev.js'
+      },
+      kitchenSinkGhPagesCljsBuild: {
+        cmd: 'lein with-profile gh-pages do clean, cljsbuild once kitchen-sink'
+      },
+      kitchenSinkGhPagesDeploy: {
+        cmd: 'npm run gh-pages'
       },
       kitchenSinkProdCljsBuild: {
         cmd: 'lein with-profile prod do clean, cljsbuild once kitchen-sink'
@@ -133,6 +145,20 @@ module.exports = function(grunt) {
 
   grunt.registerTask('kitchenSink:dev:js:build', [
     'sh:kitchenSinkDevJsBuild'
+  ]);
+
+  grunt.registerTask('kitchenSink:gh-pages:build', [
+    'clean',
+    'copy:fonts', 'copy:images', 'copy:kitchenSinkGhPagesHtml',
+    'sprite',
+    'sh:kitchenSinkProdCssBuild',
+    'sh:kitchenSinkProdJsBuild',
+    'sh:kitchenSinkGhPagesCljsBuild'
+  ]);
+
+  grunt.registerTask('kitchenSink:gh-pages:deploy', [
+    'kitchenSink:gh-pages:build',
+    'sh:kitchenSinkGhPagesDeploy'
   ]);
 
   grunt.registerTask('kitchenSink:prod:build', [

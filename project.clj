@@ -27,7 +27,8 @@
   :test-paths ["test/clj"]
   :plugins
   [[lein-ancient "0.6.15"]
-   [lein-cljsbuild "1.1.7"]]
+   [lein-cljsbuild "1.1.7"]
+   [lein-pprint "1.2.0"]]
   :doo {:build "test"}
   :aliases
   {"test-all" ["do" "clean," "doo" "chrome-headless" "test" "once"]
@@ -36,6 +37,20 @@
   {:dev [:project/dev :profiles/dev]
    :prod [:project/prod :profiles/prod]
    :test [:project/dev :project/test :profiles/test]
+   :gh-pages
+   {:cljsbuild
+    {:builds
+     {:kitchen-sink
+      {:compiler
+       {:closure-defines {nebula-widgets.kitchen-sink.config.gh-pages true}
+        :foreign-libs
+        [{:file "webpack-out/kitchen-sink/js-bundle.prod.js"
+          :provides ["js-bundle"]}]
+        :main nebula-widgets.kitchen-sink.core
+        :npm-deps false
+        :optimizations :advanced
+        :output-to "resources/public/assets/js/kitchen-sink.js"}
+       :source-paths ["src/cljs"]}}}}
    :project/dev
    {:cljsbuild
     {:builds
