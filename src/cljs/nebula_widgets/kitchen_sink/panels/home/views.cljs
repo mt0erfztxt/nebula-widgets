@@ -9,7 +9,7 @@
    :widgets/button
    :widgets/button-group
    :widgets/button-group-set
-   :widgets/card
+   ;:widgets/card ; TODO: Replace (this is old one)
    :widgets/checkable-input
    :widgets/group-input
    :widgets/checkable-group-input
