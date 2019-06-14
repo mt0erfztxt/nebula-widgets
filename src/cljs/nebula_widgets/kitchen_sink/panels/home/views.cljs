@@ -20,6 +20,7 @@
    :widgets/text-group-input-form-field
    :widgets/form
    :widgets/tab-group
+   :widgets/table
    :widgets/toolbar])
 
 (def ^:private pages-href-and-text

@@ -17,6 +17,7 @@
     [nebula-widgets.kitchen-sink.panels.text-group-input-form-field-widget.db :as text-group-input-form-field-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.text-group-input-widget.db :as text-group-input-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.text-input-widget.db :as text-input-widget-panel-db]
+    [nebula-widgets.kitchen-sink.panels.table-widget.db :as table-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.toolbar-widget.db :as toolbar-widget-panel-db]))
 
 (def ^:private db-panels
@@ -39,6 +40,7 @@
     text-group-input-form-field-widget-panel-db/default-db
     text-group-input-widget-panel-db/default-db
     text-input-widget-panel-db/default-db
+    table-widget-panel-db/default-db
     toolbar-widget-panel-db/default-db))
 
 (def default-db

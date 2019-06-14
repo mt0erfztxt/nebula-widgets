@@ -1,0 +1,23 @@
+.nw-table-headRow-cell
+    border-right: $nw-table_border;
+    display: table-cell;
+    padding: 15px 8px 16px;
+    position: relative;
+
+    &:last-child &__resizeHandle
+        display: none;
+
+
+    &__resizeHandle
+        bottom: 0;
+        cursor: col-resize;
+        right: -2px;
+        position: absolute;
+        top: 0;
+        width: 3px;
+        z-index: 1;
+
+
+    &--resizing &__resizeHandle
+    &__resizeHandle:hover
+        background-color: $nw-table-resizeHandle_bg;
