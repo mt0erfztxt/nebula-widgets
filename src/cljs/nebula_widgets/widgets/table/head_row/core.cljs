@@ -18,27 +18,43 @@
 ;; TODO: Calculate new width for columns then update table's columns state if any width changed.
 (defn widget [{:keys [on-end-column-resizing on-start-column-resizing] :as props} _table-width]
   (let [listener-keys (atom [])
+        node (atom nil)
+        left (atom nil)
         resizing? (atom (:column-resizing props))
         resize-handle-node (atom nil)
-        resizing-columns-width (atom nil)
+        ;; A seq of columns width needed to calculate position of column's resize handle. For example, if we have a
+        ;; table with four columns, then:
+        ;; * when resizing first column it would be (col1-width, col2-width)
+        ;; * when resizing second column it would be (col1-width, col2-width, col3-width)
+        resizing-columns-width (atom [])
+        resizing-column-right-sibling-width (atom nil)
+        resizing-column-and-left-siblings-widths (atom nil)
+        resizing-column-left-siblings-widths (atom nil)
+        resizing-column-width (atom nil)
         on-end-column-resizing
         (fn [column-cid]
           (reset! resize-handle-node nil)
           (reset! resizing-columns-width nil)
           (on-end-column-resizing column-cid))
         on-start-column-resizing
-        (fn [column-cid node]
-          (reset! resize-handle-node node)
-          (let [this-column-node (gdom/getParentElement node)
+        (fn [column-cid column-handle-node]
+          (reset! resize-handle-node column-handle-node)
+          (let [this-column-node (gdom/getParentElement column-handle-node)
                 next-column-node (gdom/getNextElementSibling this-column-node)
                 previous-columns-nodes
                 (loop [acc [], node this-column-node]
                   (if-let [previous-column-node (gdom/getPreviousElementSibling node)]
                     (recur (conj acc previous-column-node) previous-column-node)
-                    acc))]
-            (reset! resizing-columns-width
-                    (map #(-> % gstyle/getSize (oops/oget "width"))
-                         (into previous-columns-nodes [this-column-node next-column-node]))))
+                    acc))
+                columns-widths
+                (map #(-> % gstyle/getSize (oops/oget "width"))
+                     (into previous-columns-nodes [this-column-node next-column-node]))]
+            (reset! resizing-columns-width columns-widths)
+            (reset! left (-> @node gstyle/getBounds (oops/oget "left")))
+            (reset! resizing-column-right-sibling-width (last columns-widths))
+            (let [widths (reset! resizing-column-and-left-siblings-widths (drop-last columns-widths))]
+              (reset! resizing-column-left-siblings-widths (drop-last widths))
+              (reset! resizing-column-width (last widths))))
           (on-start-column-resizing column-cid))]
     (r/create-class
       {:display-name bem
@@ -63,7 +79,7 @@
               ^{:key cid} [cell/widget column on-end-column-resizing on-start-column-resizing resize-handle-node])]))
        :component-did-mount
        (fn [this]
-         (let [node (r/dom-node this)]
+         (let [node (reset! node (r/dom-node this))]
            (let [column-min-width 64]
              (reset!
                listener-keys
@@ -73,25 +89,22 @@
                   (fn [event]
                     (let [resize-handle-node @resize-handle-node]
                       (when (and resize-handle-node @resizing?)
-                        (let [node-bounds (gstyle/getBounds node)
-                              resizing-columns-width @resizing-columns-width
+                        (let [left @left
+                              resizing-column-width @resizing-column-width
                               client-x (oops/oget event "clientX")
-                              left (oops/oget node-bounds "left")
-                              column-widths (drop-last resizing-columns-width)
-                              resizing-column-width (last column-widths)
-                              max-x (-> resizing-column-width (+ (last resizing-columns-width)) (- column-min-width))
+                              max-x (- (+ resizing-column-width @resizing-column-right-sibling-width) column-min-width)
                               min-x column-min-width
                               x
-                              (-> (reduce + column-widths)
+                              (-> (reduce + @resizing-column-and-left-siblings-widths)
                                 (+ left)
                                 (- client-x resizing-column-width)
                                 (Math/abs)
                                 (Math/floor)
+                                (#(if (> % max-x) max-x %))
                                 (#(if (or (< % min-x)
-                                          (< client-x (reduce + (cons left (drop-last 2 resizing-columns-width)))))
+                                          (< client-x (reduce + (cons left @resizing-column-left-siblings-widths))))
                                     min-x
-                                    %))
-                                (#(if (> % max-x) max-x %)))]
+                                    %)))]
                           (gstyle/setPosition resize-handle-node x))))))]))))
        :component-did-update
        (fn [this old-argv]
