@@ -20,29 +20,31 @@
     [nebula-widgets.kitchen-sink.panels.table-widget.db :as table-widget-panel-db]
     [nebula-widgets.kitchen-sink.panels.toolbar-widget.db :as toolbar-widget-panel-db]))
 
-(def ^:private db-panels
-  (merge
-    {}
-    action-group-widget-panel-db/default-db
-    action-group-action-widget-panel-db/default-db
-    app-panel-widget-panel-db/default-db
-    button-group-set-widget-panel-db/default-db
-    button-group-widget-panel-db/default-db
-    button-widget-panel-db/default-db
-    card-widget-panel-db/default-db
-    checkable-group-input-form-field-widget-panel-db/default-db
-    checkable-group-input-widget-panel-db/default-db
-    checkable-input-widget-panel-db/default-db
-    form-field-widget-panel-db/default-db
-    form-widget-panel-db/default-db
-    group-input-widget-panel-db/default-db
-    tab-group-widget-panel-db/default-db
-    text-group-input-form-field-widget-panel-db/default-db
-    text-group-input-widget-panel-db/default-db
-    text-input-widget-panel-db/default-db
-    table-widget-panel-db/default-db
-    toolbar-widget-panel-db/default-db))
+(def ^:private panels-db
+  [action-group-widget-panel-db/default-db
+   action-group-action-widget-panel-db/default-db
+   app-panel-widget-panel-db/default-db
+   button-group-set-widget-panel-db/default-db
+   button-group-widget-panel-db/default-db
+   button-widget-panel-db/default-db
+   card-widget-panel-db/default-db
+   checkable-group-input-form-field-widget-panel-db/default-db
+   checkable-group-input-widget-panel-db/default-db
+   checkable-input-widget-panel-db/default-db
+   form-field-widget-panel-db/default-db
+   form-widget-panel-db/default-db
+   group-input-widget-panel-db/default-db
+   tab-group-widget-panel-db/default-db
+   text-group-input-form-field-widget-panel-db/default-db
+   text-group-input-widget-panel-db/default-db
+   text-input-widget-panel-db/default-db
+   table-widget-panel-db/default-db
+   toolbar-widget-panel-db/default-db])
 
 (def default-db
-  {:app {:route {:id :home, :params nil, :query nil}}
-   :panels db-panels})
+  (reduce
+    (fn [acc item]
+      (if (fn? item) (item acc) (update acc :panel merge item)))
+    {:app
+     {:route {:id :home, :params nil, :query nil}}}
+    panels-db))
