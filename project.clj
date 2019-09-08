@@ -66,7 +66,7 @@
         :optimizations :none
         :output-dir "target/cljsbuild/public/assets/js/kitchen-sink"
         :output-to "target/cljsbuild/public/assets/js/kitchen-sink.js"
-        :preloads [#_day8.re-frame-10x.preload devtools.preload]
+        :preloads [day8.re-frame-10x.preload devtools.preload]
         :pretty-print true
         :source-map-timestamp true}
        :figwheel {:on-jsload "nebula-widgets.kitchen-sink.views/mount-root-view"}

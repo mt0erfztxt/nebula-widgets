@@ -1,0 +1,25 @@
+$nw-table_border          = 1px solid $g_color_primary_text--disabled;
+$nw-table-head_bg         = $g_color_background--darker;
+$nw-table-resizeHandle_bg = $g_color_accent;
+
+
+@require './bodyRow';
+@require './headRow';
+
+
+.nw-table
+    border: $nw-table_border;
+    border-collapse: collapse;
+    display: table;
+    user-select: none;  // disable table content selection and handle dragging
+    // width: 100%;
+
+
+    &__body
+        display: table-row-group
+
+
+    &__head
+        background-color: $nw-table-head_bg;
+        border: $nw-table_border;
+        display: table-header-group;

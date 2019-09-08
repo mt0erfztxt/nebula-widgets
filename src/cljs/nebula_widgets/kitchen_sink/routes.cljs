@@ -25,6 +25,7 @@
        [(str prefix "widgets/text-group-input-form-field") :widgets/text-group-input-form-field]
        [(str prefix "widgets/text-group-input") :widgets/text-group-input]
        [(str prefix "widgets/text-input") :widgets/text-input]
+       [(str prefix "widgets/table") :widgets/table]
        [(str prefix "widgets/toolbar") :widgets/toolbar]])))
 
 (def router (create-router config/gh-pages))
