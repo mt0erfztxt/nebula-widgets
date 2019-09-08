@@ -51,13 +51,10 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn widget [_column _on-end-resizing _on-start-resizing resize-handle-node]
-  (r/create-class
-    {:display-name "nebula-widgets.widgets.table.head-row.cell"
-     :reagent-render
-     (fn [{:keys [cid title width] :as column} on-end-resizing on-start-resizing]
-       [:div
-        {:class (build-class column)
-         :style (when (and width (pos? width)) {:width width})}
-        title
-        [resize-handle-cmp resize-handle-node cid on-end-resizing on-start-resizing]])}))
+(defn widget
+  [{:keys [cid title width] :as column} on-end-resizing on-start-resizing resize-handle-node]
+  [:div
+   {:class (build-class column)
+    :style (when (and width (pos? width)) {:width width})}
+   title
+   [resize-handle-cmp resize-handle-node cid on-end-resizing on-start-resizing]])

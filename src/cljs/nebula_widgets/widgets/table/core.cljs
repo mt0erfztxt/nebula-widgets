@@ -11,16 +11,31 @@
 (def ^:private body-elt-bem (str bem "__body"))
 (def ^:private head-elt-bem (str bem "__head"))
 
-(defn- build-class [{:keys [cid]}]
+(def ^:private body-elt-cmp-props-vec
+  [:column-order
+   :rows])
+
+(def ^:private head-elt-cmp-props-vec
+  [:column-order
+   :column-resizing
+   :column-titles
+   :column-widths
+   :on-end-column-resizing
+   :on-start-column-resizing])
+
+(defn- build-class
+  [{:keys [cid]}]
   (bem-utils/build-class bem [["cid" cid]]))
 
-(defn- body-elt-cmp [{:keys [column-order rows]}]
+(defn- body-elt-cmp
+  [{:keys [column-order rows]}]
   [:div {:class body-elt-bem}
    (for [{:keys [cid] :as row} rows]
      ^{:key cid}
      [body-row/widget column-order row])])
 
-(defn- head-elt-cmp [props]
+(defn- head-elt-cmp
+  [props]
   [:div {:class head-elt-bem}
    [head-row/widget props]])
 
@@ -48,9 +63,8 @@
        :reagent-render
        (fn [props]
          [:div {:class (build-class props)}
-          [head-elt-cmp
-           (select-keys props [:column-order :column-resizing :column-titles :column-widths :on-end-column-resizing :on-start-column-resizing])]
-          [body-elt-cmp (select-keys props [:column-order :rows])]])
+          [head-elt-cmp (select-keys props head-elt-cmp-props-vec)]
+          [body-elt-cmp (select-keys props body-elt-cmp-props-vec)]])
        :component-did-mount
        (fn [this]
          (on-resize (-> this r/dom-node gdom/getParentElement (oops/oget "clientWidth"))))})))

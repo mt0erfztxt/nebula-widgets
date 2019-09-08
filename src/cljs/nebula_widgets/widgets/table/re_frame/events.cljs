@@ -5,9 +5,10 @@
 (def ^:private default-width 100)
 
 (defn- make-end-column-resizing-event-handler
-  [widget-db-key]
-  (fn end-column-resizing-event-handler [db [_ table-key column-cid new-column-width]]
-    (let [table-db (get-in db [widget-db-key table-key])
+  [widget-namespace-key]
+  (fn end-column-resizing-event-handler
+    [db [_ table-key column-cid new-column-width]]
+    (let [table-db (get-in db [widget-namespace-key table-key])
           column-order (get table-db :column-order)
           old-column-widths (get table-db :column-widths)
           affected-column-cid (->> column-order (drop-while #(not= column-cid %)) second)
@@ -19,20 +20,22 @@
             column-cid new-column-width
             affected-column-cid (+ affected-column-width column-width-delta))]
       (-> db
-        (assoc-in [widget-db-key table-key :column-resizing] nil)
+        (assoc-in [widget-namespace-key table-key :column-resizing] nil)
         (cond->
           (not (zero? column-width-delta))
-          (assoc-in [widget-db-key table-key :column-widths] new-column-widths))))))
+          (assoc-in [widget-namespace-key table-key :column-widths] new-column-widths))))))
 
 (defn- make-start-column-resizing-event-handler
-  [widget-db-key]
-  (fn start-column-resizing-event-handler [db [_ table-key column-cid]]
-    (assoc-in db [widget-db-key table-key :column-resizing] column-cid)))
+  [widget-namespace-key]
+  (fn start-column-resizing-event-handler
+    [db [_ table-key column-cid]]
+    (assoc-in db [widget-namespace-key table-key :column-resizing] column-cid)))
 
 (defn- make-set-width-event-handler
-  [widget-db-key]
-  (fn set-width-event-handler [db [_ table-key new-table-width]]
-    (let [table-db (get-in db [widget-db-key table-key])
+  [widget-namespace-key]
+  (fn set-width-event-handler
+    [db [_ table-key new-table-width]]
+    (let [table-db (get-in db [widget-namespace-key table-key])
           old-column-widths (get table-db :column-widths)
           column-widths-with-defaults-applied
           (reduce
@@ -50,8 +53,8 @@
             {}
             column-widths-with-defaults-applied)]
       (-> db
-        (assoc-in [widget-db-key table-key :column-widths] new-column-widths)
-        (assoc-in [widget-db-key table-key :width] new-table-width)))))
+        (assoc-in [widget-namespace-key table-key :column-widths] new-column-widths)
+        (assoc-in [widget-namespace-key table-key :width] new-table-width)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC

@@ -2,17 +2,22 @@
   (:require
     [re-frame.core :as rf]))
 
-(defn- column-order-sub-computation-fn [widget-db [_ widget-cid]]
-  (get-in widget-db [widget-cid :column-order]))
+;; TODO: All computation fns are of same pattern -> doseq.
+(defn- column-order-sub-computation-fn
+  [widget-db [_ table-cid]]
+  (get-in widget-db [table-cid :column-order]))
 
-(defn- column-resizing-sub-computation-fn [widget-db-chunk [_ table]]
-  (get-in widget-db-chunk [table :column-resizing]))
+(defn- column-resizing-sub-computation-fn
+  [widget-db [_ table-cid]]
+  (get-in widget-db [table-cid :column-resizing]))
 
-(defn- column-widths-sub-computation-fn [widget-db [_ widget-cid]]
-  (get-in widget-db [widget-cid :column-widths]))
+(defn- column-widths-sub-computation-fn
+  [widget-db [_ table-cid]]
+  (get-in widget-db [table-cid :column-widths]))
 
-(defn- width-sub-computation-fn [widget-db-chunk [_ table]]
-  (get-in widget-db-chunk [table :width]))
+(defn- width-sub-computation-fn
+  [widget-db [_ table-cid]]
+  (get-in widget-db [table-cid :width]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC

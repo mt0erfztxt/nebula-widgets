@@ -5,14 +5,16 @@
 
 (def ^:private bem "nw-table-bodyRow")
 
-(defn- build-class [{:keys [cid]}]
+(defn- build-class
+  [{:keys [cid]}]
   (bem-utils/build-class bem [["cid" cid]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn widget [column-order row]
+(defn widget
+  [column-order row]
   [:div {:class (build-class row)}
    (->> column-order
      (reduce
