@@ -9,16 +9,18 @@
 (def ^:private bem "nw-table-headRow-cell")
 (def ^:private resize-handle-elt-bem (str bem "__resizeHandle"))
 
-(defn- build-class [{:keys [cid resizing?]}]
+(defn- build-class
+  [{:keys [cid resizing?]}]
   (bem-utils/build-class
     bem
     [["cid" cid]
      ["resizing" resizing?]]))
 
-(defn- resize-handle-cmp [resize-handle-node cid on-end-resizing on-start-resizing]
-  (let [listener-keys (atom [])]
+(defn- resize-handle-cmp
+  [resize-handle-node cid on-end-resizing on-start-resizing]
+  (let [listener-keys (atom nil)]
     (r/create-class
-      {:display-name resize-handle-elt-bem
+      {:display-name "nebula-widgets.widgets.table.head-row.cell.resize-handle-cmp"
        :reagent-render
        (fn [_ _ _ _]
          [:span {:class resize-handle-elt-bem}])
@@ -26,20 +28,22 @@
        (fn [this]
          (let [node (r/dom-node this)]
            (reset! resize-handle-node node)
-           (reset! listener-keys
-                   [(gevents/listen node
-                                    EventType/MOUSEDOWN
-                                    (fn [_]
-                                      (gevents/listenOnce
-                                        js/document
-                                        EventType/MOUSEUP
-                                        (fn [_]
-                                          (oops/oset! node "style.!left" nil) ; TODO Does we really need that?
-                                          (on-end-resizing cid)))
-                                      (on-start-resizing cid node)))])))
+           (reset!
+             listener-keys
+             [(gevents/listen
+                node
+                EventType/MOUSEDOWN
+                (fn [_]
+                  (gevents/listenOnce
+                    js/document
+                    EventType/MOUSEUP
+                    (fn [_]
+                      (oops/oset! node "style.!left" nil)   ; TODO Does we really need that?
+                      (on-end-resizing cid)))
+                  (on-start-resizing cid node)))])))
        :component-will-unmount
        (fn [_]
-         (doseq [k (seq @listener-keys)]
+         (doseq [k @listener-keys]
            (when k
              (gevents/unlistenByKey k))))})))
 
@@ -47,9 +51,9 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn widget [column _on-end-resizing _on-start-resizing resize-handle-node]
+(defn widget [_column _on-end-resizing _on-start-resizing resize-handle-node]
   (r/create-class
-    {:display-name bem
+    {:display-name "nebula-widgets.widgets.table.head-row.cell"
      :reagent-render
      (fn [{:keys [cid title width] :as column} on-end-resizing on-start-resizing]
        [:div

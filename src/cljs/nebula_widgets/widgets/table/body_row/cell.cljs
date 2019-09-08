@@ -5,16 +5,19 @@
 (def ^:private bem "nw-table-bodyRow-cell")
 (def ^:private content-elt-bem (str bem "__content"))
 
-(defn- build-class [{:keys [cid]}]
+(defn- build-class
+  [cid]
   (bem-utils/build-class bem [["cid" cid]]))
 
-(defn- content-elt-cmp [content]
+(defn- content-elt-cmp
+  [content]
   [:span {:class content-elt-bem} content])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn widget [column content]
-  [:div {:class (build-class column)}
+(defn widget
+  [column-cid content]
+  [:div {:class (build-class column-cid)}
    [content-elt-cmp content]])

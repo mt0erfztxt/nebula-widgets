@@ -7,8 +7,10 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO: Describe widget's state map.
 (defn register
   ([] (register :nw-table))
-  ([table-namespace]
-   (events/register-events table-namespace)
-   (subs/register-subs table-namespace)))
+  ([widget-namespace]
+   (let [widget-namespace-key (keyword widget-namespace)]
+     (events/register-events widget-namespace-key)
+     (subs/register-subs widget-namespace-key))))

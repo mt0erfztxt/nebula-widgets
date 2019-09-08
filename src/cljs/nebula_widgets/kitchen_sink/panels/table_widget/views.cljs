@@ -7,8 +7,7 @@
     [nebula-widgets.widgets.table.core :as table]
     [re-frame.core :as rf]))
 
-(def ^:private bem
-  "tableWidgetPanel")
+(def ^:private bem "tableWidgetPanel")
 
 ;;------------------------------------------------------------------------------
 ;; Interactive example
@@ -26,7 +25,10 @@
 
 (defn- interactive-example-cmp []
   (let [cid :example-table
-        on-end-column-resizing #(rf/dispatch [:nw-table/end-column-resizing cid %])
+        column-order (rf/subscribe [:nw-table/column-order cid])
+        column-resizing (rf/subscribe [:nw-table/column-resizing cid])
+        column-widths (rf/subscribe [:nw-table/column-widths cid])
+        on-end-column-resizing #(rf/dispatch [:nw-table/end-column-resizing cid %1 %2])
         on-start-column-resizing #(rf/dispatch [:nw-table/start-column-resizing cid %])
         on-resize #(rf/dispatch [:nw-table/set-width cid %])
         props (rf/subscribe [(interactive-example-path->keyword)])]
@@ -35,11 +37,10 @@
         [ie/widget
          [table/widget
           {:cid cid
-           :column-resizing @(rf/subscribe [:nw-table/column-resizing cid])
-           :columns
-           [{:cid :a, :title "Column A", :width 240}
-            {:cid :b, :title "Column B", :width 150}
-            {:cid :c, :title "Column C", :width 200}]
+           :column-order @column-order
+           :column-resizing @column-resizing
+           :column-titles {:a "Column A", :b "Column B", :c "Column C"}
+           :column-widths @column-widths
            :on-end-column-resizing on-end-column-resizing
            :on-start-column-resizing on-start-column-resizing
            :on-resize on-resize

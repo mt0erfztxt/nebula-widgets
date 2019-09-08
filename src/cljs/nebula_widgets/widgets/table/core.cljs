@@ -14,15 +14,15 @@
 (defn- build-class [{:keys [cid]}]
   (bem-utils/build-class bem [["cid" cid]]))
 
-(defn- body-elt-cmp [{:keys [columns rows]}]
+(defn- body-elt-cmp [{:keys [column-order rows]}]
   [:div {:class body-elt-bem}
    (for [{:keys [cid] :as row} rows]
      ^{:key cid}
-     [body-row/widget columns row])])
+     [body-row/widget column-order row])])
 
-(defn- head-elt-cmp [props table-width]
+(defn- head-elt-cmp [props]
   [:div {:class head-elt-bem}
-   [head-row/widget props table-width]])
+   [head-row/widget props]])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
@@ -44,13 +44,13 @@
   [props]
   (let [{:keys [on-resize]} props]
     (r/create-class
-      {:reagent-render
-       (fn [{:keys [width] :as props}]
+      {:display-name "nebula-widgets.widgets.table.core.widget"
+       :reagent-render
+       (fn [props]
          [:div {:class (build-class props)}
           [head-elt-cmp
-           (select-keys props [:columns :column-resizing :on-end-column-resizing :on-start-column-resizing])
-           width]
-          [body-elt-cmp (select-keys props [:columns :rows])]])
+           (select-keys props [:column-order :column-resizing :column-titles :column-widths :on-end-column-resizing :on-start-column-resizing])]
+          [body-elt-cmp (select-keys props [:column-order :rows])]])
        :component-did-mount
        (fn [this]
          (on-resize (-> this r/dom-node gdom/getParentElement (oops/oget "clientWidth"))))})))

@@ -12,11 +12,11 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn widget [columns row]
+(defn widget [column-order row]
   [:div {:class (build-class row)}
-   (->> columns
+   (->> column-order
      (reduce
-       (fn [acc {:keys [cid] :as column}]
-         (conj acc ^{:key cid} [cell/widget column (get row cid)]))
+       (fn [acc cid]
+         (conj acc ^{:key cid} [cell/widget cid (get row cid)]))
        [])
      (seq))])

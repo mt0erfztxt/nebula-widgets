@@ -9,15 +9,15 @@
     [reagent.core :as r]))
 
 (def ^:private bem "nw-table-headRow")
-(def ^:private default-width 100)
+(def ^:private column-min-width 64)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: Calculate new width for columns then update table's columns state if any width changed.
-(defn widget [{:keys [on-end-column-resizing on-start-column-resizing] :as props} _table-width]
-  (let [listener-keys (atom [])
+(defn widget
+  [{:keys [on-end-column-resizing on-start-column-resizing] :as props}]
+  (let [listener-keys (atom nil)
         node (atom nil)
         left (atom nil)
         resizing? (atom (:column-resizing props))
@@ -31,11 +31,13 @@
         resizing-column-and-left-siblings-widths (atom nil)
         resizing-column-left-siblings-widths (atom nil)
         resizing-column-width (atom nil)
+        resizing-column-new-width (atom nil)
         on-end-column-resizing
         (fn [column-cid]
           (reset! resize-handle-node nil)
           (reset! resizing-columns-width nil)
-          (on-end-column-resizing column-cid))
+          (on-end-column-resizing column-cid @resizing-column-new-width)
+          (reset! resizing-column-new-width nil))
         on-start-column-resizing
         (fn [column-cid column-handle-node]
           (reset! resize-handle-node column-handle-node)
@@ -57,55 +59,48 @@
               (reset! resizing-column-width (last widths))))
           (on-start-column-resizing column-cid))]
     (r/create-class
-      {:display-name bem
+      {:display-name "nebula-widgets.widgets.table.head-row.core.widget"
        :reagent-render
-       (fn [{:keys [columns column-resizing]} table-width]
-         (let [column-widths-by-cid
-               (reduce
-                 (fn [acc {:keys [cid width]}]
-                   (assoc acc cid (if (and width (pos? width)) width default-width)))
-                 {}
-                 columns)
-               total-width (->> column-widths-by-cid vals (reduce +))
-               ratio (/ table-width total-width)]
-           [:div {:class bem}
-            (for [{:keys [cid] :as column}
-                  (map
-                    (fn [{:keys [cid] :as column}]
-                      (assoc column
-                        :resizing? (= cid column-resizing)
-                        :width (-> column-widths-by-cid (get cid) (* ratio) Math/floor)))
-                    columns)]
-              ^{:key cid} [cell/widget column on-end-column-resizing on-start-column-resizing resize-handle-node])]))
+       (fn [{:keys [column-order column-resizing column-titles column-widths]}]
+         [:div {:class bem}
+          (for [{:keys [cid] :as column}
+                (map
+                  (fn [cid]
+                    {:cid cid
+                     :resizing? (= cid column-resizing)
+                     :title (get column-titles cid)
+                     :width (get column-widths cid)})
+                  column-order)]
+            ^{:key cid}
+            [cell/widget column on-end-column-resizing on-start-column-resizing resize-handle-node])])
        :component-did-mount
        (fn [this]
          (let [node (reset! node (r/dom-node this))]
-           (let [column-min-width 64]
-             (reset!
-               listener-keys
-               [(gevents/listen
-                  node
-                  EventType/MOUSEMOVE
-                  (fn [event]
-                    (let [resize-handle-node @resize-handle-node]
-                      (when (and resize-handle-node @resizing?)
-                        (let [left @left
-                              resizing-column-width @resizing-column-width
-                              client-x (oops/oget event "clientX")
-                              max-x (- (+ resizing-column-width @resizing-column-right-sibling-width) column-min-width)
-                              min-x column-min-width
-                              x
-                              (-> (reduce + @resizing-column-and-left-siblings-widths)
-                                (+ left)
-                                (- client-x resizing-column-width)
-                                (Math/abs)
-                                (Math/floor)
-                                (#(if (> % max-x) max-x %))
-                                (#(if (or (< % min-x)
-                                          (< client-x (reduce + (cons left @resizing-column-left-siblings-widths))))
-                                    min-x
-                                    %)))]
-                          (gstyle/setPosition resize-handle-node x))))))]))))
+           (reset!
+             listener-keys
+             [(gevents/listen
+                node
+                EventType/MOUSEMOVE
+                (fn [event]
+                  (let [resize-handle-node @resize-handle-node]
+                    (when (and resize-handle-node @resizing?)
+                      (let [left @left
+                            resizing-column-width @resizing-column-width
+                            client-x (oops/oget event "clientX")
+                            max-x (- (+ resizing-column-width @resizing-column-right-sibling-width) column-min-width)
+                            x
+                            (-> (reduce + @resizing-column-and-left-siblings-widths)
+                              (+ left)
+                              (- client-x resizing-column-width)
+                              (Math/abs)
+                              (Math/floor)
+                              (#(if (> % max-x) max-x %))
+                              (#(if (or (< % column-min-width)
+                                        (< client-x (reduce + (cons left @resizing-column-left-siblings-widths))))
+                                  column-min-width
+                                  %)))]
+                        (gstyle/setPosition resize-handle-node x)
+                        (reset! resizing-column-new-width x))))))])))
        :component-did-update
        (fn [this old-argv]
          (let [[old-resizing? new-resizing?] (map #(-> % second :column-resizing) [old-argv (r/argv this)])]
@@ -113,6 +108,6 @@
              (reset! resizing? new-resizing?))))
        :component-will-unmount
        (fn [_]
-         (doseq [k (seq @listener-keys)]
+         (doseq [k @listener-keys]
            (when k
              (gevents/unlistenByKey k))))})))
