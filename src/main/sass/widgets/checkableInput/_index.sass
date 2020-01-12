@@ -1,0 +1,69 @@
+@use "src/main/sass/core/config"
+
+
+$input-size: 20px
+
+
+.nw-checkableInput
+  &__label
+    cursor: pointer
+    display: inline-block
+    transition: color .3s
+
+  &--disabled
+    opacity: 0.4
+
+  &--disabled &__label
+    cursor: default
+    transition: none
+
+    &:hover
+      color: inherit
+
+  &--labelShrinked
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+  &--widget_button &__label
+    display: block
+    padding: 0 8px
+
+    input
+      display: none
+
+  &--widget_checkbox,
+  &--widget_radio
+    margin-bottom: 0
+
+  &--widget_checkbox &__label,
+  &--widget_radio &__label
+    display: inline-block
+    line-height: $input-size
+    padding-left: 26px
+    position: relative
+    vertical-align: middle
+
+    input
+      display: none
+
+    &:before
+      background-size: $input-size $input-size
+      content: " "
+      display: inline-block
+      height: $input-size
+      left: 0
+      position: absolute
+      width: $input-size
+
+  &--widget_checkbox &__label:before
+    background-image: url(#{config.$images-path}/input-checkbox.svg)
+
+  &--widget_checkbox#{&}--checked &__label:before
+    background-image: url(#{config.$images-path}/input-checkbox--checked.svg)
+
+  &--widget_radio &__label:before
+    background-image: url(#{config.$images-path}/input-radio.svg)
+
+  &--widget_radio#{&}--checked &__label:before
+    background-image: url(#{config.$images-path}/input-radio--checked.svg)

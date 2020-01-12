@@ -1,0 +1,30 @@
+@use "src/main/sass/core/colors"
+@use "knob"
+
+
+$border: 1px solid black
+
+
+.manPage-interactiveExample
+  &__knob
+    border: $border
+    display: table-row-group
+
+  &__knobs
+    border: $border
+    border-collapse: collapse
+    display: table
+    width: 100%
+
+  &__knobs-header
+    display: table-cell
+    font-weight: bold
+    padding: 8px
+    text-align: center
+
+  &__knobs-headers
+    border: $border
+    display: table-header-group
+
+  &__view
+    margin-bottom: 16px

@@ -1,0 +1,31 @@
+@use "core/colors"
+@use "core/fonts"
+@use "vendor"
+@use "widgets"
+
+
+@import url('https://fonts.googleapis.com/css?family=Droid+Sans')
+
+
+*, *:before, *:after
+  box-sizing: inherit
+
+
+html
+  background-color: colors.$primary-background
+  box-sizing: border-box
+  height: 100%
+
+
+body
+  background-color: colors.$primary-background
+  font-family: fonts.$font-family
+  font-size: fonts.$font-size
+  height: 100%
+
+
+hr
+  background-color: colors.$primary-text
+  border: 0
+  height: 1px
+  margin: 8px 0

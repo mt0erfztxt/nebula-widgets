@@ -11,22 +11,27 @@
   "directories": {
     "doc": "doc"
   },
-  "dependencies": {},
+  "dependencies": {
+    "font-awesome": "4.7.0",
+    "highlight.js": "^9.17.1",
+    "md5": "^2.2.1",
+    "normalize.css": "^8.0.1"
+  },
   "devDependencies": {
     "acorn": "^6.4.0",
     "autoprefixer-stylus": "^0.9.4",
     "axis": "^0.6.1",
     "clean-css-cli": "^4.3.0",
-    "font-awesome": "4.7.0",
+    "dart-sass": "^1.24.4",
     "grunt": "^1.0.4",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-stylus": "^1.2.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-sass": "^3.1.0",
     "grunt-sh": "^0.2.0",
     "grunt-spritesmith": "^6.8.0",
-    "highlight.js": "^9.17.1",
     "jeet": "^6.1.2",
-    "md5": "^2.2.1",
     "prettier": "^1.19.1",
     "rupture": "^0.6.1",
     "stylus": "^0.54.7"

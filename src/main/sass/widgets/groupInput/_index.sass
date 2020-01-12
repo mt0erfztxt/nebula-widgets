@@ -1,0 +1,82 @@
+@use "src/main/sass/core/colors"
+
+
+$active-item-background-color: colors.$primary-background
+$hovered-item-color: #fff
+$idle-item-background-color: colors.$primary-background
+$idle-item-border-color: colors.$accent
+
+$height: 48px
+$height-small: 40px
+$height-tiny: 32px
+$height-bordered: $height - 2px
+$height-small-bordered: $height-small - 2px
+$height-tiny-bordered: $height-tiny - 2px
+
+
+@mixin nw-groupInput
+  color: colors.$primary-text
+  font-size: 14px
+  line-height: normal
+
+  &__errors
+    color: colors.$primary-text--error
+    list-style: none
+    margin: 0
+    padding: 0
+
+  &__inner
+    margin-bottom: 8px
+
+  &__item
+    margin-bottom: 8px
+
+  &--equidistant &__inner
+    display: table !important
+    table-layout: fixed
+    width: 100%
+
+  &--equidistant &__item
+    display: table-cell !important
+    text-align: center
+
+  &--inline &__inner
+    margin-bottom: 0
+
+  &--inline &__item
+    display: inline-block
+    padding-right: 24px
+
+  &:not(&--inline) &__item:last-child
+    margin-bottom: 0
+
+  &--noRowGap &__item
+    margin-bottom: 0
+
+  &--size_small#{&}--widget_button &__item
+    line-height: $height-small-bordered
+
+  &--size_tiny#{&}--widget_button &__item
+    line-height: $height-tiny-bordered
+
+  //&--stackedOnMobile &__item
+  //    +below('ts')
+  //        display: block
+
+  &--widget_button &__inner
+    border: 1px solid colors.$secondary-background
+    overflow: hidden
+
+  &--widget_button &__item
+    border: 1px solid colors.$secondary-background
+    display: inline-block
+    line-height: $height-bordered
+    margin-bottom: 0
+    outline: none
+    padding: 0
+
+    &:last-child
+      border-right: none
+
+  &--widget_button &__item--checked
+    background-color: $active-item-background-color
