@@ -44,7 +44,7 @@
 (def default-db
   (reduce
     (fn [acc item]
-      (if (fn? item) (item acc) (update acc :panel merge item)))
+      (if (fn? item) (item acc) (update acc :panels merge item)))
     {:app
      {:route {:id :home, :params nil, :query nil}}}
     panels-db))
