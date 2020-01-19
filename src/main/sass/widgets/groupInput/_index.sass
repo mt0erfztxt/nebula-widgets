@@ -1,26 +1,24 @@
-@use "src/main/sass/core/colors"
+@use "src/main/sass/core/vars"
+
+@import "../../../../../node_modules/mq-scss/mq"
 
 
-$active-item-background-color: colors.$primary-background
-$hovered-item-color: #fff
-$idle-item-background-color: colors.$primary-background
-$idle-item-border-color: colors.$accent
+$_borderWidth: 1px
 
-$height: 48px
-$height-small: 40px
-$height-tiny: 32px
-$height-bordered: $height - 2px
-$height-small-bordered: $height-small - 2px
-$height-tiny-bordered: $height-tiny - 2px
+$_item--checked__backgroundColor: vars.$backgroundColor--primary
+
+$_button__border: 1px solid $_borderWidth
+$_button__size--normal: 48px - 2 * $_borderWidth
+$_button__size--small: 40px - 2 * $_borderWidth
 
 
 @mixin nw-groupInput
-  color: colors.$primary-text
+  color: vars.$textColor--primary
   font-size: 14px
   line-height: normal
 
   &__errors
-    color: colors.$primary-text--error
+    color: vars.$textColor--primary--error
     list-style: none
     margin: 0
     padding: 0
@@ -53,24 +51,18 @@ $height-tiny-bordered: $height-tiny - 2px
   &--noRowGap &__item
     margin-bottom: 0
 
-  &--size_small#{&}--widget_button &__item
-    line-height: $height-small-bordered
-
-  &--size_tiny#{&}--widget_button &__item
-    line-height: $height-tiny-bordered
-
-  //&--stackedOnMobile &__item
-  //    +below('ts')
-  //        display: block
+  &--stackedOnMobile &__item
+    @include mq(max, vars.$tablet)
+      display: block
 
   &--widget_button &__inner
-    border: 1px solid colors.$secondary-background
+    border: $_button__border
     overflow: hidden
 
   &--widget_button &__item
-    border: 1px solid colors.$secondary-background
+    border: $_button__border
     display: inline-block
-    line-height: $height-bordered
+    line-height: $_button__size--normal
     margin-bottom: 0
     outline: none
     padding: 0
@@ -79,4 +71,7 @@ $height-tiny-bordered: $height-tiny - 2px
       border-right: none
 
   &--widget_button &__item--checked
-    background-color: $active-item-background-color
+    background-color: $_item--checked__backgroundColor
+
+  &--widget_button#{&}--size_small &__item
+    line-height: $_button__size--small

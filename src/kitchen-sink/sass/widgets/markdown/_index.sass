@@ -1,5 +1,6 @@
 @use "sass:color"
-@use "src/main/sass/core/colors"
+
+@use "src/main/sass/core/vars"
 
 
 $code-color: #4078f2
@@ -9,7 +10,7 @@ $code-color: #4078f2
   line-height: 1.68
 
   a
-    color: colors.$primary-anchor
+    color: vars.$anchorColor--primary
 
   li > code
     background-color: #fafafa
@@ -22,7 +23,7 @@ $code-color: #4078f2
     padding: 1px 4px
 
   h1, h2, h3, h4, h5, h6
-    color: colors.$primary-text
+    color: vars.$textColor--primary
 
   h1
     margin: 32px 0

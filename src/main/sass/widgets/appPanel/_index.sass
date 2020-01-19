@@ -1,0 +1,325 @@
+@use "sass:color"
+
+@use "src/main/sass/core/mixins"
+@use "src/main/sass/core/vars"
+
+@use "head"
+@use "toolbar"
+@use "vars" as appPanelVars
+
+@import "../../../../../node_modules/mq-scss/mq"
+
+
+$_head__zIndex: 5000
+
+$_sidebar__border: 1px solid vars.$textColor--primary
+$_sidebar__gutterSize--normal: 48px
+$_sidebar__zIndex: $_head__zIndex + 1000
+
+
+// TODO: Fix layout broken when value set to 'adjusted'.
+.nw-appPanel
+  color: vars.$textColor--primary
+  height: 100%
+
+  &__body
+    flex: 1 0 auto
+    transition: left vars.$transition-delay
+
+  &__crossbar
+    background-color: vars.$backgroundColor--primary
+
+  &__main
+    background-color: vars.$backgroundColor--primary
+    display: flex
+    flex-direction: column
+    min-height: 100%
+    transition: margin-left vars.$transition-delay, margin-right vars.$transition-delay
+
+  &__sidebar
+    @extend %layout--adjustable
+    background-color: vars.$backgroundColor--primary
+    display: block
+    overflow: hidden
+    position: fixed
+    width: 100%
+
+  &__sidebar-backdrop
+    @extend %layout--fixed
+    background-color: color.change(black, $alpha: 0.81)
+    @include mq(min, vars.$mobile)
+      display: none
+
+
+  // ------------------------------------------------------------------------
+  // 'layout'
+  // ------------------------------------------------------------------------
+
+  &--layout_adjusted &__body
+    flex: 1
+    overflow-y: scroll
+    position: relative
+
+  &--layout_adjusted &__main
+    height: 100%
+    min-height: auto
+
+  &--layout_pinned &__crossbar,
+  &--layout_pinned-footer &__crossbar--placement_bottom,
+  &--layout_pinned-header &__crossbar--placement_top
+    box-shadow: vars.$shadow
+    left: 0
+    overflow: hidden
+    position: fixed
+    right: 0
+    z-index: $_head__zIndex
+
+  &--layout_pinned &__crossbar--placement_bottom,
+  &--layout_pinned-footer &__crossbar--placement_bottom
+    bottom: 0
+
+  &--layout_pinned &__crossbar--placement_top,
+  &--layout_pinned-header &__crossbar--placement_top
+    top: 0
+
+  //&--layout_static
+
+  // ------------------------------------------------------------------------
+  // '(left|right)Sidebar'
+  //
+  // Have sidebar placed at (left|right) of content
+  // ------------------------------------------------------------------------
+
+  &--leftSidebar &__crossbar
+    transition: left vars.$transition-delay
+
+  &--rightSidebar &__crossbar
+    transition: right vars.$transition-delay
+
+  &--leftSidebar#{&}--rightSidebar &__crossbar
+    transition: left vars.$transition-delay, right vars.$transition-delay
+
+  &--leftSidebar &__sidebar--placement_left
+    right: auto
+    transition: border-width vars.$transition-delay, left vars.$transition-delay, width vars.$transition-delay, z-index vars.$transition-delay
+    @include mq(min, vars.$mobile)
+      width: auto
+
+  &--rightSidebar &__sidebar--placement_right
+    left: auto
+    transition: border-width vars.$transition-delay, right vars.$transition-delay, width vars.$transition-delay, z-index vars.$transition-delay
+    @include mq(min, vars.$mobile)
+      width: auto
+
+  // ++ layout_pinned-header
+  // When sidebar expanded and crossbar is pinned then they must be at same level visually.
+  &--leftSidebar#{&}--layout_pinned &__sidebar,
+  &--leftSidebar#{&}--layout_pinned-footer &__sidebar,
+  &--leftSidebar#{&}--layout_pinned-header &__sidebar,
+  &--rightSidebar#{&}--layout_pinned &__sidebar,
+  &--rightSidebar#{&}--layout_pinned-footer &__sidebar,
+  &--rightSidebar#{&}--layout_pinned-header &__sidebar
+    @include mq(min, vars.$tablet)
+      z-index: $_head__zIndex
+
+  // ------------------------------------------------------------------------
+  // '(left|right)Sidebar-collapsed'
+  //
+  // Have sidebar with sidebar's panel hidden
+  // ------------------------------------------------------------------------
+
+  &--leftSidebar-collapsed &__main
+    @include mq(min, vars.$mobile)
+      margin-left: 0
+
+  &--rightSidebar-collapsed &__main
+    @include mq(min, vars.$mobile)
+      margin-right: 0
+
+  &--leftSidebar-collapsed &__sidebar-backdrop,
+  &--rightSidebar-collapsed &__sidebar-backdrop
+    display: none
+
+  // ------------------------------------------------------------------------
+  // '(left|right)Sidebar-size_normal'
+  //
+  // Have sidebar with sidebar's panel width set to predefined value
+  // ------------------------------------------------------------------------
+
+  &--leftSidebar-size_normal &__main
+    @include mq(min, vars.$tablet)
+      margin-left: appPanelVars.$sidebar__size--normal + 1
+
+  &--rightSidebar-size_normal &__main
+    @include mq(min, vars.$tablet)
+      margin-right: appPanelVars.$sidebar__size--normal + 1
+
+  &--leftSidebar-size_normal &__sidebar--placement_left,
+  &--rightSidebar-size_normal &__sidebar--placement_right
+    width: appPanelVars.$sidebar__size--normal + 1
+    z-index: $_sidebar__zIndex
+
+  &--leftSidebar-size_normal &__sidebar--placement_left,
+  &--rightSidebar-size_normal &__sidebar--placement_right
+    @include mq(min, vars.$mobile)
+      width: appPanelVars.$sidebar__size--normal + 1
+    @include mq(min, vars.$tablet)
+      z-index: $_head__zIndex
+
+  &--leftSidebar-size_normal &__sidebar--placement_left
+    @include mq(min, vars.$mobile)
+      border-right: $_sidebar__border
+
+  &--rightSidebar-size_normal &__sidebar--placement_right
+    @include mq(min, vars.$mobile)
+      border-left: $_sidebar__border
+
+  // ++ collapsed
+  &--leftSidebar-size_normal#{&}--leftSidebar-collapsed &__main
+    @include mq(min, vars.$mobile)
+      margin-left: 0
+
+  &--rightSidebar-size_normal#{&}--rightSidebar-collapsed &__main
+    @include mq(min, vars.$mobile)
+      margin-right: 0
+
+  &--leftSidebar-size_normal#{&}--leftSidebar-collapsed &__sidebar--placement_left,
+  &--rightSidebar-size_normal#{&}--rightSidebar-collapsed &__sidebar--placement_right
+    @include mq(min, vars.$mobile)
+      width: 0
+
+  &--leftSidebar-size_normal#{&}--leftSidebar-collapsed &__sidebar--placement_left,
+  &--rightSidebar-size_normal#{&}--rightSidebar-collapsed &__sidebar--placement_right
+    @include mq(min, vars.$mobile)
+      z-index: $_head__zIndex
+
+  &--leftSidebar-size_normal#{&}--leftSidebar-collapsed &__sidebar--placement_left
+    left: - 110%
+    // more then 100% to make box shadow not visible at left side of viewport
+    @include mq(min, vars.$mobile)
+      left: 0
+
+  &--rightSidebar-size_normal#{&}--rightSidebar-collapsed &__sidebar--placement_right
+    right: - 110%
+    // more then 100% to make box shadow not visible at right side of viewport
+    @include mq(min, vars.$mobile)
+      right: 0
+
+  // ++ gutter-n
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal &__main
+    @include mq(min, vars.$mobile)
+      margin-left: $_sidebar__gutterSize--normal + 1
+    @include mq(min, vars.$tablet)
+      margin-left: $_sidebar__gutterSize--normal + appPanelVars.$sidebar__size--normal + 1
+
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal &__main
+    @include mq(min, vars.$mobile)
+      margin-right: $_sidebar__gutterSize--normal + 1
+    @include mq(min, vars.$tablet)
+      margin-right: $_sidebar__gutterSize--normal + appPanelVars.$sidebar__size--normal + 1
+
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal &__sidebar--placement_left,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal &__sidebar--placement_right
+    @include mq(min, vars.$tablet)
+      width: $_sidebar__gutterSize--normal + appPanelVars.$sidebar__size--normal + 1
+
+  // ++ layout_pinned
+  &--leftSidebar-size_normal#{&}--layout_pinned &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--layout_pinned-footer &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--layout_pinned &__crossbar--placement_top,
+  &--leftSidebar-size_normal#{&}--layout_pinned-header &__crossbar--placement_top
+    @include mq(min, vars.$tablet)
+      left: appPanelVars.$sidebar__size--normal + 1
+
+  &--rightSidebar-size_normal#{&}--layout_pinned &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--layout_pinned-footer &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--layout_pinned &__crossbar--placement_top,
+  &--rightSidebar-size_normal#{&}--layout_pinned-header &__crossbar--placement_top
+    @include mq(min, vars.$tablet)
+      right: appPanelVars.$sidebar__size--normal + 1
+
+  // ++ gutter-n ++ collapsed
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--leftSidebar-collapsed &__main
+    @include mq(min, vars.$mobile)
+      margin-left: $_sidebar__gutterSize--normal + 1
+
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--rightSidebar-collapsed &__main
+    @include mq(min, vars.$mobile)
+      margin-right: $_sidebar__gutterSize--normal + 1
+
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--leftSidebar-collapsed &__sidebar--placement_left,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--rightSidebar-collapsed &__sidebar--placement_right
+    @include mq(min, vars.$mobile)
+      width: $_sidebar__gutterSize--normal + 1
+
+  // ++ gutter-n ++ layout_pinned
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--layout_pinned &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--layout_pinned-footer &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--layout_pinned &__crossbar--placement_top,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--layout_pinned-header &__crossbar--placement_top
+    @include mq(min, vars.$mobile)
+      left: $_sidebar__gutterSize--normal + 1
+    @include mq(min, vars.$tablet)
+      left: $_sidebar__gutterSize--normal + appPanelVars.$sidebar__size--normal + 1
+
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--layout_pinned &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--layout_pinned-footer &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--layout_pinned &__crossbar--placement_top,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--layout_pinned-header &__crossbar--placement_top
+    @include mq(min, vars.$mobile)
+      right: $_sidebar__gutterSize--normal + 1
+    @include mq(min, vars.$tablet)
+      right: $_sidebar__gutterSize--normal + appPanelVars.$sidebar__size--normal + 1
+
+  // ++ gutter-n ++ adjusted ++ layout_pinned-header
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--layput_adjusted &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--layput_adjusted &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--layput_adjusted &__crossbar--placement_top,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--layput_adjusted &__crossbar--placement_top,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--adjusted#{&}--layout_pinned &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--adjusted#{&}--layout_pinned-footer &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--adjusted#{&}--layout_pinned &__crossbar--placement_top,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--adjusted#{&}--layout_pinned-header &__crossbar--placement_top
+    @include mq(min, vars.$tablet)
+      left: $_sidebar__gutterSize--normal + appPanelVars.$sidebar__size--normal + 1
+
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--layout_adjusted &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--layout_adjusted &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--layout_adjusted &__crossbar--placement_top,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--layout_adjusted &__crossbar--placement_top,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--adjusted#{&}--layout_pinned &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--adjusted#{&}--layout_pinned-footer &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--adjusted#{&}--layout_pinned &__crossbar--placement_top,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--adjusted#{&}--layout_pinned-header &__crossbar--placement_top
+    @include mq(min, vars.$tablet)
+      right: $_sidebar__gutterSize--normal + appPanelVars.$sidebar__size--normal + 1
+
+  // ++ layout_pinned-header ++ collapsed
+  &--leftSidebar-size_normal#{&}--leftSidebar-collapsed#{&}--layout_pinned &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--leftSidebar-collapsed#{&}--layout_pinned-footer &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--leftSidebar-collapsed#{&}--layout_pinned &__crossbar--placement_top,
+  &--leftSidebar-size_normal#{&}--leftSidebar-collapsed#{&}--layout_pinned-header &__crossbar--placement_top
+    @include mq(min, vars.$mobile)
+      left: 0
+
+  &--rightSidebar-size_normal#{&}--rightSidebar-collapsed#{&}--layout_pinned &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--rightSidebar-collapsed#{&}--layout_pinned-footer &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--rightSidebar-collapsed#{&}--layout_pinned &__crossbar--placement_top,
+  &--rightSidebar-size_normal#{&}--rightSidebar-collapsed#{&}--layout_pinned-header &__crossbar--placement_top
+    @include mq(min, vars.$mobile)
+      right: 0
+
+  // ++ gutter-n ++ layout_pinned-header ++ collapsed
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--leftSidebar-collapsed#{&}--layout_pinned &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--leftSidebar-collapsed#{&}--layout_pinned-footer &__crossbar--placement_bottom,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--leftSidebar-collapsed#{&}--layout_pinned &__crossbar--placement_top,
+  &--leftSidebar-size_normal#{&}--leftSidebar-gutter_normal#{&}--leftSidebar-collapsed#{&}--layout_pinned-header &__crossbar--placement_top
+    @include mq(min, vars.$mobile)
+      left: $_sidebar__gutterSize--normal + 1
+
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--rightSidebar-collapsed#{&}--layout_pinned &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--rightSidebar-collapsed#{&}--layout_pinned-footer &__crossbar--placement_bottom,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--rightSidebar-collapsed#{&}--layout_pinned &__crossbar--placement_top,
+  &--rightSidebar-size_normal#{&}--rightSidebar-gutter_normal#{&}--rightSidebar-collapsed#{&}--layout_pinned-header &__crossbar--placement_top
+    @include mq(min, vars.$mobile)
+      right: $_sidebar__gutterSize--normal + 1

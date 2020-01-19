@@ -1,7 +1,7 @@
 @use "src/main/sass/core/config"
 
 
-$input-size: 20px
+$_input__size: 20px
 
 
 .nw-checkableInput
@@ -39,7 +39,7 @@ $input-size: 20px
   &--widget_checkbox &__label,
   &--widget_radio &__label
     display: inline-block
-    line-height: $input-size
+    line-height: $_input__size
     padding-left: 26px
     position: relative
     vertical-align: middle
@@ -48,13 +48,13 @@ $input-size: 20px
       display: none
 
     &:before
-      background-size: $input-size $input-size
+      background-size: $_input__size $_input__size
       content: " "
       display: inline-block
-      height: $input-size
+      height: $_input__size
       left: 0
       position: absolute
-      width: $input-size
+      width: $_input__size
 
   &--widget_checkbox &__label:before
     background-image: url(#{config.$images-path}/input-checkbox.svg)

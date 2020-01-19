@@ -1,5 +1,4 @@
-@use "core/colors"
-@use "core/fonts"
+@use "core/vars"
 @use "vendor"
 @use "widgets"
 
@@ -12,20 +11,20 @@
 
 
 html
-  background-color: colors.$primary-background
+  background-color: vars.$backgroundColor--primary
   box-sizing: border-box
   height: 100%
 
 
 body
-  background-color: colors.$primary-background
-  font-family: fonts.$font-family
-  font-size: fonts.$font-size
+  background-color: vars.$backgroundColor--primary
+  font-family: vars.$fontFamily
+  font-size: vars.$fontSize
   height: 100%
 
 
 hr
-  background-color: colors.$primary-text
+  background-color: vars.$textColor--primary
   border: 0
   height: 1px
   margin: 8px 0
