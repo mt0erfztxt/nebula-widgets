@@ -101,8 +101,13 @@
           (oops/oget "height")
           (str "px")))
 
-(defn- update-main-elt-padding [this]
-  (let [layout (-> this r/props :layout name)
+(defn- get-layout-prop-value
+  [props]
+  (or (:layout props) :static))
+
+(defn- update-main-elt-padding
+  [this]
+  (let [layout (-> this r/props get-layout-prop-value name)
         main-node (gdom/getElementByClass main-elt-bem (r/dom-node this))]
     (doseq [[placement aka] [["bottom" "footer"] ["top" "header"]]]
       (oops/oset!+
@@ -125,8 +130,8 @@
   * `props` - optional, map. Supported props:
     - `:footer` - renderable, no default. Used to display user-defined header.
     - `:header` - renderable, no default. Used to display user-defined header.
-    - `:layout` - enum, one of :adjusted, :pinned, :pinned-footer, :pinned-header, :static or their string/symbol
-      equivalents. Layout of application panel.
+    - `:layout` - enum, one of `:adjusted`, `:pinned`, `:pinned-footer`, `:pinned-header`, `:static` (default) or their
+      string/symbol equivalents. Layout of application panel.
     - `:sidebars` - seq of maps, where each map can have following keys:
       * `:content` - renderable, no default. Content to place into sidebar.
       * `:collapsed` - logical true/false, no default. Whether sidebar is collapse or not.
