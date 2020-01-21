@@ -159,7 +159,8 @@
   * allow sidebar to be resizable"
   [& _args]
   (r/create-class
-    {:reagent-render
+    {:display-name "app-panel/widget"
+     :reagent-render
      (fn [& _args]
        (let [this (r/current-component)
              {:keys [footer header sidebars toolbars] :as props} (r/props this)
