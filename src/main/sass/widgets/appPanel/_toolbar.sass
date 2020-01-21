@@ -1,0 +1,17 @@
+@use "src/main/sass/core/vars"
+
+
+$_border: 1px solid vars.$textColor--primary
+$_size--normal: 48px + 1
+
+
+.nw-appPanel-toolbar
+  background-color: vars.$backgroundColor--primary
+  height: $_size--normal
+  min-height: $_size--normal
+
+  &--placement_bottom
+    border-top: $_border
+
+  &--placement_top
+    border-bottom: $_border

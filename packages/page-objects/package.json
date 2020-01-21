@@ -1,0 +1,34 @@
+{
+  "name": "nebula-widgets-page-objects",
+  "version": "0.1.0",
+  "description": "Widgets",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mt0erfztxt/nebula-widgets.git"
+  },
+  "author": "Sergey Kozhevnikov <mt0erfztxt@gmail.com>",
+  "main": "src/index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "npx testcafe --selector-timeout=3000 chrome test"
+  },
+  "dependencies": {
+    "app-root-path": "^2.2.1",
+    "testcafe": "^1.7.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
+    "@babel/preset-env": "^7.7.6",
+    "@babel/preset-typescript": "^7.7.4",
+    "@babel/register": "^7.7.4",
+    "@types/app-root-path": "^1.2.4",
+    "prettier": "^1.19.1",
+    "typescript": "^3.7.3"
+  }
+}

@@ -1,0 +1,58 @@
+@use "sass:color"
+
+@use "src/main/sass/core/vars"
+
+
+$code-color: #4078f2
+
+
+.markdown
+  line-height: 1.68
+
+  a
+    color: vars.$anchorColor--primary
+
+  li > code
+    background-color: #fafafa
+    //background-color: color.scale($code-color, $lightness: 98%)
+    //border: 1px solid color.scale($code-color, $lightness: 85%)
+    border-radius: 2px
+    color: $code-color
+    font-size: 13px
+    //font-style: italic
+    padding: 1px 4px
+
+  h1, h2, h3, h4, h5, h6
+    color: vars.$textColor--primary
+
+  h1
+    margin: 32px 0
+
+  h2
+    margin: 24px 0
+
+  h3
+    margin: 16px 0
+
+  h4, h5, h6
+    margin: 8px 0
+
+  p
+    margin: 16px 0
+
+    code
+      padding: 2px 4px 2px 2px
+
+  pre
+    margin: 12px 0
+
+    code
+      border-radius: 2px
+      line-height: normal
+      padding: 16px
+
+  ul
+    margin: 16px 0
+
+    ul
+      margin: 0

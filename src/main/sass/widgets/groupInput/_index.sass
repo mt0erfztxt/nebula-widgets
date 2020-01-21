@@ -1,0 +1,77 @@
+@use "src/main/sass/core/vars"
+
+@import "../../../../../node_modules/mq-scss/mq"
+
+
+$_borderWidth: 1px
+
+$_item--checked__backgroundColor: vars.$backgroundColor--primary
+
+$_button__border: 1px solid $_borderWidth
+$_button__size--normal: 48px - 2 * $_borderWidth
+$_button__size--small: 40px - 2 * $_borderWidth
+
+
+@mixin nw-groupInput
+  color: vars.$textColor--primary
+  font-size: 14px
+  line-height: normal
+
+  &__errors
+    color: vars.$textColor--primary--error
+    list-style: none
+    margin: 0
+    padding: 0
+
+  &__inner
+    margin-bottom: 8px
+
+  &__item
+    margin-bottom: 8px
+
+  &--equidistant &__inner
+    display: table !important
+    table-layout: fixed
+    width: 100%
+
+  &--equidistant &__item
+    display: table-cell !important
+    text-align: center
+
+  &--inline &__inner
+    margin-bottom: 0
+
+  &--inline &__item
+    display: inline-block
+    padding-right: 24px
+
+  &:not(&--inline) &__item:last-child
+    margin-bottom: 0
+
+  &--noRowGap &__item
+    margin-bottom: 0
+
+  &--stackedOnMobile &__item
+    @include mq(max, vars.$tablet)
+      display: block
+
+  &--widget_button &__inner
+    border: $_button__border
+    overflow: hidden
+
+  &--widget_button &__item
+    border: $_button__border
+    display: inline-block
+    line-height: $_button__size--normal
+    margin-bottom: 0
+    outline: none
+    padding: 0
+
+    &:last-child
+      border-right: none
+
+  &--widget_button &__item--checked
+    background-color: $_item--checked__backgroundColor
+
+  &--widget_button#{&}--size_small &__item
+    line-height: $_button__size--small
