@@ -140,6 +140,9 @@
       * `:placement` - required, one of :bottom, :top (default) or their string/symbol equivalents. Toolbar placement.
   * `& children` - renderables, any number of child components
 
+  NOTE:
+  * containers must have `height: 100%` for adjusted layout to work properly
+
   FIXME:
   * when sidebar created transition doesn't applied to it, but we have transition for crossbar and all it looks like
   content of crossbar flows from under created sidebar
