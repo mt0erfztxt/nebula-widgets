@@ -1,7 +1,12 @@
+# Repository rules
+
 .idea
 bak
 node_modules
 
+# Package rules
+
 /public
+/src/main/sass/_sprites.sass
 /styles/icons.styl
 /styles/vendor/dist

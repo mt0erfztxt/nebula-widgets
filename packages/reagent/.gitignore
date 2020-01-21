@@ -1,14 +1,13 @@
-/*.class
-/*.jar
-/.lein-*
-/.nrepl-port
-/.rebel_readline_history
-/checkouts
-/classes
-/figwheel_server.log
-/nebula-widgets.iml
-/pom.xml
-/pom.xml.asc
+# Package rules
+
+/*.iml
+
 /resources/public
 /target
 /webpack-out
+
+/.lein-*
+/.nrepl-port
+/.rebel_readline_history
+/figwheel_server.log
+/profiles.clj
