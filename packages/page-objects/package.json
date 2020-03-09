@@ -1,6 +1,6 @@
 {
   "name": "nebula-widgets-page-objects",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Widgets",
   "license": "Apache-2.0",
   "repository": {
@@ -8,27 +8,36 @@
     "url": "https://github.com/mt0erfztxt/nebula-widgets.git"
   },
   "author": "Sergey Kozhevnikov <mt0erfztxt@gmail.com>",
-  "main": "src/index.js",
+  "main": "lib",
+  "files": [
+    "lib"
+  ],
   "directories": {
-    "doc": "doc"
+    "test": "src/test"
   },
   "scripts": {
-    "test": "npx testcafe --selector-timeout=3000 chrome test"
+    "clean": "rm -rf lib",
+    "compile": "npx babel --copy-files --extensions '.js' --ignore 'src/fragments/**/*,src/kitchen-sink/**/*,src/test/spec/**/*,src/widgets/**/*' --out-dir lib src --source-maps",
+    "compile-watch": "npm run compile -- --watch",
+    "test": "npm run testcafe-tests",
+    "testcafe-tests": "npm run clean && npm run compile && npx testcafe --selector-timeout=3000 chromium lib/test/testcafe"
   },
   "dependencies": {
-    "app-root-path": "^2.2.1",
-    "testcafe": "^1.7.1"
+    "@sindresorhus/is": "1.2.0",
+    "app-root-path": "2.2.1",
+    "nebula-test-fragment": "file:../../../nebula-test-fragment-0.3.0.tgz",
+    "testcafe": "1.8.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.5",
-    "@babel/core": "^7.7.5",
-    "@babel/plugin-proposal-class-properties": "^7.7.4",
-    "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
-    "@babel/preset-env": "^7.7.6",
-    "@babel/preset-typescript": "^7.7.4",
-    "@babel/register": "^7.7.4",
-    "@types/app-root-path": "^1.2.4",
-    "prettier": "^1.19.1",
-    "typescript": "^3.7.3"
+    "@babel/cli": "7.8.4",
+    "@babel/core": "7.8.6",
+    "@babel/plugin-proposal-class-properties": "7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "7.8.3",
+    "@babel/plugin-proposal-private-methods": "7.8.3",
+    "@babel/preset-env": "7.8.6",
+    "@babel/register": "7.8.3",
+    "@types/app-root-path": "1.2.4",
+    "prettier": "1.19.1",
+    "unexpected": "11.12.1"
   }
 }

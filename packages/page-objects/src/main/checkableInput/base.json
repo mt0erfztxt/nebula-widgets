@@ -1,0 +1,13 @@
+{
+  "extends": "main/input",
+  "stateParts": [
+    {
+      "name": "labelShrinked"
+    },
+    {
+      "defaultValue": "checkbox",
+      "name": "widget",
+      "simple": false
+    }
+  ]
+}

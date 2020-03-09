@@ -1,0 +1,19 @@
+{
+  "stateParts": [
+    {
+      "name": "disabled"
+    },
+    {
+      "name": "invalid"
+    },
+    {
+      "defaultValue": "normal",
+      "name": "size",
+      "simple": false
+    },
+    {
+      "name": "widget",
+      "simple": false
+    }
+  ]
+}

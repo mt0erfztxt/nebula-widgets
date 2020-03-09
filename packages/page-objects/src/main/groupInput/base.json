@@ -1,0 +1,24 @@
+{
+  "extends": "main/input",
+  "stateParts": [
+    {
+      "name": "columns",
+      "simple": false
+    },
+    {
+      "name": "equidistant"
+    },
+    {
+      "name": "inline"
+    },
+    {
+      "name": "noRowGap"
+    },
+    {
+      "name": "softColumns"
+    },
+    {
+      "name": "stackedOnMobile"
+    }
+  ]
+}
