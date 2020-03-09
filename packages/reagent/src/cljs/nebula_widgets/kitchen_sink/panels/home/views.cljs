@@ -1,6 +1,7 @@
 (ns nebula-widgets.kitchen-sink.panels.home.views
   (:require
-    [nebula-widgets.kitchen-sink.routes :as routes]))
+    [nebula-widgets.kitchen-sink.routes :as routes]
+    [nebula-widgets.widgets.app-panel.core :as app-panel]))
 
 (def ^:private widgets-routes
   [:widgets/action-group
@@ -31,10 +32,15 @@
 ;; PUBLIC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn widget []
-  [:div.homePanel
-   [:ul.homePanel-widgetList
-    (for [[href text] pages-href-and-text]
-      ^{:key text}
-      [:li.homePanel-widgetList-item
-       [:a {:href href} text]])]])
+(defn widget
+  []
+  [app-panel/widget
+   {:cid "homePanel"
+    :sidebars
+    [{:content
+      [:div.homePanel
+       [:ul.homePanel-widgetList
+        (for [[href text] pages-href-and-text]
+          ^{:key text}
+          [:li.homePanel-widgetList-item
+           [:a {:href href} text]])]]}]}])
