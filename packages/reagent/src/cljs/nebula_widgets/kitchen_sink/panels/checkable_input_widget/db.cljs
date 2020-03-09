@@ -7,5 +7,5 @@
      :disabled false
      :invalid false
      :label-shrinked false
-     :size "normal"
-     :widget "checkbox"}}})
+     :size nil
+     :widget nil}}})

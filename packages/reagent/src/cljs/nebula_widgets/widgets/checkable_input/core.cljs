@@ -36,7 +36,7 @@
      ["disabled" disabled]
      ["invalid" invalid]
      ["labelShrinked" (-> props extract-label-props :shrinked)]
-     ["size" (-> size keyword size-prop-set (or :normal))]
+     ["size" (-> size keyword size-prop-set)]
      ["widget" (-> widget keyword widget-prop-set (or :checkbox))]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

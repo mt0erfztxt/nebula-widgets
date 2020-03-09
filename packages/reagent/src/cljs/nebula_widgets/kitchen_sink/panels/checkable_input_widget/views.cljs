@@ -44,8 +44,8 @@
                  [:disabled]
                  [:invalid]
                  [:label-shrinked]
-                 [:size (ie-cgi-knob/gen-items "small" "normal" "large")]
-                 [:widget (ie-cgi-knob/gen-items "button" "checkbox" "radio")]]]
+                 [:size (ie-cgi-knob/gen-items ["none"] "large" "normal" "small")]
+                 [:widget (ie-cgi-knob/gen-items ["none"] "button" "checkbox" "radio")]]]
             [ie-cgi-knob/widget
              {:cid cid}
              (cond->
