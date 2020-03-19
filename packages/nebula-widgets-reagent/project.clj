@@ -1,4 +1,4 @@
-(defproject nebula-widgets "0.1.0-SNAPSHOT"
+(defproject nebula-widgets-reagent "0.1.0-SNAPSHOT"
   :description "Nebula widgets"
   :url "https://github.com/mt0erfztxt/nebula-widgets"
   :license

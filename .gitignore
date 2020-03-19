@@ -3,6 +3,7 @@
 .idea
 bak
 node_modules
+*.iml
 
 # Package rules
 
