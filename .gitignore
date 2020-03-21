@@ -7,7 +7,7 @@ node_modules
 
 # Package rules
 
-/public
-/src/main/sass/_sprites.sass
-/styles/icons.styl
-/styles/vendor/dist
+/packages/nebula-widgets/public
+/packages/nebula-widgets/src/main/sass/_sprites.sass
+/packages/nebula-widgets/styles/icons.styl
+/packages/nebula-widgets/styles/vendor/dist
